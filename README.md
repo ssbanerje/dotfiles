@@ -2,16 +2,20 @@ My dotfiles
 ============================================================
 
 ##About
-My configuration files for Unix systems. ( Tested with : Mac OS Mountain Lion )
+Configuration files for my Mac OS X System
 
 ##Installation
 * Install with git
 
-```git clone https://github.com/subszero/dotfiles.git dotfiles && dotfiles/install.sh```
+```bash
+git clone https://github.com/subszero/dotfiles.git dotfiles && dotfiles/install.sh
+```
 
 * Git-free install
 
-```cd; curl -#L https://github.com/subszero/dotfiles/tarball/master | tar -xzv --strip-components 1 --exclude={README.md,install.sh}```
+```bash
+cd; curl -#L https://github.com/subszero/dotfiles/tarball/master | tar -xzv --strip-components 1 --exclude={README.md,install.sh}
+```
 
 ##Licence
 Copyright (C) 2012 Subho Sankar Banerjee
