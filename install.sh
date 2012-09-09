@@ -1,16 +1,24 @@
 #!/bin/bash
+
+
 cd "$(dirname "$0")"
 git pull
-function doIt() {
+
+
+function syncConfigs() {
 	rsync --exclude ".git/" --exclude ".gitignore" --exclude ".DS_Store" --exclude "install.sh" --exclude "README.md" -av . ~
 }
+
+
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
-	doIt
+	syncConfigs
 else
-	read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+	read -p "Overwrite existing files? (y/n) " -n 1
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		doIt
+		syncConfigs
 	fi
 fi
-unset doIt
+
+
+unset syncConfigs
