@@ -119,6 +119,7 @@ endif
 	"}
 
 	"Rainbow Parenthesis {
+		nnoremap <leader>rp :RainbowParenthesesToggle<CR>
 		au Syntax * RainbowParenthesesToggle
 		au Syntax * RainbowParenthesesLoadRound
 		au Syntax * RainbowParenthesesLoadSquare

@@ -1,15 +1,15 @@
 #!/bin/bash
 
-
+# Get latest version of repository
 cd "$(dirname "$0")"
 git pull
 
 
 function syncConfigs() {
-	rsync --exclude ".git/" --exclude ".gitignore" --exclude ".DS_Store" --exclude "install.sh" --exclude "README.md" -av . ~
+	rsync --exclude "fonts" --exclude ".git/" --exclude ".gitignore" --exclude ".DS_Store" --exclude "install.sh" --exclude "README.md" -av . ~
 }
 
-
+# Copy things into their right place
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
 	syncConfigs
 else
@@ -20,6 +20,8 @@ else
 	fi
 fi
 
+
+# Compile anything if required
 cd ~/.vim/bundle/Command-T/ruby/command-t/ && ruby extconf.rb && make
 
 unset syncConfigs

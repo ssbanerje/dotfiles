@@ -11,6 +11,7 @@ fi
 
 #Control history saves
 HISTCONTROL=ignoredups:ignorespace
+shopt -s histappend
 
 
 

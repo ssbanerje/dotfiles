@@ -43,6 +43,8 @@ alias mplayerx='/Applications/MPlayerX.app/Contents/MacOS/MPlayerX'
 alias gvim='mvim'
 alias mou='/Applications/Mou.app/Contents/MacOS/Mou'
 export EDITOR=mvim
+export USE_EDITOR=mvim
+export EDITOR=mvim
 export SVN_EDITOR=mvim
 
 #Set for ROOT
