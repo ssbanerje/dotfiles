@@ -6,7 +6,7 @@ git pull
 
 
 function syncConfigs() {
-	rsync --exclude "fonts" --exclude ".git/" --exclude ".gitignore" --exclude ".DS_Store" --exclude "install.sh" --exclude "README.md" -av . ~
+	rsync --exclude "fonts" --exclude ".git/" --exclude ".gitignore" --exclude ".gitmodules" --exclude ".DS_Store" --exclude "install.sh" --exclude "README.md" -av . ~
 }
 
 # Copy things into their right place

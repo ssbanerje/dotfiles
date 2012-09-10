@@ -37,7 +37,7 @@
 	diff = auto
 	status = auto
 	branch = auto
-	ui = auto
+	ui = true
 	interactive = auto
 
 [credential]

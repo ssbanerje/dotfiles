@@ -42,10 +42,9 @@ alias clc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
 alias mplayerx='/Applications/MPlayerX.app/Contents/MacOS/MPlayerX'
 alias gvim='mvim'
 alias mou='/Applications/Mou.app/Contents/MacOS/Mou'
-export EDITOR=mvim
-export USE_EDITOR=mvim
-export EDITOR=mvim
-export SVN_EDITOR=mvim
+export EDITOR=vim
+export USE_EDITOR=vim
+export SVN_EDITOR=vim
 
 #Set for ROOT
 #export ROOTSYS=/opt/alice/root
