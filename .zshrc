@@ -28,14 +28,10 @@ export ZSH_THEME="miloshadzic"
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins
-plugins=(osx git git-flow github brew history-substring-search mercurial node npm perl pip python ssh-agent sublime svn terminalapp textmate vi-mode zsh-syntax-highlighting)
+plugins=(osx git git-flow github brew history-substring-search mercurial node npm perl pip python ssh-agent sublime svn terminalapp textmate zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
 # Get stuff from .profile
 source $HOME/.profile
-
-# Get completion for homebrew
-fpath=($HOME/.zsh/func $fpath)
-typeset -U fpath
 

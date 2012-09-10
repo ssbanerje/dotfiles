@@ -6,7 +6,14 @@ git pull
 
 
 function syncConfigs() {
-	rsync --exclude "fonts" --exclude ".git/" --exclude ".gitignore" --exclude ".gitmodules" --exclude ".DS_Store" --exclude "install.sh" --exclude "README.md" -av . ~
+	rsync --exclude "fonts"\
+    --exclude ".git/"\
+    --exclude ".gitignore"\
+    --exclude ".gitmodules"\
+    --exclude ".DS_Store"\
+    --exclude "com.googlecode.iterm2.plist"\
+    --exclude "install.sh"\
+    --exclude "README.md" -av . ~
 }
 
 # Copy things into their right place
@@ -19,7 +26,7 @@ else
 		syncConfigs
 	fi
 fi
-
+cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
 
 # Compile anything if required
 cd ~/.vim/bundle/Command-T/ruby/command-t/ && ruby extconf.rb && make
