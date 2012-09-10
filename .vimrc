@@ -4,17 +4,6 @@
 "Author = Subho Sankar Banerjee
 "Date = Sun Aug 26 10:12:18 IST 2012
 "
-"
-"PLUGINS -
-"Manual pluins - taglist, alternate, cvim
-"
-"Managed by pathogen -  snipmate, nerdTree, supertab, solarized, jade, vim-javascript, vim-json, commandT, syntastic,
-"tagbar, minibuffer, simple-pairs, vim-fugitive, jellybeans, mustang, lusty-juggler, powerline, vim-molokai, gundo,
-"recover, easy-motion, yank-ring, locateOpen, align, speeddating, clang_complete, atp, conque, nerdtree, tlib, mw-utils,
-"pydoc, nerdcommenter, rainbow-parenthesis, note, pymode 
-"
-"TODO ---- texplugin
-"
 "---------------------------------------------------------------------------------------------------------------------------
 
 set nocp                                    "No copatibility with vi
