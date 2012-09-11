@@ -118,3 +118,9 @@
 [submodule ".vim/bundle/cocoa.vim"]
 	path = .vim/bundle/cocoa.vim
 	url = https://github.com/msanders/cocoa.vim.git
+[submodule ".vim/bundle/vim-node"]
+	path = .vim/bundle/vim-node
+	url = https://github.com/guileen/vim-node.git
+[submodule ".vim/bundle/vim-angry"]
+	path = .vim/bundle/vim-angry
+	url = https://github.com/b4winckler/vim-angry.git

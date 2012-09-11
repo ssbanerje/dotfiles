@@ -105,7 +105,7 @@ endif
 		let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\~$']
 		let NERDTreeShowHidden=1
 		autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
-		function s:CloseIfOnlyNerdTreeLeft()
+		func! s:CloseIfOnlyNerdTreeLeft()
 			if exists("t:NERDTreeBufName")
 				if bufwinnr(t:NERDTreeBufName) != -1
 					if winnr("$") == 1
@@ -113,7 +113,7 @@ endif
 					endif
 				endif
 			endif
-		endfunction
+		endfunc
 	"}
 
 	"Conque {
@@ -263,6 +263,7 @@ endif
 		au FileType javascript setl fen
 		au FileType javascript setl nocindent
 		au BufRead,BufNewFile *.json set filetype=json
+		au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node/dict/node.dict
 		au FileType html,xml let g:html_indent_inctags = "html,body,head,tbody"
 		au FileType html,xml let g:html_indent_script1 = "inc"
 		au FileType html,xml let g:html_indent_style1 = "inc"
