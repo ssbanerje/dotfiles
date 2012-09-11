@@ -44,7 +44,7 @@ alias gvim='mvim'
 alias mou='/Applications/Mou.app/Contents/MacOS/Mou'
 
 # Setup fasd
-eval "$(fasd --init auto)"
+#eval "$(fasd --init auto)"
 
 export EDITOR=vim
 export USE_EDITOR=vim
