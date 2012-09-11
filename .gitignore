@@ -1,8 +1,13 @@
 .DS_Store
 *.pyc
-.DS_Store
 Desktop.ini
 ._*
 Thumbs.db
 .Spotlight-V100
 .Trashes
+.svn
+*~
+.*.swp
+.bundle
+*.sublime-project
+*.sublime-workspace
