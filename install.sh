@@ -28,7 +28,4 @@ else
 fi
 cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
 
-# Compile anything if required
-cd ~/.vim/bundle/Command-T/ruby/command-t/ && ruby extconf.rb && make
-
 unset syncConfigs
