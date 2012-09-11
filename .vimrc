@@ -67,11 +67,11 @@ endif
 		set cursorline                        "Show current line (useful in terminal)
 		syntax enable                         "Color scheme for vim
 		au VimResized * :wincmd =             "Resize split screens on window resize
+		autocmd bufwritepost .vimrc call Pl#Load()
 	"}
 
 	"Powerline {
 		set laststatus=2                      "Status line configuration
-		autocmd bufwritepost .vimrc call Pl#Load()
 		"let g:Powerline_colorscheme='skwp'
 		call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo') "Get trailing whitespace
 		if has('gui_running')
@@ -102,6 +102,7 @@ endif
 	"NerdTree {
 		let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$', '\.swp$']
 		let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\~$']
+		let NERDTreeShowHidden=1
 		"autocmd VimEnter * NERDTree
 		"autocmd VimEnter * wincmd p
 	"}
@@ -147,11 +148,10 @@ endif
 		vmap Q gq
 		nmap Q gqap
 		cmap Tabe tabe
+		map <C-H> <C-W>h
 		map <C-J> <C-W>j
 		map <C-K> <C-W>k
 		map <C-L> <C-W>l
-		map <C-H> <C-W>h
-		map <C-K> <C-W>k
 		nnoremap / /\v
 		vnoremap / /\v
 		cnoreabbrev <expr> w!!
@@ -178,6 +178,11 @@ endif
 		noremap <silent>,u :GundoToggle<CR>
 		"Spell Check
 		map <leader>s :setlocal spell!<CR>
+		"Bubble lines
+		nmap <S-Up> ddkP
+		nmap <S-Down> ddp
+		vmap <S-Up> xkP`[V`]
+		vmap <S-Down> xp`[V`]
 	"}
 "}
 
@@ -248,8 +253,8 @@ endif
 		au FileType html,xml let g:html_indent_script1 = "inc"
 		au FileType html,xml let g:html_indent_style1 = "inc"
 	"}
-
 	"Python {
+
 		let python_highlight_all = 1
 		let g:pymode_doc_key = 'D'
 		let g:pymode_folding = 0
