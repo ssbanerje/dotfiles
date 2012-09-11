@@ -59,6 +59,7 @@ endif
 			set guioptions+=e
 			set lines=40                        "40 lines of text instead of 24
 			set guitablabel=%M\ %t
+			set fuoptions=maxvert,maxhorz
 		else
 			set term=xterm                      "Make arrow and other keys work
 		endif
@@ -103,8 +104,16 @@ endif
 		let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$', '\.swp$']
 		let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\~$']
 		let NERDTreeShowHidden=1
-		"autocmd VimEnter * NERDTree
-		"autocmd VimEnter * wincmd p
+		autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+		function s:CloseIfOnlyNerdTreeLeft()
+			if exists("t:NERDTreeBufName")
+				if bufwinnr(t:NERDTreeBufName) != -1
+					if winnr("$") == 1
+						q
+					endif
+				endif
+			endif
+		endfunction
 	"}
 
 	"Conque {
@@ -148,15 +157,25 @@ endif
 		vmap Q gq
 		nmap Q gqap
 		cmap Tabe tabe
-		map <C-H> <C-W>h
-		map <C-J> <C-W>j
-		map <C-K> <C-W>k
-		map <C-L> <C-W>l
-		nnoremap / /\v
 		vnoremap / /\v
 		cnoreabbrev <expr> w!!
 					\((getcmdtype() == ':' && getcmdline() == 'w!!')
 					\?('!sudo tee % >/dev/null'):('w!!'))
+		nnoremap / /\v
+		"Window navigation and resizing
+		map <C-H> <C-W>h
+		map <C-J> <C-W>j
+		map <C-K> <C-W>k
+		map <C-L> <C-W>l
+		map <S-H> <C-W><
+		map <S-J> <C-W>+
+		map <S-K> <C-W>-
+		map <S-L> <C-W>>
+		"Bubble lines and bocks
+		nmap <S-Up> ddkP
+		nmap <S-Down> ddp
+		vmap <S-Up> xkP`[V`]
+		vmap <S-Down> xp`[V`]	"Bubble lines
 	"}
 
 	"Convenience {
@@ -177,12 +196,7 @@ endif
 		"Toggle gundo
 		noremap <silent>,u :GundoToggle<CR>
 		"Spell Check
-		map <leader>s :setlocal spell!<CR>
-		"Bubble lines
-		nmap <S-Up> ddkP
-		nmap <S-Down> ddp
-		vmap <S-Up> xkP`[V`]
-		vmap <S-Down> xp`[V`]
+		map <leader>s :setlocal spell!<CR>		
 	"}
 "}
 
