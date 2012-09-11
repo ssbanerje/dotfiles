@@ -42,6 +42,10 @@ alias clc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
 alias mplayerx='/Applications/MPlayerX.app/Contents/MacOS/MPlayerX'
 alias gvim='mvim'
 alias mou='/Applications/Mou.app/Contents/MacOS/Mou'
+
+# Setup fasd
+eval "$(fasd --init auto)"
+
 export EDITOR=vim
 export USE_EDITOR=vim
 export SVN_EDITOR=vim
