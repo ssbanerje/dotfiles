@@ -71,11 +71,14 @@ export PATH=$PATH:/usr/local/share/npm/bin
 
 #For homebrew
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+#For python
 alias pip="/usr/local/share/python/pip"
 alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"
 alias ipython='/usr/local/share/python/ipython'
 alias ipy='/usr/local/share/python/ipython qtconsole'
 export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
+export PYTHONSTARTUP="$HOME/.pyrc"
 
 #Set Proxies
 export http_proxy=http://proxy.iiit.ac.in:8080
