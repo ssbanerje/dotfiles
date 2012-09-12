@@ -124,3 +124,6 @@
 [submodule ".vim/bundle/vim-angry"]
 	path = .vim/bundle/vim-angry
 	url = https://github.com/b4winckler/vim-angry.git
+[submodule ".vim/bundle/vim-matlab"]
+	path = .vim/bundle/vim-matlab
+	url = https://github.com/sgeb/vim-matlab.git
