@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Get latest version of repository
-cd "$(dirname "$0")"
-git pull
-
-
 function syncConfigs() {
 	rsync --exclude "fonts"\
     --exclude ".git/"\
@@ -15,6 +10,20 @@ function syncConfigs() {
     --exclude "install.sh"\
     --exclude "README.md" -av . ~
 }
+
+cd "$(dirname "$0")"
+
+#Initialize the repository
+if [ "$1" == "--init" ]; then
+  git submodule init
+  git submodule update
+fi
+
+#Update the repository
+if [ "$1" == "--update" ]; then
+  git pull
+  git submodule foreach git pull
+fi
 
 # Copy things into their right place
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
