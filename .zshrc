@@ -1,5 +1,5 @@
 ######################################################################
-# .zshrc file for my mac
+# .zshrc file
 # Author: Subho Sankar Banerjee
 # EMail: subs.zero[at]gmail[dot]com
 ########################################################################
@@ -28,10 +28,16 @@ export ZSH_THEME="miloshadzic"
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins
-plugins=(osx git git-flow github brew history-substring-search mercurial node npm perl pip python sublime svn terminalapp textmate zsh-syntax-highlighting)
+plugins=(git git-flow github brew history-substring-search mercurial node npm perl pip python sublime svn terminalapp textmate zsh-syntax-highlighting)
+if [[ `uname` = "Darwin" ]]; then 
+  plugins=(osx $plugins)
+fi
 
 source $ZSH/oh-my-zsh.sh
 
 # Get stuff from .profile
 source $HOME/.profile
+if [[ `uname` = "Darwin" ]]; then 
+  source $HOME/.profile.osx
+fi
 

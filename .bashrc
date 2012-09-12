@@ -9,25 +9,27 @@ if [ -z "$PS1" ]; then
    return
 fi
 
+#Do this only on MacOSX
+if [ `uname` == 'Darwin' ]; then
+  #Homebrew completion
+  source $(brew --repo)/Library/Contributions/brew_bash_completion.sh
+  #Get stuff from the profile file
+  source $HOME/.profile.osx
+fi
+
+#Get stuff from the profile file
+source $HOME/.profile
+
 #Control history saves
 HISTCONTROL=ignoredups:ignorespace
 shopt -s histappend
-
-
 
 #Set reverse and forward search for arrow keys
 bind '"\e[A"':history-search-backward
 bind '"\e[B"':history-search-forward
 
-#Get stuff from the profile file
-source $HOME/.profile
-
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
-
-#Homebrew completion
-source $(brew --repo)/Library/Contributions/brew_bash_completion.sh
-
 
 ## Custom prompt
 # Colors
