@@ -17,6 +17,8 @@ cd "$(dirname "$0")"
 if [ "$1" == "--init" ]; then
   git submodule init
   git submodule update
+  mkdir -p ~/.vim/vim_backups
+  mkdir -p ~/.vim/vim_swp
 fi
 
 #Update the repository
