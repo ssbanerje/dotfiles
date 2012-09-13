@@ -34,9 +34,18 @@ else
 	read -p "Overwrite existing files? (y/n) " -n 1
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		syncConfigs
+		#Copy dotfiles
+    syncConfigs
+    #Copy everything else
+    if [ `uname` == "Darwin" ]; then
+      cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+      cp fonts/*.otf ~/Library/Fonts 
+    else
+      cp fonts/*.ttf ~/.fonts.dir
+      fc-cache -vf
+    fi
 	fi
 fi
-cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
 
 unset syncConfigs
+
