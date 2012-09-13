@@ -84,7 +84,7 @@ endif
 		endif
 	"}
 	
-	"Supertab{
+	"Supertab {
 		let g:SuperTabDefaultCompletionType="context"
 		set completeopt=menuone,longest,preview
 	"}
@@ -98,6 +98,10 @@ endif
 	
 	"Yank Ring {
 		let g:yankring_history_dir = '~/.vim/vim_backups'
+	"}
+	
+	"Align {
+		let g:DrChipTopLvlMenu= ""
 	"}
 
 	"NerdTree {
@@ -137,12 +141,17 @@ endif
 		au Syntax * RainbowParenthesesLoadChevrons
 	"}
 
-	"Notes{
+	"Notes {
 		let g:notes_directory = '~/Documents/Notes'
 		let g:notes_suffix = '.txt'
 	"}
+	
+	"Headlights {
+		let g:headlights_spillover_menus = 1
+		let g:headlights_show_functions = 1
+	"}
 
-	"CTags{
+	"CTags {
 		map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 		map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 		map <C-]> :split <CR>:exec("tag ".expand("<cword>"))<CR>
