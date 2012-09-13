@@ -134,3 +134,6 @@
 [submodule ".vim/bundle/headlights"]
 	path = .vim/bundle/headlights
 	url = https://github.com/mbadran/headlights.git
+[submodule ".vim/bundle/tabman.vim"]
+	path = .vim/bundle/tabman.vim
+	url = https://github.com/kien/tabman.vim.git

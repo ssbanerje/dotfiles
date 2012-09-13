@@ -83,7 +83,7 @@ endif
 			let g:Powerline_symbols = 'unicode'
 		endif
 	"}
-	
+
 	"Supertab {
 		let g:SuperTabDefaultCompletionType="context"
 		set completeopt=menuone,longest,preview
@@ -95,11 +95,11 @@ endif
 		let g:miniBufExplMapCTabSwitchBufs = 1
 		let g:miniBufExplModSelTarget = 1
 	"}
-	
+
 	"Yank Ring {
 		let g:yankring_history_dir = '~/.vim/vim_backups'
 	"}
-	
+
 	"Align {
 		let g:DrChipTopLvlMenu= ""
 	"}
@@ -145,10 +145,15 @@ endif
 		let g:notes_directory = '~/Documents/Notes'
 		let g:notes_suffix = '.txt'
 	"}
-	
+
 	"Headlights {
 		let g:headlights_spillover_menus = 1
 		let g:headlights_show_functions = 1
+	"}
+
+	"Tabman {
+		let g:tabman_toggle = '<leader>tt'
+		let g:tabman_focus = '<leader>tf'
 	"}
 
 	"CTags {
@@ -205,7 +210,7 @@ endif
 		"Toggle gundo
 		noremap <silent>,u :GundoToggle<CR>
 		"Spell Check
-		map <leader>s :setlocal spell!<CR>		
+		map <leader>s :setlocal spell!<CR>
 	"}
 "}
 
