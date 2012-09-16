@@ -19,6 +19,7 @@ if [ "$1" == "--init" ]; then
   git submodule update
   mkdir -p ~/.vim/vim_backups
   mkdir -p ~/.vim/vim_swp
+  mkdir -p ~/Documents/Notes
 fi
 
 #Update the repository
