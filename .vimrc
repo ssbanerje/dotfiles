@@ -235,6 +235,13 @@ endif
 		exe "normal `z"
 	endfunc
 	autocmd BufWrite *.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
+	"Git commit mesages have spell-check + insert mode
+	if has('autocmd')
+		if has('spell')
+			au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
+		endif
+		au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
+	endif
 
 	func! ListChars()
 		set list
