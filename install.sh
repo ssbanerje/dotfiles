@@ -8,6 +8,7 @@ function syncConfigs() {
     --exclude ".DS_Store"\
     --exclude "com.googlecode.iterm2.plist"\
     --exclude "install.sh"\
+    --exclude "*.png"\
     --exclude "README.md" -av . ~
 }
 

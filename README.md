@@ -9,7 +9,7 @@
 This is a compilation of dotfiles from dotfile repos, blogs and projects from across the web, put together to suit my workflow.
 
 ## Screenshot(s)
-![](http://i.imgur.com/HcWOz.png)
+![Vim](https://raw.github.com/subszero/dotfiles/master/vim_screenshot.png)
 
 
 ##Using these dotfiles
