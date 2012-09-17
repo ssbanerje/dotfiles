@@ -30,8 +30,6 @@ brew install ctags coreutils git macvim ack python fasd
 # Install the dotfiles
 git clone https://github.com/subszero/dotfiles.git dotfiles
 dotfiles/install.sh --init
-# Install the fonts
-cp -r dotfiles/fonts ~/Library/Fonts
 ```
 
 ###Update
