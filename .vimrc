@@ -211,6 +211,10 @@ endif
 		noremap <silent>,u :GundoToggle<CR>
 		"Spell Check
 		map <leader>s :setlocal spell!<CR>
+		"Windows file endings
+		noremap <Leader>w mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+		"Open cope
+		"map <leader>x :botright cope<CR>
 	"}
 "}
 
