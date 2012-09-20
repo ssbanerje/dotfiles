@@ -18,7 +18,7 @@
 	url = https://github.com/vim-scripts/YankRing.vim.git
 [submodule ".vim/bundle/atp-vim"]
 	path = .vim/bundle/atp-vim
-	url = git://atp-vim.git.sourceforge.net/gitroot/atp-vim/atp-vim
+	url = git://git.code.sf.net/p/atp-vim/code
 [submodule ".vim/bundle/clang_complete"]
 	path = .vim/bundle/clang_complete
 	url = https://github.com/Rip-Rip/clang_complete.git
