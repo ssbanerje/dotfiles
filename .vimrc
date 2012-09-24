@@ -62,6 +62,22 @@ endif
 			set fuoptions=maxvert,maxhorz
 		else
 			set term=xterm                      "Make arrow and other keys work
+			"Drag and drop support for mac terminal
+			if $TERM_PROGRAM == "Apple_Terminal" && $TERM_PROGRAM_VERSION >= 297
+				set title titlestring=%(%m\ %)%((%{expand(\"%:~:h\")})%)%a
+				set icon iconstring=%{&t_IE}]7;file://%{hostname()}%{expand(\"%:p\")}%{&t_IS}
+				set iconstring+=VIM
+			endif
+		endif
+		if has("mac")
+			nnoremap <D-≠>      16<C-w>>
+			inoremap <D-≠> <C-o>16<C-w>>
+			nnoremap <D-–>      16<C-w><
+			inoremap <D-–> <C-o>16<C-w><
+			nnoremap <D-±>      8<C-w>+
+			inoremap <D-±> <C-o>8<C-w>+
+			nnoremap <D-—>      8<C-w>-
+			inoremap <D-—> <C-o>8<C-w>-
 		endif
 		set mouse=a                           "Use mouse everywhere (even in terminal)
 		set mousehide                         "Hide mouse while typing
@@ -294,7 +310,6 @@ endif
 		au FileType html,xml let g:html_indent_style1 = "inc"
 	"}
 	"Python {
-
 		let python_highlight_all = 1
 		let g:pymode_doc_key = 'D'
 		let g:pymode_folding = 0
@@ -306,7 +321,8 @@ endif
 		au BufNewFile,BufRead *.mako set ft=mako
 		au FileType python set modeline ts=4 sw=4 tw=78 sts=4 et smarttab noexpandtab
 		au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
-		au FileType python set omnifunc=pythoncomplete#Complete
+		au FileType python set omnifunc=RopeOmni
+		"au FileType python set omnifunc=pythoncomplete#Complete
 	"}
 
 	"VIM {
