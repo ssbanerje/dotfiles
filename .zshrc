@@ -32,7 +32,6 @@ plugins=(git git-flow github brew history-substring-search mercurial node npm pe
 if [[ `uname` = "Darwin" ]]; then 
   plugins=(osx $plugins)
 fi
-
 source $ZSH/oh-my-zsh.sh
 
 # Get stuff from .profile
@@ -41,3 +40,21 @@ if [[ `uname` = "Darwin" ]]; then
   source $HOME/.profile.osx
 fi
 
+setopt LOCAL_OPTIONS # allow functions to have local options
+setopt LOCAL_TRAPS # allow functions to have local traps
+setopt SHARE_HISTORY # share history between sessions
+setopt CORRECT
+setopt COMPLETE_IN_WORD
+setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
+setopt HIST_REDUCE_BLANKS
+setopt complete_aliases
+
+zle -N newtab
+
+bindkey '^[^[[D' backward-word
+bindkey '^[^[[C' forward-word
+bindkey '^[[5D' beginning-of-line
+bindkey '^[[5C' end-of-line
+bindkey '^[[3~' delete-char
+bindkey '^[^N' newtab
+bindkey '^?' backward-delete-char

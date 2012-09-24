@@ -48,6 +48,9 @@ export ALL_PROXY=$http_proxy
 CUDA=/usr/local/cuda
 export PATH=$PATH:$CUDA/bin
 
+#My scripts
+export PATH=$PATH:$HOME/.bin
+
 #Set for ROOT
 #export ROOTSYS=/opt/alice/root
 #export ROOTBUILD=debug
