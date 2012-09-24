@@ -16,6 +16,7 @@ This is a compilation of dotfiles from dotfile repos, blogs and projects from ac
 ###Dependencies
 * [XCode Tools](http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12#)
 * Install [homebrew](https://github.com/mxcl/homebrew) and some packages used in the dotfiles
+* Install BetterTouchTool... You will thank me later!
 
 ```bash
 ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)

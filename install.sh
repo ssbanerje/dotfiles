@@ -9,6 +9,7 @@ function syncConfigs() {
     --exclude "com.googlecode.iterm2.plist"\
     --exclude "install.sh"\
     --exclude "*.png"\
+    --exclude "BetterTouchTool.config"
     --exclude "README.md" -av . ~
 }
 
