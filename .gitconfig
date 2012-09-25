@@ -48,7 +48,7 @@
 	autosetuprebase = always
 
 [alias] 
-# [b]ranch
+  # [b]ranch
 	bc  = checkout -b
 	bce = checkout --orphan
 	bl  = branch --verbose
@@ -96,4 +96,9 @@
 	# [w]orking copy
 	wd  = diff --color-words --cached
 	wr  = reset --hard HEAD
-	ws  = status --short --branch --ignore-submodules=untracked
+  ws  = status --short --branch --ignore-submodules=untracked
+  # [l]og
+  loll = log --graph --decorate --pretty=oneline --abbrev-commit
+  lol = !git --no-pager loll
+  lolal = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  lola = !git --no-pager lolal
