@@ -22,7 +22,11 @@ fi
 export ZSH=$HOME/.oh-my-zsh
 
 # Set to the name theme to load.
-export ZSH_THEME="miloshadzic"
+#export ZSH_THEME="miloshadzic"
+setopt prompt_subst
+precmd() {
+    PROMPT=$(~/.powerline-bash/powerline-bash.py $?)
+}
 
 # Comment this out to disable weekly auto-update checks
 export DISABLE_AUTO_UPDATE="true"
@@ -58,3 +62,4 @@ bindkey '^[[5C' end-of-line
 bindkey '^[[3~' delete-char
 bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char
+
