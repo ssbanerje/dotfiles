@@ -10,7 +10,7 @@ function syncConfigs() {
     --exclude "install.sh"\
     --exclude "*.png"\
     --exclude "BetterTouchTool.config"\
-    --exclude "brewList"
+    --exclude "brewList"\
     --exclude "README.md" -av . ~
 }
 
