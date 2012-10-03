@@ -59,9 +59,11 @@ ngrep
 ninja
 node
 opencv
+optipng
 p11-kit
 pango
 pcre
+phantomjs
 pixman
 pkg-config
 potrace
