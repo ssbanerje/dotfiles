@@ -32,7 +32,7 @@ export ZSH_THEME="miloshadzic"
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins
-plugins=(git git-flow github brew history-substring-search mercurial node npm perl pip python sublime svn terminalapp textmate zsh-syntax-highlighting)
+plugins=(git git-flow github brew history-substring-search mercurial node npm perl pip python sublime svn terminalapp textmate zsh-syntax-highlighting lol)
 if [[ `uname` = "Darwin" ]]; then
   plugins=(osx $plugins)
 fi
