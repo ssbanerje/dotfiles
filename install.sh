@@ -40,6 +40,7 @@ else
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		#Copy dotfiles
     syncConfigs
+    ln -Fs $HOME/.zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     #Copy everything else
     if [ `uname` == "Darwin" ]; then
       cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
