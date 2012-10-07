@@ -273,7 +273,7 @@ endif
 		let g:clang_complete_macros = 1
 		let g:syntastic_c_check_header = 1
 		let g:syntastic_cpp_check_header = 1
-    let g:syntastic_cpp_compiler = 'clang++'
+		let g:syntastic_cpp_compiler = 'clang++'
 		au FileType c,cpp se cin                               "Indentation for C/C++
 		au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 		au FileType c,cpp set completeopt=menuone,menu,longest,preview
