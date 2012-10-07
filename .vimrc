@@ -22,10 +22,6 @@ endif
 	let mapleader=","                       "Change mapleader from \ to ,
 	set title                               "Set title in terminal
 	set so=7                                "7 lines to cursor
-	set expandtab                           "Insert spaces instead of a tab character
-	set softtabstop=2                       "Set indentation
-	set tabstop=2
-	set shiftwidth=2
 	command! T setlocal noexpandtab
 	command! S setlocal expandtab
 	set magic                               "Set magic on for regular expressions
@@ -319,14 +315,9 @@ endif
 		au FileType python syn keyword pythonDecorator True None False self
 		au BufNewFile,BufRead *.jinja set syntax=htmljinja
 		au BufNewFile,BufRead *.mako set ft=mako
-		au FileType python set modeline ts=4 sw=4 tw=78 sts=4 et smarttab noexpandtab
 		au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 		au FileType python set omnifunc=RopeOmni
 		"au FileType python set omnifunc=pythoncomplete#Complete
-	"}
-
-	"VIM {
-		au FileType vim set noexpandtab
 	"}
 "}
 
