@@ -47,7 +47,7 @@
 	autosetupmerge = always
 	autosetuprebase = always
 
-[alias] 
+[alias]
   # [b]ranch
 	bc  = checkout -b
 	bce = checkout --orphan
