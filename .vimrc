@@ -20,6 +20,8 @@ endif
 "General_Settings {
 	let g:mapleader=","                     "Change mapleader from \ to ,
 	let mapleader=","                       "Change mapleader from \ to ,
+	let g:maplocalleader = "\\"             "Set localleader to \
+	let maplocalleader = "\\"               "Set localleader to \
 	set title                               "Set title in terminal
 	set so=7                                "7 lines to cursor
 	command! T setlocal noexpandtab
