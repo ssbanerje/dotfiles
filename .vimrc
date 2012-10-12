@@ -6,11 +6,14 @@
 "
 "---------------------------------------------------------------------------------------------------------------------------
 
-set nocp                                    "No copatibility with vi
-if has("syntax")                            "Turn on syntax
+set nocp                                  "No copatibility with vi
+if has("syntax")                          "Turn on syntax
 	syntax on
 endif
 
+if executable('/bin/zsh')                 "Because bash is so old school
+	set shell=/bin/zsh
+endif
 
 "Pathogen {
 	call pathogen#infect()                  "Set up pathogen
@@ -35,7 +38,7 @@ endif
 	set smartcase                           "ignore case if input is lowercase in searched
 	set scrolloff=5                         "Keep buffer between top and bottom of screen
 	set wildmode=list,longest               "Emulate terminal for auto complete
-	set wildignore=*.swp,*.bak,*.pyc,*.class,*.o
+	set wildignore=.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,.DS_Store,*.aux,*.out,*.toc,*.pyc
 	set hidden                              "Switch buffers without saving
 	set backspace=indent,eol,start          "Handle backspaces better
 	set wildmenu                            "Smarter command line
@@ -90,7 +93,11 @@ endif
 		"let g:Powerline_colorscheme='skwp'
 		call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo') "Get trailing whitespace
 		if has('gui_running')
-			set guifont=Monaco\ for\ Powerline:h12
+			if has("gui_gtk2")
+				set guifont=Monaco\ for\ Powerline\ 12
+			else
+				set guifont=Monaco\ for\ Powerline:h12
+			endif
 			let g:Powerline_symbols = 'fancy'
 		else
 			set t_Co=256
@@ -179,10 +186,17 @@ endif
 		map <C-]> :split <CR>:exec("tag ".expand("<cword>"))<CR>
 	"}
 
+	"Syntatstic {
+		let g:syntastic_enable_signs=1
+		let g:syntastic_auto_loc_list=1
+	"}
+
 	"Some remaps {
 		nnoremap ; :
 		nnoremap j gj
 		nnoremap k gk
+		noremap <leader>bp :bprevious<cr>
+		noremap <leader>bn :bnext<cr>
 		cmap WQ wq
 		cmap wQ wq
 		vmap Q gq
@@ -255,14 +269,17 @@ endif
 		%s/\s\+$//ge
 		exe "normal `z"
 	endfunc
-	autocmd BufWrite *.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
-	"Git commit mesages have spell-check + insert mode
-	if has('autocmd')
-		if has('spell')
-			au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
+	autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
+
+	"Git {
+		match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+		if has('autocmd') "Git commit mesages have spell-check + insert mode
+			if has('spell')
+				au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
+			endif
+			au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
 		endif
-		au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
-	endif
+	"}
 
 	func! ListChars()
 		set list
@@ -310,6 +327,7 @@ endif
 		au FileType html,xml let g:html_indent_script1 = "inc"
 		au FileType html,xml let g:html_indent_style1 = "inc"
 	"}
+
 	"Python {
 		let python_highlight_all = 1
 		let g:pymode_doc_key = 'D'
