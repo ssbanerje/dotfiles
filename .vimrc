@@ -112,6 +112,9 @@ endif
 
 	"Yank Ring {
 		let g:yankring_history_dir = '~/.vim/vim_backups'
+		let g:yankring_replace_n_pkey = '<leader>['
+		let g:yankring_replace_n_nkey = '<leader>]'
+		nmap <leader>y :YRShow<cr>
 	"}
 
 	"Align {
