@@ -25,7 +25,6 @@ endif
 	let mapleader=","                       "Change mapleader from \ to ,
 	let g:maplocalleader = "\\"             "Set localleader to \
 	let maplocalleader = "\\"               "Set localleader to \
-	set title                               "Set title in terminal
 	set so=7                                "7 lines to cursor
 	command! T setlocal noexpandtab
 	command! S setlocal expandtab
@@ -44,7 +43,7 @@ endif
 	set wildmenu                            "Smarter command line
 	set wildmode=list:longest,full
 	set gdefault                            "Smarter substitution
-	set clipboard=unnamed                   "Default yank goes to mac clipboard"
+	set clipboard=unnamed                   "Default yank goes to mac clipboard
 	set dictionary=/usr/share/dict/words    "Set dictionary
 	set backupskip=/tmp/*,/private/tmp/*    "Edit crontab files
 	set lbr                                 "Set default line width
@@ -250,6 +249,7 @@ endif
 "}
 
 "Programming {
+	let g:snips_author = 'Subho Banerjee'  "Snipmate autor
 	filetype plugin on                      "Set file type plugins
 	filetype indent on
 	set ofu=syntaxcomplete#Complete
@@ -270,6 +270,7 @@ endif
 		exe "normal `z"
 	endfunc
 	autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
+	au BufRead,BufNewFile,BufWrite {*.json,,*.py,*.coffee,*.yaml,*.yml} set foldmethod=indent
 
 	"Git {
 		match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
@@ -318,10 +319,13 @@ endif
 		au FileType perl syn region POD start=/^=head[123]/ end=/^=cut/ fold
 	"}
 
-	"Javascript {
+	"WebDev {
 		au FileType javascript setl fen
 		au FileType javascript setl nocindent
-		au BufRead,BufNewFile *.json set filetype=json
+		au BufRead,BufNewFile,BufWrite {*.js.asp,*.json} set ft=javascript
+		au BufRead,BufNewFile,BufWrite {*.less} set ft=css
+		au BufRead,BufNewFile,BufWrite {Capfile,Gemfile,Rakefile,Thorfile,config.ru,.caprc,.irbrc,irb_tempfile*} set ft=ruby
+		au BufRead,BufNewFile *.ejs set filetype=html
 		au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node/dict/node.dict
 		au FileType html,xml let g:html_indent_inctags = "html,body,head,tbody"
 		au FileType html,xml let g:html_indent_script1 = "inc"
