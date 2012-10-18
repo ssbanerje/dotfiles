@@ -22,8 +22,7 @@ fi
 export ZSH=$HOME/.oh-my-zsh
 
 # Set to the name theme to load.
-export ZSH_THEME="sorin"
-#export ZSH_THEME="miloshadzic"
+export ZSH_THEME="miloshadzic"
 #setopt prompt_subst
 #precmd() {
 #    PROMPT=$(~/.powerline-bash/powerline-bash.py $?)
