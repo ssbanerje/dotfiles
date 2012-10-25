@@ -39,10 +39,10 @@ export USE_EDITOR=vim
 export SVN_EDITOR=vim
 
 #Set Proxies
-export http_proxy=http://proxy.iiit.ac.in:8080
-export https_proxy=https://proxy.iiit.ac.in:8080
-export proxy=$http_proxy
-export ALL_PROXY=$http_proxy
+#export http_proxy=http://proxy.iiit.ac.in:8080
+#export https_proxy=https://proxy.iiit.ac.in:8080
+#export proxy=$http_proxy
+#export ALL_PROXY=$http_proxy
 
 #Set for CUDA
 CUDA=/usr/local/cuda
