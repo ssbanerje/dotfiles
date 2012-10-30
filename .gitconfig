@@ -102,3 +102,6 @@
   lol = !git --no-pager loll
   lolal = log --graph --decorate --pretty=oneline --abbrev-commit --all
   lola = !git --no-pager lolal
+
+[push]
+  default = matching
