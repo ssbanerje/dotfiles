@@ -50,8 +50,7 @@ else
     if [ `uname` == "Darwin" ]; then
       cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
       cp fonts/*.otf ~/Library/Fonts
-    else
-          fi
+    fi
 	fi
 fi
 
