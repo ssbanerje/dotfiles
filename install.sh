@@ -23,6 +23,11 @@ if [ "$1" == "--init" ]; then
   mkdir -p ~/.vim/vim_backups
   mkdir -p ~/.vim/vim_swp
   mkdir -p ~/Documents/Notes
+  if [ `uname` != "Darwin" ]; then
+    mkdir -p ~/.fonts
+    cp fonts/*.ttf ~/.fonts
+    fc-cache -vf
+  fi
 fi
 
 #Update the repository
@@ -46,9 +51,7 @@ else
       cp com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
       cp fonts/*.otf ~/Library/Fonts
     else
-      cp fonts/*.ttf ~/.fonts.dir
-      fc-cache -vf
-    fi
+          fi
 	fi
 fi
 
