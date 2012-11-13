@@ -2,6 +2,7 @@
 	whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 	legacyheaders = false
 	quotepath = false
+	excludesfile = /Users/Subho/.global_ignore
 
 [repack]
 	usedeltabaseoffset = true

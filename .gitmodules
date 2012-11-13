@@ -151,3 +151,6 @@
 [submodule ".vim/bundle/vim-ruby"]
 	path = .vim/bundle/vim-ruby
 	url = https://github.com/vim-ruby/vim-ruby.git
+[submodule ".global_gitignore"]
+	path = .global_gitignore
+	url = https://github.com/github/gitignore
