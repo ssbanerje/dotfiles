@@ -4,6 +4,7 @@ automake
 boost
 cairo
 cmake
+cminpack
 colordiff
 coreutils
 corkscrew
@@ -13,6 +14,7 @@ eigen
 fasd
 fftw
 findutils
+flann
 fontconfig
 freetype
 gd
@@ -34,6 +36,7 @@ gsl
 hadoop
 haskell-platform
 hdf5
+heroku-toolbelt
 hub
 intltool
 jasper
@@ -56,6 +59,7 @@ macvim
 mercurial
 mplayer
 multimarkdown
+nettle
 ngrep
 ninja
 node
@@ -63,6 +67,7 @@ opencv
 optipng
 p11-kit
 pango
+pcl
 pcre
 phantomjs
 pixman
@@ -71,6 +76,7 @@ potrace
 pypy
 pyqt
 python
+qhull
 qt
 ragel
 readline
@@ -80,12 +86,14 @@ scala
 sip
 spark
 sqlite
+sshuttle
 swig
 szip
 tbb
 tree
 unrar
 valgrind
+vtk
 wdiff
 wget
 xz
