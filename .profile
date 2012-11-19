@@ -58,4 +58,5 @@ export PATH=$PATH:$HOME/.bin
 
 #Start Python Shell with sensible settings
 export PYTHONSTARTUP="$HOME/.pyrc"
+export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"
