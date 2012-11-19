@@ -270,7 +270,7 @@ endif
 		exe "normal `z"
 	endfunc
 	autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
-	au BufRead,BufNewFile,BufWrite {*.json,,*.py,*.coffee,*.yaml,*.yml} set foldmethod=indent
+	"au BufRead,BufNewFile,BufWrite {*.json,,*.py,*.coffee,*.yaml,*.yml} set foldmethod=indent
 
 	"Git {
 		match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
