@@ -46,6 +46,7 @@ libffi
 libgcrypt
 libgpg-error
 libicns
+libmpc
 libpng
 libspiro
 libtasn1
@@ -57,6 +58,7 @@ little-cms2
 lua
 macvim
 mercurial
+mpfr
 mplayer
 multimarkdown
 nettle
