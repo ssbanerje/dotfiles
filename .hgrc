@@ -1,5 +1,0 @@
-[merge-tools]
-  splice.executable = gvim
-  splice.args = -f $base $local $other $output -c 'SpliceInit'
-  splice.premerge = keep
-  splice.priority = 1
