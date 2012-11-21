@@ -127,9 +127,6 @@
 [submodule ".vim/bundle/vim-matlab"]
 	path = .vim/bundle/vim-matlab
 	url = https://github.com/sgeb/vim-matlab.git
-[submodule ".powerline-bash"]
-	path = .powerline-bash
-	url = https://github.com/subszero/powerline-bash
 [submodule ".vim/bundle/headlights"]
 	path = .vim/bundle/headlights
 	url = https://github.com/mbadran/headlights.git
