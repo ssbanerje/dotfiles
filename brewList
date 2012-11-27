@@ -49,6 +49,7 @@ libicns
 libmpc
 libpng
 libspiro
+libsvm
 libtasn1
 libtiff
 libtool
