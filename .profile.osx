@@ -10,6 +10,14 @@ alias clc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
 alias mplayerx='/Applications/MPlayerX.app/Contents/MacOS/MPlayerX'
 alias gvim='mvim'
 alias mou='/Applications/Mou.app/Contents/MacOS/Mou'
+alias st='open -a "Sublime Text 2"'
+alias preview="open -a '$PREVIEW'"
+alias xcode="open -a '/Developer/Applications/Xcode.app'"
+alias filemerge="open -a '/Developer/Applications/Utilities/FileMerge.app'"
+alias safari="open -a safari"
+alias firefox="open -a firefox"
+alias chrome="open -a google\ chrome"
+alias f='open -a Finder'
 
 #Set environment for MATLAB
 export MATLAB=/Applications/MATLAB_R2010b.app
