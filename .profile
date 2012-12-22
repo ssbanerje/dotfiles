@@ -24,6 +24,9 @@ alias grep='grep --color=auto --exclude="*.svn*"'
 alias mkdir='mkdir -p'
 alias dus='du -ms * | sort -n'
 
+# Datafart
+alias datafart='curl --data-binary @- datafart.com'
+
 # Play safe!
 #alias rm='rmtrash'
 alias rm='rm -i'
