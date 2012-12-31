@@ -45,6 +45,7 @@ else
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		#Copy dotfiles
     syncConfigs
+    mkdir -p $HOME/.oh-my-zsh/custom/plugins
     ln -Fs $HOME/.zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     #Copy everything else
     if [ `uname` == "Darwin" ]; then
