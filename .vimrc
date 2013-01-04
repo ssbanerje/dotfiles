@@ -59,7 +59,9 @@ endif
 			set guioptions+=e
 			set lines=40                        "40 lines of text instead of 24
 			set guitablabel=%M\ %t
-			set fuoptions=maxvert,maxhorz
+			if has("mac")
+				set fuoptions=maxvert,maxhorz
+			endif
 		else
 			set term=xterm                      "Make arrow and other keys work
 			"Drag and drop support for mac terminal
@@ -93,7 +95,7 @@ endif
 		call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo') "Get trailing whitespace
 		if has('gui_running')
 			if has("gui_gtk2")
-				set guifont=Monaco\ for\ Powerline\ 12
+				set guifont=Monaco\ for\ Powerline\ 10
 			else
 				set guifont=Monaco\ for\ Powerline:h12
 			endif
