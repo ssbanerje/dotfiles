@@ -41,6 +41,7 @@ hub
 intltool
 jasper
 jpeg
+jq
 jsdoc-toolkit
 libffi
 libgcrypt
@@ -61,6 +62,7 @@ macvim
 mercurial
 mpfr
 mplayer
+mtr
 multimarkdown
 nettle
 ngrep
@@ -93,6 +95,7 @@ sshuttle
 swig
 szip
 tbb
+tcptrack
 tree
 unrar
 valgrind
