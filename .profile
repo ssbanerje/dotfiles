@@ -51,11 +51,11 @@ export ALL_PROXY=$http_proxy
 CUDA=/usr/local/cuda
 export PATH=$PATH:$CUDA/bin
 
-#Set for Dia
-export PATH=$PATH:/Applications/Dia.app/Contents/Resources/bin
-
 #My scripts
 export PATH=$PATH:$HOME/.bin
+
+#Matlab on linux
+export PATH=$PATH:/usr/local/MATLAB/R2012b/bin
 
 #Set for ROOT
 #export ROOTSYS=/opt/alice/root
@@ -64,5 +64,4 @@ export PATH=$PATH:$HOME/.bin
 
 #Start Python Shell with sensible settings
 export PYTHONSTARTUP="$HOME/.pyrc"
-export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"

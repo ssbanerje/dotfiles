@@ -38,6 +38,9 @@ alias ipython='/usr/local/share/python/ipython'
 alias ipy='/usr/local/share/python/ipython qtconsole'
 export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 
+#Set for Dia
+export PATH=$PATH:/Applications/Dia.app/Contents/Resources/bin
+
 #Locale
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en

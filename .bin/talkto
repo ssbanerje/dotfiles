@@ -1,0 +1,3 @@
+#!/bin/sh
+
+dd if=/dev/dsp | ssh -c arcfour -C ${1} dd of=/dev/dsp

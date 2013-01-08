@@ -1,9 +1,9 @@
                                              __      __  _______ __
                                         ____/ /___  / /_/ ____(_) /__  _____
                                        / __  / __ \/ __/ /_  / / / _ \/ ___/
-                                      / /_/ / /_/ / /_/ __/ / / /  __(__  ) 
-                                      \__,_/\____/\__/_/   /_/_/\___/____/  
-                                            JUST THE WAY I LIKE IT 
+                                      / /_/ / /_/ / /_/ __/ / / /  __(__  )
+                                      \__,_/\____/\__/_/   /_/_/\___/____/
+                                            JUST THE WAY I LIKE IT
 
 
 This is a compilation of dotfiles from dotfile repos, blogs and projects from across the web, put together to suit my workflow.
