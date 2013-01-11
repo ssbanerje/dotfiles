@@ -25,6 +25,7 @@ ghc
 git
 git-flow
 glib
+glpk
 gmp
 gnu-sed
 gnuplot
