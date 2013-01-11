@@ -20,7 +20,7 @@ alias chrome="open -a google\ chrome"
 alias f='open -a Finder'
 
 #Set environment for MATLAB
-export MATLAB=/Applications/MATLAB_R2010b.app
+export MATLAB=/Applications/MATLAB_R2012b.app
 export PATH=$PATH:$MATLAB/bin
 
 #Set for MacTex
