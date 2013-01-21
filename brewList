@@ -1,6 +1,7 @@
 ack
 autoconf
 automake
+bash-completion
 boost
 cairo
 cmake
@@ -44,6 +45,7 @@ jasper
 jpeg
 jq
 jsdoc-toolkit
+legit
 libffi
 libgcrypt
 libgpg-error

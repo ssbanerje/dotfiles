@@ -103,6 +103,16 @@
   lol = !git --no-pager loll
   lolal = log --graph --decorate --pretty=oneline --abbrev-commit --all
   lola = !git --no-pager lolal
+  # [l]egit
+  switch = !legit switch \"$@\"
+	branches = !legit branches
+	sprout = !legit sprout \"$@\"
+	unpublish = !legit unpublish \"$@\"
+	harvest = !legit harvest \"$@\"
+	sync = !legit sync \"$@\"
+	publish = !legit publish \"$@\"
+	graft = !legit graft \"$@\"
+
 
 [push]
   default = matching
