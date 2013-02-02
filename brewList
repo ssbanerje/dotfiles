@@ -48,6 +48,7 @@ jpeg
 jq
 jsdoc-toolkit
 legit
+libevent
 libffi
 libgcrypt
 libgpg-error
@@ -101,6 +102,7 @@ swig
 szip
 tbb
 tcptrack
+tor
 tree
 unrar
 valgrind
