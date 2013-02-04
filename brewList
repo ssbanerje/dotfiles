@@ -12,6 +12,7 @@ coreutils
 corkscrew
 cscope
 ctags
+dosbox
 eigen
 fasd
 fftw
@@ -104,6 +105,9 @@ rename
 rmtrash
 scala
 scipy
+sdl
+sdl_net
+sdl_sound
 sip
 spark
 sqlite
