@@ -1,0 +1,118 @@
+[core]
+        whitespace = fix,space-before-tab,tab-in-indent,trailing-space
+        legacyheaders = false
+        quotepath = false
+        excludesfile = /Users/Subho/.global_ignore
+
+[repack]
+        usedeltabaseoffset = true
+
+[apply]
+        whitespace = fix
+
+[user]
+        name = Subho Banerjee
+        email = subs.zero@gmail.com
+
+[github]
+        user = subszero
+
+[difftool]
+        prompt = false
+
+[diff]
+        renames = copy
+        tool = vimdiff
+        wordRegex = [^[:space:]]
+        mnemonicprefix = true
+
+[merge]
+        summary = true
+        tool = splice
+
+[mergetool "splice"]
+        cmd = "gvim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
+        trustExitCode = true
+
+[color]
+        diff = auto
+        status = auto
+        branch = auto
+        ui = true
+        interactive = auto
+
+[credential]
+        helper = osxkeychain
+
+[branch]
+        autosetupmerge = always
+        autosetuprebase = always
+
+[alias]
+  # [b]ranch
+        bc  = checkout -b
+        bce = checkout --orphan
+        bl  = branch --verbose
+        bm  = merge
+        bmt = mergetool
+        br  = branch -d
+        bR  = branch -D
+        brc = rebase --continue
+        brs = rebase --skip
+        bs  = checkout # [s]witch
+        # [c]ommit
+        ca  = commit --amend
+        cc  = commit
+        cd  = diff --color-words
+        cl  = !git log --decorate --graph --abbrev-commit --date=relative --pretty='tformat:%C(yellow)%h%Creset}%Cgreen(%ar)%Creset}%C(bold blue)<%an>%Creset}%C(red)%d%Creset %s' $* | sed -Ee 's/(^[^<]*) ago)/\\1)/' | sed -Ee 's/(^[^<]*), [[:digit:]]+ .*months?)/\\1)/' | column -t -s '}' | less -FXRS
+        cp  = cherry-pick -x
+        cr  = reset --hard HEAD^
+        cs  = show
+        # [f]ile
+        fa  = add
+        faa = !git add --all && git ws
+        fc  = !touch $@ && git add $@ && $EDITOR $1
+        ff  = rm --cached # [f]orget
+        fm  = mv # [m]ove
+        fr  = rm
+        fu  = reset HEAD
+        # [r]emote
+        r   = remote
+        rc  = remote add
+        rco = remote add origin
+        rl  = remote -v
+        rr  = remote rm
+        rp  = !git push && git push --tags
+        # [s]ubmodule
+        sc  = submodule add
+        scm = submodule foreach --recursive git checkout master
+        sl  = submodule --quiet foreach --recursive echo $path  on  $(git rev-parse --abbrev-ref HEAD)
+        sr  = submodulerm
+        ss  = !git submodule sync && git submodule update --init --recursive # [s]ync
+        su  = submodule foreach --recursive git pull # [u]pdate
+        # [t]ag
+        tc  = tag
+        tl  = tag -n1 --list
+        tr  = tag -d
+        # [w]orking copy
+        wd  = diff --color-words --cached
+        wr  = reset --hard HEAD
+  ws  = status --short --branch --ignore-submodules=untracked
+  # [l]og
+  loll = log --graph --decorate --pretty=oneline --abbrev-commit
+  lol = !git --no-pager loll
+  lolal = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  lola = !git --no-pager lolal
+  # [l]egit
+  switch = !legit switch \"$@\"
+        branches = !legit branches
+        sprout = !legit sprout \"$@\"
+        unpublish = !legit unpublish \"$@\"
+        harvest = !legit harvest \"$@\"
+        sync = !legit sync \"$@\"
+        publish = !legit publish \"$@\"
+        graft = !legit graft \"$@\"
+
+
+[push]
+  default = matching
