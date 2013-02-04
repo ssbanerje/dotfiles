@@ -65,3 +65,4 @@ export PATH=$PATH:/usr/local/MATLAB/R2012b/bin
 #Start Python Shell with sensible settings
 export PYTHONSTARTUP="$HOME/.pyrc"
 alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"
+

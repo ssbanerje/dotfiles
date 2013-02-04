@@ -8,6 +8,7 @@
 if [ -z "$PS1" ]; then
    return
 fi
+HISTCONTROL=ignoreboth
 
 #Do this only on MacOSX
 if [ `uname` == 'Darwin' ]; then
@@ -18,7 +19,14 @@ if [ `uname` == 'Darwin' ]; then
   if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
   fi
+else
+  if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+  fi
 fi
+
+#Friendlier less
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 #Get stuff from the profile file
 source $HOME/.profile
