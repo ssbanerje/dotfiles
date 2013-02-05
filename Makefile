@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 BUILD := build
 HOME := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-build: clean init build-fonts-$(UNAME) build-git build-shell build-$(UNAME)
+build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-$(UNAME)
 init: init-vim
 
 ######## Init Everythning ###########
@@ -60,6 +60,12 @@ build-zsh:
 	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 	cat shell/zshrc.prompt.sh >> $(BUILD)/.zshrc
 	[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $(BUILD)/.zshrc
+
+########## For SSH #############
+build-ssh:
+	mkdir -p $(BUILD)/.ssh/
+	cp ssh/config $(BUILD)/.ssh/
+
 
 ######## OS Specific ###########
 build-Darwin:
