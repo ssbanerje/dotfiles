@@ -1,0 +1,28 @@
+# My .bashrc file
+#####################################################################
+# Author: Subho Sankar Banerjee
+# EMail: subs.zero[at]gmail[dot]com
+########################################################################
+
+# Check if this is an interactive shell
+if [ -z "$PS1" ]; then
+   return
+fi
+
+#Friendlier less
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+#Get stuff from the profile file
+source $HOME/.profile
+
+#Control history saves
+HISTCONTROL=ignoreboth:ignoredups:ignorespace
+shopt -s histappend
+
+#Set reverse and forward search for arrow keys
+bind '"\e[A"':history-search-backward
+bind '"\e[B"':history-search-forward
+
+# Make bash check its window size after a process completes
+shopt -s checkwinsize
+

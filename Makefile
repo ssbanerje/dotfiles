@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 BUILD := build
 HOME := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-build: init build-fonts-$(UNAME) build-git build-$(UNAME)
+build: clean init build-fonts-$(UNAME) build-git build-shell build-$(UNAME)
 init: init-vim
 
 ######## Init Everythning ###########
@@ -10,6 +10,7 @@ init-submodule:
 	git submodule init
 	git submodule update
 init-vim:
+	@echo '------------------------- Init ------------------------'
 	mkdir -p $(BUILD)/.vim/vim_backups
 	mkdir -p $(BUILD)/.vim/vim_swp
 	mkdir -p $(BUILD)/Documents
@@ -18,27 +19,44 @@ init-vim:
 build-fonts-Darwin:
 	@echo '---------------------- Build fonts ---------------------'
 	mkdir -p $(BUILD)/Library/Fonts/
-	rsync fonts/*.otf $(BUILD)/Library/Fonts/
+	cp fonts/*.otf $(BUILD)/Library/Fonts/
 build-fonts-Linux:
 	@echo '---------------------- Build fonts ---------------------'
 	mkdir -p $(BUILD)/.fonts
-	rsync fonts/*.ttf $(BUILD)/.fonts
+	cp fonts/*.ttf $(BUILD)/.fonts
 
 ######## Git ###########
 build-git:
 	@echo '---------------- Configurations for Git ----------------'
 	mkdir -p $(BUILD)/.global_gitinore
 	cp -r git/gitignore/ $(BUILD)/.global_gitinore
-	rsync git/gitconfig $(BUILD)/.gitconfig
-	rsync git/gitattributes $(BUILD)/.gitattributes
+	cp git/gitconfig $(BUILD)/.gitconfig
+	cp git/gitattributes $(BUILD)/.gitattributes
 	sed -i .bak -e 's/<<GLOBALGITIGNORE>>/$(HOME)\/.global_gitinore/g' $(BUILD)/.gitconfig
 	cat git/gitconfig.$(UNAME) >> $(BUILD)/.gitconfig
+
+######## Shell stuff ###########
+build-shell: build-bash build-zsh build-commands
+build-commands:
+	@echo '---------- Configurations for Shell Commands ------------'
+	cp shell/ackrc $(BUILD)/.ackrc
+	cp shell/hushlogin $(BUILD)/.hushlogin
+	cp shell/screenrc $(BUILD)/.screenrc
+	cp shell/toprc $(BUILD)/.toprc
+	cp shell/npmrc $(BUILD)/.npmrc
+build-bash:
+	@echo '-------------- Configurations for Bash -----------------'
+	cp shell/bash_profile $(BUILD)/.bash_profile
+	cp shell/bashrc $(BUILD)/.bashrc
+	cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
+	[ -e shell/bashrc.$(UNAME).sh ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
+build-zsh:
 
 ######## OS Specific ###########
 build-Darwin:
 	@echo '---------------- Configurations for OSX ----------------'
 	mkdir -p $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
-	rsync com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
+	cp com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
 
 ######## Install ###########
 install-common:
@@ -49,4 +67,5 @@ install-Linux: install-common
 
 ######## Clean ###########
 clean:
-	rm -rf build/
+	@echo '--------------------- Clean Up -----------------------'
+	[ -e build ] && rm -rf build/
