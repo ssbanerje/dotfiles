@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 BUILD := build
 HOME := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-$(UNAME)
+build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-$(UNAME)
 init: init-vim
 
 ######## Init Everythning ###########
@@ -54,6 +54,7 @@ build-bash:
 	cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
 	[ -e shell/bashrc.$(UNAME).sh ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
 build-zsh:
+	@echo '---------------- Configurations for ZSH ----------------'
 	cp shell/zshrc $(BUILD)/.zshrc
 	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
 	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
@@ -63,9 +64,15 @@ build-zsh:
 
 ########## For SSH #############
 build-ssh:
+	@echo '---------------- Configurations for SSH ----------------'
 	mkdir -p $(BUILD)/.ssh/
 	cp ssh/config $(BUILD)/.ssh/
 
+######## For Interps ###########
+build-interp:
+	@echo '-------------- Configurations for Interps --------------'
+	cp interp/pyrc $(BUILD)/.pyrc
+	cp interp/irbrc $(BUILD)/.irbrc
 
 ######## OS Specific ###########
 build-Darwin:
@@ -84,4 +91,4 @@ install-Linux: install-common
 ######## Clean ###########
 clean:
 	@echo '--------------------- Clean Up -----------------------'
-	[ -e build ] && rm -rf build/
+	rm -rf build/
