@@ -1,5 +1,5 @@
 ######################################################################
-# .profile inclusions especially for OS X
+# .profile inclusions especially for OSX
 # Author: Subho Sankar Banerjee
 # EMail: subs.zero[at]gmail[dot]com
 ########################################################################

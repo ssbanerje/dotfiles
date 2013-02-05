@@ -54,9 +54,6 @@ export PATH=$PATH:$CUDA/bin
 #My scripts
 export PATH=$PATH:$HOME/.bin
 
-#Matlab on linux
-export PATH=$PATH:/usr/local/MATLAB/R2012b/bin
-
 #Set for ROOT
 #export ROOTSYS=/opt/alice/root
 #export ROOTBUILD=debug

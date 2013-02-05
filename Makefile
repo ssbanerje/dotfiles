@@ -33,10 +33,13 @@ build-git:
 	cp git/gitconfig $(BUILD)/.gitconfig
 	cp git/gitattributes $(BUILD)/.gitattributes
 	sed -i .bak -e 's/<<GLOBALGITIGNORE>>/$(HOME)\/.global_gitinore/g' $(BUILD)/.gitconfig
-	cat git/gitconfig.$(UNAME) >> $(BUILD)/.gitconfig
+	[ -e git/gitconfig.$(UNAME) ] && cat git/gitconfig.$(UNAME) >> $(BUILD)/.gitconfig
 
 ######## Shell stuff ###########
 build-shell: build-bash build-zsh build-commands
+	@echo '--------------- Configurations for Sh -------------------'
+	cp shell/profile $(BUILD)/.profile
+	[ -e shell/profile.$(UNAME).sh ] && cat shell/profile.$(UNAME).sh >> $(BUILD)/.profile
 build-commands:
 	@echo '---------- Configurations for Shell Commands ------------'
 	cp shell/ackrc $(BUILD)/.ackrc
