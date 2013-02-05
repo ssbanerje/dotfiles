@@ -51,12 +51,19 @@ build-bash:
 	cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
 	[ -e shell/bashrc.$(UNAME).sh ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
 build-zsh:
+	cp shell/zshrc $(BUILD)/.zshrc
+	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
+	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
+	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	cat shell/zshrc.prompt.sh >> $(BUILD)/.zshrc
+	[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $(BUILD)/.zshrc
 
 ######## OS Specific ###########
 build-Darwin:
 	@echo '---------------- Configurations for OSX ----------------'
 	mkdir -p $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
 	cp com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
+build-Linux:
 
 ######## Install ###########
 install-common:
