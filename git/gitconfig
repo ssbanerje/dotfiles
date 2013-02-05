@@ -2,7 +2,7 @@
         whitespace = fix,space-before-tab,tab-in-indent,trailing-space
         legacyheaders = false
         quotepath = false
-        excludesfile = /Users/Subho/.global_ignore
+        excludesfile = <<GLOBALGITIGNORE>>
 
 [repack]
         usedeltabaseoffset = true
@@ -40,9 +40,6 @@
         branch = auto
         ui = true
         interactive = auto
-
-[credential]
-        helper = osxkeychain
 
 [branch]
         autosetupmerge = always
@@ -113,6 +110,6 @@
         publish = !legit publish \"$@\"
         graft = !legit graft \"$@\"
 
-
 [push]
   default = matching
+
