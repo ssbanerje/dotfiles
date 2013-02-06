@@ -80,9 +80,11 @@ build-editors: build-vim
 	cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
 	cp editors/vimrc $(BUILD)/.vimrc
+	mkdir -p $(BUILD)/.vim
 
 ######## OS Specific ###########
 build-common:
+	@echo '-------------- Configurations for Scripts --------------'
 	mkdir -p $(BUILD)/.bin
 	cp bin/gzball $(BUILD)/.bin/
 	cp bin/ports $(BUILD)/.bin/
