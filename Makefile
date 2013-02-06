@@ -79,8 +79,9 @@ build-editors: build-vim
 	@echo '-------------- Configurations for Editors --------------'
 	cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
+	@echo '---------------- Configurations for VIM ----------------'
 	cp editors/vimrc $(BUILD)/.vimrc
-	mkdir -p $(BUILD)/.vim
+	cp -r editors/vim $(BUILD)/.vim
 
 ######## OS Specific ###########
 build-common:

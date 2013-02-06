@@ -1,30 +1,3 @@
-[submodule ".vim/bundle/Align"]
-	path = .vim/bundle/Align
-	url = https://github.com/vim-scripts/Align.git
-[submodule ".vim/bundle/Command-T"]
-	path = .vim/bundle/Command-T
-	url = https://github.com/wincent/Command-T.git
-[submodule ".vim/bundle/LocateOpen"]
-	path = .vim/bundle/LocateOpen
-	url = https://github.com/yokomizor/LocateOpen.git
-[submodule ".vim/bundle/Recover.vim"]
-	path = .vim/bundle/Recover.vim
-	url = https://github.com/chrisbra/Recover.vim
-[submodule ".vim/bundle/YankRing.vim"]
-	path = .vim/bundle/YankRing.vim
-	url = https://github.com/vim-scripts/YankRing.vim.git
-[submodule ".vim/bundle/atp-vim"]
-	path = .vim/bundle/atp-vim
-	url = git://git.code.sf.net/p/atp-vim/code
-[submodule ".vim/bundle/clang_complete"]
-	path = .vim/bundle/clang_complete
-	url = https://github.com/Rip-Rip/clang_complete.git
-[submodule ".vim/bundle/conque-term"]
-	path = .vim/bundle/conque-term
-	url = https://github.com/rosenfeld/conque-term.git
-[submodule ".vim/bundle/gundo"]
-	path = .vim/bundle/gundo
-	url = http://github.com/sjl/gundo.vim.git
 [submodule ".vim/bundle/jellybeans.vim"]
 	path = .vim/bundle/jellybeans.vim
 	url = https://github.com/nanotech/jellybeans.vim.git
@@ -151,3 +124,30 @@
 [submodule "shell/zsh-syntax-highlighting"]
 	path = shell/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "editors/vim/bundle/Align"]
+	path = editors/vim/bundle/Align
+	url = https://github.com/vim-scripts/Align.git
+[submodule "editors/vim/bundle/Command-T"]
+	path = editors/vim/bundle/Command-T
+	url = https://github.com/wincent/Command-T.git
+[submodule "editors/vim/bundle/LocateOpen"]
+	path = editors/vim/bundle/LocateOpen
+	url = https://github.com/yokomizor/LocateOpen.git
+[submodule "editors/vim/bundle/Recover.vim"]
+	path = editors/vim/bundle/Recover.vim
+	url = https://github.com/chrisbra/Recover.vim
+[submodule "editors/vim/bundle/YankRing.vim"]
+	path = editors/vim/bundle/YankRing.vim
+	url = https://github.com/vim-scripts/YankRing.vim.git
+[submodule "editors/vim/bundle/atp-vim"]
+	path = editors/vim/bundle/atp-vim
+	url = git://git.code.sf.net/p/atp-vim/code
+[submodule "editors/vim/bundle/clang_complete"]
+	path = editors/vim/bundle/clang_complete
+	url = https://github.com/Rip-Rip/clang_complete.git
+[submodule "editors/vim/bundle/conque-term"]
+	path = editors/vim/bundle/conque-term
+	url = https://github.com/rosenfeld/conque-term.git
+[submodule "editors/vim/bundle/gundo"]
+	path = editors/vim/bundle/gundo
+	url = http://github.com/sjl/gundo.vim.git
