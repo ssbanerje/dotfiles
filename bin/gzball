@@ -4,7 +4,7 @@
 
 ECHO="echo"
 
-# be totally quite with -q argument
+# be totally quiet with -q argument
 if [ "$1" == "-q" ] ; then
   TAR="tar czf"
   shift

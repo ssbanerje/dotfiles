@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 BUILD := build
 HOME := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-$(UNAME)
+build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-editors build-$(UNAME)
 init: init-vim
 
 ######## Init Everythning ###########
@@ -74,12 +74,27 @@ build-interp:
 	cp interp/pyrc $(BUILD)/.pyrc
 	cp interp/irbrc $(BUILD)/.irbrc
 
+######## For Editors ###########
+build-editors: build-vim
+	@echo '-------------- Configurations for Editors --------------'
+	cp editors/editorconfig $(BUILD)/.editorconfig
+build-vim:
+	cp editors/vimrc $(BUILD)/.vimrc
+
 ######## OS Specific ###########
-build-Darwin:
+build-common:
+	mkdir -p $(BUILD)/.bin
+	cp bin/gzball $(BUILD)/.bin/
+	cp bin/ports $(BUILD)/.bin/
+	cp bin/talkto $(BUILD)/.bin/
+	cp bin/wikisearch $(BUILD)/.bin/
+build-Darwin: build-common
 	@echo '---------------- Configurations for OSX ----------------'
 	mkdir -p $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
-	cp com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
-build-Linux:
+	cp osx/com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
+	cp osx/lock-screen $(BUILD)/.bin/
+	cp osx/lyrics $(BUILD)/.bin/
+build-Linux: build-common
 
 ######## Install ###########
 install-common:
