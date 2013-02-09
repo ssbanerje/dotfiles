@@ -1,21 +1,3 @@
-[submodule ".vim/bundle/jellybeans.vim"]
-	path = .vim/bundle/jellybeans.vim
-	url = https://github.com/nanotech/jellybeans.vim.git
-[submodule ".vim/bundle/lusty"]
-	path = .vim/bundle/lusty
-	url = https://github.com/sjbach/lusty.git
-[submodule ".vim/bundle/minibufexpl.vim"]
-	path = .vim/bundle/minibufexpl.vim
-	url = https://github.com/fholgado/minibufexpl.vim
-[submodule ".vim/bundle/molokai"]
-	path = .vim/bundle/molokai
-	url = https://github.com/tomasr/molokai.git
-[submodule ".vim/bundle/mustang-vim"]
-	path = .vim/bundle/mustang-vim
-	url = https://github.com/croaker/mustang-vim.git
-[submodule ".vim/bundle/nerdcommenter"]
-	path = .vim/bundle/nerdcommenter
-	url = https://github.com/scrooloose/nerdcommenter.git
 [submodule ".vim/bundle/nerdtree"]
 	path = .vim/bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
@@ -151,3 +133,21 @@
 [submodule "editors/vim/bundle/gundo"]
 	path = editors/vim/bundle/gundo
 	url = http://github.com/sjl/gundo.vim.git
+[submodule "editors/vim/bundle/jellybeans.vim"]
+	path = editors/vim/bundle/jellybeans.vim
+	url = https://github.com/nanotech/jellybeans.vim.git
+[submodule "editors/vim/bundle/lusty"]
+	path = editors/vim/bundle/lusty
+	url = https://github.com/sjbach/lusty.git
+[submodule "editors/vim/bundle/minibufexpl.vim"]
+	path = editors/vim/bundle/minibufexpl.vim
+	url = https://github.com/fholgado/minibufexpl.vim
+[submodule "editors/vim/bundle/molokai"]
+	path = editors/vim/bundle/molokai
+	url = https://github.com/tomasr/molokai.git
+[submodule "editors/vim/bundle/mustang-vim"]
+	path = editors/vim/bundle/mustang-vim
+	url = https://github.com/croaker/mustang-vim.git
+[submodule "editors/vim/bundle/nerdcommenter"]
+	path = editors/vim/bundle/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter.git
