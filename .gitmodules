@@ -1,36 +1,3 @@
-[submodule ".vim/bundle/vim-notes"]
-	path = .vim/bundle/vim-notes
-	url = https://github.com/xolox/vim-notes.git
-[submodule ".vim/bundle/vim-powerline"]
-	path = .vim/bundle/vim-powerline
-	url = https://github.com/Lokaltog/vim-powerline.git
-[submodule ".vim/bundle/vim-snipmate"]
-	path = .vim/bundle/vim-snipmate
-	url = https://github.com/garbas/vim-snipmate.git
-[submodule ".vim/bundle/vim-speeddating"]
-	path = .vim/bundle/vim-speeddating
-	url = https://github.com/tpope/vim-speeddating.git
-[submodule ".vim/bundle/splice.vim"]
-	path = .vim/bundle/splice.vim
-	url = https://github.com/sjl/splice.vim.git
-[submodule ".vim/bundle/ack.vim"]
-	path = .vim/bundle/ack.vim
-	url = https://github.com/mileszs/ack.vim.git
-[submodule ".vim/bundle/cocoa.vim"]
-	path = .vim/bundle/cocoa.vim
-	url = https://github.com/msanders/cocoa.vim.git
-[submodule ".vim/bundle/vim-node"]
-	path = .vim/bundle/vim-node
-	url = https://github.com/guileen/vim-node.git
-[submodule ".vim/bundle/vim-angry"]
-	path = .vim/bundle/vim-angry
-	url = https://github.com/b4winckler/vim-angry.git
-[submodule ".vim/bundle/vim-matlab"]
-	path = .vim/bundle/vim-matlab
-	url = https://github.com/sgeb/vim-matlab.git
-[submodule ".vim/bundle/headlights"]
-	path = .vim/bundle/headlights
-	url = https://github.com/mbadran/headlights.git
 [submodule ".vim/bundle/tabman.vim"]
 	path = .vim/bundle/tabman.vim
 	url = https://github.com/kien/tabman.vim.git
@@ -151,3 +118,36 @@
 [submodule "editors/vim/bundle/vim-json"]
 	path = editors/vim/bundle/vim-json
 	url = https://github.com/leshill/vim-json.git
+[submodule "editors/vim/bundle/vim-notes"]
+	path = editors/vim/bundle/vim-notes
+	url = https://github.com/xolox/vim-notes.git
+[submodule "editors/vim/bundle/vim-powerline"]
+	path = editors/vim/bundle/vim-powerline
+	url = https://github.com/Lokaltog/vim-powerline.git
+[submodule "editors/vim/bundle/vim-snipmate"]
+	path = editors/vim/bundle/vim-snipmate
+	url = https://github.com/garbas/vim-snipmate.git
+[submodule "editors/vim/bundle/vim-speeddating"]
+	path = editors/vim/bundle/vim-speeddating
+	url = https://github.com/tpope/vim-speeddating.git
+[submodule "editors/vim/bundle/splice.vim"]
+	path = editors/vim/bundle/splice.vim
+	url = https://github.com/sjl/splice.vim.git
+[submodule "editors/vim/bundle/ack.vim"]
+	path = editors/vim/bundle/ack.vim
+	url = https://github.com/mileszs/ack.vim.git
+[submodule "editors/vim/bundle/cocoa.vim"]
+	path = editors/vim/bundle/cocoa.vim
+	url = https://github.com/msanders/cocoa.vim.git
+[submodule "editors/vim/bundle/vim-node"]
+	path = editors/vim/bundle/vim-node
+	url = https://github.com/guileen/vim-node.git
+[submodule "editors/vim/bundle/vim-angry"]
+	path = editors/vim/bundle/vim-angry
+	url = https://github.com/b4winckler/vim-angry.git
+[submodule "editors/vim/bundle/vim-matlab"]
+	path = editors/vim/bundle/vim-matlab
+	url = https://github.com/sgeb/vim-matlab.git
+[submodule "editors/vim/bundle/headlights"]
+	path = editors/vim/bundle/headlights
+	url = https://github.com/mbadran/headlights.git
