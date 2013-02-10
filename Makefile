@@ -13,7 +13,7 @@ init-vim:
 	@echo '------------------------- Init ------------------------'
 	mkdir -p $(BUILD)/.vim/vim_backups
 	mkdir -p $(BUILD)/.vim/vim_swp
-	mkdir -p $(BUILD)/Documents
+	mkdir -p $(BUILD)/Documents/Notes
 
 ######## Fonts ###########
 build-fonts-Darwin:
@@ -81,7 +81,7 @@ build-editors: build-vim
 build-vim:
 	@echo '---------------- Configurations for VIM ----------------'
 	cp editors/vimrc $(BUILD)/.vimrc
-	cp -r editors/vim $(BUILD)/.vim
+	cp -r editors/vim/ $(BUILD)/.vim/
 
 ######## OS Specific ###########
 build-common:
