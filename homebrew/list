@@ -94,6 +94,7 @@ phantomjs
 pixman
 pkg-config
 potrace
+psutils
 pypy
 pyqt
 python
