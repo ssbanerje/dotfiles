@@ -30,7 +30,8 @@ brew install ctags coreutils git macvim ack python fasd
 ```bash
 # Install the dotfiles
 git clone https://github.com/subszero/dotfiles.git dotfiles
-dotfiles/install.sh --init
+make
+make install
 ```
 
 `Note:` You would also need to change the `.gitconfig` file. So that you do not end up commiting as me.
