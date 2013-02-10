@@ -1,21 +1,3 @@
-[submodule ".vim/bundle/vim-colors-solarized"]
-	path = .vim/bundle/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule ".vim/bundle/vim-easymotion"]
-	path = .vim/bundle/vim-easymotion
-	url = https://github.com/Lokaltog/vim-easymotion.git
-[submodule ".vim/bundle/vim-fugitive"]
-	path = .vim/bundle/vim-fugitive
-	url = https://github.com/tpope/vim-fugitive.git
-[submodule ".vim/bundle/vim-jade"]
-	path = .vim/bundle/vim-jade
-	url = https://github.com/digitaltoad/vim-jade.git
-[submodule ".vim/bundle/vim-javascript"]
-	path = .vim/bundle/vim-javascript
-	url = https://github.com/pangloss/vim-javascript.git
-[submodule ".vim/bundle/vim-json"]
-	path = .vim/bundle/vim-json
-	url = https://github.com/leshill/vim-json.git
 [submodule ".vim/bundle/vim-notes"]
 	path = .vim/bundle/vim-notes
 	url = https://github.com/xolox/vim-notes.git
@@ -151,3 +133,21 @@
 [submodule "editors/vim/bundle/vim-addon-mw-utils"]
 	path = editors/vim/bundle/vim-addon-mw-utils
 	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
+[submodule "editors/vim/bundle/vim-colors-solarized"]
+	path = editors/vim/bundle/vim-colors-solarized
+	url = git://github.com/altercation/vim-colors-solarized.git
+[submodule "editors/vim/bundle/vim-easymotion"]
+	path = editors/vim/bundle/vim-easymotion
+	url = https://github.com/Lokaltog/vim-easymotion.git
+[submodule "editors/vim/bundle/vim-fugitive"]
+	path = editors/vim/bundle/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git
+[submodule "editors/vim/bundle/vim-jade"]
+	path = editors/vim/bundle/vim-jade
+	url = https://github.com/digitaltoad/vim-jade.git
+[submodule "editors/vim/bundle/vim-javascript"]
+	path = editors/vim/bundle/vim-javascript
+	url = https://github.com/pangloss/vim-javascript.git
+[submodule "editors/vim/bundle/vim-json"]
+	path = editors/vim/bundle/vim-json
+	url = https://github.com/leshill/vim-json.git
