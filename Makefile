@@ -103,6 +103,7 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
+	cd ${HOME}/.vim/bundle/Command-T/ && rake make
 install-Darwin: install-common
 install-Linux: install-common
 	fc-cache -vf
