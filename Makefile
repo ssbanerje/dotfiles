@@ -1,8 +1,9 @@
 UNAME := $(shell uname)
 BUILD := build
-HOME := $(shell echo ${HOME} | sed 's/\//\\\//g')
+HOME_ESCAPED := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
 build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-editors build-$(UNAME)
+install: install-common install-$(UNAME)
 init: init-vim
 
 ######## Init Everythning ###########
@@ -29,10 +30,10 @@ build-fonts-Linux:
 build-git:
 	@echo '---------------- Configurations for Git ----------------'
 	mkdir -p $(BUILD)/.global_gitinore
-	cp -r git/gitignore/ $(BUILD)/.global_gitinore
+	cat git/gitignore/Global/*.gitignore > $(BUILD)/.global_gitignore
 	cp git/gitconfig $(BUILD)/.gitconfig
 	cp git/gitattributes $(BUILD)/.gitattributes
-	sed -i .bak -e 's/<<GLOBALGITIGNORE>>/$(HOME)\/.global_gitinore/g' $(BUILD)/.gitconfig
+	sed -i.bak -e 's/<<GLOBALGITIGNORE>>/$(HOME_ESCAPED)\/.global_gitignore/g' $(BUILD)/.gitconfig
 	[ -e git/gitconfig.$(UNAME) ] && cat git/gitconfig.$(UNAME) >> $(BUILD)/.gitconfig
 
 ######## Shell stuff ###########
@@ -55,12 +56,12 @@ build-bash:
 	[ -e shell/bashrc.$(UNAME).sh ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
 build-zsh:
 	@echo '---------------- Configurations for ZSH ----------------'
-	cp shell/zshrc $(BUILD)/.zshrc
+	cp shell/zshrc.prompt.sh $(BUILD)/.zshrc
+	cat shell/zshrc >> $(BUILD)/.zshrc
+	[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $(BUILD)/.zshrc
 	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
 	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
 	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-	cat shell/zshrc.prompt.sh >> $(BUILD)/.zshrc
-	[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $(BUILD)/.zshrc
 
 ########## For SSH #############
 build-ssh:
@@ -81,7 +82,7 @@ build-editors: build-vim
 build-vim:
 	@echo '---------------- Configurations for VIM ----------------'
 	cp editors/vimrc $(BUILD)/.vimrc
-	cp -r editors/vim/ $(BUILD)/.vim/
+	cp -r editors/vim/* $(BUILD)/.vim/
 
 ######## OS Specific ###########
 build-common:
@@ -101,10 +102,10 @@ build-Linux: build-common
 
 ######## Install ###########
 install-common:
-	rsync $(BUILD)/ ${HOME}
+	rsync -av $(BUILD)/ ${HOME}
 install-Darwin: install-common
 install-Linux: install-common
-	fc-cache -vc
+	fc-cache -vf
 
 ######## Clean ###########
 clean:
