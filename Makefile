@@ -83,6 +83,7 @@ build-vim:
 	@echo '---------------- Configurations for VIM ----------------'
 	cp editors/vimrc $(BUILD)/.vimrc
 	cp -r editors/vim/* $(BUILD)/.vim/
+	cp -r editors/powerline/ $(BUILD)/.powerline
 
 ######## OS Specific ###########
 build-common:
@@ -104,6 +105,7 @@ build-Linux: build-common
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
 	cd ${HOME}/.vim/bundle/Command-T/ && rake make
+	cd ${HOME}/.powerline && ./setup.py build && ./setup.py install --user
 install-Darwin: install-common
 install-Linux: install-common
 	fc-cache -vf
