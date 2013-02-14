@@ -106,9 +106,6 @@
 [submodule "editors/vim/bundle/vim-notes"]
 	path = editors/vim/bundle/vim-notes
 	url = https://github.com/xolox/vim-notes.git
-[submodule "editors/vim/bundle/vim-powerline"]
-	path = editors/vim/bundle/vim-powerline
-	url = https://github.com/Lokaltog/vim-powerline.git
 [submodule "editors/vim/bundle/vim-snipmate"]
 	path = editors/vim/bundle/vim-snipmate
 	url = https://github.com/garbas/vim-snipmate.git

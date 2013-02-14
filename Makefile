@@ -94,7 +94,7 @@ build-common:
 	cp bin/wikisearch $(BUILD)/.bin/
 build-Darwin: build-common
 	@echo '---------------- Configurations for OSX ----------------'
-	mkdir -p $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
+	mkdir -p $(BUILD)/Library/Preferences/
 	cp osx/com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
 	cp osx/lock-screen $(BUILD)/.bin/
 	cp osx/lyrics $(BUILD)/.bin/

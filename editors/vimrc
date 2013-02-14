@@ -92,7 +92,7 @@ endif
 	"Powerline {
 		set laststatus=2                      "Status line configuration
 		"let g:Powerline_colorscheme='skwp'
-		call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo') "Get trailing whitespace
+		"call Pl#Theme#InsertSegment('ws_marker', 'after', 'lineinfo') "Get trailing whitespace
 		if has('gui_running')
 			if has("gui_gtk2")
 				set guifont=Monaco\ for\ Powerline\ 10
