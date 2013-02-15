@@ -20,11 +20,11 @@ init-vim:
 build-fonts-Darwin:
 	@echo '---------------------- Build fonts ---------------------'
 	mkdir -p $(BUILD)/Library/Fonts/
-	cp fonts/*.otf $(BUILD)/Library/Fonts/
+	cp fonts/* $(BUILD)/Library/Fonts/
 build-fonts-Linux:
 	@echo '---------------------- Build fonts ---------------------'
 	mkdir -p $(BUILD)/.fonts
-	cp fonts/*.ttf $(BUILD)/.fonts
+	cp fonts/* $(BUILD)/.fonts
 
 ######## Git ###########
 build-git:

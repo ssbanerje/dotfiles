@@ -95,7 +95,7 @@ endif
 		set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 		if has('gui_running')
 			if has("gui_gtk2")
-				set guifont=Monaco\ for\ Powerline\10
+				set guifont=Monaco\ for\ Powerline\ 10
 			else
 				set guifont=Monaco\ for\ Powerline:h12
 			endif
