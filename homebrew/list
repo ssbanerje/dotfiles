@@ -3,6 +3,7 @@ atk
 autoconf
 automake
 bash-completion
+bison
 boost
 cairo
 cmake
@@ -19,6 +20,7 @@ fftw
 findutils
 flann
 fontconfig
+fontforge
 freetype
 gd
 gdbm
@@ -67,6 +69,7 @@ libtiff
 libtool
 libusb
 libvirt
+libyaml
 little-cms2
 lua
 macvim
