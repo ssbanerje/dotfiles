@@ -15,7 +15,9 @@ cscope
 ctags
 dosbox
 eigen
+faac
 fasd
+ffmpeg
 fftw
 findutils
 flann
@@ -28,6 +30,7 @@ gdk-pixbuf
 gettext
 gfortran
 ghc
+ghostscript
 git
 git-flow
 glib
@@ -51,9 +54,11 @@ hub
 icu4c
 intltool
 jasper
+jbig2dec
 jpeg
 jq
 jsdoc-toolkit
+lame
 legit
 libevent
 libffi
@@ -121,6 +126,7 @@ swig
 szip
 tbb
 tcptrack
+texi2html
 tor
 tree
 unrar
@@ -129,6 +135,8 @@ vtk
 wdiff
 wget
 wxmac
+x264
+xvid
 xz
 yajl
 yasm
