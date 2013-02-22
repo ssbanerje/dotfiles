@@ -109,6 +109,12 @@ install-common:
 install-Darwin: install-common
 install-Linux: install-common
 	fc-cache -vf
+	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'
+	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited '1'
+	gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/font 'Monaco For Powerline 12'
+	gconftool-2 -t bool -s /apps/meld/use_custom_font '1'
+	gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 12'
+	gconftool-2 -t int -s /apps/meld/tab_size '2'
 
 ######## Clean ###########
 clean:
