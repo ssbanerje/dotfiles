@@ -151,3 +151,6 @@
 [submodule "editors/powerline"]
 	path = editors/powerline
 	url = git://github.com/Lokaltog/powerline
+[submodule "editors/vim/bundle/vim-git"]
+	path = editors/vim/bundle/vim-git
+	url = https://github.com/tpope/vim-git.git
