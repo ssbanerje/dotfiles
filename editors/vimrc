@@ -50,6 +50,7 @@ endif
 	set tw=500
 	set pastetoggle=<F2>
 
+
 	"GUI Settings {
 		let g:molokai_original=1
 		colorscheme molokai
@@ -63,6 +64,7 @@ endif
 				set fuoptions=maxvert,maxhorz
 			endif
 		else
+			set ttyfast
 			set term=xterm                      "Make arrow and other keys work
 			"Drag and drop support for mac terminal
 			if $TERM_PROGRAM == "Apple_Terminal" && $TERM_PROGRAM_VERSION >= 297
@@ -100,7 +102,9 @@ endif
 				set guifont=Monaco\ for\ Powerline:h12
 			endif
 		else
-			set t_Co=256
+			if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
+				set t_Co=256
+			endif
 		endif
 	"}
 
@@ -281,11 +285,10 @@ endif
 			au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
 		endif
 		au FileType gitcommit DiffGitCached
-		au FileType gitrebase nnoremap P :Pick
-		au FileType gitrebase nnoremap P :Pick
-		au FileType gitrebase nnoremap S :Squash
-		au FileType gitrebase nnoremap C :Cycle
-		au FileType gitrebase nnoremap R :Reword
+		au FileType gitrebase nnoremap P :Pick<CR>
+		au FileType gitrebase nnoremap S :Squash<CR>
+		au FileType gitrebase nnoremap C :Cycle<CR>
+		au FileType gitrebase nnoremap R :Reword<CR>
 	"}
 
 	func! ListChars()
@@ -328,6 +331,7 @@ endif
 	"WebDev {
 		au FileType javascript setl fen
 		au FileType javascript setl nocindent
+		autocmd FileType html setlocal indentkeys-=*<Return>
 		au BufRead,BufNewFile,BufWrite {*.js.asp,*.json} set ft=javascript
 		au BufRead,BufNewFile,BufWrite {*.less} set ft=css
 		au BufRead,BufNewFile,BufWrite {Capfile,Gemfile,Rakefile,Thorfile,config.ru,.caprc,.irbrc,irb_tempfile*} set ft=ruby
