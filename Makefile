@@ -56,12 +56,13 @@ build-bash:
 	[ -e shell/bashrc.$(UNAME).sh ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
 build-zsh:
 	@echo '---------------- Configurations for ZSH ----------------'
-	cp shell/zshrc.prompt.sh $(BUILD)/.zshrc
+	cp shell/zshrc.prompt.$(UNAME).sh $(BUILD)/.zshrc
 	cat shell/zshrc >> $(BUILD)/.zshrc
 	[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $(BUILD)/.zshrc
 	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
 	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
 	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
 
 ########## For SSH #############
 build-ssh:
