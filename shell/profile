@@ -45,10 +45,6 @@ export https_proxy=https://proxy.iiit.ac.in:8080
 export proxy=$http_proxy
 export ALL_PROXY=$http_proxy
 
-#Set for CUDA
-CUDA=/usr/local/cuda
-export PATH=$PATH:$CUDA/bin
-
 #My scripts
 export PATH=$PATH:$HOME/.bin
 

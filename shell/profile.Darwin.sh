@@ -19,6 +19,11 @@ alias firefox="open -a firefox"
 alias chrome="open -a google\ chrome"
 alias f='open -a Finder'
 
+#Set for CUDA
+CUDA=/Developer/NVIDIA/CUDA-5.0
+export PATH=$PATH:$CUDA/bin
+
+
 #Set environment for MATLAB
 export MATLAB=/Applications/MATLAB_R2012b.app
 export PATH=$PATH:$MATLAB/bin
