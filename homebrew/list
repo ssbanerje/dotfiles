@@ -101,8 +101,10 @@ pcre
 phantomjs
 pixman
 pkg-config
+portmidi
 potrace
 psutils
+pygame
 pypy
 pyqt
 python
@@ -115,9 +117,13 @@ rmtrash
 scala
 scipy
 sdl
+sdl_image
+sdl_mixer
 sdl_net
 sdl_sound
+sdl_ttf
 sip
+smpeg
 spark
 sqlite
 sshuttle
