@@ -67,9 +67,6 @@
 [submodule "editors/vim/bundle/simple-pairs"]
 	path = editors/vim/bundle/simple-pairs
 	url = https://github.com/vim-scripts/simple-pairs.git
-[submodule "editors/vim/bundle/snipmate-snippets"]
-	path = editors/vim/bundle/snipmate-snippets
-	url = https://github.com/honza/snipmate-snippets.git
 [submodule "editors/vim/bundle/supertab"]
 	path = editors/vim/bundle/supertab
 	url = https://github.com/ervandew/supertab.git
@@ -106,9 +103,6 @@
 [submodule "editors/vim/bundle/vim-notes"]
 	path = editors/vim/bundle/vim-notes
 	url = https://github.com/xolox/vim-notes.git
-[submodule "editors/vim/bundle/vim-snipmate"]
-	path = editors/vim/bundle/vim-snipmate
-	url = https://github.com/garbas/vim-snipmate.git
 [submodule "editors/vim/bundle/vim-speeddating"]
 	path = editors/vim/bundle/vim-speeddating
 	url = https://github.com/tpope/vim-speeddating.git
@@ -154,3 +148,9 @@
 [submodule "editors/vim/bundle/vim-git"]
 	path = editors/vim/bundle/vim-git
 	url = https://github.com/tpope/vim-git.git
+[submodule "editors/vim/bundle/vim-snippets"]
+	path = editors/vim/bundle/vim-snippets
+	url = https://github.com/honza/vim-snippets.git
+[submodule "editors/vim/bundle/vim-snipmate"]
+	path = editors/vim/bundle/vim-snipmate
+	url = https://github.com/garbas/vim-snipmate.git
