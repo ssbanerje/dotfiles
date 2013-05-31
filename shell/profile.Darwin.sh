@@ -18,6 +18,7 @@ alias safari="open -a safari"
 alias firefox="open -a firefox"
 alias chrome="open -a google\ chrome"
 alias f='open -a Finder'
+alias vim='mvim -v'
 
 #Set for CUDA
 CUDA=/Developer/NVIDIA/CUDA-5.0
