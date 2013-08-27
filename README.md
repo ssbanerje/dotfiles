@@ -25,6 +25,12 @@ brew install ctags coreutils git macvim ack python fasd
 
 * Install [iTerm2](http://www.iterm2.com/#/section/home) - This is by no means _required_ for these configuration files, but a welcome replacement of `Terminal.app`
 
+
+On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning
+```bash
+sudo apt-get install ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome
+```
+
 ###Installation
 
 ```bash
