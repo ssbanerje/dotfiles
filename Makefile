@@ -37,7 +37,7 @@ build-git:
 	[ -e git/gitconfig.$(UNAME) ] && cat git/gitconfig.$(UNAME) >> $(BUILD)/.gitconfig
 
 ######## Shell stuff ###########
-build-shell: build-bash build-zsh build-commands
+build-shell: build-bash build-zsh build-commands build-tmux
 	@echo '--------------- Configurations for Sh -------------------'
 	cp shell/profile $(BUILD)/.profile
 	[ -e shell/profile.$(UNAME).sh ] && cat shell/profile.$(UNAME).sh >> $(BUILD)/.profile
@@ -48,6 +48,9 @@ build-commands:
 	cp shell/screenrc $(BUILD)/.screenrc
 	cp shell/toprc $(BUILD)/.toprc
 	cp shell/npmrc $(BUILD)/.npmrc
+build-tmux:
+	cp shell/tmux.conf $(BUILD)/.tmux.conf
+	echo "source '$(HOME)/.powerline/powerline/bindings/tmux/powerline.conf'" >> $(BUILD)/.tmux.conf
 build-bash:
 	@echo '-------------- Configurations for Bash -----------------'
 	cp shell/bash_profile $(BUILD)/.bash_profile
