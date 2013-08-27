@@ -154,3 +154,6 @@
 [submodule "editors/vim/bundle/vim-snipmate"]
 	path = editors/vim/bundle/vim-snipmate
 	url = https://github.com/garbas/vim-snipmate.git
+[submodule "editors/vim/bundle/vim-misc"]
+	path = editors/vim/bundle/vim-misc
+	url = https://github.com/xolox/vim-misc
