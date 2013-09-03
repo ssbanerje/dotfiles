@@ -41,7 +41,6 @@ build-shell: build-bash build-zsh build-commands build-tmux
 	@echo '--------------- Configurations for Sh -------------------'
 	cp shell/profile $(BUILD)/.profile
 	[ -e shell/profile.$(UNAME).sh ] && cat shell/profile.$(UNAME).sh >> $(BUILD)/.profile
-	[ -e /usr/bin/conky ] && cp shell/conkyrc $(BUILD)/.conkyrc
 build-commands:
 	@echo '---------- Configurations for Shell Commands ------------'
 	cp shell/ackrc $(BUILD)/.ackrc
@@ -105,6 +104,8 @@ build-Darwin: build-common
 	cp osx/lock-screen $(BUILD)/.bin/
 	cp osx/lyrics $(BUILD)/.bin/
 build-Linux: build-common
+	@echo '-------------- Configurations for Linux---------------'
+	[ -e /usr/bin/conky ] && cp shell/conkyrc $(BUILD)/.conkyrc
 
 ######## Install ###########
 install-common:
