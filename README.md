@@ -9,7 +9,7 @@
 This is a compilation of dotfiles from dotfile repos, blogs and projects from across the web, put together to suit my workflow.
 
 ## Screenshot(s)
-![Vim](https://raw.github.com/subszero/dotfiles/master/vim_screenshot.png)
+![Vim](https://raw.github.com/ssbanerje/dotfiles/master/vim_screenshot.png)
 
 
 ##Using these dotfiles
@@ -35,7 +35,7 @@ sudo apt-get install ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-n
 
 ```bash
 # Install the dotfiles
-git clone https://github.com/subszero/dotfiles.git dotfiles
+git clone https://github.com/ssbanerje/dotfiles.git dotfiles
 make
 make install
 ```
