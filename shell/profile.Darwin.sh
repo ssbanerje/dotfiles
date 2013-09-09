@@ -39,7 +39,6 @@ export PATH=$PATH:/usr/local/share/npm/bin
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
 #For python
-alias pip="/usr/local/share/python/pip"
 alias ipython='/usr/local/share/python/ipython'
 alias ipy='/usr/local/share/python/ipython qtconsole'
 export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
