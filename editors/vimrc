@@ -43,7 +43,9 @@ endif
 	set wildmenu                            "Smarter command line
 	set wildmode=list:longest,full
 	set gdefault                            "Smarter substitution
-	set clipboard=unnamed                   "Default yank goes to mac clipboard
+	if $TMUX == ''
+    set clipboard=unnamed                   "Default yank goes to mac clipboard
+  endif
 	set dictionary=/usr/share/dict/words    "Set dictionary
 	set backupskip=/tmp/*,/private/tmp/*    "Edit crontab files
 	set lbr                                 "Set default line width
