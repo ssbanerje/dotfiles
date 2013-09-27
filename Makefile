@@ -4,7 +4,7 @@ HOME_ESCAPED := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
 build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-editors build-$(UNAME)
 install: install-common install-$(UNAME)
-init: init-vim
+init: init-vim init-submodule
 
 ######## Init Everythning ###########
 init-submodule:
