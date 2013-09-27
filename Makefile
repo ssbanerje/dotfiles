@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 BUILD := build
 HOME_ESCAPED := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-build: clean init build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-editors build-$(UNAME)
+build: clean init-vim build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-editors build-$(UNAME)
 install: install-common install-$(UNAME)
 init: init-vim init-submodule
 
@@ -105,7 +105,10 @@ build-Darwin: build-common
 	cp osx/lyrics $(BUILD)/.bin/
 build-Linux: build-common
 	@echo '-------------- Configurations for Linux---------------'
-	[ -e /usr/bin/conky ] && cp shell/conkyrc $(BUILD)/.conkyrc
+	if [ -e /usr/bin/conky ] ;\
+  then\
+    cp shell/conkyrc $(BUILD)/.conkyrc;\
+  fi;
 
 ######## Install ###########
 install-common:
