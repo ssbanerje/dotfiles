@@ -28,7 +28,7 @@ brew install ctags coreutils git macvim ack python fasd
 
 On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning
 ```bash
-sudo apt-get install ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake
+sudo apt-get install ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux
 ```
 
 ###Installation
