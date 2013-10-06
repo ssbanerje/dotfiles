@@ -28,7 +28,7 @@ brew install ctags coreutils git macvim ack python fasd
 
 On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning
 ```bash
-sudo apt-get install ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux
+sudo apt-get install zsh ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux
 ```
 
 ###Installation
@@ -36,6 +36,9 @@ sudo apt-get install ruby1.9.1-dev libclang-dev exuberant-ctags python-pip vim-n
 ```bash
 # Install the dotfiles
 git clone https://github.com/ssbanerje/dotfiles.git dotfiles
+cd dotfiles
+git submodule init
+git submodule update
 make
 make install
 ```
@@ -43,8 +46,4 @@ make install
 `Note:` You would also need to change the `.gitconfig` file. So that you do not end up commiting as me.
 
 ###Update
-
-```bash
-dotfiles/install.sh --update
-```
-
+To update to the latest version, simply update the git repository and submodules. Then run `make` and `make install`.
