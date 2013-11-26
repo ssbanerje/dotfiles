@@ -91,6 +91,8 @@ endif
 		syntax enable                         "Color scheme for vim
 		au VimResized * :wincmd =             "Resize split screens on window resize
 		autocmd bufwritepost .vimrc call Pl#Load()
+    autocmd BufWrite * mkview             "Save and load folds
+    autocmd BufRead * silent loadview
 	"}
 
 	"Powerline {
