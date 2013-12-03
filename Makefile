@@ -97,6 +97,7 @@ build-common:
 	cp bin/ports $(BUILD)/.bin/
 	cp bin/talkto $(BUILD)/.bin/
 	cp bin/wikisearch $(BUILD)/.bin/
+	cp bin/random $(BUILD)/.bin/
 build-Darwin: build-common
 	@echo '---------------- Configurations for OSX ----------------'
 	mkdir -p $(BUILD)/Library/Preferences/
