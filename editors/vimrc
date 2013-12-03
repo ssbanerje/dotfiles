@@ -194,7 +194,9 @@ endif
 
 	"Syntatstic {
 		let g:syntastic_enable_signs=1
-		"let g:syntastic_auto_loc_list=1 "Some really weird error on MacVim
+                let g:syntastic_auto_loc_list=1 "Some really weird error on MacVim
+    let g:syntastic_cpp_compiler = 'clang++'
+    let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 	"}
 
 	"Some remaps {
