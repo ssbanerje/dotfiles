@@ -157,3 +157,6 @@
 [submodule "editors/vim/bundle/vim-misc"]
 	path = editors/vim/bundle/vim-misc
 	url = https://github.com/xolox/vim-misc
+[submodule "editors/vim/bundle/vim-howdoi"]
+	path = editors/vim/bundle/vim-howdoi
+	url = https://github.com/laurentgoudet/vim-howdoi
