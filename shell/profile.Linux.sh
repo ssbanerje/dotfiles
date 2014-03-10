@@ -10,6 +10,6 @@ CUDA=/usr/local/cuda
 export PATH=$PATH:$CUDA/bin
 
 #Matlab on linux
-export MATLAB=/usr/local/MATLAB/R2012b
+export MATLAB=/usr/local/MATLAB/R2013b
 export PATH=$PATH:$MATLAB/bin
 
