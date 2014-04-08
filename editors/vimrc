@@ -278,7 +278,6 @@ endif
 		exe "normal `z"
 	endfunc
 	autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
-	"au BufRead,BufNewFile,BufWrite {*.json,,*.py,*.coffee,*.yaml,*.yml} set foldmethod=indent
 
 	"Git {
 		match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
@@ -372,6 +371,12 @@ endif
 		au BufNewFile,BufRead *.mako set ft=mako
 		au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 		au FileType python set omnifunc=RopeOmni
-		"au FileType python set omnifunc=pythoncomplete#Complete
+    au FileType python setlocal tabstop=4
+    au FileType python setlocal softtabstop=4
+    au FileType python setlocal shiftwidth=4
+    au FileType python setlocal textwidth=80
+    au FileType python setlocal smarttab
+    au FileType python setlocal expandtab
+    "au FileType python set omnifunc=pythoncomplete#Complete
 	"}
 "}
