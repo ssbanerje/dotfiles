@@ -371,12 +371,6 @@ endif
 		au BufNewFile,BufRead *.mako set ft=mako
 		au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 		au FileType python set omnifunc=RopeOmni
-    au FileType python setlocal tabstop=4
-    au FileType python setlocal softtabstop=4
-    au FileType python setlocal shiftwidth=4
-    au FileType python setlocal textwidth=80
-    au FileType python setlocal smarttab
-    au FileType python setlocal expandtab
     "au FileType python set omnifunc=pythoncomplete#Complete
 	"}
 "}
