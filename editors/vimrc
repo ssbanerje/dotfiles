@@ -363,7 +363,7 @@ endif
 		let g:pymode_folding = 0
 		let g:pymode_virtualenv = 1
 		let g:pymode_trim_whitespaces = 1
-		let g:pymode_indent = []
+                let g:pymode_indent = 1
 		let g:pymode_lint_checkers = ['pyflakes']             "pep8 and others!
 		let g:pydoc_open_cmd = 'split'
 		let g:pymode_rope = 1
