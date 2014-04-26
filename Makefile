@@ -125,7 +125,7 @@ install-Linux: install-common
 	gconftool-2 -t bool -s /apps/meld/use_custom_font '1'
 	gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'
 	gconftool-2 -t int -s /apps/meld/tab_size '2'
-	cd ${HOME}/.powerline && ./setup.py build && ./setup.py install --user --install-option="--prefix="
+	cd ${HOME}/.powerline && ./setup.py build && ./setup.py install --user
 
 ######## Clean ###########
 clean:
