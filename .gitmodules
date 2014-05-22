@@ -160,3 +160,6 @@
 [submodule "editors/vim/bundle/vim-howdoi"]
 	path = editors/vim/bundle/vim-howdoi
 	url = https://github.com/laurentgoudet/vim-howdoi
+[submodule "editors/vim/bundle/unite"]
+	path = editors/vim/bundle/unite
+	url = https://github.com/Shougo/unite.vim
