@@ -52,7 +52,6 @@ endif
 	set tw=500
 	set pastetoggle=<F2>
 
-
 	"GUI Settings {
 		let g:molokai_original=1
 		colorscheme molokai
@@ -197,6 +196,17 @@ endif
     let g:syntastic_cpp_compiler = 'clang++'
     let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 	"}
+
+  "Unite {
+    call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    call unite#filters#sorter_default#use(['sorter_rank'])
+    augroup vimrc_unite
+      autocmd!
+      " obliterate unite buffers (marks especially).
+      autocmd BufLeave \[unite\]* if "nofile" ==# &buftype | setlocal bufhidden=wipe | endif
+      autocmd FileType unite call s:unite_settings()
+    augroup END
+  "}
 
 	"Some remaps {
 		nnoremap ; :
