@@ -16,9 +16,6 @@
 [submodule "editors/vim/bundle/atp-vim"]
 	path = editors/vim/bundle/atp-vim
 	url = git://git.code.sf.net/p/atp-vim/code
-[submodule "editors/vim/bundle/clang_complete"]
-	path = editors/vim/bundle/clang_complete
-	url = https://github.com/Rip-Rip/clang_complete.git
 [submodule "editors/vim/bundle/conque-term"]
 	path = editors/vim/bundle/conque-term
 	url = https://github.com/rosenfeld/conque-term.git
@@ -52,9 +49,6 @@
 [submodule "editors/vim/bundle/simple-pairs"]
 	path = editors/vim/bundle/simple-pairs
 	url = https://github.com/vim-scripts/simple-pairs.git
-[submodule "editors/vim/bundle/supertab"]
-	path = editors/vim/bundle/supertab
-	url = https://github.com/ervandew/supertab.git
 [submodule "editors/vim/bundle/syntastic"]
 	path = editors/vim/bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
@@ -88,9 +82,6 @@
 [submodule "editors/vim/bundle/ack.vim"]
 	path = editors/vim/bundle/ack.vim
 	url = https://github.com/mileszs/ack.vim.git
-[submodule "editors/vim/bundle/cocoa.vim"]
-	path = editors/vim/bundle/cocoa.vim
-	url = https://github.com/msanders/cocoa.vim.git
 [submodule "editors/vim/bundle/vim-node"]
 	path = editors/vim/bundle/vim-node
 	url = https://github.com/guileen/vim-node.git
@@ -112,12 +103,6 @@
 [submodule "editors/vim/bundle/vim-markdown"]
 	path = editors/vim/bundle/vim-markdown
 	url = https://github.com/tpope/vim-markdown.git
-[submodule "editors/vim/bundle/vim-rails"]
-	path = editors/vim/bundle/vim-rails
-	url = https://github.com/tpope/vim-rails.git
-[submodule "editors/vim/bundle/vim-ruby"]
-	path = editors/vim/bundle/vim-ruby
-	url = https://github.com/vim-ruby/vim-ruby.git
 [submodule "editors/powerline"]
 	path = editors/powerline
 	url = git://github.com/Lokaltog/powerline

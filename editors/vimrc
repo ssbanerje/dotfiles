@@ -44,13 +44,15 @@ endif
 	set wildmode=list:longest,full
 	set gdefault                            "Smarter substitution
 	if $TMUX == ''
-    set clipboard=unnamed                   "Default yank goes to mac clipboard
-  endif
+	set clipboard=unnamed                   "Default yank goes to mac clipboard
+	endif
 	set dictionary=/usr/share/dict/words    "Set dictionary
 	set backupskip=/tmp/*,/private/tmp/*    "Edit crontab files
 	set lbr                                 "Set default line width
 	set tw=500
 	set pastetoggle=<F2>
+	set shiftwidth=2
+	set expandtab
 
 	"GUI Settings {
 		let g:molokai_original=1
@@ -89,9 +91,8 @@ endif
 		set cursorline                        "Show current line (useful in terminal)
 		syntax enable                         "Color scheme for vim
 		au VimResized * :wincmd =             "Resize split screens on window resize
-		autocmd bufwritepost .vimrc call Pl#Load()
-    autocmd BufWrite * mkview             "Save and load folds
-    autocmd BufRead * silent loadview
+		autocmd BufWrite * mkview             "Save and load folds
+		autocmd BufRead * silent loadview
 	"}
 
 	"Powerline {
@@ -165,6 +166,9 @@ endif
 	"}
 
 	"Headlights {
+		let g:headlights_debug_mode = 1
+
+		let g:headlights_use_plugin_menu = 0
 		let g:headlights_spillover_menus = 1
 		let g:headlights_show_functions = 1
 	"}
@@ -182,29 +186,22 @@ endif
 
 	"Syntatstic {
 		let g:syntastic_enable_signs=1
-    let g:syntastic_cpp_compiler = 'clang++'
-    let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 	"}
 
-  "Unite {
-    let g:unite_source_history_yank_enable = 1
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
-    nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-    nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
-    nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-    nnoremap <leader>b :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+	"Unite {
+		let g:unite_source_history_yank_enable = 1
+		call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
-    " Custom mappings for the unite buffer
-    autocmd FileType unite call s:unite_settings()
-    function! s:unite_settings()
-      " Play nice with supertab
-        let b:SuperTabDisabled=1
-          " Enable navigation with control-j and control-k in insert mode
-            imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-              imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-              endfunction""""
-  "}
+		" Custom mappings for the unite buffer
+		autocmd FileType unite call s:unite_settings()
+		function! s:unite_settings()
+			" Play nice with supertab
+				let b:SuperTabDisabled=1
+					" Enable navigation with control-j and control-k in insert mode
+						imap <buffer> <C-j>	 <Plug>(unite_select_next_line)
+							imap <buffer> <C-k>	 <Plug>(unite_select_previous_line)
+							endfunction""""
+	"}
 
 	"Some remaps {
 		nnoremap ; :
@@ -242,23 +239,28 @@ endif
 		"Stop highlighting search
 		noremap <silent>., :nohlsearch<CR>
 		"Start a zsh session
-		noremap <silent>,k :ConqueTerm zsh<CR>
+		noremap <leader>k :ConqueTerm zsh<CR>
 		"Toggle Nerdtree
-		noremap <silent>,m :NERDTreeToggle<cr>
+		noremap <leader>m :NERDTreeToggle<cr>
 		"Toggle tagbar
-		noremap <silent>,. :TagbarToggle<CR>
+		noremap <leader>. :TagbarToggle<CR>
+		"Open Unite file viewer
+		nnoremap <leader>; :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
+		nnoremap <leader>t :<C-u>Unite -no-split -buffer-name=files	 -start-insert file_rec/async:!<cr>
+		nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
+		nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank		history/yank<cr>
+		nnoremap <leader>b :<C-u>Unite -no-split -buffer-name=buffer	buffer<cr>
+
 		"Split window horizontally
 		noremap <silent>ss :split<CR>
 		"Split window vertically
 		noremap <silent>vv :vsplit<CR>
 		"Toggle gundo
-		noremap <silent>,u :GundoToggle<CR>
+		noremap <leader>u :GundoToggle<CR>
 		"Spell Check
 		map <leader>s :setlocal spell!<CR>
 		"Windows file endings
 		noremap <Leader>w mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-		"Open cope
-		"map <leader>x :botright cope<CR>
 	"}
 "}
 
@@ -308,10 +310,8 @@ endif
 	command! L call ListChars()
 
 	"C/C++ {
-		let g:clang_complete_copen = 1
-		let g:clang_use_library = 1
-		let g:clang_complete_patterns = 1
-		let g:clang_complete_macros = 1
+		let g:syntastic_cpp_compiler = 'clang++'
+		let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 		let g:syntastic_c_check_header = 1
 		let g:syntastic_cpp_check_header = 1
 		let g:syntastic_cpp_compiler = 'clang++'
@@ -353,13 +353,13 @@ endif
 
 	"Python {
 		let python_highlight_all = 1
-    let g:pymode_options = 1
+		let g:pymode_options = 1
 		let g:pymode_doc_key = 'D'
 		let g:pydoc_cmd = 'python -m pydoc'
 		let g:pymode_folding = 0
 		let g:pymode_virtualenv = 1
 		let g:pymode_trim_whitespaces = 1
-                let g:pymode_indent = 1
+		let g:pymode_indent = 1
 		let g:pymode_lint_checkers = ['pyflakes']             "pep8 and others!
 		let g:pydoc_open_cmd = 'split'
 		let g:pymode_rope = 1
@@ -378,6 +378,6 @@ endif
 		au BufNewFile,BufRead *.mako set ft=mako
 		au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 		au FileType python set omnifunc=RopeOmni
-    "au FileType python set omnifunc=pythoncomplete#Complete
+		"au FileType python set omnifunc=pythoncomplete#Complete
 	"}
 "}

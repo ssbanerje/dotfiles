@@ -57,7 +57,7 @@
         brc = rebase --continue
         brs = rebase --skip
         bs  = checkout # [s]witch
-        # [c]ommit
+  # [c]ommit
         ca  = commit --amend
         cc  = commit
         cd  = diff --color-words
@@ -65,7 +65,7 @@
         cp  = cherry-pick -x
         cr  = reset --hard HEAD^
         cs  = show
-        # [f]ile
+  # [f]ile
         fa  = add
         faa = !git add --all && git ws
         fc  = !touch $@ && git add $@ && $EDITOR $1
@@ -73,7 +73,7 @@
         fm  = mv # [m]ove
         fr  = rm
         fu  = reset HEAD
-        # [r]emote
+  # [r]emote
         r   = remote
         rc  = remote add
         rco = remote add origin
@@ -87,21 +87,21 @@
         sr  = submodulerm
         ss  = !git submodule sync && git submodule update --init --recursive # [s]ync
         su  = submodule foreach --recursive git pull # [u]pdate
-        # [t]ag
+  # [t]ag
         tc  = tag
         tl  = tag -n1 --list
         tr  = tag -d
         # [w]orking copy
         wd  = diff --color-words --cached
         wr  = reset --hard HEAD
-  ws  = status --short --branch --ignore-submodules=untracked
+        ws  = status --short --branch --ignore-submodules=untracked
   # [l]og
-  loll = log --graph --decorate --pretty=oneline --abbrev-commit
-  lol = !git --no-pager loll
-  lolal = log --graph --decorate --pretty=oneline --abbrev-commit --all
-  lola = !git --no-pager lolal
+        loll = log --graph --decorate --pretty=oneline --abbrev-commit
+        lol = !git --no-pager loll
+        lolal = log --graph --decorate --pretty=oneline --abbrev-commit --all
+        lola = !git --no-pager lolal
   # [l]egit
-  switch = !legit switch \"$@\"
+        switch = !legit switch \"$@\"
         branches = !legit branches
         sprout = !legit sprout \"$@\"
         unpublish = !legit unpublish \"$@\"
@@ -109,6 +109,8 @@
         sync = !legit sync \"$@\"
         publish = !legit publish \"$@\"
         graft = !legit graft \"$@\"
+  # [m]isc
+        st = status
 
 [push]
   default = matching

@@ -114,7 +114,6 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
-	cd ${HOME}/.vim/bundle/Command-T/ && rake make
 install-Darwin: install-common
 	cd ${HOME}/.powerline && ./setup.py build && ./setup.py install
 install-Linux: install-common
