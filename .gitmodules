@@ -10,18 +10,9 @@
 [submodule "editors/vim/bundle/Align"]
 	path = editors/vim/bundle/Align
 	url = https://github.com/vim-scripts/Align.git
-[submodule "editors/vim/bundle/Command-T"]
-	path = editors/vim/bundle/Command-T
-	url = https://github.com/wincent/Command-T.git
-[submodule "editors/vim/bundle/LocateOpen"]
-	path = editors/vim/bundle/LocateOpen
-	url = https://github.com/yokomizor/LocateOpen.git
 [submodule "editors/vim/bundle/Recover.vim"]
 	path = editors/vim/bundle/Recover.vim
 	url = https://github.com/chrisbra/Recover.vim
-[submodule "editors/vim/bundle/YankRing.vim"]
-	path = editors/vim/bundle/YankRing.vim
-	url = https://github.com/vim-scripts/YankRing.vim.git
 [submodule "editors/vim/bundle/atp-vim"]
 	path = editors/vim/bundle/atp-vim
 	url = git://git.code.sf.net/p/atp-vim/code
@@ -34,9 +25,6 @@
 [submodule "editors/vim/bundle/gundo"]
 	path = editors/vim/bundle/gundo
 	url = http://github.com/sjl/gundo.vim.git
-[submodule "editors/vim/bundle/jellybeans.vim"]
-	path = editors/vim/bundle/jellybeans.vim
-	url = https://github.com/nanotech/jellybeans.vim.git
 [submodule "editors/vim/bundle/lusty"]
 	path = editors/vim/bundle/lusty
 	url = https://github.com/sjbach/lusty.git
@@ -46,9 +34,6 @@
 [submodule "editors/vim/bundle/molokai"]
 	path = editors/vim/bundle/molokai
 	url = https://github.com/tomasr/molokai.git
-[submodule "editors/vim/bundle/mustang-vim"]
-	path = editors/vim/bundle/mustang-vim
-	url = https://github.com/croaker/mustang-vim.git
 [submodule "editors/vim/bundle/nerdcommenter"]
 	path = editors/vim/bundle/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
@@ -82,18 +67,12 @@
 [submodule "editors/vim/bundle/vim-addon-mw-utils"]
 	path = editors/vim/bundle/vim-addon-mw-utils
 	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
-[submodule "editors/vim/bundle/vim-colors-solarized"]
-	path = editors/vim/bundle/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
 [submodule "editors/vim/bundle/vim-easymotion"]
 	path = editors/vim/bundle/vim-easymotion
 	url = https://github.com/Lokaltog/vim-easymotion.git
 [submodule "editors/vim/bundle/vim-fugitive"]
 	path = editors/vim/bundle/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule "editors/vim/bundle/vim-jade"]
-	path = editors/vim/bundle/vim-jade
-	url = https://github.com/digitaltoad/vim-jade.git
 [submodule "editors/vim/bundle/vim-javascript"]
 	path = editors/vim/bundle/vim-javascript
 	url = https://github.com/pangloss/vim-javascript.git
@@ -103,9 +82,6 @@
 [submodule "editors/vim/bundle/vim-notes"]
 	path = editors/vim/bundle/vim-notes
 	url = https://github.com/xolox/vim-notes.git
-[submodule "editors/vim/bundle/vim-speeddating"]
-	path = editors/vim/bundle/vim-speeddating
-	url = https://github.com/tpope/vim-speeddating.git
 [submodule "editors/vim/bundle/splice.vim"]
 	path = editors/vim/bundle/splice.vim
 	url = https://github.com/sjl/splice.vim.git

@@ -123,13 +123,6 @@ endif
 		let g:miniBufExplModSelTarget = 1
 	"}
 
-	"Yank Ring {
-		let g:yankring_history_dir = '~/.vim/vim_backups'
-		let g:yankring_replace_n_pkey = '<leader>['
-		let g:yankring_replace_n_nkey = '<leader>]'
-		nmap <leader>y :YRShow<cr>
-	"}
-
 	"Align {
 		let g:DrChipTopLvlMenu= ""
 	"}
@@ -156,10 +149,6 @@ endif
 
 	"vimrc {
 		au BufWritePost .vimrc so ~/.vimrc          "Reload vimrc automatically when changes are written
-	"}
-
-	"LocateOpen {
-		let g:locateopen_smartcase = 1
 	"}
 
 	"Rainbow Parenthesis {
@@ -254,8 +243,6 @@ endif
 		noremap <silent>., :nohlsearch<CR>
 		"Start a zsh session
 		noremap <silent>,k :ConqueTerm zsh<CR>
-		"Start commandT
-		noremap <silent>,; :CommandT<CR>
 		"Toggle Nerdtree
 		noremap <silent>,m :NERDTreeToggle<cr>
 		"Toggle tagbar
