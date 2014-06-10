@@ -16,9 +16,6 @@
 [submodule "editors/vim/bundle/atp-vim"]
 	path = editors/vim/bundle/atp-vim
 	url = git://git.code.sf.net/p/atp-vim/code
-[submodule "editors/vim/bundle/conque-term"]
-	path = editors/vim/bundle/conque-term
-	url = https://github.com/rosenfeld/conque-term.git
 [submodule "editors/vim/bundle/gundo"]
 	path = editors/vim/bundle/gundo
 	url = http://github.com/sjl/gundo.vim.git
@@ -127,3 +124,6 @@
 [submodule "editors/vim/bundle/vimproc.vim"]
 	path = editors/vim/bundle/vimproc.vim
 	url = https://github.com/Shougo/vimproc.vim.git
+[submodule "editors/vim/bundle/vimshell.vim"]
+	path = editors/vim/bundle/vimshell.vim
+	url = https://github.com/Shougo/vimshell.vim

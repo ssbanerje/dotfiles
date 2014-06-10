@@ -58,32 +58,32 @@ endif
     colorscheme molokai
     set background=dark
     if has('gui_running')
-    	set guioptions-=T                   "remove the toolbar
-    	set guioptions+=e
-    	set lines=40                        "40 lines of text instead of 24
-    	set guitablabel=%M\ %t
-    	if has("mac")
-    		set fuoptions=maxvert,maxhorz
-    	endif
+      set guioptions-=T                   "remove the toolbar
+      set guioptions+=e
+      set lines=40                        "40 lines of text instead of 24
+      set guitablabel=%M\ %t
+      if has("mac")
+        set fuoptions=maxvert,maxhorz
+      endif
     else
-    	set ttyfast
-    	set term=xterm                      "Make arrow and other keys work
-    	"Drag and drop support for mac terminal
-    	if $TERM_PROGRAM == "Apple_Terminal" && $TERM_PROGRAM_VERSION >= 297
-    		set title titlestring=%(%m\ %)%((%{expand(\"%:~:h\")})%)%a
-    		set icon iconstring=%{&t_IE}]7;file://%{hostname()}%{expand(\"%:p\")}%{&t_IS}
-    		set iconstring+=VIM
-    	endif
+      set ttyfast
+      set term=xterm                      "Make arrow and other keys work
+      "Drag and drop support for mac terminal
+      if $TERM_PROGRAM == "Apple_Terminal" && $TERM_PROGRAM_VERSION >= 297
+        set title titlestring=%(%m\ %)%((%{expand(\"%:~:h\")})%)%a
+        set icon iconstring=%{&t_IE}]7;file://%{hostname()}%{expand(\"%:p\")}%{&t_IS}
+        set iconstring+=VIM
+      endif
     endif
     if has("mac")
-    	nnoremap <D-≠>      16<C-w>>
-    	inoremap <D-≠> <C-o>16<C-w>>
-    	nnoremap <D-–>      16<C-w><
-    	inoremap <D-–> <C-o>16<C-w><
-    	nnoremap <D-±>      8<C-w>+
-    	inoremap <D-±> <C-o>8<C-w>+
-    	nnoremap <D-—>      8<C-w>-
-    	inoremap <D-—> <C-o>8<C-w>-
+      nnoremap <D-≠>      16<C-w>>
+      inoremap <D-≠> <C-o>16<C-w>>
+      nnoremap <D-–>      16<C-w><
+      inoremap <D-–> <C-o>16<C-w><
+      nnoremap <D-±>      8<C-w>+
+      inoremap <D-±> <C-o>8<C-w>+
+      nnoremap <D-—>      8<C-w>-
+      inoremap <D-—> <C-o>8<C-w>-
     endif
     set mouse=a                           "Use mouse everywhere (even in terminal)
     set mousehide                         "Hide mouse while typing
@@ -99,15 +99,15 @@ endif
     set laststatus=2 " Always display the statusline in all windows
     set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
     if has('gui_running')
-    	if has("gui_gtk2")
-    		set guifont=Monaco\ for\ Powerline\ 10
-    	else
-    		set guifont=Monaco\ for\ Powerline:h12
-    	endif
+      if has("gui_gtk2")
+        set guifont=Monaco\ for\ Powerline\ 10
+      else
+        set guifont=Monaco\ for\ Powerline:h12
+      endif
     else
-    	if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
-    		set t_Co=256
-    	endif
+      if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
+        set t_Co=256
+      endif
     endif
   "}
 
@@ -133,18 +133,14 @@ endif
     let NERDTreeShowHidden=1
     autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
     func! s:CloseIfOnlyNerdTreeLeft()
-    	if exists("t:NERDTreeBufName")
-    		if bufwinnr(t:NERDTreeBufName) != -1
-    			if winnr("$") == 1
-    				q
-    			endif
-    		endif
-    	endif
+      if exists("t:NERDTreeBufName")
+        if bufwinnr(t:NERDTreeBufName) != -1
+          if winnr("$") == 1
+            q
+          endif
+        endif
+      endif
     endfunc
-  "}
-
-  "Conque {
-    let g:ConqueTerm_ReadUnfocused = 1
   "}
 
   "vimrc {
@@ -198,6 +194,32 @@ endif
     endfunction
   "}
 
+  "VimShell {
+    " Make shell window show below the current window.
+    set splitbelow
+    let g:vimshell_no_default_keymappings = 0
+    let g:vimshell_prompt_expr =
+        \ 'escape($USER . ":". fnamemodify(getcwd(), ":~")."%", "\\[]()?! ")." "'
+    let g:vimshell_prompt_pattern = '^\%(\f\)\+\:\%(\f\|\\.\)\+% '
+    let g:vimshell_split_command = ''
+    let g:vimshell_enable_transient_user_prompt = 1
+    autocmd FileType vimshell call s:vimshell_settings()
+    function! s:vimshell_settings()
+      " custom mappings
+      " Use ctrl-L to clear in insert mode.
+      imap <buffer> <c-l> <ESC><Plug>(vimshell_clear)i
+      iunmap <buffer> <ESC><ESC>
+      imap <buffer> <ESC> <Plug>(vimshell_term_send_escape)
+      " Initialize execute file list.
+      call vimshell#set_execute_file('txt,vim,c,h,cpp,d,xml,java', 'vim')
+      let g:vimshell_execute_file_list['rb'] = 'ruby'
+      let g:vimshell_execute_file_list['pl'] = 'perl'
+      let g:vimshell_execute_file_list['py'] = 'python'
+      nnoremap <silent><buffer> <C-j>
+        \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
+  endfunction
+  "}
+
   "Some remaps {
     nnoremap ; :
     nnoremap j gj
@@ -211,8 +233,8 @@ endif
     cmap Tabe tabe
     vnoremap / /\v
     cnoreabbrev <expr> w!!
-    			\((getcmdtype() == ':' && getcmdline() == 'w!!')
-    			\?('!sudo tee % >/dev/null'):('w!!'))
+      \((getcmdtype() == ':' && getcmdline() == 'w!!')
+      \?('!sudo tee % >/dev/null'):('w!!'))
     nnoremap / /\v
     "Window navigation and resizing
     map <C-H> <C-W>h
@@ -227,20 +249,20 @@ endif
     nmap <S-Up> ddkP
     nmap <S-Down> ddp
     vmap <S-Up> xkP`[V`]
-    vmap <S-Down> xp`[V`]	"Bubble lines
+    vmap <S-Down> xp`[V`]  "Bubble lines
   "}
 
   "Convenience {
     "Stop highlighting search
     noremap <silent>., :nohlsearch<CR>
     "Start a zsh session
-    noremap <leader>k :ConqueTerm zsh<CR>
+    noremap <leader>k :VimShellPop <CR>
     "Toggle Nerdtree
     noremap <leader>m :NERDTreeToggle<cr>
     "Toggle tagbar
     noremap <leader>. :TagbarToggle<CR>
     "Open Unite file viewer
-    nnoremap <leader>; :<C-u>Unite -buffer-name=files	-start-insert file_rec/async:!<cr>
+    nnoremap <leader>; :<C-u>Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
     nnoremap <leader>y :<C-u>Unite -buffer-name=yank history/yank<cr>
     nnoremap <leader>b :<C-u>Unite -buffer-name=buffer buffer<cr>
     nnoremap <leader>a :<C-u>Unite grep:.<cr>
@@ -259,7 +281,9 @@ endif
 "}
 
 "Programming {
-  let g:snips_author = 'Subho Banerjee'  "Snipmate autor
+  let g:snips_author = 'Subho Banerjee'  "Snipmate author
+  imap <C-J> <Plug>snipMateNextOrTrigger
+  smap <C-J> <Plug>snipMateNextOrTrigger
   filetype plugin on                      "Set file type plugins
   filetype indent on
   set ofu=syntaxcomplete#Complete
@@ -284,10 +308,10 @@ endif
   "Git {
     match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
     if has('autocmd') "Git commit mesages have spell-check + insert mode
-    	if has('spell')
-    		au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
-    	endif
-    	au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
+      if has('spell')
+        au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
+      endif
+      au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
     endif
     au FileType gitcommit DiffGitCached
     au FileType gitrebase nnoremap P :Pick<CR>
