@@ -8,8 +8,7 @@ init: init-vim init-submodule
 
 ######## Init Everythning ###########
 init-submodule:
-	git submodule init
-	git submodule update
+	git submodule update --init --recursive
 init-vim:
 	@echo '------------------------- Init ------------------------'
 	mkdir -p $(BUILD)/.vim/vim_backups
@@ -114,6 +113,7 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
+	cd ${HOME}/.vim/bundle/vimproc.vim && make
 install-Darwin: install-common
 	cd ${HOME}/.powerline && ./setup.py build && ./setup.py install
 install-Linux: install-common

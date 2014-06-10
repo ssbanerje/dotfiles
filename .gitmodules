@@ -124,3 +124,6 @@
 [submodule "editors/vim/bundle/unite"]
 	path = editors/vim/bundle/unite
 	url = https://github.com/Shougo/unite.vim
+[submodule "editors/vim/bundle/vimproc.vim"]
+	path = editors/vim/bundle/vimproc.vim
+	url = https://github.com/Shougo/vimproc.vim.git
