@@ -31,9 +31,6 @@
 [submodule "editors/vim/bundle/nerdcommenter"]
 	path = editors/vim/bundle/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
-[submodule "editors/vim/bundle/nerdtree"]
-	path = editors/vim/bundle/nerdtree
-	url = https://github.com/scrooloose/nerdtree.git
 [submodule "editors/vim/bundle/pydoc"]
 	path = editors/vim/bundle/pydoc
 	url = https://github.com/fs111/pydoc.vim.git
@@ -130,3 +127,9 @@
 [submodule "editors/vim/bundle/YouCompleteMe"]
 	path = editors/vim/bundle/YouCompleteMe
 	url = https://github.com/Valloric/YouCompleteMe
+[submodule "editors/vim/bundle/vimfiler.vim"]
+	path = editors/vim/bundle/vimfiler.vim
+	url = https://github.com/Shougo/vimfiler.vim
+[submodule "editors/vim/bundle/neossh.vim"]
+	path = editors/vim/bundle/neossh.vim
+	url = https://github.com/Shougo/neossh.vim

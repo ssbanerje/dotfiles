@@ -16,14 +16,14 @@ This is a compilation of dotfiles from dotfile repos, blogs and projects from ac
 ###Dependencies
 * [XCode Tools](http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12#)
 * Install [homebrew](https://github.com/mxcl/homebrew) and some packages used in the dotfiles
-* Install BetterTouchTool... You will thank me later!
+* Install BetterTouchTool
 
 ```bash
 ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)
-brew install ctags coreutils git macvim ack python fasd
+brew install ctags coreutils git macvim ack python fasd tmux
 ```
 
-* Install [iTerm2](http://www.iterm2.com/#/section/home) - This is by no means _required_ for these configuration files, but a welcome replacement of `Terminal.app`
+* Install [iTerm2](http://www.iterm2.com/#/section/home) - Not _required_ for these configuration files, but a welcome replacement of `Terminal.app`
 
 
 On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning

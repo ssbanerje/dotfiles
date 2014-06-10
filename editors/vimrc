@@ -127,22 +127,6 @@ endif
     let g:DrChipTopLvlMenu= ""
   "}
 
-  "NerdTree {
-    let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$', '\.swp$']
-    let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\~$']
-    let NERDTreeShowHidden=1
-    autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
-    func! s:CloseIfOnlyNerdTreeLeft()
-      if exists("t:NERDTreeBufName")
-        if bufwinnr(t:NERDTreeBufName) != -1
-          if winnr("$") == 1
-            q
-          endif
-        endif
-      endif
-    endfunc
-  "}
-
   "vimrc {
     au BufWritePost .vimrc so ~/.vimrc          "Reload vimrc automatically when changes are written
   "}
@@ -200,7 +184,6 @@ endif
 
   "VimShell {
     " Make shell window show below the current window.
-    set splitbelow
     let g:vimshell_no_default_keymappings = 0
     let g:vimshell_prompt_expr =
         \ 'escape($USER . ":". fnamemodify(getcwd(), ":~")."%", "\\[]()?! ")." "'
@@ -212,16 +195,15 @@ endif
       " custom mappings
       " Use ctrl-L to clear in insert mode.
       imap <buffer> <c-l> <ESC><Plug>(vimshell_clear)i
-      iunmap <buffer> <ESC><ESC>
-      imap <buffer> <ESC> <Plug>(vimshell_term_send_escape)
       " Initialize execute file list.
-      call vimshell#set_execute_file('txt,vim,c,h,cpp,d,xml,java', 'vim')
-      let g:vimshell_execute_file_list['rb'] = 'ruby'
-      let g:vimshell_execute_file_list['pl'] = 'perl'
-      let g:vimshell_execute_file_list['py'] = 'python'
       nnoremap <silent><buffer> <C-j>
         \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
-  endfunction
+    endfunction
+  "}
+  "
+  "VimFiler {
+    let g:vimfiler_as_default_explorer = 1
+    let g:vimfiler_force_overwrite_statusline = 0
   "}
 
   "Some remaps {
@@ -262,7 +244,7 @@ endif
     "Start a zsh session
     noremap <leader>k :VimShellPop <CR>
     "Toggle Nerdtree
-    noremap <leader>m :NERDTreeToggle<cr>
+    noremap <leader>m :VimFilerExplorer<cr>
     "Toggle tagbar
     noremap <leader>. :TagbarToggle<CR>
     "Open Unite file viewer
