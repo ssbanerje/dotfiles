@@ -194,6 +194,10 @@ endif
     endfunction
   "}
 
+  "YouCompleteMe {
+    let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_cfamily_conf.py"
+  "}
+
   "VimShell {
     " Make shell window show below the current window.
     set splitbelow

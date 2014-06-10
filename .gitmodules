@@ -127,3 +127,6 @@
 [submodule "editors/vim/bundle/vimshell.vim"]
 	path = editors/vim/bundle/vimshell.vim
 	url = https://github.com/Shougo/vimshell.vim
+[submodule "editors/vim/bundle/YouCompleteMe"]
+	path = editors/vim/bundle/YouCompleteMe
+	url = https://github.com/Valloric/YouCompleteMe
