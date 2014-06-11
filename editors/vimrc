@@ -21,372 +21,75 @@ endif
 "}
 
 "General_Settings {
-  let g:mapleader=","                     "Change mapleader from \ to ,
-  let mapleader=","                       "Change mapleader from \ to ,
-  let g:maplocalleader = "\\"             "Set localleader to \
-  let maplocalleader = "\\"               "Set localleader to \
-  set so=7                                "7 lines to cursor
-  command! T setlocal noexpandtab
-  command! S setlocal expandtab
-  set magic                               "Set magic on for regular expressions
-  set backup                              "Set up location for creating backups of buffers
-  set backupdir=$HOME/.vim/vim_backups/
-  set directory=$HOME/.vim/vim_swp/
-  set incsearch                           "Incremental search
-  set hlsearch                            "Highlight text being searched for
-  set smartcase                           "ignore case if input is lowercase in searched
-  set scrolloff=5                         "Keep buffer between top and bottom of screen
-  set hidden                              "Switch buffers without saving
-  set backspace=indent,eol,start          "Handle backspaces better
-  set wildmenu                            "Smarter command line
-  set wildmode=list:longest,full
-  set wildignore=.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,.DS_Store,*.aux,*.out,*.toc,*.pyc
-  set gdefault                            "Smarter substitution
-  if $TMUX == ''
-    set clipboard=unnamed                   "Default yank goes to mac clipboard
-  endif
-  set dictionary=/usr/share/dict/words    "Set dictionary
-  set backupskip=/tmp/*,/private/tmp/*    "Edit crontab files
-  set lbr                                 "Set default line width
-  set tw=500
-  set pastetoggle=<F2>
-  set shiftwidth=2
-  set expandtab
+  augroup VIMRC_VIMRC
+    au BufWritePost .vimrc so ~/.vimrc          "Reload vimrc automatically when changes are written
+  augroup END
 
+  source ~/.vim/rcfiles/general.vim
   "GUI Settings {
-    let g:molokai_original=1
-    colorscheme molokai
-    set background=dark
-    if has('gui_running')
-      set guioptions-=T                   "remove the toolbar
-      set guioptions+=e
-      set lines=40                        "40 lines of text instead of 24
-      set guitablabel=%M\ %t
-      if has("mac")
-        set fuoptions=maxvert,maxhorz
-      endif
-    else
-      set ttyfast
-      set term=xterm                      "Make arrow and other keys work
-      "Drag and drop support for mac terminal
-      if $TERM_PROGRAM == "Apple_Terminal" && $TERM_PROGRAM_VERSION >= 297
-        set title titlestring=%(%m\ %)%((%{expand(\"%:~:h\")})%)%a
-        set icon iconstring=%{&t_IE}]7;file://%{hostname()}%{expand(\"%:p\")}%{&t_IS}
-        set iconstring+=VIM
-      endif
-    endif
-    if has("mac")
-      nnoremap <D-≠>      16<C-w>>
-      inoremap <D-≠> <C-o>16<C-w>>
-      nnoremap <D-–>      16<C-w><
-      inoremap <D-–> <C-o>16<C-w><
-      nnoremap <D-±>      8<C-w>+
-      inoremap <D-±> <C-o>8<C-w>+
-      nnoremap <D-—>      8<C-w>-
-      inoremap <D-—> <C-o>8<C-w>-
-    endif
-    set mouse=a                           "Use mouse everywhere (even in terminal)
-    set mousehide                         "Hide mouse while typing
-    set cursorline                        "Show current line (useful in terminal)
-    syntax enable                         "Color scheme for vim
-    au VimResized * :wincmd =             "Resize split screens on window resize
-    autocmd BufWrite * mkview             "Save and load folds
-    autocmd BufRead * silent loadview
+    source ~/.vim/rcfiles/gui.vim
   "}
+"}
 
+"Plugins {
   "Powerline {
-    set rtp+=~/.powerline/powerline/bindings/vim
-    set laststatus=2 " Always display the statusline in all windows
-    set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
-    if has('gui_running')
-      if has("gui_gtk2")
-        set guifont=Monaco\ for\ Powerline\ 10
-      else
-        set guifont=Monaco\ for\ Powerline:h12
-      endif
-    else
-      if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
-        set t_Co=256
-      endif
-    endif
-  "}
-
-  "Supertab {
-    let g:SuperTabDefaultCompletionType="context"
-    set completeopt=menuone,longest,preview
+    source ~/.vim/rcfiles/plugin.powerline.vim
   "}
 
   "Minibuffer {
-    let g:miniBufExplMapWindowNavVim = 1
-    let g:miniBufExplMapWindowNavArrows = 1
-    let g:miniBufExplMapCTabSwitchBufs = 1
-    let g:miniBufExplModSelTarget = 1
+    source ~/.vim/rcfiles/plugin.minibufexpl.vim
   "}
 
   "Align {
-    let g:DrChipTopLvlMenu= ""
-  "}
-
-  "vimrc {
-    au BufWritePost .vimrc so ~/.vimrc          "Reload vimrc automatically when changes are written
+    source ~/.vim/rcfiles/plugin.align.vim
   "}
 
   "Rainbow Parenthesis {
-    nnoremap <leader>rp :RainbowParenthesesToggle<CR>
-    au Syntax * RainbowParenthesesToggle
-    au Syntax * RainbowParenthesesLoadRound
-    au Syntax * RainbowParenthesesLoadSquare
-    au Syntax * RainbowParenthesesLoadBraces
-    au Syntax * RainbowParenthesesLoadChevrons
+    source ~/.vim/rcfiles/plugin.rainbow.vim
   "}
 
   "Notes {
-    let g:notes_suffix = '.txt'
+    source ~/.vim/rcfiles/plugin.notes.vim
   "}
 
   "Headlights {
-    let g:headlights_debug_mode = 1
-
-    let g:headlights_use_plugin_menu = 0
-    let g:headlights_spillover_menus = 1
-    let g:headlights_show_functions = 1
+    source ~/.vim/rcfiles/plugin.headlights.vim
   "}
 
   "Tabman {
-    let g:tabman_toggle = '<leader>tt'
-    let g:tabman_focus = '<leader>tf'
-  "}
-
-  "CTags {
-    map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-    map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
-    map <C-]> :split <CR>:exec("tag ".expand("<cword>"))<CR>
+    source ~/.vim/rcfiles/plugin.tabman.vim
   "}
 
   "Syntatstic {
-    let g:syntastic_enable_signs=1
+    source ~/.vim/rcfiles/plugin.syntastic.vim
   "}
 
   "Unite {
-    let g:unite_source_history_yank_enable = 1
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    autocmd FileType unite call s:unite_settings()
-    function! s:unite_settings()
-      " Enable navigation with control-j and control-k in insert mode
-      imap <buffer> <C-j> <Plug>(unite_select_next_line)
-      imap <buffer> <C-k> <Plug>(unite_select_previous_line)
-    endfunction
+    source ~/.vim/rcfiles/plugin.unite.vim
   "}
 
   "YouCompleteMe {
-    let g:ycm_global_ycm_extra_conf = "~/.vim/ycm_cfamily_conf.py"
+    source ~/.vim/rcfiles/plugin.ycm.vim
   "}
 
   "VimShell {
-    " Make shell window show below the current window.
-    let g:vimshell_no_default_keymappings = 0
-    let g:vimshell_prompt_expr =
-        \ 'escape($USER . ":". fnamemodify(getcwd(), ":~")."%", "\\[]()?! ")." "'
-    let g:vimshell_prompt_pattern = '^\%(\f\)\+\:\%(\f\|\\.\)\+% '
-    let g:vimshell_split_command = ''
-    let g:vimshell_enable_transient_user_prompt = 1
-    autocmd FileType vimshell call s:vimshell_settings()
-    function! s:vimshell_settings()
-      " custom mappings
-      " Use ctrl-L to clear in insert mode.
-      imap <buffer> <c-l> <ESC><Plug>(vimshell_clear)i
-      " Initialize execute file list.
-      nnoremap <silent><buffer> <C-j>
-        \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
-    endfunction
+    source ~/.vim/rcfiles/plugin.vimshell.vim
   "}
-  "
+
   "VimFiler {
-    let g:vimfiler_as_default_explorer = 1
-    let g:vimfiler_force_overwrite_statusline = 0
+    source ~/.vim/rcfiles/plugin.vimfiler.vim
   "}
 
   "Signify {
-    let g:signify_vcs_list = [ 'git' ]
+    source ~/.vim/rcfiles/plugin.signify.vim
   "}
+"}
 
-  "Some remaps {
-    nnoremap ; :
-    nnoremap j gj
-    nnoremap k gk
-    noremap <leader>bp :bprevious<cr>
-    noremap <leader>bn :bnext<cr>
-    cmap WQ wq
-    cmap wQ wq
-    vmap Q gq
-    nmap Q gqap
-    cmap Tabe tabe
-    vnoremap / /\v
-    cnoreabbrev <expr> w!!
-      \((getcmdtype() == ':' && getcmdline() == 'w!!')
-      \?('!sudo tee % >/dev/null'):('w!!'))
-    nnoremap / /\v
-    "Window navigation and resizing
-    map <C-H> <C-W>h
-    map <C-J> <C-W>j
-    map <C-K> <C-W>k
-    map <C-L> <C-W>l
-    map <S-H> <C-W><
-    map <S-J> <C-W>+
-    map <S-K> <C-W>-
-    map <S-L> <C-W>>
-    "Bubble lines and bocks
-    nmap <S-Up> ddkP
-    nmap <S-Down> ddp
-    vmap <S-Up> xkP`[V`]
-    vmap <S-Down> xp`[V`]  "Bubble lines
-  "}
-
-  "Convenience {
-    "Stop highlighting search
-    noremap <silent>., :nohlsearch<CR>
-    "Start a zsh session
-    noremap <leader>k :VimShellPop <CR>
-    "Toggle Nerdtree
-    noremap <leader>m :VimFilerExplorer<cr>
-    "Toggle tagbar
-    noremap <leader>. :TagbarToggle<CR>
-    "Open Unite file viewer
-    nnoremap <leader>; :<C-u>Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
-    nnoremap <leader>y :<C-u>Unite -buffer-name=yank history/yank<cr>
-    nnoremap <leader>b :<C-u>Unite -buffer-name=buffer buffer<cr>
-    nnoremap <leader>a :<C-u>Unite grep:.<cr>
-
-    "Split window horizontally
-    noremap <silent>ss :split<CR>
-    "Split window vertically
-    noremap <silent>vv :vsplit<CR>
-    "Toggle gundo
-    noremap <leader>u :GundoToggle<CR>
-    "Spell Check
-    map <leader>s :setlocal spell!<CR>
-    "Windows file endings
-    noremap <Leader>w mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-  "}
+"Remaps {
+  source ~/.vim/rcfiles/remaps.vim
 "}
 
 "Programming {
-  let g:snips_author = 'Subho Banerjee'  "Snipmate author
-  imap <C-J> <Plug>snipMateNextOrTrigger
-  smap <C-J> <Plug>snipMateNextOrTrigger
-  filetype plugin on                      "Set file type plugins
-  filetype indent on
-  set ofu=syntaxcomplete#Complete
-  set undolevels=1000                     "Maximum size of command buffer
-  set showmatch                           "Show matching brackets
-  set nu                                  "Show line numbers
-  set showfulltag                         "Set details about how tags are used
-  nnoremap <leader>p p                    "Autoindent after pasting
-  nnoremap <leader>P P
-  nnoremap p p'[v']=
-  set colorcolumn=800
-  nmap <D-]> >>                           "Textmate style indent
-  vmap <D-]> >gv
-  imap <D-]> <C-0>>>
-  func! DeleteTrailingWS()
-    exe "normal mz"
-    %s/\s\+$//ge
-    exe "normal `z"
-  endfunc
-  autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
-
-  "Git {
-    match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
-    if has('autocmd') "Git commit mesages have spell-check + insert mode
-      if has('spell')
-        au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
-      endif
-      au BufNewFile,BufRead COMMIT_EDITMSG call feedkeys('ggi', 't')
-    endif
-    au FileType gitcommit DiffGitCached
-    au FileType gitrebase nnoremap P :Pick<CR>
-    au FileType gitrebase nnoremap S :Squash<CR>
-    au FileType gitrebase nnoremap C :Cycle<CR>
-    au FileType gitrebase nnoremap R :Reword<CR>
-  "}
-
-  set listchars=tab:▸\ ,eol:¬
-  set nolist
-  func! ListChars()
-    set list
-    set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
-    set showbreak=↪
-  endfunc
-  command! L call ListChars()
-
-  "C/C++ {
-    let g:syntastic_cpp_compiler = 'clang++'
-    let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
-    let g:syntastic_c_check_header = 1
-    let g:syntastic_cpp_check_header = 1
-    let g:syntastic_cpp_compiler = 'clang++'
-    au FileType c,cpp se cin                               "Indentation for C/C++
-    au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-    au FileType c,cpp set completeopt=menuone,menu,longest,preview
-  "}
-
-  "LaTeX {
-    au FileType tex set tw=100
-    au FileType tex set grepprg=grep\ -nH\ $*
-    au FileType tex let g:tex_flavor='latex'
-  "}
-
-  "Perl {
-    au FileType perl let perl_include_pod = 1
-    au FileType perl let perl_extended_vars = 1
-    au FileType perl set makeprg=perl\ -c\ %\ $*
-    au FileType perl set errorformat=%f:%l:%m
-    au FileType perl set autowrite
-    au FileType perl set foldenable
-    au FileType perl set foldmethod=syntax
-    au FileType perl syn region POD start=/^=head[123]/ end=/^=cut/ fold
-  "}
-
-  "WebDev {
-    au FileType javascript setl fen
-    au FileType javascript setl nocindent
-    autocmd FileType html setlocal indentkeys-=*<Return>
-    au BufRead,BufNewFile,BufWrite {*.js.asp,*.json} set ft=javascript
-    au BufRead,BufNewFile,BufWrite {*.less} set ft=css
-    au BufRead,BufNewFile,BufWrite {Capfile,Gemfile,Rakefile,Thorfile,config.ru,.caprc,.irbrc,irb_tempfile*} set ft=ruby
-    au BufRead,BufNewFile *.ejs set filetype=html
-    au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node/dict/node.dict
-    au FileType html,xml let g:html_indent_inctags = "html,body,head,tbody"
-    au FileType html,xml let g:html_indent_script1 = "inc"
-    au FileType html,xml let g:html_indent_style1 = "inc"
-  "}
-
-  "Python {
-    let python_highlight_all = 1
-    let g:pymode_options = 1
-    let g:pymode_doc_key = 'D'
-    let g:pydoc_cmd = 'python -m pydoc'
-    let g:pymode_folding = 0
-    let g:pymode_virtualenv = 1
-    let g:pymode_trim_whitespaces = 1
-    let g:pymode_indent = 1
-    let g:pymode_lint_checkers = ['pyflakes']             "pep8 and others!
-    let g:pydoc_open_cmd = 'split'
-    let g:pymode_rope = 1
-    let g:pymode_rope_autoimport_generate = 1
-    let g:pymode_rope_autoimport_underlineds = 0
-    let g:pymode_rope_codeassist_maxfixes = 10
-    let g:pymode_rope_sorted_completions = 1
-    let g:pymode_rope_extended_complete = 1
-    let g:pymode_rope_autoimport_modules = ["os","shutil","datetime"]
-    let g:pymode_rope_vim_completion = 1
-    let g:pymode_rope_guess_project = 1
-    let g:pymode_rope_goto_def_newwin = ""
-    let g:pymode_rope_always_show_complete_menu = 0
-    au FileType python syn keyword pythonDecorator True None False self
-    au BufNewFile,BufRead *.jinja set syntax=htmljinja
-    au BufNewFile,BufRead *.mako set ft=mako
-    au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
-    au FileType python set omnifunc=RopeOmni
-  "}
+  source ~/.vim/rcfiles/programming.vim
 "}
+
