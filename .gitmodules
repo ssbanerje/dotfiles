@@ -133,3 +133,6 @@
 [submodule "editors/vim/bundle/neossh.vim"]
 	path = editors/vim/bundle/neossh.vim
 	url = https://github.com/Shougo/neossh.vim
+[submodule "editors/vim/bundle/vim-signify"]
+	path = editors/vim/bundle/vim-signify
+	url = https://github.com/mhinz/vim-signify

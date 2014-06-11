@@ -206,6 +206,10 @@ endif
     let g:vimfiler_force_overwrite_statusline = 0
   "}
 
+  "Signify {
+    let g:signify_vcs_list = [ 'git' ]
+  "}
+
   "Some remaps {
     nnoremap ; :
     nnoremap j gj
