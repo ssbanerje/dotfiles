@@ -22,7 +22,7 @@ export ZSH=$HOME/.oh-my-zsh
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins
-plugins=(git git-flow github history-substring-search mercurial node npm perl pip python sublime svn zsh-syntax-highlighting lol web-search tmux)
+plugins=(git git-flow github git-extras svn mercurial common-aliases history-substring-search perl pip python sublime svn zsh-syntax-highlighting web-search tmux)
 source $ZSH/oh-my-zsh.sh
 
 # Get stuff from .profile
