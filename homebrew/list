@@ -1,5 +1,6 @@
 ack
 atk
+boost
 cairo
 cloog
 cmake
@@ -21,18 +22,22 @@ glib
 glibmm
 gmp
 gobject-introspection
+graphviz
 gtk+
 harfbuzz
 hub
 hubflow
 icu4c
+intltool
 isl
 jbig2dec
 jpeg
+libcroco
 libevent
 libffi
 libmpc
 libpng
+librsvg
 libsigc++
 libtiff
 libxml2
@@ -43,6 +48,7 @@ macvim
 matplotlib
 mpfr
 numpy
+open-mpi
 openblas
 openssl
 pango
