@@ -136,3 +136,6 @@
 [submodule "editors/vim/bundle/vim-signify"]
 	path = editors/vim/bundle/vim-signify
 	url = https://github.com/mhinz/vim-signify
+[submodule "editors/vim/bundle/vim-scala"]
+	path = editors/vim/bundle/vim-scala
+	url = https://github.com/derekwyatt/vim-scala
