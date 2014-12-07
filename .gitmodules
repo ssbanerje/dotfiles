@@ -139,3 +139,6 @@
 [submodule "editors/vim/bundle/vim-scala"]
 	path = editors/vim/bundle/vim-scala
 	url = https://github.com/derekwyatt/vim-scala
+[submodule "editors/emacs/spacemacs"]
+	path = editors/emacs/spacemacs
+	url = https://github.com/syl20bnr/spacemacs

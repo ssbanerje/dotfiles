@@ -79,7 +79,7 @@ build-interp:
 	cp interp/irbrc $(BUILD)/.irbrc
 
 ######## For Editors ###########
-build-editors: build-vim
+build-editors: build-vim build-emacs
 	@echo '-------------- Configurations for Editors --------------'
 	cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
@@ -87,6 +87,10 @@ build-vim:
 	cp editors/vimrc $(BUILD)/.vimrc
 	cp -r editors/vim/* $(BUILD)/.vim/
 	cp -r editors/powerline/ $(BUILD)/.powerline
+build-emacs:
+	@echo '---------------- Configurations for EMACS ----------------'
+	cp editors/emacs/spacemacs.conf $(BUILD)/.spacemacs
+	cp -r editors/emacs/spacemacs $(BUILD)/.emacs.d/
 
 ######## OS Specific ###########
 build-common:
