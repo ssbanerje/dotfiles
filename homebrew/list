@@ -99,6 +99,7 @@ suite-sparse
 swig
 tbb
 tmux
+tree
 wget
 xz
 zeromq
