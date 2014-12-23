@@ -125,7 +125,7 @@ Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'tpope/vim-git'
 
 " YouCompleteMe
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
 
 "ATP Plugin
 Plug 'git://git.code.sf.net/p/atp-vim/code', { 'for' : 'tex' }
