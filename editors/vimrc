@@ -16,6 +16,7 @@ if executable('/bin/zsh')                 "Because bash is so old school
 endif
 
 "VimPlug {
+  let g:plug_window="vertical topleft new"
   call plug#begin('~/.vim/plugged')
   source ~/.vim/rcfiles/plugins.vim
   call plug#end()

@@ -117,6 +117,7 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
+	vim -c PlugInstall -c qa!
 install-Darwin: install-common
 	cd ${HOME}/.powerline && python setup.py build && python setup.py install
 install-Linux: install-common
