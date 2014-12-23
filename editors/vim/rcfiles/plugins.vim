@@ -129,3 +129,9 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 
 "ATP Plugin
 Plug 'git://git.code.sf.net/p/atp-vim/code'
+
+" Numbers
+Plug 'myusuf3/numbers.vim'
+
+" Indent Guides
+Plug 'nathanaelkane/vim-indent-guides'

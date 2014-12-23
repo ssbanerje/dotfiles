@@ -3,7 +3,6 @@ filetype indent on
 
 set undolevels=1000
 set showmatch
-set nu!
 set showfulltag
 set nolist
 set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
