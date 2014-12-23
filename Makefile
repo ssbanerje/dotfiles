@@ -117,10 +117,8 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
-	cd ${HOME}/.vim/bundle/vimproc.vim && make
 install-Darwin: install-common
 	cd ${HOME}/.powerline && python setup.py build && python setup.py install
-	cd ${HOME}/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer --system-libclang
 install-Linux: install-common
 	fc-cache -vf
 	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'
@@ -130,7 +128,6 @@ install-Linux: install-common
 	gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'
 	gconftool-2 -t int -s /apps/meld/tab_size '2'
 	cd ${HOME}/.powerline && python setup.py build && python setup.py install --user
-	cd ${HOME}/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer
 
 ######## Clean ###########
 clean:

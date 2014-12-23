@@ -15,9 +15,10 @@ if executable('/bin/zsh')                 "Because bash is so old school
   set shell=/bin/zsh
 endif
 
-"Pathogen {
-  call pathogen#infect()                  "Set up pathogen
-  call pathogen#helptags()
+"VimPlug {
+  call plug#begin('~/.vim/plugged')
+  source ~/.vim/rcfiles/plugins.vim
+  call plug#end()
 "}
 
 "General_Settings {
