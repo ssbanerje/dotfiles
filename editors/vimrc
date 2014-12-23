@@ -16,11 +16,7 @@ if executable('/bin/zsh')                 "Because bash is so old school
 endif
 
 "VimPlug {
-<<<<<<< HEAD
-  let g:plug_window="vertical topleft new"
-=======
   let g:plug_window="vertical"
->>>>>>> Install on startup
   call plug#begin('~/.vim/plugged')
   source ~/.vim/rcfiles/plugins.vim
   call plug#end()
