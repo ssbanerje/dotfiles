@@ -1,5 +1,5 @@
 " Align
-Plug 'vim-scripts/Align'
+Plug 'vim-scripts/Align', { 'on' : 'Align' }
 
 " Recover
 Plug 'vim-scripts/recover.vim'
@@ -20,10 +20,10 @@ Plug 'tomasr/molokai'
 Plug 'scrooloose/nerdcommenter'
 
 " PyDoc
-Plug 'fs111/pydoc.vim'
+Plug 'fs111/pydoc.vim', { 'for': 'python' }
 
 " Python-Mode
-Plug 'klen/python-mode'
+Plug 'klen/python-mode', { 'for': 'python' }
 
 " Rainbow Paranthesis
 Plug 'kien/rainbow_parentheses.vim'
@@ -56,7 +56,7 @@ Plug 'Shougo/neossh.vim'
 Plug 'mhinz/vim-signify'
 
 " Vim Scala
-Plug 'derekwyatt/vim-scala'
+Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 
 " Snippets
 Plug 'honza/vim-snippets'
@@ -86,19 +86,19 @@ Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 
 " Vim Javascript
-Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'json'] }
 
 " Vim JSON
-Plug 'leshill/vim-json'
+Plug 'leshill/vim-json', { 'for': ['javascript', 'json'] }
 
 " Notes
-Plug 'xolox/vim-notes'
+Plug 'xolox/vim-notes', { 'for': 'notes' }
 
 " Splice
 Plug 'sjl/splice.vim'
 
 " Ack
-Plug 'mileszs/ack.vim'
+Plug 'mileszs/ack.vim', { 'on': 'Ack' }
 
 " Vim NodeJS
 Plug 'guileen/vim-node'
@@ -107,7 +107,7 @@ Plug 'guileen/vim-node'
 Plug 'b4winckler/vim-angry'
 
 " Vim Matlab
-Plug 'sgeb/vim-matlab'
+Plug 'sgeb/vim-matlab', { 'for': 'matlab' }
 
 " Headlights
 Plug 'mbadran/headlights'
@@ -119,7 +119,7 @@ Plug 'kien/tabman.vim'
 Plug 'editorconfig/editorconfig-vim'
 
 " Vim Markdown
-Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 
 "Vim Git
 Plug 'tpope/vim-git'
@@ -128,7 +128,7 @@ Plug 'tpope/vim-git'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 
 "ATP Plugin
-Plug 'git://git.code.sf.net/p/atp-vim/code'
+Plug 'git://git.code.sf.net/p/atp-vim/code', { 'for' : 'tex' }
 
 " Numbers
 Plug 'myusuf3/numbers.vim'
