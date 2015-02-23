@@ -13,7 +13,6 @@ init-vim:
 	@echo '------------------------- Init ------------------------'
 	mkdir -p $(BUILD)/.vim/vim_backups
 	mkdir -p $(BUILD)/.vim/vim_swp
-	mkdir -p $(BUILD)/Documents/Notes
 
 ######## Fonts ###########
 build-fonts-Darwin:
@@ -28,7 +27,6 @@ build-fonts-Linux:
 ######## Git ###########
 build-git:
 	@echo '---------------- Configurations for Git ----------------'
-	mkdir -p $(BUILD)/.global_gitinore
 	cat git/gitignore/Global/*.gitignore > $(BUILD)/.global_gitignore
 	cp git/gitconfig $(BUILD)/.gitconfig
 	cp git/gitattributes $(BUILD)/.gitattributes
