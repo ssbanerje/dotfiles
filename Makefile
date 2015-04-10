@@ -47,6 +47,7 @@ build-commands:
 	cp shell/npmrc $(BUILD)/.npmrc
 build-tmux:
 	cp shell/tmux.conf $(BUILD)/.tmux.conf
+	echo "set -g status-right '#($(HOME)/.powerline/scripts/powerline tmux right)'" >> $(BUILD)/.tmux.conf
 	echo "source '$(HOME)/.powerline/powerline/bindings/tmux/powerline.conf'" >> $(BUILD)/.tmux.conf
 build-bash:
 	@echo '-------------- Configurations for Bash -----------------'
