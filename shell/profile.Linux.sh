@@ -2,8 +2,8 @@
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
 
-# Set sbin in PATH
-export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
+# Set PATH to include non-standar locations
+export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.powerline/scripts
 
 #Set for CUDA
 CUDA=/usr/local/cuda
