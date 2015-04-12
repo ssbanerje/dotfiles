@@ -11,11 +11,11 @@ alias mplayerx='/Applications/MPlayerX.app/Contents/MacOS/MPlayerX'
 alias gvim='mvim'
 alias preview="open -a '$PREVIEW'"
 alias xcode="open -a '/Developer/Applications/Xcode.app'"
-alias filemerge="open -a '/Developer/Applications/Utilities/FileMerge.app'"
 alias safari="open -a safari"
 alias chrome="open -a google\ chrome"
 alias f='open -a Finder'
 alias vim='mvim -v'
+alias ipy="ipython qtconsole"
 
 #Set environment for MATLAB
 export MATLAB=/Applications/MATLAB_R2015a.app
@@ -26,11 +26,6 @@ export PATH=$PATH:/usr/texbin
 
 #For homebrew
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-
-#For python
-alias ipython='/usr/local/share/python/ipython'
-alias ipy='/usr/local/share/python/ipython qtconsole'
-export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 
 #Locale
 export LANG="en_US.UTF-8"

@@ -22,7 +22,7 @@ alias e='emacs -nw --quick'
 alias v='vim -p'
 alias grep='grep --color=auto --exclude="*.svn*"'
 alias mkdir='mkdir -p'
-alias dus='du -ms * | sort -n'
+alias dus='du -hs * | sort -n'
 alias datafart='curl --data-binary @- datafart.com'
 
 # Play safe!
@@ -41,11 +41,6 @@ export SVN_EDITOR=vim
 
 #My scripts
 export PATH=$PATH:$HOME/.bin
-
-#Set for ROOT
-#export ROOTSYS=/opt/alice/root
-#export ROOTBUILD=debug
-#export PATH=$PATH:$ROOTSYS/bin
 
 #Start Python Shell with sensible settings
 export PYTHONSTARTUP="$HOME/.pyrc"
