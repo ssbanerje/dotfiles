@@ -19,6 +19,19 @@ else
     set icon iconstring=%{&t_IE}]7;file://%{hostname()}%{expand(\"%:p\")}%{&t_IS}
     set iconstring+=VIM
   endif
+  "Different cursors for iterm under tmux
+  if exists('$ITERM_PROFILE')
+    if exists('$TMUX')
+      let &t_SI = "\<Esc>[3 q"
+      let &t_EI = "\<Esc>[0 q"
+    else
+      let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+      let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    endif
+  endif
+  if exists('$TMUX')
+    set term=screen-256color
+  endif
 endif
 
 if has("mac")
@@ -38,6 +51,8 @@ set cursorline                        "Show current line (useful in terminal)
 syntax enable                         "Color scheme for vim
 
 augroup VIMRC_GUI
+  let &viewdir=expand("$HOME") . "/.vim/viewdir"
+  if !isdirectory(expand(&viewdir))|call mkdir(expand(&viewdir), "p", 451)|endif
   au!
   au VimResized * :wincmd =             "Resize split screens on window resize
   au BufWrite * mkview             "Save and load folds
