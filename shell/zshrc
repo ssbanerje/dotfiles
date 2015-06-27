@@ -61,7 +61,7 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 
 # completing process IDs with menu selection
 zstyle ':completion:*:*:kill:*' menu yes select
-zstyle ':completion:*:kill:*'
+#zstyle ':completion:*:kill:*'
 
 # Switch between zsh and vim seamlessly
 fancy-ctrl-z () {
