@@ -85,6 +85,10 @@ endif
   "Signify {
     source ~/.vim/rcfiles/plugin.signify.vim
   "}
+
+  "Signify {
+    source ~/.vim/rcfiles/plugin.numbers.vim
+  "}
 "}
 
 "Remaps {

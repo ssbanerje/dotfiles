@@ -135,3 +135,6 @@ Plug 'myusuf3/numbers.vim'
 
 " Indent Guides
 Plug 'nathanaelkane/vim-indent-guides'
+
+" Multiple cursors
+Plug 'terryma/vim-multiple-cursors'
