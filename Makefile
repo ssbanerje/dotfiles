@@ -112,6 +112,7 @@ build-Linux: build-common
   then\
     cp shell/conkyrc $(BUILD)/.conkyrc;\
   fi;
+	cp -r shell/base16-shell $(BUILD)/.shellcolors
 
 ######## Install ###########
 install-common:

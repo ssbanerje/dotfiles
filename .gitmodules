@@ -16,3 +16,6 @@
 [submodule "shell/iTerm2-Color-Schemes"]
 	path = shell/iTerm2-Color-Schemes
 	url = https://github.com/mbadolato/iTerm2-Color-Schemes
+[submodule "shell/base16-shell"]
+	path = shell/base16-shell
+	url = https://github.com/chriskempson/base16-shell

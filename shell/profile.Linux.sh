@@ -5,6 +5,9 @@ alias pbpaste='xsel --clipboard --output'
 # Set PATH to include non-standard locations
 export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.powerline/scripts
 
+# Source color schemes
+source ${HOME}/.shellcolors/base16-monokai.dark.sh
+
 # Set for CUDA
 CUDA=/usr/local/cuda
 export PATH=$PATH:$CUDA/bin
