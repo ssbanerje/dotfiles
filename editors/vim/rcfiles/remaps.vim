@@ -38,10 +38,17 @@ noremap <leader>m :VimFilerExplorer<cr>
 "Toggle tagbar
 noremap <leader>. :TagbarToggle<CR>
 "Open Unite file viewer
+nnoremap <leader>q :<C-u>Unite -buffer-name=unite<cr>
+nnoremap <leader>f :<C-u>Unite -buffer-name=find line<cr>
+nnoremap <leader>b :<C-u>Unite -buffer-name=buffer buffer<cr>
+nnoremap <leader>t :<C-u>Unite -buffer-name=tab tab<cr>
+nnoremap <leader>W :<C-u>Unite -buffer-name=window window<cr>
+nnoremap <leader>x :<C-u>Unite -buffer-name=launcher launcher<cr>
 nnoremap <leader>; :<C-u>Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
 nnoremap <leader>y :<C-u>Unite -buffer-name=yank history/yank<cr>
-nnoremap <leader>b :<C-u>Unite -buffer-name=buffer buffer<cr>
 nnoremap <leader>a :<C-u>Unite grep:.<cr>
+nnoremap <leader>g :<C-u>Unite giti<cr>
+
 
 "Split window horizontally
 noremap <silent>ss :split<CR>
