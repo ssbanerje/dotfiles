@@ -1,7 +1,7 @@
 " Synatstic
 Plug 'scrooloose/syntastic'
 
-"██████╗ ██████╗ ██╗      ██████╗ ██████╗     ███████╗ ██████╗██╗  ██╗███████╗███╗   ███╗███████╗███████╗
+" ██████╗ ██████╗ ██╗      ██████╗ ██████╗     ███████╗ ██████╗██╗  ██╗███████╗███╗   ███╗███████╗███████╗
 "██╔════╝██╔═══██╗██║     ██╔═══██╗██╔══██╗    ██╔════╝██╔════╝██║  ██║██╔════╝████╗ ████║██╔════╝██╔════╝
 "██║     ██║   ██║██║     ██║   ██║██████╔╝    ███████╗██║     ███████║█████╗  ██╔████╔██║█████╗  ███████╗
 "██║     ██║   ██║██║     ██║   ██║██╔══██╗    ╚════██║██║     ██╔══██║██╔══╝  ██║╚██╔╝██║██╔══╝  ╚════██║
@@ -124,7 +124,7 @@ Plug 'ekalinin/Dockerfile.vim'
 Plug 'tomtom/tlib_vim'
 
 " Align ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Plug 'vim-scripts/Align', { 'on' : 'Align' }
+Plug 'junegunn/vim-easy-align', { 'on' : 'EasyAlign' }
 
 " Recover
 Plug 'chrisbra/Recover.vim'
@@ -155,13 +155,6 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " Vimshell
 Plug 'Shougo/vimshell.vim'
-
-
-
-
-
-
-
 
 " Snippets
 Plug 'honza/vim-snippets'
