@@ -35,6 +35,10 @@ augroup VIMRC_PROG
   autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
 augroup END
 
+"Rainbow {
+  source ~/.vim/rcfiles/plugin.rainbow.vim
+"}
+
 "Git {
   source ~/.vim/rcfiles/git.vim
 "}
