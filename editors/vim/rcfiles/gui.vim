@@ -4,6 +4,9 @@ if my_vim_colorscheme ==? "molokai"
  let g:molokai_original=1
  colorscheme molokai
 elseif my_vim_colorscheme ==? "gruvbox"
+  let g:gruvbox_italic=0
+  let g:gruvbox_bold=0
+  let g:gruvbox_underline=0
   colorscheme gruvbox
   set background=dark
 endif
@@ -68,3 +71,7 @@ augroup END
 if $TMUX == ''
   set clipboard=unnamed                   "Default yank goes to mac clipboard
 endif
+
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4

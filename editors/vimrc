@@ -38,16 +38,12 @@ endif
     source ~/.vim/rcfiles/plugin.powerline.vim
   "}
 
-  "Minibuffer {
-    source ~/.vim/rcfiles/plugin.minibufexpl.vim
-  "}
-
   "Align {
     source ~/.vim/rcfiles/plugin.align.vim
   "}
 
   "Rainbow Parenthesis {
-    source ~/.vim/rcfiles/plugin.rainbow.vim
+    let g:rainbow_active = 1
   "}
 
   "Notes {
@@ -86,7 +82,7 @@ endif
     source ~/.vim/rcfiles/plugin.signify.vim
   "}
 
-  "Signify {
+  "Numbers {
     source ~/.vim/rcfiles/plugin.numbers.vim
   "}
 "}
