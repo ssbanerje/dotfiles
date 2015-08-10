@@ -138,3 +138,7 @@ Plug 'nathanaelkane/vim-indent-guides'
 
 " Multiple cursors
 Plug 'terryma/vim-multiple-cursors'
+
+" Dockerfile snippets and syntax
+Plug 'ekalinin/Dockerfile.vim'
+
