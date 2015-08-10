@@ -13,7 +13,7 @@ Plug 'sjbach/lusty'
 " Mini Buffer Explorer
 Plug 'fholgado/minibufexpl.vim'
 
-" Molokai
+" Molokai color scheme
 Plug 'tomasr/molokai'
 
 " Nerd Commenter
@@ -142,3 +142,5 @@ Plug 'terryma/vim-multiple-cursors'
 " Dockerfile snippets and syntax
 Plug 'ekalinin/Dockerfile.vim'
 
+" The gruvbox colorscheme
+Plug 'morhetz/gruvbox'

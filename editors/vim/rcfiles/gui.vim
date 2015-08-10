@@ -1,6 +1,12 @@
-let g:molokai_original=1
-colorscheme molokai
-set background=dark
+" Colorschemes
+let my_vim_colorscheme = "gruvbox"
+if my_vim_colorscheme ==? "molokai"
+ let g:molokai_original=1
+ colorscheme molokai
+elseif my_vim_colorscheme ==? "gruvbox"
+  colorscheme gruvbox
+  set background=dark
+endif
 
 if has('gui_running')
   set guioptions-=T                   "remove the toolbar
