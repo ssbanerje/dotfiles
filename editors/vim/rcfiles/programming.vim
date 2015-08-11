@@ -1,64 +1,75 @@
-filetype plugin on
-filetype indent on
+" ██████╗ ███████╗███╗   ██╗███████╗██████╗ ██╗ ██████╗
+"██╔════╝ ██╔════╝████╗  ██║██╔════╝██╔══██╗██║██╔════╝
+"██║  ███╗█████╗  ██╔██╗ ██║█████╗  ██████╔╝██║██║
+"██║   ██║██╔══╝  ██║╚██╗██║██╔══╝  ██╔══██╗██║██║
+"╚██████╔╝███████╗██║ ╚████║███████╗██║  ██║██║╚██████╗
+" ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝
 
+" Undo upto 1000 actions
 set undolevels=1000
+
+" Show matching brackets
 set showmatch
+
+" Show full names for completion in insert mode
 set showfulltag
-set nolist
-set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
-set colorcolumn=800
+
+" Set listmode off and change listmode characters
+func! ListChars()
+  set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
+  set showbreak=↪
+  set list
+endfunc
+" Use L to toggle list mode
+command! L call ListChars()
+
+" Color the column after textwidth
+set cc=+1
+hi ColorColumn ctermbg=lightgrey guibg=lightgrey
 
 " Paste with indent
 nnoremap <leader>p p
 nnoremap <leader>P P
 nnoremap p p'[v']=
+
 " Textmate style indentation
-nmap <D-]> >>
+nmap <leader> >>
 vmap <D-]> >gv
 imap <D-]> <C-0>>>
 
+" Delete the trailing the white spaces on source code files
 func! DeleteTrailingWS()
   exe "normal mz"
   %s/\s\+$//ge
   exe "normal `z"
 endfunc
-
-func! ListChars()
-  set list
-  set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
-  set showbreak=↪
-endfunc
-command! L call ListChars()
-
 augroup VIMRC_PROG
   au!
   autocmd BufWrite *.tex,*.bib,*.c,*.cpp,*.cc,*.h,*.m,*.js,*.py,*.pl,*.pm :call DeleteTrailingWS()
 augroup END
 
-"Rainbow {
-  source ~/.vim/rcfiles/plugin.rainbow.vim
-"}
+"██╗      █████╗ ███╗   ██╗ ██████╗ ██╗   ██╗ █████╗  ██████╗ ███████╗
+"██║     ██╔══██╗████╗  ██║██╔════╝ ██║   ██║██╔══██╗██╔════╝ ██╔════╝
+"██║     ███████║██╔██╗ ██║██║  ███╗██║   ██║███████║██║  ███╗█████╗
+"██║     ██╔══██║██║╚██╗██║██║   ██║██║   ██║██╔══██║██║   ██║██╔══╝
+"███████╗██║  ██║██║ ╚████║╚██████╔╝╚██████╔╝██║  ██║╚██████╔╝███████╗
+"╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
 
-"Git {
-  source ~/.vim/rcfiles/git.vim
-"}
+" Git
+source ~/.vim/rcfiles/git.vim
 
-"C/C++ {
-  source ~/.vim/rcfiles/cpp.vim
-"}
+" C/C++
+source ~/.vim/rcfiles/cpp.vim
 
-"LaTeX {
-  source ~/.vim/rcfiles/tex.vim
-"}
+" LaTeX
+source ~/.vim/rcfiles/tex.vim
 
-"Perl {
-  source ~/.vim/rcfiles/perl.vim
-"}
+" Perl
+source ~/.vim/rcfiles/perl.vim
 
-"WebDev {
-  source ~/.vim/rcfiles/webdev.vim
-"}
+" WebDev
+source ~/.vim/rcfiles/webdev.vim
 
-"Python {
-  source ~/.vim/rcfiles/python.vim
-"}
+" Python
+source ~/.vim/rcfiles/python.vim
+
