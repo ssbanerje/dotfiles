@@ -84,34 +84,34 @@ noremap <leader>u :GundoToggle<CR>
 map <leader>s :setlocal spell!<CR>
 
 " Start unite
-nnoremap <leader>q :<C-u>Unite -buffer-name=unite<cr>
+nnoremap <leader>q :Unite -buffer-name=unite<cr>
 
 " Find text in current file
-nnoremap <leader>f :<C-u>Unite -buffer-name=find line<cr>
+nnoremap <leader>f :Unite -buffer-name=find -start-insert line<cr>
 
 " List all buffers currently open
-nnoremap <leader>b :<C-u>Unite -buffer-name=buffer buffer<cr>
+nnoremap <leader>b :Unite -buffer-name=buffer buffer<cr>
 
 " List all tabs currently open
-nnoremap <leader>t :<C-u>Unite -buffer-name=tab tab<cr>
+nnoremap <leader>t :Unite -buffer-name=tab tab<cr>
 
 " List all windows currently open
-nnoremap <leader>w :<C-u>Unite -buffer-name=window window<cr>
+nnoremap <leader>w :Unite -buffer-name=window window<cr>
 
 " Execute a program
-nnoremap <leader>x :<C-u>Unite -buffer-name=launcher launcher<cr>
+nnoremap <leader>x :Unite -buffer-name=launcher -start-insert launcher<cr>
 
 " Recursively search files in the current directory
-nnoremap <leader>; :<C-u>Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
+nnoremap <leader>; :Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
 
 " Show clipboard
-nnoremap <leader>y :<C-u>Unite -buffer-name=yank history/yank<cr>
+nnoremap <leader>y :Unite -buffer-name=yank history/yank<cr>
 
 " Use grep/ack on the current file
-nnoremap <leader>a :<C-u>Unite grep:.<cr>
+nnoremap <leader>a :Unite -buffer-name=grep -start-insert grep:.<cr>
 
 " Execute git commands
-nnoremap <leader>g :<C-u>Unite giti<cr>
+nnoremap <leader>g :Unite -buffer-name=git -start-insert giti<cr>
 
 " Change Windows file endings to UNIX
 noremap <Leader>W mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
