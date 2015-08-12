@@ -123,7 +123,7 @@ Plug 'ekalinin/Dockerfile.vim'
 " tlib_vim
 Plug 'tomtom/tlib_vim'
 
-" Align ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+" Align
 Plug 'junegunn/vim-easy-align', { 'on' : 'EasyAlign' }
 
 " Recover
@@ -214,3 +214,10 @@ Plug 'kmnk/vim-unite-giti'
 
 " NeoSSH
 Plug 'Shougo/neossh.vim'
+
+" Outline
+Plug 'Shougo/unite-outline'
+
+" Sessions
+Plug 'Shougo/unite-session'
+

@@ -1,18 +1,40 @@
+" ██████╗ ███████╗███╗   ██╗███████╗██████╗  █████╗ ██╗
+"██╔════╝ ██╔════╝████╗  ██║██╔════╝██╔══██╗██╔══██╗██║
+"██║  ███╗█████╗  ██╔██╗ ██║█████╗  ██████╔╝███████║██║
+"██║   ██║██╔══╝  ██║╚██╗██║██╔══╝  ██╔══██╗██╔══██║██║
+"╚██████╔╝███████╗██║ ╚████║███████╗██║  ██║██║  ██║███████╗
+" ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+
+" Convenience
 nnoremap ; :
-nnoremap j gj
-nnoremap k gk
-noremap <leader>bp :bprevious<cr>
-noremap <leader>bn :bnext<cr>
 cmap WQ wq
 cmap wQ wq
 vmap Q gq
 nmap Q gqap
 cmap Tabe tabe
-vnoremap / /\v
-cnoreabbrev <expr> w!!
-      \((getcmdtype() == ':' && getcmdline() == 'w!!')
-      \?('!sudo tee % >/dev/null'):('w!!'))
+
+" Use magic based regex for searching
 nnoremap / /\v
+vnoremap / /\v
+cnoremap %s/ %smagic/
+cnoremap \>s/ \>smagic/
+nnoremap :g/ :g/\v
+nnoremap :g// :g//
+
+" Move around wrapped lines
+nnoremap j gj
+nnoremap k gk
+
+" Move between bufferes
+noremap <leader>bp :bprevious<cr>
+noremap <leader>bn :bnext<cr>
+
+"Split window horizontally
+noremap <silent>ss :split<CR>
+
+"Split window vertically
+noremap <silent>vv :vsplit<CR>
+
 "Window navigation and resizing
 map <C-H> <C-W>h
 map <C-J> <C-W>j
@@ -22,42 +44,94 @@ map <S-H> <C-W><
 map <S-J> <C-W>+
 map <S-K> <C-W>-
 map <S-L> <C-W>>
+
 "Bubble lines and bocks
 nmap <S-Up> ddkP
-nmap <S-Down> ddp
-vmap <S-Up> xkP`[V`]
-vmap <S-Down> xp`[V`]  "Bubble lines
-"}
+vmap <S-up> xkp`[v`]
+vmap <S-down> xp`[v`]
+nmap <S-down> ddp
+
+" Get sudo access to a file
+cnoreabbrev <expr> w!!
+      \((getcmdtype() == ':' && getcmdline() == 'w!!')
+      \?('!sudo tee % >/dev/null'):('w!!'))
+
+
+"██╗     ███████╗ █████╗ ██████╗ ███████╗██████╗
+"██║     ██╔════╝██╔══██╗██╔══██╗██╔════╝██╔══██╗
+"██║     █████╗  ███████║██║  ██║█████╗  ██████╔╝
+"██║     ██╔══╝  ██╔══██║██║  ██║██╔══╝  ██╔══██╗
+"███████╗███████╗██║  ██║██████╔╝███████╗██║  ██║
+"╚══════╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
+
 
 "Stop highlighting search
 noremap <silent>., :nohlsearch<CR>
+
 "Start a zsh session
 noremap <leader>k :VimShellPop <CR>
+
 "Toggle Nerdtree
 noremap <leader>m :VimFilerExplorer<cr>
+
 "Toggle tagbar
 noremap <leader>. :TagbarToggle<CR>
-"Open Unite file viewer
-nnoremap <leader>q :<C-u>Unite -buffer-name=unite<cr>
-nnoremap <leader>f :<C-u>Unite -buffer-name=find line<cr>
-nnoremap <leader>b :<C-u>Unite -buffer-name=buffer buffer<cr>
-nnoremap <leader>t :<C-u>Unite -buffer-name=tab tab<cr>
-nnoremap <leader>W :<C-u>Unite -buffer-name=window window<cr>
-nnoremap <leader>x :<C-u>Unite -buffer-name=launcher launcher<cr>
-nnoremap <leader>; :<C-u>Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
-nnoremap <leader>y :<C-u>Unite -buffer-name=yank history/yank<cr>
-nnoremap <leader>a :<C-u>Unite grep:.<cr>
-nnoremap <leader>g :<C-u>Unite giti<cr>
 
-
-"Split window horizontally
-noremap <silent>ss :split<CR>
-"Split window vertically
-noremap <silent>vv :vsplit<CR>
 "Toggle gundo
 noremap <leader>u :GundoToggle<CR>
-"Spell Check
+
+"Toggle Spell Check
 map <leader>s :setlocal spell!<CR>
-"Windows file endings
-noremap <Leader>w mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+" Start unite
+nnoremap <leader>q :Unite -buffer-name=unite<cr>
+
+" Find text in current file
+nnoremap <leader>f :Unite -buffer-name=find -start-insert line<cr>
+
+" List all buffers currently open
+nnoremap <leader>b :Unite -buffer-name=buffer buffer<cr>
+
+" List all tabs currently open
+nnoremap <leader>t :Unite -buffer-name=tab tab<cr>
+
+" List all windows currently open
+nnoremap <leader>w :Unite -buffer-name=window window<cr>
+
+" Execute a program
+nnoremap <leader>x :Unite -buffer-name=launcher -start-insert launcher<cr>
+
+" Recursively search files in the current directory
+nnoremap <leader>; :Unite -buffer-name=files  -start-insert file_rec/async:!<cr>
+
+" Show clipboard
+nnoremap <leader>y :Unite -buffer-name=yank history/yank<cr>
+
+" Use grep/ack on the current file
+nnoremap <leader>a :Unite -buffer-name=grep -start-insert grep:.<cr>
+
+" Execute git commands
+nnoremap <leader>g :Unite -buffer-name=git -start-insert giti<cr>
+
+" Change Windows file endings to UNIX
+noremap <Leader>W mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+
+"███╗   ███╗ █████╗  ██████╗
+"████╗ ████║██╔══██╗██╔════╝
+"██╔████╔██║███████║██║
+"██║╚██╔╝██║██╔══██║██║
+"██║ ╚═╝ ██║██║  ██║╚██████╗
+"╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
+
+if has("mac")
+  nnoremap <D-≠>      16<C-w>>
+  inoremap <D-≠> <C-o>16<C-w>>
+  nnoremap <D-–>      16<C-w><
+  inoremap <D-–> <C-o>16<C-w><
+  nnoremap <D-±>      8<C-w>+
+  inoremap <D-±> <C-o>8<C-w>+
+  nnoremap <D-—>      8<C-w>-
+  inoremap <D-—> <C-o>8<C-w>-
+endif
 

@@ -88,7 +88,7 @@ build-vim:
 	cp -r editors/powerline/ $(BUILD)/.powerline
 build-emacs:
 	@echo '---------------- Configurations for EMACS ----------------'
-	cp editors/emacs/spacemacs.conf $(BUILD)/.spacemacs
+	cp editors/spacemacs $(BUILD)/.spacemacs
 	cp -r editors/emacs/spacemacs $(BUILD)/.emacs.d/
 
 ######## OS Specific ###########
