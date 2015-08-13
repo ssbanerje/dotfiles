@@ -45,6 +45,9 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
 " Tagbar
 Plug 'majutsushi/tagbar'
 
+" C++ enhanced highlighting
+Plug 'octol/vim-cpp-enhanced-highlight'
+
 
 "██████╗ ██╗   ██╗████████╗██╗  ██╗ ██████╗ ███╗   ██╗
 "██╔══██╗╚██╗ ██╔╝╚══██╔══╝██║  ██║██╔═══██╗████╗  ██║
