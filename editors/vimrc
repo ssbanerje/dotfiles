@@ -125,61 +125,31 @@ source ~/.vim/rcfiles/programming.vim
 "██║     ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║███████║
 "╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
 
+source ~/.vim/rcfiles/plugin.powerline.vim
 
+source ~/.vim/rcfiles/plugin.align.vim
 
-"Plugins {
-  "Powerline {
-    source ~/.vim/rcfiles/plugin.powerline.vim
-  "}
+source ~/.vim/rcfiles/plugin.rainbow.vim
 
-  "Align {
-    source ~/.vim/rcfiles/plugin.align.vim
-  "}
+source ~/.vim/rcfiles/plugin.notes.vim
 
-  "Rainbow Parenthesis {
-    let g:rainbow_active = 1
-    source ~/.vim/rcfiles/plugin.rainbow.vim
-  "}
+source ~/.vim/rcfiles/plugin.headlights.vim
 
-  "Notes {
-    source ~/.vim/rcfiles/plugin.notes.vim
-  "}
+source ~/.vim/rcfiles/plugin.tabman.vim
 
-  "Headlights {
-    source ~/.vim/rcfiles/plugin.headlights.vim
-  "}
+source ~/.vim/rcfiles/plugin.syntastic.vim
 
-  "Tabman {
-    source ~/.vim/rcfiles/plugin.tabman.vim
-  "}
+source ~/.vim/rcfiles/plugin.unite.vim
 
-  "Syntatstic {
-    source ~/.vim/rcfiles/plugin.syntastic.vim
-  "}
+source ~/.vim/rcfiles/plugin.ycm.vim
 
-  "Unite {
-    source ~/.vim/rcfiles/plugin.unite.vim
-  "}
+source ~/.vim/rcfiles/plugin.vimshell.vim
 
-  "YouCompleteMe {
-    source ~/.vim/rcfiles/plugin.ycm.vim
-  "}
+source ~/.vim/rcfiles/plugin.vimfiler.vim
 
-  "VimShell {
-    source ~/.vim/rcfiles/plugin.vimshell.vim
-  "}
+source ~/.vim/rcfiles/plugin.signify.vim
 
-  "VimFiler {
-    source ~/.vim/rcfiles/plugin.vimfiler.vim
-  "}
+source ~/.vim/rcfiles/plugin.numbers.vim
 
-  "Signify {
-    source ~/.vim/rcfiles/plugin.signify.vim
-  "}
-
-  "Numbers {
-    source ~/.vim/rcfiles/plugin.numbers.vim
-  "}
-"}
-
+source ~/.vim/rcfiles/plugin.startify.vim
 

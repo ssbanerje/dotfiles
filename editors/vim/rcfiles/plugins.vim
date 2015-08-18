@@ -201,6 +201,9 @@ Plug 'terryma/vim-multiple-cursors'
 " Vim Addons : MW Utils
 Plug 'MarcWeber/vim-addon-mw-utils'
 
+" Start screen for vim
+Plug 'mhinz/vim-startify'
+
 
 "██╗   ██╗███╗   ██╗██╗████████╗███████╗
 "██║   ██║████╗  ██║██║╚══██╔══╝██╔════╝
