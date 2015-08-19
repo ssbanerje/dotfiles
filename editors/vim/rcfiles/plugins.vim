@@ -1,3 +1,6 @@
+" Start screen for vim
+Plug 'mhinz/vim-startify'
+
 " Synatstic
 Plug 'scrooloose/syntastic'
 
@@ -31,6 +34,8 @@ Plug 'tpope/vim-git'
 " Vim Signify
 Plug 'mhinz/vim-signify'
 
+" Splice
+Plug 'sjl/splice.vim'
 
 " ██████╗    ██╗ ██████╗██████╗ ██████╗
 "██╔════╝   ██╔╝██╔════╝██╔══██╗██╔══██╗
@@ -82,7 +87,7 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 "╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
 
 " ATP Plugin
-Plug 'git://git.code.sf.net/p/atp-vim/code', { 'for' : ['tex', 'bib'] }
+Plug 'git://git.code.sf.net/p/atp-vim/code', { 'for': ['tex', 'bib'] }
 
 
 "██╗    ██╗███████╗██████╗
@@ -102,7 +107,7 @@ Plug 'leshill/vim-json', { 'for': ['javascript', 'json'] }
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 
 " Vim NodeJS
-Plug 'guileen/vim-node'
+Plug 'guileen/vim-node', { 'for': ['javascript', 'json'] }
 
 
 "██████╗  ██████╗  ██████╗██╗  ██╗███████╗██████╗
@@ -113,7 +118,7 @@ Plug 'guileen/vim-node'
 "╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
 
 " Dockerfile snippets and syntax
-Plug 'ekalinin/Dockerfile.vim'
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 
 
 "██╗   ██╗████████╗██╗██╗
@@ -127,13 +132,13 @@ Plug 'ekalinin/Dockerfile.vim'
 Plug 'tomtom/tlib_vim'
 
 " Align
-Plug 'junegunn/vim-easy-align', { 'on' : 'EasyAlign' }
+Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 
 " Recover
 Plug 'chrisbra/Recover.vim'
 
 " Gundo
-Plug 'sjl/gundo.vim'
+Plug 'sjl/gundo.vim', { 'on': 'GundoToggle' }
 
 " Nerd Commenter
 Plug 'scrooloose/nerdcommenter'
@@ -145,7 +150,7 @@ Plug 'luochen1990/rainbow'
 Plug 'jiangmiao/auto-pairs'
 
 " Vimfiler
-Plug 'Shougo/vimfiler.vim'
+Plug 'Shougo/vimfiler.vim', { 'on': 'VimFilerExplorer' }
 
 " Easymotion
 Plug 'Lokaltog/vim-easymotion'
@@ -157,22 +162,13 @@ Plug 'xolox/vim-misc'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " Vimshell
-Plug 'Shougo/vimshell.vim'
+Plug 'Shougo/vimshell.vim', { 'on': 'VimShellPop' }
 
 " Snippets
 Plug 'honza/vim-snippets'
 
 " Snipmate
 Plug 'garbas/vim-snipmate'
-
-" EasyMotion
-Plug 'Lokaltog/vim-easymotion'
-
-" Notes
-Plug 'xolox/vim-notes', { 'for': 'notes' }
-
-" Splice
-Plug 'sjl/splice.vim'
 
 " Ack
 Plug 'mileszs/ack.vim', { 'on': 'Ack' }
@@ -183,9 +179,6 @@ Plug 'b4winckler/vim-angry'
 " Headlights
 Plug 'mbadran/headlights'
 
-" Tabman
-Plug 'kien/tabman.vim'
-
 " EditorConfig
 Plug 'editorconfig/editorconfig-vim'
 
@@ -193,16 +186,13 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'myusuf3/numbers.vim'
 
 " Indent Guides
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'nathanaelkane/vim-indent-guides', { 'on': 'IndentGuidesToggle' }
 
 " Multiple cursors
 Plug 'terryma/vim-multiple-cursors'
 
 " Vim Addons : MW Utils
 Plug 'MarcWeber/vim-addon-mw-utils'
-
-" Start screen for vim
-Plug 'mhinz/vim-startify'
 
 
 "██╗   ██╗███╗   ██╗██╗████████╗███████╗
@@ -217,9 +207,6 @@ Plug 'Shougo/unite.vim'
 
 " Vim-git-unite
 Plug 'kmnk/vim-unite-giti'
-
-" NeoSSH
-Plug 'Shougo/neossh.vim'
 
 " Outline
 Plug 'Shougo/unite-outline'

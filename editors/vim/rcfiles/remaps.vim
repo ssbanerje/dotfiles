@@ -84,6 +84,9 @@ noremap <leader>u :GundoToggle<CR>
 "Toggle Spell Check
 map <leader>s :setlocal spell!<CR>
 
+"Toggle indent guides
+map <leader>i :IndentGuidesToggle<CR>
+
 " Start unite
 nnoremap <leader>q :Unite -buffer-name=unite<cr>
 
