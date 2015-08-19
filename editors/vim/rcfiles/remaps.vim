@@ -7,6 +7,7 @@
 
 " Convenience
 nnoremap ; :
+cmap Q q
 cmap WQ wq
 cmap wQ wq
 vmap Q gq

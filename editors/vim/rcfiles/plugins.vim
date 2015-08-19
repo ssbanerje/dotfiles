@@ -45,6 +45,9 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
 " Tagbar
 Plug 'majutsushi/tagbar'
 
+" C++ enhanced highlighting
+Plug 'octol/vim-cpp-enhanced-highlight'
+
 
 "██████╗ ██╗   ██╗████████╗██╗  ██╗ ██████╗ ███╗   ██╗
 "██╔══██╗╚██╗ ██╔╝╚══██╔══╝██║  ██║██╔═══██╗████╗  ██║
@@ -197,6 +200,9 @@ Plug 'terryma/vim-multiple-cursors'
 
 " Vim Addons : MW Utils
 Plug 'MarcWeber/vim-addon-mw-utils'
+
+" Start screen for vim
+Plug 'mhinz/vim-startify'
 
 
 "██╗   ██╗███╗   ██╗██╗████████╗███████╗

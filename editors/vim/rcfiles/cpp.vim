@@ -10,3 +10,6 @@ augroup VIMRC_CPP
   au FileType c,cpp set completeopt=menuone,menu,longest,preview
 augroup END
 
+" Enable enhanced syntax highlighting for C++
+let g:cpp_class_scope_highlight = 1
+let g:cpp_experimental_template_highlight = 1
