@@ -185,15 +185,14 @@ Plug 'editorconfig/editorconfig-vim'
 " Numbers
 Plug 'myusuf3/numbers.vim'
 
-" Indent Guides
-Plug 'nathanaelkane/vim-indent-guides', { 'on': 'IndentGuidesToggle' }
+" Indent Lines
+Plug 'Yggdroot/indentLine'
 
 " Multiple cursors
 Plug 'terryma/vim-multiple-cursors'
 
 " Vim Addons : MW Utils
 Plug 'MarcWeber/vim-addon-mw-utils'
-
 
 "██╗   ██╗███╗   ██╗██╗████████╗███████╗
 "██║   ██║████╗  ██║██║╚══██╔══╝██╔════╝

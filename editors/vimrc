@@ -153,3 +153,4 @@ source ~/.vim/rcfiles/plugin.numbers.vim
 
 source ~/.vim/rcfiles/plugin.startify.vim
 
+source ~/.vim/rcfiles/plugin.indent.vim
