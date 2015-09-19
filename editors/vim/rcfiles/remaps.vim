@@ -30,6 +30,9 @@ nnoremap k gk
 noremap <leader>bp :bprevious<cr>
 noremap <leader>bn :bnext<cr>
 
+" Move around windows
+nmap  -  <Plug>(choosewin)
+
 "Split window horizontally
 noremap <silent>ss :split<CR>
 

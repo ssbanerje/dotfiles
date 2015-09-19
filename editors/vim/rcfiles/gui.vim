@@ -38,6 +38,8 @@ augroup VIMRC_GUI_RESIZE
   au VimResized * :wincmd =
 augroup END
 
+" Settings for the choosewin plugin
+source ~/.vim/rcfiles/plugin.choosewin.vim
 
 " ██████╗ ██████╗ ██╗      ██████╗ ██████╗ ███████╗
 "██╔════╝██╔═══██╗██║     ██╔═══██╗██╔══██╗██╔════╝
