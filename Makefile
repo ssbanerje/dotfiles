@@ -97,7 +97,6 @@ build-common:
 	mkdir -p $(BUILD)/.bin
 	cp bin/gzball $(BUILD)/.bin/
 	cp bin/ports $(BUILD)/.bin/
-	cp bin/talkto $(BUILD)/.bin/
 	cp bin/wikisearch $(BUILD)/.bin/
 	cp bin/random $(BUILD)/.bin/
 build-Darwin: build-common
