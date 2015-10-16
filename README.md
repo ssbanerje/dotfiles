@@ -38,6 +38,7 @@ sudo apt-get install zsh ruby1.9.1-dev libclang-dev exuberant-ctags python-pip v
 git clone https://github.com/ssbanerje/dotfiles.git dotfiles
 cd dotfiles
 git submodule update --init --recursive
+make init
 make
 make install
 ```
