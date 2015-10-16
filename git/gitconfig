@@ -2,7 +2,7 @@
         whitespace = fix,space-before-tab,tab-in-indent,trailing-space
         legacyheaders = false
         quotepath = false
-        excludesfile = <<GLOBALGITIGNORE>>
+        excludesfile = {{HOME_DIR}}/.global_gitignore
 
 [repack]
         usedeltabaseoffset = true
@@ -11,14 +11,17 @@
         whitespace = fix
 
 [user]
-        name = Subho Banerjee
-        email = subs.zero@gmail.com
+        name = {{NAME}}
+        email = {{EMAIL}}
 
 [github]
-        user = ssbanerje
+        user = {{GITHUB_USERNAME}}
 
 [difftool]
         prompt = false
+
+[credential]
+    helper = {{CREDENTIAL_HELPER}}
 
 [diff]
         renames = copy

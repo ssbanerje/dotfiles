@@ -8,21 +8,15 @@
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
-# Set less options
-if [[ -x $(which less) ]]
-then
-    export PAGER="less"
-    export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
-fi
-
-# Path to your oh-my-zsh configuration.
+export ZSH_THEME="{{ZSH_THEME}}"
 export ZSH=$HOME/.oh-my-zsh
-
-# Comment this out to disable weekly auto-update checks
 export DISABLE_AUTO_UPDATE="true"
 
 # Plugins
-plugins=(git git-flow github git-extras svn mercurial common-aliases history-substring-search perl pip python sublime svn zsh-syntax-highlighting web-search tmux docker scala sudo)
+plugins=(
+{% for plugin in OH_MY_ZSH_PLUGINS %} {{plugin}} {% endfor %}
+{% for plugin in OH_MY_ZSH_PLUGINS_OS_DEP %} {{plugin}} {% endfor %}
+)
 source $ZSH/oh-my-zsh.sh
 
 # Get stuff from .profile
@@ -73,6 +67,7 @@ fancy-ctrl-z () {
     zle clear-screen
   fi
 }
+
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z''
 

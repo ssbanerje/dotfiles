@@ -2,42 +2,68 @@ UNAME := $(shell uname)
 BUILD := build
 HOME_ESCAPED := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-build: clean init-vim build-fonts-$(UNAME) build-git build-shell build-ssh build-interp build-editors build-$(UNAME)
-install: install-common install-$(UNAME)
-init: init-vim init-submodule
+build: clean\
+  init\
+  build-fonts-$(UNAME)\
+  build-git\
+  build-shell\
+  build-ssh\
+  build-interp\
+  build-editors\
+  build-$(UNAME)
 
-######## Init Everythning ###########
-init-submodule:
+install: install-common\
+  install-$(UNAME)
+
+######## Init ###########
+init:
+	@echo '---------------- Init ----------------'
 	git submodule update --init --recursive
-init-vim:
-	@echo '------------------------- Init ------------------------'
-	mkdir -p $(BUILD)/.vim/vim_backups
-	mkdir -p $(BUILD)/.vim/vim_swp
+	pip install --upgrade click jinja2
+
+
 
 ######## Fonts ###########
 build-fonts-Darwin:
-	@echo '---------------------- Build fonts ---------------------'
+	@echo '---------------- Copying Fonts ----------------'
 	mkdir -p $(BUILD)/Library/Fonts/
 	cp fonts/* $(BUILD)/Library/Fonts/
 build-fonts-Linux:
-	@echo '---------------------- Build fonts ---------------------'
+	@echo '---------------- Copying Fonts ----------------'
 	mkdir -p $(BUILD)/.fonts
 	cp fonts/* $(BUILD)/.fonts
+
+
 
 ######## Git ###########
 build-git:
 	@echo '---------------- Configurations for Git ----------------'
 	cat git/gitignore/Global/*.gitignore > $(BUILD)/.global_gitignore
-	cp git/gitconfig $(BUILD)/.gitconfig
+	python generate_template.py --template-file git/gitconfig --json-file config/git_config_db.json
+	mv $(BUILD)/gitconfig $(BUILD)/.gitconfig
 	cp git/gitattributes $(BUILD)/.gitattributes
-	sed -i.bak -e 's/<<GLOBALGITIGNORE>>/$(HOME_ESCAPED)\/.global_gitignore/g' $(BUILD)/.gitconfig
-	[ -e git/gitconfig.$(UNAME) ] && cat git/gitconfig.$(UNAME) >> $(BUILD)/.gitconfig
+
+
 
 ######## Shell stuff ###########
-build-shell: build-bash build-zsh build-commands build-tmux
+build-shell: build-sh build-bash build-zsh build-commands build-tmux
+build-sh:
 	@echo '--------------- Configurations for Sh -------------------'
 	cp shell/profile $(BUILD)/.profile
 	[ -e shell/profile.$(UNAME).sh ] && cat shell/profile.$(UNAME).sh >> $(BUILD)/.profile
+build-bash:
+	@echo '-------------- Configurations for Bash -----------------'
+	cp shell/bash_profile $(BUILD)/.bash_profile
+	cp shell/bashrc $(BUILD)/.bashrc
+	cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
+	[ -e shell/bashrc.$(UNAME).sh  ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
+build-zsh:
+	@echo '---------------- Configurations for ZSH ----------------'
+	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
+	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
+	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	python generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json
+	mv build/zshrc build/.zshrc
 build-commands:
 	@echo '---------- Configurations for Shell Commands ------------'
 	cp shell/ackrc $(BUILD)/.ackrc
@@ -46,23 +72,10 @@ build-commands:
 	cp shell/toprc $(BUILD)/.toprc
 	cp shell/npmrc $(BUILD)/.npmrc
 build-tmux:
-	cp shell/tmux.conf $(BUILD)/.tmux.conf
-	echo "set -g status-right '#($(HOME)/.powerline/scripts/powerline tmux right)'" >> $(BUILD)/.tmux.conf
-	echo "source '$(HOME)/.powerline/powerline/bindings/tmux/powerline.conf'" >> $(BUILD)/.tmux.conf
-build-bash:
-	@echo '-------------- Configurations for Bash -----------------'
-	cp shell/bash_profile $(BUILD)/.bash_profile
-	cp shell/bashrc $(BUILD)/.bashrc
-	cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
-	[ -e shell/bashrc.$(UNAME).sh ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
-build-zsh:
-	@echo '---------------- Configurations for ZSH ----------------'
-	cp shell/zshrc.prompt.$(UNAME).sh $(BUILD)/.zshrc
-	cat shell/zshrc >> $(BUILD)/.zshrc
-	[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $(BUILD)/.zshrc
-	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
-	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
-	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	@echo '------------------ Configurations TMUX ------------------'
+	python generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json
+	mv build/tmux.conf build/.tmux.conf
+
 
 
 ########## For SSH #############
@@ -71,11 +84,15 @@ build-ssh:
 	mkdir -p $(BUILD)/.ssh/
 	cp ssh/config $(BUILD)/.ssh/
 
+
+
 ######## For Interps ###########
 build-interp:
 	@echo '-------------- Configurations for Interps --------------'
 	cp interp/pyrc $(BUILD)/.pyrc
 	cp interp/irbrc $(BUILD)/.irbrc
+
+
 
 ######## For Editors ###########
 build-editors: build-vim build-emacs
@@ -83,6 +100,8 @@ build-editors: build-vim build-emacs
 	cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
 	@echo '---------------- Configurations for VIM ----------------'
+	mkdir -p $(BUILD)/.vim/vim_backups
+	mkdir -p $(BUILD)/.vim/vim_swp
 	cp editors/vimrc $(BUILD)/.vimrc
 	cp -r editors/vim/* $(BUILD)/.vim/
 	cp -r editors/powerline/ $(BUILD)/.powerline
@@ -90,6 +109,8 @@ build-emacs:
 	@echo '---------------- Configurations for EMACS ----------------'
 	cp editors/spacemacs $(BUILD)/.spacemacs
 	cp -r editors/emacs/spacemacs $(BUILD)/.emacs.d/
+
+
 
 ######## OS Specific ###########
 build-common:
@@ -113,6 +134,8 @@ build-Linux: build-common
   fi;
 	cp -r shell/base16-shell $(BUILD)/.shellcolors
 
+
+
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
@@ -128,6 +151,8 @@ install-Linux: install-common
 	gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'
 	gconftool-2 -t int -s /apps/meld/tab_size '2'
 	cd ${HOME}/.powerline && python setup.py build && python setup.py install --user
+
+
 
 ######## Clean ###########
 clean:

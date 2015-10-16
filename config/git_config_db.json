@@ -1,0 +1,14 @@
+{
+  "GLOBAL_GITIGNORE": "hello world",
+  "NAME": "Subho Banerjee",
+  "EMAIL": "ssbanerje@gmail.com",
+  "GITHUB_USERNAME": "ssbanerje",
+  "__UNAME__": {
+    "Darwin": {
+      "CREDENTIAL_HELPER": "osxkeychain"
+    },
+    "Linux": {
+      "CREDENTIAL_HELPER": "cache --timeout 36000"
+    }
+  }
+}
