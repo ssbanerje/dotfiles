@@ -5,46 +5,46 @@
 
 (setq-default
  ;; List of additional paths where to look for configuration layers.
- ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '()
+
  ;; List of configuration layers to load.
- dotspacemacs-configuration-layers '()
+ dotspacemacs-configuration-layers '(dockerfile c-c++ go html ipython-notebook
+                                     java javascript latex markdown python rust
+                                     scala shell-scripts extra-langs git github
+                                     tmux ycmd auto-completion better-defaults
+                                     colors osx search-engine semantic shell
+                                     spell-checking spotify syntax-checking
+                                     themes-megapack games
+                                     )
+
  ;; A list of packages and/or extensions that will not be install and loaded.
  dotspacemacs-excluded-packages '()
- ;; Default theme applied at startup
- dotspacemacs-default-theme 'monokai
 )
 
 ;; Settings
 ;; --------
 
 (setq-default
- ;; Default theme applied at startup
- dotspacemacs-default-theme 'solarized-light
- ;; The leader key
  dotspacemacs-leader-key "SPC"
- ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
- ;; the commands bound to the current keystrokes.
  dotspacemacs-guide-key-delay 0.4
- ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only)
  dotspacemacs-fullscreen-at-startup nil
- ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
- ;; overrides the default behavior of Emacs which recenters the point when
- ;; it reaches the top or bottom of the screen
  dotspacemacs-smooth-scrolling t
- ;; If non nil pressing 'jk' in insert state, ido or helm will activate the
- ;; evil leader.
  dotspacemacs-feature-toggle-leader-on-jk nil
- ;; The default package repository used if no explicit repository has been
- ;; specified with an installed package.
- ;; Not used for now.
  dotspacemacs-default-package-repository nil
 )
+
+;; Switching windows
+;; -----------------
+
+(global-set-key [S-left] 'windmove-left)
+(global-set-key [S-right] 'windmove-right)
+(global-set-key [S-up] 'windmove-up)
+(global-set-key [S-down] 'windmove-down)
 
 ;; Initialization Hooks
 ;; --------------------
 
 (defun dotspacemacs/init ()
-  "User initialization for Spacemacs. This function is called at the very
- startup."
+  (global-linum-mode)
 )
+
