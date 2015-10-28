@@ -64,9 +64,6 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 "██║        ██║      ██║   ██║  ██║╚██████╔╝██║ ╚████║
 "╚═╝        ╚═╝      ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 
-" PyDoc
-Plug 'fs111/pydoc.vim', { 'for': 'python' }
-
 " Python-Mode
 Plug 'klen/python-mode', { 'for': 'python' }
 

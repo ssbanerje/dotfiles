@@ -1,14 +1,13 @@
-let python_highlight_all = 1
-let g:pymode_options = 1
-let g:pymode_doc_key = 'D'
-let g:pydoc_cmd = 'python -m pydoc'
+let g:pymode_syntax_all = 1
+let g:pymode_doc_bind = 'D'
 let g:pymode_folding = 0
 let g:pymode_virtualenv = 1
 let g:pymode_trim_whitespaces = 1
 let g:pymode_indent = 1
 let g:pymode_lint_checkers = ['pyflakes']             "pep8 and others!
-let g:pydoc_open_cmd = 'split'
+
 let g:pymode_rope = 1
+let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_autoimport_generate = 1
 let g:pymode_rope_autoimport_underlineds = 0
 let g:pymode_rope_codeassist_maxfixes = 10
@@ -28,3 +27,4 @@ augroup VIMRC_PYTHON
   au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
   au FileType python set omnifunc=RopeOmni
 augroup END
+
