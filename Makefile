@@ -49,8 +49,10 @@ build-git:
 build-shell: build-sh build-bash build-zsh build-commands build-tmux
 build-sh:
 	@echo '--------------- Configurations for Sh -------------------'
-	cp shell/profile $(BUILD)/.profile
-	[ -e shell/profile.$(UNAME).sh ] && cat shell/profile.$(UNAME).sh >> $(BUILD)/.profile
+	cp shell/common_settings $(BUILD)/.common_settings
+	[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(BUILD)/.common_settings
+	cp shell/aliases $(BUILD)/.aliases
+	[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(BUILD)/.aliases
 build-bash:
 	@echo '-------------- Configurations for Bash -----------------'
 	cp shell/bash_profile $(BUILD)/.bash_profile

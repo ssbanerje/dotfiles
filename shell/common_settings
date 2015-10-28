@@ -1,0 +1,29 @@
+#Vim all the way
+export EDITOR=vim
+export USE_EDITOR=vim
+export SVN_EDITOR=vim
+
+# Set less options
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+if [[ -x $(which less) ]]
+then
+  export PAGER="less"
+  export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
+fi
+
+#My scripts
+export PATH=$PATH:$HOME/.bin
+
+#Start Python Shell with sensible settings
+export PYTHONSTARTUP="$HOME/.pyrc"
+
+#Color scheme for terminal
+export TERM="xterm-256color"
+
+#Stuff for rvm
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+# Setup fasd
+eval `/usr/libexec/path_helper -s`
+eval "$(fasd --init auto)"
+

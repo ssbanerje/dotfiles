@@ -1,9 +1,3 @@
-#######################################################################
-# .profile inclusions especially for Linux
-# Author: Subho Sankar Banerjee
-# EMail: subs.zero[at]gmail[dot]com
-#######################################################################
-
 #Use pbcopy and pbpaste on Linux systems
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'

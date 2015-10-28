@@ -22,9 +22,6 @@ export PATH=$PATH:$MATLAB/bin
 #Set for MacTex
 export PATH=$PATH:/usr/texbin
 
-#For homebrew
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-
 #Locale
 export LANG="en_US.UTF-8"
 export LANGUAGE="en_US:en"

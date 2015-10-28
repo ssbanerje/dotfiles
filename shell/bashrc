@@ -9,12 +9,6 @@ if [ -z "$PS1" ]; then
    return
 fi
 
-#Friendlier less
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-#Get stuff from the profile file
-source $HOME/.profile
-
 #Control history saves
 HISTCONTROL=ignoreboth:ignoredups:ignorespace
 shopt -s histappend
@@ -26,3 +20,8 @@ bind '"\e[B"':history-search-forward
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
 
+# Source aliases
+source $HOME/.aliases
+
+# Source common settings
+source $HOME/.common_settings
