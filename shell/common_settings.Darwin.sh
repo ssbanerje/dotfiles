@@ -1,10 +1,4 @@
-######################################################################
-# .profile inclusions especially for OSX
-# Author: Subho Sankar Banerjee
-# EMail: subs.zero[at]gmail[dot]com
-########################################################################
-
-#Aliases specifically for the Mac
+# Aliases specifically for the Mac
 alias vncviewer='/System/Library/CoreServices/Screen\ Sharing.app/Contents/MacOS/Screen\ Sharing'
 alias clc='/System/Library/Frameworks/OpenCL.framework/Libraries/openclc'
 alias preview="open -a '$PREVIEW'"
@@ -15,14 +9,14 @@ alias f='open -a Finder'
 alias vim='mvim -v'
 alias gvim='mvim'
 
-#Set environment for MATLAB
+# Set environment for MATLAB
 export MATLAB=/Applications/MATLAB_R2015a.app
 export PATH=$PATH:$MATLAB/bin
 
-#Set for MacTex
+# Set for MacTex
 export PATH=$PATH:/usr/texbin
 
-#Locale
+# Locale
 export LANG="en_US.UTF-8"
 export LANGUAGE="en_US:en"
 export LC_CTYPE="UTF-8"
@@ -39,9 +33,14 @@ export LC_ALL="en_US.UTF-8"
 export LC_MEASUREMENT="en_US.UTF-8"
 export LC_IDENTIFICATION="en_US.UTF-8"
 
-#Setup grc
+# Setup grc
 if $(grc &>/dev/null)
 then
     source `brew --prefix`/etc/grc.bashrc
 fi
 
+# Setup path helper
+eval `/usr/libexec/path_helper -s`
+
+# Setup fasd
+eval "$(fasd --init auto)"

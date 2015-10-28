@@ -23,7 +23,3 @@ export TERM="xterm-256color"
 #Stuff for rvm
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-# Setup fasd
-eval `/usr/libexec/path_helper -s`
-eval "$(fasd --init auto)"
-
