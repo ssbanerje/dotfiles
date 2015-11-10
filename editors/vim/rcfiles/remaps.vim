@@ -118,7 +118,7 @@ nnoremap <leader>y :Unite -buffer-name=yank history/yank<cr>
 nnoremap <leader>a :Unite -buffer-name=grep -start-insert grep:.<cr>
 
 " Execute git commands
-nnoremap <leader>g :Unite -buffer-name=git -start-insert giti<cr>
+nnoremap <silent> <Leader>g :Unite -buffer-name=git menu:git<CR>
 
 " Change Windows file endings to UNIX
 noremap <Leader>W mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm

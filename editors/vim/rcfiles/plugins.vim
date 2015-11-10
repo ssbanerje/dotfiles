@@ -204,9 +204,6 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 " Unite
 Plug 'Shougo/unite.vim'
 
-" Vim-git-unite
-Plug 'kmnk/vim-unite-giti'
-
 " Outline
 Plug 'Shougo/unite-outline'
 
