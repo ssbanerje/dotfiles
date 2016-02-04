@@ -61,8 +61,8 @@ build-bash:
 	[ -e shell/bashrc.$(UNAME).sh  ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
 build-zsh:
 	@echo '---------------- Configurations for ZSH ----------------'
-	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
 	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
+	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
 	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 	python generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json
 	mv build/zshrc build/.zshrc

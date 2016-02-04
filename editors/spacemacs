@@ -14,7 +14,7 @@
                                      tmux ycmd auto-completion better-defaults
                                      colors osx search-engine semantic shell
                                      spell-checking spotify syntax-checking
-                                     themes-megapack games
+                                     themes-megapack games unimpaired evil-snipe
                                      )
 
  ;; A list of packages and/or extensions that will not be install and loaded.

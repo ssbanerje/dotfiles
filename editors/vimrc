@@ -131,11 +131,7 @@ source ~/.vim/rcfiles/plugin.align.vim
 
 source ~/.vim/rcfiles/plugin.rainbow.vim
 
-source ~/.vim/rcfiles/plugin.notes.vim
-
 source ~/.vim/rcfiles/plugin.headlights.vim
-
-source ~/.vim/rcfiles/plugin.tabman.vim
 
 source ~/.vim/rcfiles/plugin.syntastic.vim
 
