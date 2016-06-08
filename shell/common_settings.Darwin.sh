@@ -9,6 +9,9 @@ alias f='open -a Finder'
 alias vim='mvim -v'
 alias gvim='mvim'
 
+# Setup path for Homebrew
+export PATH="/usr/local/sbin:$PATH"
+
 # Set environment for MATLAB
 export MATLAB=/Applications/MATLAB_R2015a.app
 export PATH=$PATH:$MATLAB/bin
