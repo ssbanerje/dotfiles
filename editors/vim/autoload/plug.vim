@@ -45,6 +45,7 @@
 "
 " Then reload .vimrc and :PlugInstall to install plugins.
 "
+"
 " Plug options:
 "
 "| Option                  | Description                                      |
@@ -577,14 +578,12 @@ function! s:syntax()
   syn match plugStar /^*/
   syn match plugMessage /\(^- \)\@<=.*/
   syn match plugName /\(^- \)\@<=[^ ]*:/
-  syn match plugSha /\%(: \)\@<=[0-9a-f]\{4,}$/
+  syn match plugSha /\%(: \)\@<=[0-9a-z]\{4,}$/
   syn match plugTag /(tag: [^)]\+)/
   syn match plugInstall /\(^+ \)\@<=[^:]*/
   syn match plugUpdate /\(^* \)\@<=[^:]*/
-  syn match plugCommit /^  \X*[0-9a-f]\{7} .*/ contains=plugRelDate,plugEdge,plugTag
-  syn match plugEdge /^  \X\+$/
-  syn match plugEdge /^  \X*/ contained nextgroup=plugSha
-  syn match plugSha /[0-9a-f]\{7}/ contained
+  syn match plugCommit /^  [0-9a-z]\{7} .*/ contains=plugRelDate,plugSha,plugTag
+  syn match plugSha /\(^  \)\@<=[0-9a-z]\{7}/ contained
   syn match plugRelDate /([^)]*)$/ contained
   syn match plugNotLoaded /(not loaded)$/
   syn match plugError /^x.*/
@@ -670,7 +669,7 @@ function! s:switch_out(...)
 endfunction
 
 function! s:finish_bindings()
-  nnoremap <silent> <buffer> R  :call <SID>retry()<cr>
+  nnoremap <silent> <buffer> R  :silent! call <SID>retry()<cr>
   nnoremap <silent> <buffer> D  :PlugDiff<cr>
   nnoremap <silent> <buffer> S  :PlugStatus<cr>
   nnoremap <silent> <buffer> U  :call <SID>status_update()<cr>
@@ -680,10 +679,6 @@ function! s:finish_bindings()
 endfunction
 
 function! s:prepare(...)
-  if empty(getcwd())
-    throw 'Invalid current working directory. Cannot proceed.'
-  endif
-
   call s:job_abort()
   if s:switch_in()
     normal q
@@ -768,7 +763,17 @@ function! s:do(pull, force, todo)
       let error = ''
       let type = type(spec.do)
       if type == s:TYPE.string
-        let error = s:bang(spec.do)
+        try
+          " FIXME: Escaping is incomplete. We could use shellescape with eval,
+          "        but it won't work on Windows.
+          let g:_plug_do = '!'.escape(spec.do, '#!%')
+          execute "normal! :execute g:_plug_do\<cr>\<cr>"
+        finally
+          if v:shell_error
+            let error = 'Exit status: ' . v:shell_error
+          endif
+          unlet g:_plug_do
+        endtry
       elseif type == s:TYPE.funcref
         try
           let status = installed ? 'installed' : (updated ? 'updated' : 'unchanged')
@@ -781,10 +786,6 @@ function! s:do(pull, force, todo)
       endif
       call setline(4, empty(error) ? (getline(4) . 'OK')
                                  \ : ('x' . getline(4)[1:] . error))
-      if !empty(error)
-        call add(s:update.errors, name)
-        call s:regress_bar()
-      endif
       cd -
     endif
   endfor
@@ -794,14 +795,32 @@ function! s:hash_match(a, b)
   return stridx(a:a, a:b) == 0 || stridx(a:b, a:a) == 0
 endfunction
 
-function! s:checkout(spec)
-  let sha = a:spec.commit
-  let output = s:system('git rev-parse HEAD', a:spec.dir)
-  if !v:shell_error && !s:hash_match(sha, s:lines(output)[0])
-    let output = s:system(
-          \ 'git fetch --depth 999999 && git checkout '.s:esc(sha), a:spec.dir)
-  endif
-  return output
+function! s:checkout(plugs)
+  for [name, spec] in items(a:plugs)
+    let sha = spec.commit
+    call append(3, '- Checking out '.sha[:6].' of '.name.' ... ')
+    redraw
+
+    let error = []
+    let output = s:lines(s:system('git rev-parse HEAD', spec.dir))
+    if v:shell_error
+      let error = output
+    elseif !s:hash_match(sha, output[0])
+      let output = s:lines(s:system(
+            \ 'git fetch --depth 999999 && git checkout '.sha, spec.dir))
+      if v:shell_error
+        let error = output
+      endif
+    endif
+    if empty(error)
+      call setline(4, getline(4) . 'OK')
+    else
+      call setline(4, 'x'.getline(4)[1:] . 'Error')
+      for line in reverse(error)
+        call append(4, '    '.line)
+      endfor
+    endif
+  endfor
 endfunction
 
 function! s:finish(pull)
@@ -891,7 +910,7 @@ function! s:update_impl(pull, force, args) abort
   endif
 
   let python = (has('python') || has('python3')) && (!s:nvim || has('vim_starting'))
-  let ruby = has('ruby') && !s:nvim && (v:version >= 703 || v:version == 702 && has('patch374')) && !(s:is_win && has('gui_running')) && s:check_ruby()
+  let ruby = has('ruby') && !s:nvim && (v:version >= 703 || v:version == 702 && has('patch374')) && !(s:is_win && has('gui_running'))
 
   let s:update = {
     \ 'start':   reltime(),
@@ -969,51 +988,8 @@ function! s:update_finish()
     let $GIT_TERMINAL_PROMPT = s:git_terminal_prompt
   endif
   if s:switch_in()
-    call append(3, '- Updating ...') | 4
-    for [name, spec] in items(filter(copy(s:update.all), 'index(s:update.errors, v:key) < 0 && (s:update.force || s:update.pull || has_key(s:update.new, v:key))'))
-      let pos = s:logpos(name)
-      if !pos
-        continue
-      endif
-      if has_key(spec, 'commit')
-        call s:log4(name, 'Checking out '.spec.commit)
-        let out = s:checkout(spec)
-      elseif has_key(spec, 'tag')
-        let tag = spec.tag
-        if tag =~ '\*'
-          let tags = s:lines(s:system('git tag --list '.string(tag).' --sort -version:refname 2>&1', spec.dir))
-          if !v:shell_error && !empty(tags)
-            let tag = tags[0]
-            call s:log4(name, printf('Latest tag for %s -> %s', spec.tag, tag))
-            call append(3, '')
-          endif
-        endif
-        call s:log4(name, 'Checking out '.tag)
-        let out = s:system('git checkout -q '.s:esc(tag).' 2>&1', spec.dir)
-      else
-        let branch = s:esc(get(spec, 'branch', 'master'))
-        call s:log4(name, 'Merging origin/'.branch)
-        let out = s:system('git checkout -q '.branch.' 2>&1'
-              \. (has_key(s:update.new, name) ? '' : ('&& git merge --ff-only origin/'.branch.' 2>&1')), spec.dir)
-      endif
-      if !v:shell_error && filereadable(spec.dir.'/.gitmodules') &&
-            \ (s:update.force || has_key(s:update.new, name) || s:is_updated(spec.dir))
-        call s:log4(name, 'Updating submodules. This may take a while.')
-        let out .= s:bang('git submodule update --init --recursive 2>&1', spec.dir)
-      endif
-      let msg = printf('%s %s: %s', v:shell_error ? 'x': '-', name, s:lastline(out))
-      if v:shell_error
-        call add(s:update.errors, name)
-        call s:regress_bar()
-        execute pos 'd _'
-        call append(4, msg) | 4
-      elseif !empty(out)
-        call setline(pos, msg)
-      endif
-      redraw
-    endfor
-    4 d _
-    call s:do(s:update.pull, s:update.force, filter(copy(s:update.all), 'index(s:update.errors, v:key) < 0 && has_key(v:val, "do")'))
+    call s:checkout(filter(copy(s:update.all), 'has_key(v:val, "commit")'))
+    call s:do(s:update.pull, s:update.force, filter(copy(s:update.all), 'has_key(v:val, "do")'))
     call s:finish(s:update.pull)
     call setline(1, 'Updated. Elapsed time: ' . split(reltimestr(reltime(s:update.start)))[0] . ' sec.')
     call s:switch_out('normal! gg')
@@ -1169,7 +1145,7 @@ while 1 " Without TCO, Vim stack is bound to explode
 
   let has_tag = has_key(spec, 'tag')
   if !new
-    let [error, _] = s:git_validate(spec, 0)
+    let error = s:git_validate(spec, 0)
     if empty(error)
       if pull
         let fetch_opt = (has_tag && !empty(globpath(spec.dir, '.git/shallow'))) ? '--depth 99999999' : ''
@@ -1759,7 +1735,7 @@ function! s:update_ruby()
           ok, result =
             if exists
               chdir = "#{cd} #{iswin ? dir : esc(dir)}"
-              ret, data = bt.call "#{chdir} && git rev-parse --abbrev-ref HEAD 2>&1 && git config -f .git/config remote.origin.url", nil, nil, nil
+              ret, data = bt.call "#{chdir} && git rev-parse --abbrev-ref HEAD 2>&1 && git config remote.origin.url", nil, nil, nil
               current_uri = data.lines.to_a.last
               if !ret
                 if data =~ /^Interrupted|^Timeout/
@@ -1775,7 +1751,7 @@ function! s:update_ruby()
                 if pull
                   log.call name, 'Updating ...', :update
                   fetch_opt = (tag && File.exist?(File.join(dir, '.git/shallow'))) ? '--depth 99999999' : ''
-                  bt.call "#{chdir} && git fetch #{fetch_opt} #{progress} 2>&1", name, :update, nil
+                  bt.call "#{chdir} && git fetch #{fetch_opt} #{progress} 2>&1 && git checkout -q #{checkout} 2>&1 && git merge --ff-only #{merge} 2>&1 && #{subm}", name, :update, nil
                 else
                   [true, skip]
                 end
@@ -1881,18 +1857,11 @@ function! s:git_validate(spec, check_branch)
         let err = printf('Invalid branch: %s (expected: %s). Try PlugUpdate.',
               \ branch, a:spec.branch)
       endif
-      if empty(err)
-        let commits = len(s:lines(s:system(printf('git rev-list origin/%s..HEAD', a:spec.branch), a:spec.dir)))
-        if !v:shell_error && commits
-          let err = join([printf('Diverged from origin/%s by %d commit(s).', a:spec.branch, commits),
-                        \ 'Reinstall after PlugClean.'], "\n")
-        endif
-      endif
     endif
   else
     let err = 'Not found'
   endif
-  return [err, err =~# 'PlugClean']
+  return err
 endfunction
 
 function! s:rm_rf(dir)
@@ -1911,7 +1880,7 @@ function! s:clean(force)
   let errs = {}
   let [cnt, total] = [0, len(g:plugs)]
   for [name, spec] in items(g:plugs)
-    if !s:is_managed(name)
+    if !s:is_managed(name) || empty(s:git_validate(spec, 0))
       call add(dirs, spec.dir)
     else
       let [err, clean] = s:git_validate(spec, 1)
@@ -2011,7 +1980,7 @@ function! s:status()
   for [name, spec] in items(g:plugs)
     if has_key(spec, 'uri')
       if isdirectory(spec.dir)
-        let [err, _] = s:git_validate(spec, 1)
+        let err = s:git_validate(spec, 1)
         let [valid, msg] = [empty(err), empty(err) ? 'OK' : err]
       else
         let [valid, msg] = [0, 'Not found. Try PlugInstall.']
@@ -2121,15 +2090,10 @@ function! s:section(flags)
 endfunction
 
 function! s:format_git_log(line)
-  let indent = '  '
-  let tokens = split(a:line, nr2char(1))
-  if len(tokens) != 5
-    return indent.substitute(a:line, '\s*$', '', '')
-  endif
-  let [graph, sha, refs, subject, date] = tokens
+  let [sha, refs, subject, date] = split(a:line, nr2char(1))
   let tag = matchstr(refs, 'tag: [^,)]\+')
   let tag = empty(tag) ? ' ' : ' ('.tag.') '
-  return printf('%s%s%s%s%s (%s)', indent, graph, sha, tag, subject, date)
+  return printf('  %s%s%s (%s)', sha, tag, subject, date)
 endfunction
 
 function! s:append_ul(lnum, text)
@@ -2151,7 +2115,7 @@ function! s:diff()
     call s:append_ul(2, origin ? 'Pending updates:' : 'Last update:')
     for [k, v] in plugs
       let range = origin ? '..origin/'.v.branch : 'HEAD@{1}..'
-      let diff = s:system_chomp('git log --graph --color=never --pretty=format:"%x01%h%x01%d%x01%s%x01%cr" '.s:shellesc(range), v.dir)
+      let diff = s:system_chomp('git log --pretty=format:"%h%x01%d%x01%s%x01%cr" '.s:shellesc(range), v.dir)
       if !empty(diff)
         let ref = has_key(v, 'tag') ? (' (tag: '.v.tag.')') : has_key(v, 'commit') ? (' '.v.commit) : ''
         call append(5, extend(['', '- '.k.':'.ref], map(s:lines(diff), 's:format_git_log(v:val)')))
