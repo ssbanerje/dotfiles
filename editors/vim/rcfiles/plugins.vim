@@ -51,7 +51,7 @@ Plug 'sjl/splice.vim'
 " ╚═════╝╚═╝     ╚═════╝╚═╝     ╚═╝
 
 " YouCompleteMe
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer', 'for': 'c,cpp' }
 
 " Tagbar
 Plug 'majutsushi/tagbar'
