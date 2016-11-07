@@ -128,6 +128,7 @@ build-Darwin: build-common
 	cp osx/com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
 	cp osx/lock-screen $(BUILD)/.bin/
 	cp osx/lyrics $(BUILD)/.bin/
+	cp -r osx/hammerspoon $(BUILD)/.hammerspoon
 build-Linux: build-common
 	@echo '-------------- Configurations for Linux---------------'
 	if [ -e /usr/bin/conky ] ;\
