@@ -8,7 +8,6 @@ Host *
    ControlPath /tmp/%r@%h:%p
    ControlPersist yes
    ForwardAgent yes
-   UseRoaming no
 
 Host github.com
   Hostname github.com
