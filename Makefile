@@ -75,6 +75,8 @@ build-commands:
 	cp shell/npmrc $(BUILD)/.npmrc
 build-tmux:
 	@echo '------------------ Configurations TMUX ------------------'
+	mkdir -p $(BUILD)/.tmux/plugins
+	rsync -r shell/tpm $(BUILD)/.tmux/plugins/tpm
 	python generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json
 	mv build/tmux.conf build/.tmux.conf
 

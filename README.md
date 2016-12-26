@@ -20,7 +20,7 @@ This is a compilation of dotfiles from dotfile repos, blogs and projects from ac
 
 ```bash
 ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)
-brew install ctags coreutils git macvim ack python fasd tmux
+brew install ctags coreutils git macvim ack python fasd tmux reattach-to-user-namespace
 ```
 
 * Install [iTerm2](http://www.iterm2.com/#/section/home) - Not _required_ for these configuration files, but a welcome replacement of `Terminal.app`
@@ -28,7 +28,7 @@ brew install ctags coreutils git macvim ack python fasd tmux
 
 On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning
 ```bash
-sudo apt-get install zsh ruby-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux cmake python-dev
+sudo apt-get install zsh ruby-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux cmake python-dev xclip
 ```
 
 ###Installation
