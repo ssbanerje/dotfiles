@@ -19,7 +19,7 @@ install: install-common\
 init:
 	@echo '---------------- Init ----------------'
 	git submodule update --init --recursive
-	pip install --upgrade click jinja2 || 1
+	pip install --upgrade --user click jinja2 || 1
 
 
 
