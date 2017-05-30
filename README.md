@@ -14,19 +14,21 @@ This is a compilation of dotfiles from dotfile repos, blogs and projects from ac
 
 ##Using these dotfiles
 ###Dependencies
+
+####Mac OS
 * [XCode Tools](http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12#)
 * Install [homebrew](https://github.com/mxcl/homebrew) and some packages used in the dotfiles
-* Install BetterTouchTool
 
 ```bash
 ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)
 brew install ctags coreutils git macvim ack python fasd tmux reattach-to-user-namespace
 ```
 
-* Install [iTerm2](http://www.iterm2.com/#/section/home) - Not _required_ for these configuration files, but a welcome replacement of `Terminal.app`
+* Install [iTerm2](http://www.iter, m2.com/#/section/home), [hammerspoon](http://www.hammerspoon.org)
 
-
+####Linux
 On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning
+
 ```bash
 sudo apt-get install zsh ruby-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux cmake python-dev xclip psutils
 ```
@@ -42,8 +44,6 @@ make init
 make
 make install
 ```
-
-`Note:` You would also need to change the `.gitconfig` file. So that you do not end up commiting as me.
 
 ###Update
 To update to the latest version, simply update the git repository and submodules. Then run `make` and `make install`. To update all VIM plugins, run `:PlugUpdate`
