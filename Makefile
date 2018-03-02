@@ -19,7 +19,7 @@ install: install-common\
 init:
 	@echo '---------------- Init ----------------'
 	git submodule update --init --recursive
-	pip install --upgrade --user click jinja2 || 1
+	pip3 install --upgrade --user click jinja2 || 1
 
 
 
@@ -39,7 +39,7 @@ build-fonts-Linux:
 build-git:
 	@echo '---------------- Configurations for Git ----------------'
 	cat git/gitignore/Global/*.gitignore > $(BUILD)/.global_gitignore
-	python generate_template.py --template-file git/gitconfig --json-file config/git_config_db.json
+	python3 generate_template.py --template-file git/gitconfig --json-file config/git_config_db.json
 	mv $(BUILD)/gitconfig $(BUILD)/.gitconfig
 	cp git/gitattributes $(BUILD)/.gitattributes
 
@@ -64,7 +64,7 @@ build-zsh:
 	cp -r shell/oh-my-zsh/ $(BUILD)/.oh-my-zsh
 	mkdir -p $(BUILD)/.oh-my-zsh/custom/plugins/
 	cp -r shell/zsh-syntax-highlighting/ $(BUILD)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-	python generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json
+	python3 generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json
 	mv build/zshrc build/.zshrc
 build-commands:
 	@echo '---------- Configurations for Shell Commands ------------'
@@ -77,7 +77,7 @@ build-tmux:
 	@echo '------------------ Configurations TMUX ------------------'
 	mkdir -p $(BUILD)/.tmux/plugins
 	rsync -r shell/tpm $(BUILD)/.tmux/plugins/tpm
-	python generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json
+	python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json
 	mv build/tmux.conf build/.tmux.conf
 
 
@@ -146,7 +146,7 @@ install-common:
 	rsync -av $(BUILD)/ ${HOME}
 	vim -c PlugInstall -c qa!
 install-Darwin: install-common
-	cd ${HOME}/.powerline && python setup.py build && python setup.py install
+	cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install
 install-Linux: install-common
 	fc-cache -vf
 	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'
@@ -155,7 +155,7 @@ install-Linux: install-common
 	gconftool-2 -t bool -s /apps/meld/use_custom_font '1'
 	gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'
 	gconftool-2 -t int -s /apps/meld/tab_size '2'
-	cd ${HOME}/.powerline && python setup.py build && python setup.py install --user
+	cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user
 
 
 

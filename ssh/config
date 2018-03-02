@@ -9,10 +9,10 @@ Host *
    ControlPersist yes
    ForwardAgent yes
 
-Host github.com
-  Hostname github.com
-  IdentityFile ~/.ssh/github_rsa
+#Host github.com
+#  Hostname github.com
+#  IdentityFile ~/.ssh/github_rsa
 
-Host github.com
-  Hostname ssh.github.com
-  Port 443
+#Host github.com
+#  Hostname ssh.github.com
+#  Port 443
