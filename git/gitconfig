@@ -31,10 +31,13 @@
 
 [merge]
         summary = true
-        tool = splice
+        tool = vimdiff
 
-[mergetool "splice"]
-        cmd = "gvim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
+[mergetool]
+        prompt = true
+
+[mergetool "vimdiff"]
+        cmd = "vim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'"
         trustExitCode = true
 
 [color]
