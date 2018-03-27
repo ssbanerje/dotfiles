@@ -1,12 +1,10 @@
-#Use pbcopy and pbpaste on Linux systems
-alias pbcopy='xsel --clipboard --input'
-alias pbpaste='xsel --clipboard --output'
-
 # Set PATH to include non-standard locations
 export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.powerline/scripts
 
 # Source color schemes
-source ${HOME}/.shellcolors/scripts/base16-monokai.sh
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+source ${HOME}/.config/base16-shell/scripts/base16-monokai.sh
 
 # Set for CUDA
 CUDA=/usr/local/cuda

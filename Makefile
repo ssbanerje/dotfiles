@@ -19,7 +19,7 @@ install: install-common\
 init:
 	@echo '---------------- Init ----------------'
 	git submodule update --init --recursive
-	pip3 install --upgrade --user click jinja2 || 1
+	python3 -m pip install --upgrade --user click jinja2 || 1
 
 
 
@@ -49,10 +49,11 @@ build-git:
 build-shell: build-sh build-bash build-zsh build-commands build-tmux
 build-sh:
 	@echo '--------------- Configurations for Sh -------------------'
-	cp shell/common_settings $(BUILD)/.common_settings
-	[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(BUILD)/.common_settings
-	cp shell/aliases $(BUILD)/.aliases
-	[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(BUILD)/.aliases
+	mkdir -p $(BUILD)/.config
+	cp shell/common_settings $(BUILD)/.config/common_settings
+	[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(BUILD)/.config/common_settings
+	cp shell/aliases $(BUILD)/.config/aliases
+	[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(BUILD)/.config/aliases
 build-bash:
 	@echo '-------------- Configurations for Bash -----------------'
 	cp shell/bash_profile $(BUILD)/.bash_profile
@@ -92,7 +93,7 @@ build-ssh:
 
 ######## For Interps ###########
 build-interp:
-	@echo '-------------- Configurations for Interps --------------'
+	@echo '-------------- Configurations for REPLs ----------------'
 	cp interp/pyrc $(BUILD)/.pyrc
 	cp interp/irbrc $(BUILD)/.irbrc
 
@@ -105,11 +106,6 @@ build-editors: build-vim
 build-vim:
 	@echo '---------------- Configurations for VIM ----------------'
 	cp -r editors/spacevim $(BUILD)/.SpaceVim
-#	mkdir -p $(BUILD)/.vim/vim_backups
-#	mkdir -p $(BUILD)/.vim/vim_swp
-#	cp editors/vimrc $(BUILD)/.vimrc
-#	cp -r editors/vim/* $(BUILD)/.vim/
-#	cp -r editors/powerline/ $(BUILD)/.powerline
 
 
 
@@ -130,17 +126,14 @@ build-Darwin: build-common
 	cp -r osx/hammerspoon $(BUILD)/.hammerspoon
 build-Linux: build-common
 	@echo '-------------- Configurations for Linux---------------'
-	if [ -e /usr/bin/conky ] ;\
-  then\
-    cp shell/conkyrc $(BUILD)/.conkyrc;\
-  fi;
-	cp -r shell/base16-shell $(BUILD)/.shellcolors
+	cp -r shell/base16-shell $(BUILD)/.config/base16-shell
 
 
 
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
+	cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user
 install-vim:
 	if [ ! -d ${HOME}/.vim ]; then \
     echo "Hello";\
@@ -156,17 +149,18 @@ install-vim:
   else \
     git -C ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim pull origin master; \
   fi
-install-Darwin: install-common install-vim
-	cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install
-install-Linux: install-common install-vim
+install-fonts-Linux:
 	fc-cache -vf > /dev/null
+	mkfontdir ${HOME}/.fonts > /dev/null
+	mkfontscale ${HOME}/.fonts > /dev/null
 	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'
 	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited '1'
 	gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/font 'Monaco For Powerline 10'
 	gconftool-2 -t bool -s /apps/meld/use_custom_font '1'
 	gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'
 	gconftool-2 -t int -s /apps/meld/tab_size '2'
-	cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user
+install-Darwin: install-common install-vim
+install-Linux: install-common install-vim install-fonts-Linux
 
 
 

@@ -21,7 +21,7 @@ bind '"\e[B"':history-search-forward
 shopt -s checkwinsize
 
 # Source aliases
-source $HOME/.aliases
+source $HOME/.config/aliases
 
 # Source common settings
-source $HOME/.common_settings
+source $HOME/.config/common_settings

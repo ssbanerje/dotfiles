@@ -69,8 +69,8 @@ zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z''
 
 # Source Aliases
-source $HOME/.aliases
+source $HOME/.config/aliases
 
 # Source common settings
-source $HOME/.common_settings
+source $HOME/.config/common_settings
 
