@@ -99,20 +99,17 @@ build-interp:
 
 
 ######## For Editors ###########
-build-editors: build-vim build-emacs
+build-editors: build-vim
 	@echo '-------------- Configurations for Editors --------------'
 	cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
 	@echo '---------------- Configurations for VIM ----------------'
-	mkdir -p $(BUILD)/.vim/vim_backups
-	mkdir -p $(BUILD)/.vim/vim_swp
-	cp editors/vimrc $(BUILD)/.vimrc
-	cp -r editors/vim/* $(BUILD)/.vim/
-	cp -r editors/powerline/ $(BUILD)/.powerline
-build-emacs:
-	@echo '---------------- Configurations for EMACS ----------------'
-	cp editors/spacemacs $(BUILD)/.spacemacs
-	cp -r editors/emacs/spacemacs $(BUILD)/.emacs.d/
+	cp -r editors/spacevim $(BUILD)/.SpaceVim
+#	mkdir -p $(BUILD)/.vim/vim_backups
+#	mkdir -p $(BUILD)/.vim/vim_swp
+#	cp editors/vimrc $(BUILD)/.vimrc
+#	cp -r editors/vim/* $(BUILD)/.vim/
+#	cp -r editors/powerline/ $(BUILD)/.powerline
 
 
 
@@ -144,11 +141,25 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	rsync -av $(BUILD)/ ${HOME}
-	vim -c PlugInstall -c qa!
-install-Darwin: install-common
+install-vim:
+	if [ ! -d ${HOME}/.vim ]; then \
+    echo "Hello";\
+    ln -s ${HOME}/.SpaceVim ${HOME}/.vim; \
+  fi
+	if [ ! -d ${HOME}/.config/nvim ]; then \
+    echo "World";\
+    mkdir -p ${HOME}/.config; \
+    ln -s ${HOME}/.SpaceVim ${HOME}/.config/nvim; \
+  fi
+	if [ ! -d ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim ]; then \
+    git clone https://github.com/Shougo/dein.vim.git ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim; \
+  else \
+    git -C ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim pull origin master; \
+  fi
+install-Darwin: install-common install-vim
 	cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install
-install-Linux: install-common
-	fc-cache -vf
+install-Linux: install-common install-vim
+	fc-cache -vf > /dev/null
 	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'
 	gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited '1'
 	gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/font 'Monaco For Powerline 10'

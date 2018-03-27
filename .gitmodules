@@ -10,9 +10,6 @@
 [submodule "editors/powerline"]
 	path = editors/powerline
 	url = git://github.com/Lokaltog/powerline
-[submodule "editors/emacs/spacemacs"]
-	path = editors/emacs/spacemacs
-	url = https://github.com/syl20bnr/spacemacs
 [submodule "shell/iTerm2-Color-Schemes"]
 	path = shell/iTerm2-Color-Schemes
 	url = https://github.com/mbadolato/iTerm2-Color-Schemes
@@ -22,3 +19,6 @@
 [submodule "shell/tpm"]
 	path = shell/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "editors/spacevim"]
+	path = editors/spacevim
+	url = https://github.com/SpaceVim/SpaceVim
