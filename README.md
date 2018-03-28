@@ -8,10 +8,6 @@
 
 This is a compilation of dotfiles from dotfile repos, blogs and projects from across the web, put together to suit my workflow.
 
-## Screenshot(s)
-![Vim](https://raw.github.com/ssbanerje/dotfiles/master/vim_screenshot.png)
-
-
 ## Using these dotfiles
 ### Dependencies
 
