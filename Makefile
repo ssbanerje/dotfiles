@@ -3,6 +3,7 @@ BUILD := build
 HOME_ESCAPED := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
 .PHONY: build install
+
 build: clean\
   init\
   build-fonts-$(UNAME)\
@@ -12,6 +13,7 @@ build: clean\
   build-interp\
   build-editors\
   build-$(UNAME)
+
 install: install-common\
   install-$(UNAME)
 
@@ -95,6 +97,7 @@ build-editors: build-vim
 	@cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
 	@cp -r editors/spacevim $(BUILD)/.SpaceVim
+	@cp -r editors/SpaceVim.d $(BUILD)/.SpaceVim.d
 
 
 

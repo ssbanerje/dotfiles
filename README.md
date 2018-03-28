@@ -22,6 +22,9 @@ This is a compilation of dotfiles from dotfile repos, blogs and projects from ac
 ```bash
 ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)
 brew install ctags coreutils git macvim ack python fasd tmux reattach-to-user-namespace
+brew install global --with-pygments --with-ctags
+pip install --user flake8 yapf autoflake isort python-language-server
+npm -g install remark remark-cli remark-stringify
 ```
 
 * Install [iTerm2](http://www.iterm2.com/#/section/home), [hammerspoon](http://www.hammerspoon.org)
@@ -30,8 +33,12 @@ brew install ctags coreutils git macvim ack python fasd tmux reattach-to-user-na
 On Linux you may have to install a few packages before everything starts working well. On a Debian/Ubunutu machine this can be done by runnning
 
 ```bash
-sudo apt-get install zsh ruby-dev libclang-dev exuberant-ctags python-pip vim-nox vim-gnome rake tmux cmake python-dev xclip psutils
+sudo apt-get install global zsh ruby-dev libclang-dev exuberant-ctags python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils python3-pygments
+pip install --user flake8 yapf autoflake isort python-language-server
+npm -g install remark remark-cli remark-stringify
 ```
+
+
 
 ### Installation
 
