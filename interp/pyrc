@@ -80,7 +80,6 @@ atexit.register(savehist)
 
 # Enable Pretty Printing for stdout
 ###################################
-
 def my_displayhook(value):
     if value is not None:
         try:
@@ -94,7 +93,6 @@ sys.displayhook = my_displayhook
 
 # Welcome message
 #################
-
 WELCOME = """\
 %(Brown)s
 Type \e to get an external editor.
@@ -107,7 +105,6 @@ Sheesh, I thought he'd never leave. Who invited that guy?
 # Start an external editor with \e
 ##################################
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/438813/
-
 EDITOR = os.environ.get('EDITOR', 'vim')
 EDIT_CMD = '\e'
 
