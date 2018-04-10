@@ -122,7 +122,7 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	@rsync -av $(BUILD)/ ${HOME}
-	@cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user
+	@cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user --prefix=
 install-vim:
 	@if [ ! -d ${HOME}/.vim ]; then \
     echo "Hello";\
