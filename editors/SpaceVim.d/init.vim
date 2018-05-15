@@ -25,7 +25,12 @@ call SpaceVim#layers#load('lang#c')
 call SpaceVim#layers#load('lang#go')
 call SpaceVim#layers#load('lang#python')
 call SpaceVim#layers#load('lang#vim')
+call SpaceVim#layers#load('lang#toml')
 call SpaceVim#layers#load('lang#markdown')
+call SpaceVim#layers#load('lang#rust')
+call SpaceVim#layers#load('lang#java')
+call SpaceVim#layers#load('lang#scala')
+call SpaceVim#layers#load('lang#tmux')
 call SpaceVim#layers#load('lsp', {
     \ 'filetypes' : ['rust', 'python' ],
     \ })
