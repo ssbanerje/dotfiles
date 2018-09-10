@@ -3,82 +3,98 @@
 #=============================================================================
 
 [options]
-    colorscheme = 'gruvbox'
-    background = 'dark'
-    enable_guicolors = true
-    statusline_separator = 'arrow'
-    statusline_inactive_separator = 'arrow'
-    buffer_index_type = 4
-    enable_tabline_filetype_icon = true
-    enable_statusline_display_mode = false
-    enable_debug = true
-    realtime_leader_guide = true
-    buffer_index_type = 0
-    enable_os_fileformat_icon = true
-    enable_tabline_filetype_icon = true
-    enable_vimfiler_welcome = 1
-    github_username = 'ssbanerje'
-    auto_disable_touchpad = 1
+  vimcompatible = false
+  colorscheme = 'molokai'
+  background = 'dark'
+  enable_guicolors = true
+  statusline_separator = 'arrow'
+  statusline_inactive_separator = 'slant'
+  enable_tabline_filetype_icon = true
+  enable_statusline_display_mode = false
+  enable_os_fileformat_icon = true
+  enable_tabline_filetype_icon = true
+  enable_vimfiler_welcome = 1
+  buffer_index_type = 4
+  auto_disable_touchpad = true
+  realtime_leader_guide = true
+  github_username = 'ssbanerje'
+  enable_debug = true
+  automatic_update = true
 
 [[layers]]
-name = 'git'
+  name = 'default'
 
 [[layers]]
-name = 'github'
+  name = 'VersionControl'
 
 [[layers]]
-name = 'unite'
+  name = 'git'
 
 [[layers]]
-name = 'tags'
+  name = 'github'
 
 [[layers]]
-name = 'autocomplete'
-auto-completion-return-key-behavior = 'complete'
-auto-completion-tab-key-behavior = 'smart'
-auto-completion-complete-with-key-sequence-delay = 0.1
+  name = 'unite'
 
 [[layers]]
-name = 'shell'
-default_position = 'top'
-default_height = 30
+  name = 'tags'
 
 [[layers]]
-name = 'lang#c'
+  name = 'autocomplete'
+  auto-completion-return-key-behavior = 'complete'
+  auto-completion-tab-key-behavior = 'smart'
+  auto-completion-complete-with-key-sequence-delay = 0.1
 
 [[layers]]
-name = 'lang#rust'
+  name = 'shell'
+  default_position = 'top'
+  default_height = 30
 
 [[layers]]
-name = 'lang#python'
+  name = 'lang#c'
+  [layer.clang_std]
+    c = "c11"
+    cpp = "c++17"
+    objc = "c11"
+    objcpp = "c++17"
 
 [[layers]]
-name = 'lang#vim'
+  name = 'lang#rust'
 
 [[layers]]
-name = 'lang#go'
+  name = 'lang#python'
+  format-on-save = true
 
 [[layers]]
-name = 'lang#toml'
+  name = 'lang#dockerfile'
 
 [[layers]]
-name = 'lang#markdown'
+  name = "lang#latex"
 
 [[layers]]
-name = 'lang#java'
+  name = 'lang#html'
 
 [[layers]]
-name = 'lang#scala'
+  name = 'lang#javascript'
+  auto_fix = true
+  enable_flow_syntax = true
 
 [[layers]]
-name = 'lang#tmux'
+  name = 'lang#extra'
 
 [[layers]]
-name = 'lsp'
-filetypes = [
-  'rust',
-  'python'
-]
+  name = 'lang#markdown'
 
+[[layers]]
+  name = 'lang#vim'
 
+[[layers]]
+  name = 'lang#scala'
+
+[[layers]]
+  name = 'lsp'
+  filetypes = [
+    'rust',
+    'python'
+  ]
 
