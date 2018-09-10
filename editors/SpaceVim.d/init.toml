@@ -1,0 +1,84 @@
+#=============================================================================
+# SpaceVim Configuration File
+#=============================================================================
+
+[options]
+    colorscheme = 'gruvbox'
+    background = 'dark'
+    enable_guicolors = true
+    statusline_separator = 'arrow'
+    statusline_inactive_separator = 'arrow'
+    buffer_index_type = 4
+    enable_tabline_filetype_icon = true
+    enable_statusline_display_mode = false
+    enable_debug = true
+    realtime_leader_guide = true
+    buffer_index_type = 0
+    enable_os_fileformat_icon = true
+    enable_tabline_filetype_icon = true
+    enable_vimfiler_welcome = 1
+    github_username = 'ssbanerje'
+    auto_disable_touchpad = 1
+
+[[layers]]
+name = 'git'
+
+[[layers]]
+name = 'github'
+
+[[layers]]
+name = 'unite'
+
+[[layers]]
+name = 'tags'
+
+[[layers]]
+name = 'autocomplete'
+auto-completion-return-key-behavior = 'complete'
+auto-completion-tab-key-behavior = 'smart'
+auto-completion-complete-with-key-sequence-delay = 0.1
+
+[[layers]]
+name = 'shell'
+default_position = 'top'
+default_height = 30
+
+[[layers]]
+name = 'lang#c'
+
+[[layers]]
+name = 'lang#rust'
+
+[[layers]]
+name = 'lang#python'
+
+[[layers]]
+name = 'lang#vim'
+
+[[layers]]
+name = 'lang#go'
+
+[[layers]]
+name = 'lang#toml'
+
+[[layers]]
+name = 'lang#markdown'
+
+[[layers]]
+name = 'lang#java'
+
+[[layers]]
+name = 'lang#scala'
+
+[[layers]]
+name = 'lang#tmux'
+
+[[layers]]
+name = 'lsp'
+filetypes = [
+  'rust',
+  'python'
+]
+
+
+
