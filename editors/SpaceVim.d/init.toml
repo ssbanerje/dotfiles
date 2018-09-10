@@ -1,0 +1,100 @@
+#=============================================================================
+# SpaceVim Configuration File
+#=============================================================================
+
+[options]
+  vimcompatible = false
+  colorscheme = 'molokai'
+  background = 'dark'
+  enable_guicolors = true
+  statusline_separator = 'arrow'
+  statusline_inactive_separator = 'slant'
+  enable_tabline_filetype_icon = true
+  enable_statusline_display_mode = false
+  enable_os_fileformat_icon = true
+  enable_tabline_filetype_icon = true
+  enable_vimfiler_welcome = 1
+  buffer_index_type = 4
+  auto_disable_touchpad = true
+  realtime_leader_guide = true
+  github_username = 'ssbanerje'
+  enable_debug = true
+  automatic_update = true
+
+[[layers]]
+  name = 'default'
+
+[[layers]]
+  name = 'VersionControl'
+
+[[layers]]
+  name = 'git'
+
+[[layers]]
+  name = 'github'
+
+[[layers]]
+  name = 'unite'
+
+[[layers]]
+  name = 'tags'
+
+[[layers]]
+  name = 'autocomplete'
+  auto-completion-return-key-behavior = 'complete'
+  auto-completion-tab-key-behavior = 'smart'
+  auto-completion-complete-with-key-sequence-delay = 0.1
+
+[[layers]]
+  name = 'shell'
+  default_position = 'top'
+  default_height = 30
+
+[[layers]]
+  name = 'lang#c'
+  [layer.clang_std]
+    c = "c11"
+    cpp = "c++17"
+    objc = "c11"
+    objcpp = "c++17"
+
+[[layers]]
+  name = 'lang#rust'
+
+[[layers]]
+  name = 'lang#python'
+  format-on-save = true
+
+[[layers]]
+  name = 'lang#dockerfile'
+
+[[layers]]
+  name = "lang#latex"
+
+[[layers]]
+  name = 'lang#html'
+
+[[layers]]
+  name = 'lang#javascript'
+  auto_fix = true
+  enable_flow_syntax = true
+
+[[layers]]
+  name = 'lang#extra'
+
+[[layers]]
+  name = 'lang#markdown'
+
+[[layers]]
+  name = 'lang#vim'
+
+[[layers]]
+  name = 'lang#scala'
+
+[[layers]]
+  name = 'lsp'
+  filetypes = [
+    'rust',
+    'python'
+  ]
+
