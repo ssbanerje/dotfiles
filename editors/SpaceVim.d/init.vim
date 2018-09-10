@@ -11,6 +11,8 @@ let g:spacevim_auto_disable_touchpad = 1
 " }}}
 
 " SpaceVim Layers: {{{
+call SpaceVim#layers#load('git')
+call SpaceVim#layers#load('github')
 call SpaceVim#layers#load('unite')
 call SpaceVim#layers#load('tags')
 call SpaceVim#layers#load('autocomplete', {
@@ -34,9 +36,6 @@ call SpaceVim#layers#load('lang#tmux')
 call SpaceVim#layers#load('lsp', {
     \ 'filetypes' : ['rust', 'python' ],
     \ })
-
-call SpaceVim#layers#load('git')
-call SpaceVim#layers#load('github')
 " }}}
 
 " My Privite Config: {{{
