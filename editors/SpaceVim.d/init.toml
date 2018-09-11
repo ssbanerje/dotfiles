@@ -94,7 +94,12 @@
 [[layers]]
   name = 'lsp'
   filetypes = [
+    'c',
+    'cpp',
     'rust',
-    'python'
+    'python',
+    'sh',
+    'html',
+    'javascript'
   ]
 

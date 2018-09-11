@@ -20,8 +20,21 @@ install: install-common\
 ######## Init ###########
 init-submodules:
 	@git submodule update --init --recursive
-init: init-submodules
-	@python3 -m pip install --upgrade --user click jinja2 || 1
+init: init-submodules init-prereqs-$(UNAME)
+	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
+		isort python-language-server || 1
+	@npm -g install remark remark-cli remark-stringify bash-language-server\
+		javascript-typescript-langserver vscode-html-languageserver-bin
+
+init-prereqs-Linux:
+	@sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
+	@sudo apt-get install global zsh ruby-dev libclang-dev exuberant-ctags\
+		python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils\
+		python3-pygments npm rsync neovim python3-neovim
+init-prereqs-Darwin:
+	@brew install ctags coreutils git macvim ack python fasd tmux\
+		reattach-to-user-namespace node neovim
+	@brew install global --with-pygments --with-ctags
 
 
 
@@ -38,7 +51,8 @@ build-fonts-Linux:
 ######## Git ###########
 build-git:
 	@cat git/gitignore/Global/*.gitignore > $(BUILD)/.global_gitignore
-	@python3 generate_template.py --template-file git/gitconfig --json-file config/git_config_db.json
+	@python3 generate_template.py --template-file git/gitconfig\
+		--json-file config/git_config_db.json
 	@mv $(BUILD)/gitconfig $(BUILD)/.gitconfig
 	@cp git/gitattributes $(BUILD)/.gitattributes
 
@@ -125,18 +139,11 @@ install-common:
 	@cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user --prefix=
 install-vim:
 	@if [ ! -d ${HOME}/.vim ]; then \
-    echo "Hello";\
     ln -s ${HOME}/.SpaceVim ${HOME}/.vim; \
   fi
 	@if [ ! -d ${HOME}/.config/nvim ]; then \
-    echo "World";\
     mkdir -p ${HOME}/.config; \
     ln -s ${HOME}/.SpaceVim ${HOME}/.config/nvim; \
-  fi
-	@if [ ! -d ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim ]; then \
-    git clone https://github.com/Shougo/dein.vim.git ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim; \
-  else \
-    git -C ${HOME}/.cache/vimfiles/repos/github.com/Shougo/dein.vim pull origin master; \
   fi
 install-fonts-Linux:
 	@fc-cache -vf > /dev/null
