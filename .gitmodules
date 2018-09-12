@@ -19,6 +19,3 @@
 [submodule "shell/tpm"]
 	path = shell/tpm
 	url = https://github.com/tmux-plugins/tpm
-[submodule "editors/spacevim"]
-	path = editors/spacevim
-	url = https://github.com/SpaceVim/SpaceVim

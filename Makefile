@@ -113,7 +113,6 @@ build-interp:
 build-editors: build-vim
 	@cp editors/editorconfig $(BUILD)/.editorconfig
 build-vim:
-	@cp -r editors/spacevim $(BUILD)/.SpaceVim
 	@cp -r editors/SpaceVim.d $(BUILD)/.SpaceVim.d
 
 
