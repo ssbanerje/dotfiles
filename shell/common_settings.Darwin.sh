@@ -47,3 +47,6 @@ eval `/usr/libexec/path_helper -s`
 
 # Setup fasd
 eval "$(fasd --init auto)"
+
+# Use LLVM tools from homebrew vs Apple
+export PATH="/usr/local/opt/llvm/bin:$PATH"
