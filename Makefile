@@ -137,7 +137,7 @@ build-Linux: build-common
 
 ######## Install ###########
 install-common:
-	@rsync -av $(BUILD)/ ${HOME}
+	@rsync -avz $(BUILD)/ ${HOME}
 install-vim:
 	@curl -sLf https://spacevim.org/install.sh | bash
 install-fonts-Linux:
