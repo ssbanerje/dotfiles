@@ -123,6 +123,7 @@ build-common:
 	@cp bin/ports $(BUILD)/.bin/
 	@cp bin/wikisearch $(BUILD)/.bin/
 	@cp bin/random $(BUILD)/.bin/
+	@cp bin/diffconflicts $(BUILD)/.bin/
 build-Darwin: build-common
 	@mkdir -p $(BUILD)/Library/Preferences/
 	@cp osx/com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist

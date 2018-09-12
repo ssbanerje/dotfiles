@@ -31,13 +31,13 @@
 
 [merge]
         summary = true
-        tool = vimdiff
+        tool = diffconflicts
 
 [mergetool]
-        prompt = true
+        keepBackup = false
 
-[mergetool "vimdiff"]
-        cmd = "vim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'"
+[mergetool "diffconflicts"]
+        cmd = "diffconflicts nvim $BASE $LOCAL $REMOTE $MERGED"
         trustExitCode = true
 
 [color]

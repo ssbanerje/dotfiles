@@ -1,7 +1,8 @@
 #Vim all the way
-export EDITOR=vim
-export USE_EDITOR=vim
-export SVN_EDITOR=vim
+export VISUAL=nvim
+export EDITOR=nvim
+export USE_EDITOR=nvim
+export SVN_EDITOR=nvim
 
 # Set less options
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
