@@ -34,7 +34,7 @@ init-prereqs-Darwin:
 	@brew tap caskroom/fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort python-language-server || 1
+		isort python-language-server powerline-status || 1
 	@npm -g install remark remark-cli remark-stringify bash-language-server\
 		javascript-typescript-langserver vscode-html-languageserver-bin
 
@@ -61,7 +61,7 @@ build-git:
 
 
 ######## Shell stuff ###########
-build-shell: build-sh build-bash build-zsh build-commands build-tmux build-powerline
+build-shell: build-sh build-bash build-zsh build-commands build-tmux
 build-sh:
 	@mkdir -p $(BUILD)/.config
 	@cp shell/common_settings $(BUILD)/.config/common_settings
@@ -91,8 +91,6 @@ build-tmux:
 	@rsync -r shell/tpm $(BUILD)/.tmux/plugins/tpm
 	@python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json
 	@mv build/tmux.conf build/.tmux.conf
-build-powerline:
-	@cp -r editors/powerline $(BUILD)/.powerline
 
 
 
@@ -139,7 +137,6 @@ build-Linux: build-common
 ######## Install ###########
 install-common:
 	@rsync -av $(BUILD)/ ${HOME}
-	@cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user --prefix=
 install-vim:
 	@curl -sLf https://spacevim.org/install.sh | bash
 install-fonts-Linux:

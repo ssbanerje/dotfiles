@@ -5,6 +5,7 @@ import json
 import platform
 import click
 import jinja2
+import subprocess
 
 @click.command()
 @click.option('--template-file', help='Template file that has to be specialized')
@@ -23,6 +24,11 @@ def generate(template_file, json_file, output_dir):
         platform_specifc = json_data["__UNAME__"][uname]
         json_data.update(platform_specifc)
         json_data.pop('__UNAME__', None)
+    # Get the path to the powerline
+    pip = subprocess.Popen(('pip', 'show', 'powerline-status'), stdout=subprocess.PIPE)
+    grep = subprocess.Popen(('grep', 'Location'), stdin=pip.stdout, stdout=subprocess.PIPE)
+    out = subprocess.check_output(('awk', '{ print $2 }'), stdin=grep.stdout)
+    json_data['POWERLINE_ROOTDIR'] = out.decode("utf-8").strip()
 
     # Read in the templated file
     template_dir = os.path.dirname(os.path.abspath(template_file))
