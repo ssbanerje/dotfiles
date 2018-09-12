@@ -20,21 +20,22 @@ install: install-common\
 ######## Init ###########
 init-submodules:
 	@git submodule update --init --recursive
-init: init-submodules init-prereqs-$(UNAME)
-	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort python-language-server || 1
-	@npm -g install remark remark-cli remark-stringify bash-language-server\
-		javascript-typescript-langserver vscode-html-languageserver-bin
-
 init-prereqs-Linux:
-	@sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
-	@sudo apt-get install global zsh ruby-dev libclang-dev exuberant-ctags\
+	@sudo apt-get install -y global zsh ruby-dev libclang-dev exuberant-ctags\
 		python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils\
-		python3-pygments npm rsync neovim python3-neovim
+		python3-pygments npm rsync neovim python3-neovim git curl
+	@sudo snap install --classic clangd
+	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
+	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
 init-prereqs-Darwin:
 	@brew install ctags coreutils git macvim ack python fasd tmux\
 		reattach-to-user-namespace node neovim
 	@brew install global --with-pygments --with-ctags
+init: init-prereqs-$(UNAME) init-submodules
+	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
+		isort python-language-server || 1
+	@npm -g install remark remark-cli remark-stringify bash-language-server\
+		javascript-typescript-langserver vscode-html-languageserver-bin
 
 
 
@@ -59,7 +60,7 @@ build-git:
 
 
 ######## Shell stuff ###########
-build-shell: build-sh build-bash build-zsh build-commands build-tmux
+build-shell: build-sh build-bash build-zsh build-commands build-tmux build-powerline
 build-sh:
 	@mkdir -p $(BUILD)/.config
 	@cp shell/common_settings $(BUILD)/.config/common_settings
@@ -89,6 +90,8 @@ build-tmux:
 	@rsync -r shell/tpm $(BUILD)/.tmux/plugins/tpm
 	@python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json
 	@mv build/tmux.conf build/.tmux.conf
+build-powerline:
+	@cp -r editors/powerline $(BUILD)/.powerline
 
 
 
@@ -138,23 +141,23 @@ install-common:
 	@rsync -av $(BUILD)/ ${HOME}
 	@cd ${HOME}/.powerline && python3 setup.py build && python3 setup.py install --user --prefix=
 install-vim:
-	@if [ ! -d ${HOME}/.vim ]; then \
-    ln -s ${HOME}/.SpaceVim ${HOME}/.vim; \
-  fi
-	@if [ ! -d ${HOME}/.config/nvim ]; then \
-    mkdir -p ${HOME}/.config; \
-    ln -s ${HOME}/.SpaceVim ${HOME}/.config/nvim; \
-  fi
+	@curl -sLf https://spacevim.org/install.sh | bash
 install-fonts-Linux:
-	@fc-cache -vf > /dev/null
-	@mkfontdir ${HOME}/.fonts > /dev/null
-	@mkfontscale ${HOME}/.fonts > /dev/null
-	@gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'
-	@gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited '1'
-	@gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/font 'Monaco For Powerline 10'
-	@gconftool-2 -t bool -s /apps/meld/use_custom_font '1'
-	@gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'
-	@gconftool-2 -t int -s /apps/meld/tab_size '2'
+	@if command -v fc-cache; then \
+		fc-cache -vf > /dev/null; \
+	fi
+	@if command -v mkfontdir; then \
+		mkfontdir ${HOME}/.fonts > /dev/null; \
+		mkfontscale ${HOME}/.fonts > /dev/null; \
+	fi
+	@if command -v gconftool-2; then \
+	  gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/use_system_font '0'; \
+	  gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited '1'; \
+	  gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/font 'Monaco For Powerline 10'; \
+	  gconftool-2 -t bool -s /apps/meld/use_custom_font '1'; \
+	  gconftool-2 -t string -s /apps/meld/custom_font 'Monospace 10'; \
+	  gconftool-2 -t int -s /apps/meld/tab_size '2'; \
+	fi
 install-Darwin: install-common install-vim
 install-Linux: install-common install-vim install-fonts-Linux
 
