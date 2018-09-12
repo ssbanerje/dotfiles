@@ -1,87 +1,72 @@
 require "hs.wifi"
 require "hs.window"
 require "hs.pathwatcher"
-
--- Grid settings
-hs.grid.GRIDWIDTH  = 3
-hs.grid.GRIDHEIGHT = 3
-hs.grid.MARGINX    = 0
-hs.grid.MARGINY    = 0
-hs.hotkey.bind("cmd", "G", hs.grid.show)
+require "hs.caffeinate"
 
 -- Set window animation off. It's much smoother.
 hs.window.animationDuration = 0
 
--- hot key
-hs.hotkey.bind({"cmd", "ctrl"}, "J", function()
-  hs.hints.windowHints(hs.window.visibleWindows(), nil, false)
-end)
+-- ------------------------------------------------------
+-- Grid settings
+-- ------------------------------------------------------
 
+hs.grid.GRIDWIDTH  = 4
+hs.grid.GRIDHEIGHT = 4
+hs.grid.MARGINX    = 0
+hs.grid.MARGINY    = 0
+
+-- Hotkey to activate grid
+hs.hotkey.bind("cmd", "G", hs.grid.show)
+
+-- ------------------------------------------------------
+-- Hotkeys
+-- ------------------------------------------------------
+
+-- Maximize window
 hs.hotkey.bind("cmd", "M", hs.grid.maximizeWindow)
 
--- Move windows
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "Y", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x - 10
-  f.y = f.y - 10
-  win:setFrame(f)
+-- Setup Sleep Inhibitor
+local sleep_menu_icon
+local function disable()
+  hs.caffeinate.set("displayIdle", false, false)
+  hs.caffeinate.set("systemIdle", false, false)
+  hs.caffeinate.set("system", false, false)
+  sleep_menu_icon:delete()
+end
+local function enable()
+  hs.caffeinate.set("displayIdle", true, true)
+  hs.caffeinate.set("systemIdle", true, true)
+  hs.caffeinate.set("system", true, true)
+  if not menu then
+      sleep_menu_icon = hs.menubar.new()
+  end
+  sleep_menu_icon:returnToMenuBar()
+  sleep_menu_icon:setTitle("☕️")
+  sleep_menu_icon:setTooltip("Mocha")
+  sleep_menu_icon:setClickCallback(function() disable() end)
+end
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "S", function()
+  if sleep_menu_icon then
+    disable()
+  else
+    enable()
+  end
 end)
 
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "K", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.y = f.y - 10
-  win:setFrame(f)
+-- Lock Screen
+hs.hotkey.bind({"ctrl", "alt"}, "L", hs.caffeinate.lockScreen)
+
+-- Launch iTerm2
+hs.hotkey.bind({"ctrl", "alt"}, "T", function ()
+  hs.application.launchOrFocus("iTerm")
 end)
 
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "U", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x + 10
-  f.y = f.y - 10
-  win:setFrame(f)
-end)
+-- ------------------------------------------------------
+-- Watchers
+-- ------------------------------------------------------
 
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "H", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x - 10
-  win:setFrame(f)
-end)
-
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "L", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x + 10
-  win:setFrame(f)
-end)
-
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "N", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x - 10
-  f.y = f.y + 10
-  win:setFrame(f)
-end)
-
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "J", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.y = f.y + 10
-  win:setFrame(f)
-end)
-
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "M", function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x + 10
-  f.y = f.y + 10
-  win:setFrame(f)
-end)
-
--- reload config
-function reloadConfig(files)
+-- Hammerspoon configuration watcher
+hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", function (files)
   doReload = false
   for _,file in pairs(files) do
     if file:sub(-4) == ".lua" then
@@ -91,31 +76,12 @@ function reloadConfig(files)
   if doReload then
     hs.reload()
   end
-end
-local myWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
-hs.alert.show("Hammerspoon config loaded")
-
--- Home
-hs.hotkey.bind({"cmd", "shift", "ctrl"}, "H", function()
-  hs.grid.GRIDWIDTH  = 4
-  hs.grid.GRIDHEIGHT = 4
-  hs.grid.MARGINX    = 0
-  hs.grid.MARGINY    = 0
-  hs.alert.show("External Monitor Layout")
-end)
-
-hs.hotkey.bind({"cmd", "shift", "ctrl"}, "L", function()
-  hs.grid.GRIDWIDTH  = 3
-  hs.grid.GRIDHEIGHT = 3
-  hs.grid.MARGINX    = 0
-  hs.grid.MARGINY    = 0
-  hs.alert.show("Laptop Monitor Layout")
-end)
+end):start()
+hs.alert.show("Hammerspoon Configuration Loaded")
 
 -- Wifi status watcher
 hs.wifi.watcher.new(function ()
   local currentWifi = hs.wifi.currentNetwork()
-  -- short-circuit if disconnecting
   if not currentWifi then return end
   hs.alert.show("Wi-Fi connected to " .. currentWifi, 3)
   hs.audiodevice.defaultOutputDevice():setVolume(0)

@@ -7,23 +7,26 @@ import click
 import jinja2
 import subprocess
 
+
 @click.command()
 @click.option('--template-file', help='Template file that has to be specialized')
 @click.option('--json-file', help='JSON file from which the template has to be specialized')
 @click.option('--output-dir', default="build", help='Folder where the dotfiles will be staged')
-
 def generate(template_file, json_file, output_dir):
     # Read in the JSON DB file
     with open(json_file) as db_file:
         json_data = json.load(db_file)
+
     # Add some entries into the database
     json_data["HOME_DIR"] = os.environ["HOME"]
+
     # Handle the __UNAME__ tag
     if '__UNAME__' in json_data:
         uname = platform.uname()[0]
         platform_specifc = json_data["__UNAME__"][uname]
         json_data.update(platform_specifc)
         json_data.pop('__UNAME__', None)
+
     # Get the path to the powerline
     pip = subprocess.Popen(('pip', 'show', 'powerline-status'), stdout=subprocess.PIPE)
     grep = subprocess.Popen(('grep', 'Location'), stdin=pip.stdout, stdout=subprocess.PIPE)
@@ -38,7 +41,8 @@ def generate(template_file, json_file, output_dir):
     # Write out to the file
     output_file = output_dir + '/' + os.path.basename(template_file)
     with open(output_file, 'w') as out_file:
-      out_file.write(template.render(json_data))
+        out_file.write(template.render(json_data))
+
 
 if __name__ == '__main__':
     generate()
