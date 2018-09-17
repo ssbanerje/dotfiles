@@ -23,3 +23,6 @@ then
   source $HOME/.cargo/env
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
+
+# Python Executables
+export PATH=$PATH:$HOME/.local/bin

@@ -29,3 +29,5 @@ alias datafart='curl --data-binary @- datafart.com'
 
 alias ipy="ipython qtconsole"
 alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"
+
+alias clangd="clangd-6.0"
