@@ -3,6 +3,9 @@ require "hs.window"
 require "hs.pathwatcher"
 require "hs.caffeinate"
 
+hyper = {"cmd","alt","ctrl"}
+shift_hyper = {"cmd","alt","ctrl","shift"}
+
 -- Set window animation off. It's much smoother.
 hs.window.animationDuration = 0
 
@@ -45,7 +48,7 @@ local function enable()
   sleep_menu_icon:setTooltip("Mocha")
   sleep_menu_icon:setClickCallback(function() disable() end)
 end
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "S", function()
+hs.hotkey.bind(hyper, "S", function()
   if sleep_menu_icon then
     disable()
   else
@@ -54,10 +57,10 @@ hs.hotkey.bind({"ctrl", "alt", "cmd"}, "S", function()
 end)
 
 -- Lock Screen
-hs.hotkey.bind({"ctrl", "alt"}, "L", hs.caffeinate.lockScreen)
+hs.hotkey.bind(hyper, "L", hs.caffeinate.lockScreen)
 
 -- Launch iTerm2
-hs.hotkey.bind({"ctrl", "alt"}, "T", function ()
+hs.hotkey.bind(hyper, "T", function ()
   hs.application.launchOrFocus("iTerm")
 end)
 
