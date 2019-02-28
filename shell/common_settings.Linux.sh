@@ -17,12 +17,5 @@ export PATH=$PATH:$MATLAB/bin
 # Source Intel compilers
 [ -e /opt/intel/parallel_studio_xe_2015/psxevars.sh ] && (source /opt/intel/parallel_studio_xe_2015/psxevars.sh 2>&1 > /dev/null)
 
-# Source Rustup
-if [ -d $HOME/.cargo/ ]
-then
-  source $HOME/.cargo/env
-  export PATH="$HOME/.cargo/bin:$PATH"
-fi
-
 # Python Executables
 export PATH=$PATH:$HOME/.local/bin

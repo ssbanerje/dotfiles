@@ -37,5 +37,10 @@ man() {
         man "$@"
 }
 
-# Setup Rust
-source $HOME/.cargo/env
+# Source Rustup
+if [ -d $HOME/.cargo/ ]
+then
+  source $HOME/.cargo/env
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
