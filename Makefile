@@ -29,7 +29,7 @@ init-prereqs-Linux:
 	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
 init-prereqs-Darwin:
 	@brew install ctags coreutils git macvim ack python fasd tmux\
-		reattach-to-user-namespace node neovim
+		reattach-to-user-namespace node neovim bash-completion
 	@brew install global
 	@brew tap caskroom/fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
