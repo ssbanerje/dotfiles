@@ -4,7 +4,8 @@
                       "git", "git-flow", "github", "git-extras", "gitfast",
                       "svn", "mercurial", "perl", "pip", "python",
                       "svn", "zsh-syntax-highlighting", "sudo",
-                      "web-search", "tmux", "docker", "scala", "sbt", "aws", "mvn"],
+                      "web-search", "tmux", "docker", "scala", "sbt", "aws", "mvn",
+                      "compleat", "extract"],
   "__UNAME__": {
     "Darwin": {
       "OH_MY_ZSH_PLUGINS_OS_DEP": ["osx", "brew", "terminalapp", "textmate"]
