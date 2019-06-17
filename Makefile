@@ -35,8 +35,8 @@ init-prereqs-Darwin:
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
 		isort python-language-server powerline-status || 1
-	@npm -g install remark remark-cli remark-stringify bash-language-server\
-		javascript-typescript-langserver vscode-html-languageserver-bin
+	@npm -g install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
+		bash-language-server javascript-typescript-langserver vscode-html-languageserver-bin
 
 
 
