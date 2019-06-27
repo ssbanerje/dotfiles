@@ -44,3 +44,4 @@ then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
+export PATH=~/.npm/bin:$PATH
