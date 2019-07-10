@@ -23,8 +23,9 @@ init-submodules:
 init-prereqs-Linux:
 	@sudo apt-get install -y global zsh ruby-dev libclang-dev exuberant-ctags\
 		python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils\
-		python3-pygments npm rsync neovim python3-neovim git curl
+		python3-pygments rsync neovim python3-neovim git curl
 	@sudo snap install --classic clangd
+	@npm config set prefix ~/.npm
 	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
 	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
 init-prereqs-Darwin:
@@ -35,8 +36,8 @@ init-prereqs-Darwin:
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
 		isort python-language-server powerline-status || 1
-	@npm -g install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
-		bash-language-server javascript-typescript-langserver vscode-html-languageserver-bin
+	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
+		javascript-typescript-langserver vscode-html-languageserver-bin bash-language-server
 
 
 
