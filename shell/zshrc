@@ -9,6 +9,9 @@
 
 #For homebrew
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
+  FPATH=/usr/local/share/zsh/site-functions:$FPATH
+fi
 
 export ZSH_THEME="{{ZSH_THEME}}"
 export ZSH=$HOME/.config/oh-my-zsh
