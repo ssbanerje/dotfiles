@@ -44,4 +44,8 @@ then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-export PATH=~/.npm/bin:$PATH
+# Setup NPM binaries
+export PATH=$HOME/.npm/bin:$PATH
+
+# Setup aliases
+source $HOME/.config/aliases

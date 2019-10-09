@@ -41,10 +41,9 @@ init-prereqs-Linux:
 	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
 	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
 init-prereqs-Darwin:
-	@brew install ctags coreutils git macvim ack python fasd tmux\
-		reattach-to-user-namespace node neovim bash-completion yarn
-	@brew install global
-	@brew tap caskroom/fonts && brew cask install font-hack-nerd-font
+	@brew install ctags coreutils git ack python fasd tmux\
+		reattach-to-user-namespace node neovim bash-completion global
+	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
 		isort python-language-server powerline-status || 1
