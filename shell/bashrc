@@ -20,8 +20,5 @@ bind '"\e[B"':history-search-forward
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
 
-# Source aliases
-source $HOME/.config/aliases
-
 # Source common settings
 source $HOME/.config/common_settings

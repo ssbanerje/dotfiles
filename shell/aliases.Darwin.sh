@@ -6,6 +6,5 @@ alias xcode="open -a '/Developer/Applications/Xcode.app'"
 alias safari="open -a safari"
 alias chrome="open -a google\ chrome"
 alias f='open -a Finder'
-alias vim='mvim -v'
-alias gvim='mvim'
+alias vim='nvim'
 

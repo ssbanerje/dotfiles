@@ -44,3 +44,5 @@ then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
+# Setup aliases
+source $HOME/.config/aliases
