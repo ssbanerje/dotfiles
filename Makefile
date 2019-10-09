@@ -1,8 +1,15 @@
+######## Variables ###########
 UNAME := $(shell uname)
 BUILD := build
 HOME_ESCAPED := $(shell echo ${HOME} | sed 's/\//\\\//g')
 
-.PHONY: build install
+
+
+######## Main build targets ###########
+.PHONY: clean \
+	init init-prereqs-$(UNAME) init-submodules \
+	build build-$(UNAME) build-common build-editors build-vim build-interp build-ssh build-shell build-sh build-bash build-zsh build-commands build-tmux build-git build-fonts-$(UNAME) \
+	install install-$(UNAME) install-vim install-common install-fonts-Linux
 
 build: clean\
   init\
@@ -17,20 +24,25 @@ build: clean\
 install: install-common\
   install-$(UNAME)
 
+
+
 ######## Init ###########
 init-submodules:
 	@git submodule update --init --recursive
 init-prereqs-Linux:
-	@sudo apt-get install -y global zsh ruby-dev libclang-dev exuberant-ctags\
+	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	@echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+	@sudo apt-get update && \
+		sudo apt-get install -y global zsh ruby-dev libclang-dev exuberant-ctags\
 		python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils\
-		python3-pygments rsync neovim python3-neovim git curl
+		python3-pygments rsync neovim python3-neovim git curl yarn
 	@sudo snap install --classic clangd
 	@npm config set prefix ~/.npm
 	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
 	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
 init-prereqs-Darwin:
 	@brew install ctags coreutils git macvim ack python fasd tmux\
-		reattach-to-user-namespace node neovim bash-completion
+		reattach-to-user-namespace node neovim bash-completion yarn
 	@brew install global
 	@brew tap caskroom/fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
@@ -120,10 +132,7 @@ build-vim:
 ######## OS Specific ###########
 build-common:
 	@mkdir -p $(BUILD)/.bin
-	@cp bin/gzball $(BUILD)/.bin/
-	@cp bin/ports $(BUILD)/.bin/
-	@cp bin/random $(BUILD)/.bin/
-	@cp bin/diffconflicts $(BUILD)/.bin/
+	@cp -r bin/* $(BUILD)/.bin/
 build-Darwin: build-common
 	@mkdir -p $(BUILD)/Library/Preferences/
 	@cp osx/com.googlecode.iterm2.plist $(BUILD)/Library/Preferences/com.googlecode.iterm2.plist
@@ -164,3 +173,4 @@ install-Linux: install-common install-vim install-fonts-Linux
 ######## Clean ###########
 clean:
 	@rm -rf build/
+
