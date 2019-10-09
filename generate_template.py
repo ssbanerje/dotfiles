@@ -27,12 +27,6 @@ def generate(template_file, json_file, output_dir):
         json_data.update(platform_specifc)
         json_data.pop('__UNAME__', None)
 
-    # Get the path to the powerline
-    pip = subprocess.Popen(('pip3', 'show', 'powerline-status'), stdout=subprocess.PIPE)
-    grep = subprocess.Popen(('grep', 'Location'), stdin=pip.stdout, stdout=subprocess.PIPE)
-    out = subprocess.check_output(('awk', '{ print $2 }'), stdin=grep.stdout)
-    json_data['POWERLINE_ROOTDIR'] = out.decode("utf-8").strip()
-
     # Read in the templated file
     template_dir = os.path.dirname(os.path.abspath(template_file))
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))

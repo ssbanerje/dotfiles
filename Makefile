@@ -46,9 +46,9 @@ init-prereqs-Darwin:
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort python-language-server powerline-status || 1
+		isort python-language-server || 1
 	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
-		javascript-typescript-langserver vscode-html-languageserver-bin bash-language-server
+		javascript-typescript-langserver vscode-html-languageserver-bin import-js bash-language-server
 
 
 
