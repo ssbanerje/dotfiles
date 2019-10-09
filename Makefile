@@ -31,7 +31,7 @@ init-prereqs-Darwin:
 	@brew install ctags coreutils git macvim ack python fasd tmux\
 		reattach-to-user-namespace node neovim bash-completion
 	@brew install global
-	@brew tap caskroom/fonts && brew cask install font-hack-nerd-font
+	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
 		isort python-language-server powerline-status || 1
