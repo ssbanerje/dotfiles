@@ -95,8 +95,6 @@ build-zsh:
 build-commands:
 	@cp shell/ackrc $(BUILD)/.ackrc
 	@cp shell/hushlogin $(BUILD)/.hushlogin
-	@cp shell/screenrc $(BUILD)/.screenrc
-	@cp shell/toprc $(BUILD)/.toprc
 	@cp shell/npmrc $(BUILD)/.npmrc
 build-tmux:
 	@mkdir -p $(BUILD)/.tmux/plugins
