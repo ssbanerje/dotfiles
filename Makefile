@@ -35,7 +35,7 @@ init-prereqs-Linux:
 	@sudo apt-get update && \
 		sudo apt-get install -y global zsh ruby-dev libclang-dev exuberant-ctags\
 		python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils\
-		python3-pygments rsync neovim python3-neovim git curl yarn
+		python3-pygments rsync neovim python3-neovim git curl yarn global
 	@sudo snap install --classic clangd
 	@npm config set prefix ~/.npm
 	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
