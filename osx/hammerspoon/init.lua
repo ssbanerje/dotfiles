@@ -20,9 +20,11 @@ hs.grid.MARGINY    = 0
 
 -- Show grid
 hs.hotkey.bind(hyper, 'g', hs.grid.show)
+hs.hotkey.bind("cmd", 'g', hs.grid.show)
 
 -- Maximize window
 hs.hotkey.bind(hyper, 'm', hs.grid.maximizeWindow)
+hs.hotkey.bind("cmd", 'm', hs.grid.maximizeWindow)
 
 -- Screen halves
 hs.hotkey.bind(hyper, "Left", function () 
