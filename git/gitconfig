@@ -14,6 +14,13 @@
         name = {{NAME}}
         email = {{EMAIL}}
 
+[sendmail]
+        smtpserver = {{SMTP_SERVER}}
+        smtpserverport = {{SMTP_PORT}}
+        smtpencryption = {{SMTP_ENCRYPTION}}
+        smtpuser = {{EMAIL}}
+        from = {{EMAIL}}
+
 [github]
         user = {{GITHUB_USERNAME}}
 
