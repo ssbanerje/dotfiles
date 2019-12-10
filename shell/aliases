@@ -22,12 +22,4 @@ alias dus='du -hs * | sort -n'
 
 alias j='jobs -l'
 
-alias e='emacs -nw --quick'
-alias v='vim -p'
-
-alias datafart='curl --data-binary @- datafart.com'
-
-alias ipy="ipython qtconsole"
 alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"
-
-alias clangd="clangd-6.0"

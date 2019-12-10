@@ -1020,9 +1020,9 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>317 292 924 485 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1680 1027 0 0 1680 1027 </string>
+	<string>0 1417 2560 429 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>0 0 836 1027 0 0 1680 1027 </string>
+	<string>631 239 1046 507 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>173 27 570 451 0 0 1280 777 </string>
 	<key>New Bookmarks</key>
@@ -2826,6 +2826,7 @@
 	<array>
 		<string>3.3.7beta4</string>
 		<string>3.3.7beta2</string>
+		<string>3.3.8beta1</string>
 		<string>3.2.1beta4</string>
 		<string>3.3.7beta3</string>
 	</array>
@@ -2843,7 +2844,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>059661BB-F3AB-4EC0-93FB-8675B95A421F</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>10</integer>
+	<integer>18</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -3576,17 +3577,6 @@
 			</dict>
 		</array>
 	</dict>
-	<key>NoSyncSearchHistory2</key>
-	<array>
-		<string>local</string>
-		<string>Filter GOT</string>
-		<string>Filter Goth</string>
-		<string>Filtere</string>
-		<string>GotHERE</string>
-		<string>Frontend_Bound</string>
-		<string>Frontend_U</string>
-		<string>frontend_U</string>
-	</array>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
 	<real>558420327.26949596</real>
 	<key>NoSyncTipOfTheDayEligibilityBeganTime</key>
@@ -3657,7 +3647,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-11-20T19:38:56Z</date>
+	<date>2019-12-10T02:00:10Z</date>
 	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -3665,7 +3655,7 @@
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<false/>
+	<true/>
 	<key>ShowPaneTitles</key>
 	<true/>
 	<key>SmartPlacement</key>
@@ -3709,6 +3699,6 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.3.7beta4</string>
+	<string>3.3.8beta1</string>
 </dict>
 </plist>
