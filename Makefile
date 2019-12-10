@@ -41,12 +41,13 @@ init-prereqs-Linux:
 	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
 	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
 init-prereqs-Darwin:
+	@brew upgrade
 	@brew install ctags coreutils git ack python fasd tmux\
 		reattach-to-user-namespace node neovim bash-completion global
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort python-language-server || 1
+		isort python-language-server neovim || 1
 	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
 		javascript-typescript-langserver vscode-html-languageserver-bin import-js bash-language-server
 

@@ -3,66 +3,51 @@ require "hs.window"
 require "hs.pathwatcher"
 require "hs.caffeinate"
 
-hyper = {"cmd","alt","ctrl"}
-shift_hyper = {"cmd","alt","ctrl","shift"}
-
--- Set window animation off. It's much smoother.
+-- ------------------------------------------------------
+-- Variables 
+-- ------------------------------------------------------
+hyper = {"cmd","ctrl"}
+hyper_alt = {"cmd", "ctrl", "alt"}
 hs.window.animationDuration = 0
-
--- ------------------------------------------------------
--- Grid settings
--- ------------------------------------------------------
-
 hs.grid.GRIDWIDTH  = 4
 hs.grid.GRIDHEIGHT = 4
 hs.grid.MARGINX    = 0
 hs.grid.MARGINY    = 0
 
--- Hotkey to activate grid
-hs.hotkey.bind("cmd", "G", hs.grid.show)
-
 -- ------------------------------------------------------
 -- Hotkeys
 -- ------------------------------------------------------
 
--- Maximize window
-hs.hotkey.bind("cmd", "M", hs.grid.maximizeWindow)
+-- Show grid
+hs.hotkey.bind(hyper, 'g', hs.grid.show)
+hs.hotkey.bind("cmd", 'g', hs.grid.show)
 
--- Setup Sleep Inhibitor
-local sleep_menu_icon
-local function disable()
-  hs.caffeinate.set("displayIdle", false, false)
-  hs.caffeinate.set("systemIdle", false, false)
-  hs.caffeinate.set("system", false, false)
-  sleep_menu_icon:delete()
-end
-local function enable()
-  hs.caffeinate.set("displayIdle", true, true)
-  hs.caffeinate.set("systemIdle", true, true)
-  hs.caffeinate.set("system", true, true)
-  if not menu then
-      sleep_menu_icon = hs.menubar.new()
-  end
-  sleep_menu_icon:returnToMenuBar()
-  sleep_menu_icon:setTitle("☕️")
-  sleep_menu_icon:setTooltip("Mocha")
-  sleep_menu_icon:setClickCallback(function() disable() end)
-end
-hs.hotkey.bind(hyper, "S", function()
-  if sleep_menu_icon then
-    disable()
-  else
-    enable()
-  end
+-- Maximize window
+hs.hotkey.bind(hyper, 'm', hs.grid.maximizeWindow)
+hs.hotkey.bind("cmd", 'm', hs.grid.maximizeWindow)
+
+-- Screen halves
+hs.hotkey.bind(hyper, "Left", function () 
+  hs.window.focusedWindow():move(hs.layout.left50)
+end)
+hs.hotkey.bind(hyper, "Right", function () 
+  hs.window.focusedWindow():move(hs.layout.right50)
+end)
+hs.hotkey.bind(hyper, "Up", function () 
+  hs.window.focusedWindow():move({0, 0, 1, 0.5})
+end)
+hs.hotkey.bind(hyper, "Down", function () 
+  hs.window.focusedWindow():move({0, 0.5, 1, 0.5})
 end)
 
 -- Lock Screen
-hs.hotkey.bind(hyper, "L", hs.caffeinate.lockScreen)
+hs.hotkey.bind(hyper, 'l', hs.caffeinate.lockScreen)
 
--- Launch iTerm2
-hs.hotkey.bind(hyper, "T", function ()
-  hs.application.launchOrFocus("iTerm")
-end)
+-- Toggle console
+hs.hotkey.bind(hyper, 'y', hs.toggleConsole)
+
+-- Reload configuration
+hs.hotkey.bind(hyper, 'r', hs.reload)
 
 -- ------------------------------------------------------
 -- Watchers
