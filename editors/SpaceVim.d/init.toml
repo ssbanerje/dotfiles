@@ -59,6 +59,9 @@
     objcpp = "c++17"
 
 [[layers]]
+  name = "format"
+
+[[layers]]
   name = 'lang#rust'
 
 [[layers]]
