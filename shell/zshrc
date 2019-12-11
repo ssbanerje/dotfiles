@@ -74,3 +74,7 @@ bindkey '^Z' fancy-ctrl-z''
 # Source common settings
 source $HOME/.config/common_settings
 
+# Iterm2 Shell Intergration
+if [[ -a $HOME/.config/iterm2_shell_integration.zsh ]]; then
+  source $HOME/.config/iterm2_shell_integration.zsh
+fi

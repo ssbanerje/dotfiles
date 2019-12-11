@@ -3,12 +3,12 @@
   "OH_MY_ZSH_PLUGINS": ["common-aliases", "history-substring-search", "sudo",
                       "git", "git-flow", "github", "git-extras", "gitfast",
                       "svn", "mercurial", "perl", "pip", "python",
-                      "zsh-syntax-highlighting", "sudo", "colored-man-pages", "colorize", 
+                      "zsh-syntax-highlighting", "sudo", "colored-man-pages", "colorize",
                       "web-search", "tmux", "docker", "scala", "sbt", "aws", "mvn",
                       "compleat", "extract", "npm"],
   "__UNAME__": {
     "Darwin": {
-      "OH_MY_ZSH_PLUGINS_OS_DEP": ["osx", "brew", "terminalapp", "textmate"]
+      "OH_MY_ZSH_PLUGINS_OS_DEP": ["osx", "brew", "textmate"]
     },
     "Linux": {
       "OH_MY_ZSH_PLUGINS_OS_DEP": ["debian", "command-not-found", "systemd"]

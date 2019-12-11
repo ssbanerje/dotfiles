@@ -137,6 +137,8 @@ build-Darwin: build-common
 	@cp osx/lock-screen $(BUILD)/.bin/
 	@cp osx/lyrics $(BUILD)/.bin/
 	@cp -r osx/hammerspoon $(BUILD)/.hammerspoon
+	@curl -L https://iterm2.com/shell_integration/zsh -o $(BUILD)/.config/iterm2_shell_integration.zsh
+	@curl -L https://iterm2.com/shell_integration/bash -o $(BUILD)/.config/iterm2_shell_integration.bash
 build-Linux: build-common
 	@cp -r shell/base16-shell $(BUILD)/.config/base16-shell
 
