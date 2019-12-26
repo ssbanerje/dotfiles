@@ -3,7 +3,7 @@
   "EMAIL": "ssbanerje@gmail.com",
   "GITHUB_USERNAME": "ssbanerje",
   "SMTP_SERVER": "smtp.gmail.com",
-  "SMTP_SERVERPORT": "587",
+  "SMTP_PORT": "587",
   "SMTP_ENCRYPTION": "tls",
   "__UNAME__": {
     "Darwin": {

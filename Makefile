@@ -43,7 +43,7 @@ init-prereqs-Linux:
 init-prereqs-Darwin:
 	@brew upgrade
 	@brew install ctags coreutils git ack python fasd tmux\
-		reattach-to-user-namespace node neovim bash-completion global
+		reattach-to-user-namespace node neovim bash-completion global blueutil
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 init: init-prereqs-$(UNAME) init-submodules
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
@@ -137,6 +137,8 @@ build-Darwin: build-common
 	@cp osx/lock-screen $(BUILD)/.bin/
 	@cp osx/lyrics $(BUILD)/.bin/
 	@cp -r osx/hammerspoon $(BUILD)/.hammerspoon
+	@curl -L https://iterm2.com/shell_integration/zsh -o $(BUILD)/.config/iterm2_shell_integration.zsh
+	@curl -L https://iterm2.com/shell_integration/bash -o $(BUILD)/.config/iterm2_shell_integration.bash
 build-Linux: build-common
 	@cp -r shell/base16-shell $(BUILD)/.config/base16-shell
 
