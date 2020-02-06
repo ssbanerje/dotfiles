@@ -10,10 +10,10 @@ function bluetooth(power)
   end, {"--power", power}):start()
 end
 
-hs.caffeinate.watcher.new(function (event)
-  if event == hs.caffeinate.watcher.systemWillSleep then
-    bluetooth("off")
-  elseif event == hs.caffeinate.watcher.screensDidWake then
-     bluetooth("on")
-   end
-end):start()
+-- hs.caffeinate.watcher.new(function (event)
+--   if event == hs.caffeinate.watcher.systemWillSleep then
+--     bluetooth("off")
+--   elseif event == hs.caffeinate.watcher.screensDidWake then
+--      bluetooth("on")
+--    end
+-- end):start()
