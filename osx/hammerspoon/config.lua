@@ -1,16 +1,3 @@
-require "hs.hotkey"
-require "hs.notify"
-require "hs.pathwatcher"
-
--- Perform reload
-function reload()
-  hs.reload()
-  hs.notify.new({title="Hammerspoon", informativeText="Hammerspoon configuration reloaded"}):send()
-end
-
--- Reload by hotkey
-hs.hotkey.bind(hyper, 'r', reload)
-
 -- Watch for configuration changes
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", function (files)
   local doReload = false
@@ -20,7 +7,7 @@ hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", function (files)
     end
   end
   if doReload then
-    reload()
+    hs.reload()
+    hs.notify.new({title="Hammerspoon", informativeText="Hammerspoon configuration reloaded"}):send()
   end
 end):start()
-
