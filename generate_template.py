@@ -5,7 +5,6 @@ import json
 import platform
 import click
 import jinja2
-import subprocess
 
 
 @click.command()
