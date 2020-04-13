@@ -1,23 +1,26 @@
 ######## Variables ###########
-ROOT := $(shell pwd)
 UNAME := $(shell uname)
-BUILD := $(ROOT)/build
+BUILD := $(shell pwd)/build
+SUBDIRS := bin editors fonts git interp osx shell ssh
 TARGETS := # This defines the targets built by "all"
+BACKUPFOLDER := $(HOME)/old_dotfiles
+
 
 ######## Main build targets ###########
 all: # Dependencies are set later
 
 .PHONY: all
 
-SUBDIRS := bin editors fonts git interp osx shell ssh
 include $(addsuffix /module.mak, $(SUBDIRS))
 
 all: $(TARGETS)
 
 $(BUILD):
+	@echo "- Creating $@"
 	@mkdir -p $(BUILD)
 
 $(BUILD)/.config:
+	@echo "- Creating $@"
 	@mkdir -p $(BUILD)/.config
 
 
@@ -56,7 +59,7 @@ init: init-prereqs-$(UNAME) init-submodules
 
 ######## Install ###########
 install-common:
-	@rsync -avz $(BUILD)/ ${HOME}
+	@rsync -az $(BUILD)/ ${HOME}
 
 install-vim:
 	@curl -sLf https://spacevim.org/install.sh | bash
@@ -78,11 +81,11 @@ install-fonts-Linux:
 	  gconftool-2 -t int -s /apps/meld/tab_size '2'; \
 	fi
 
-install-Darwin: install-common install-vim
+install-Darwin: install-common
 
-install-Linux: install-common install-vim install-fonts-Linux
+install-Linux: install-common install-fonts-Linux
 
-install: all install-common install-$(UNAME)
+install: all install-common install-vim install-$(UNAME)
 
 .PHONY: install install-common install-vim install-Darwin install-Linux
 
@@ -94,7 +97,8 @@ clean:
 listfiles:
 	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)),echo $(file);)
 
-distclean:
-	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)),rm -rf $(file);)
+backup: listfiles
+	@mkdir -p $(BACKUPFOLDER)/{.bin,.ssh,.config,Library/Preferences}
+	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)), cp -rf $(file) $(patsubst $(HOME)/%, $(BACKUPFOLDER)/%, $(file));)
 
-.PHONY: clean distclean listfiles
+.PHONY: clean distclean listfiles backup

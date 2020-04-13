@@ -6,7 +6,8 @@ endif
 
 TARGETS += $(FONTDIR) #$(patsubst %, $(DIR)/%, $(filter-out module.mak, $(wildcard fonts/*)))
 
-$(FONTDIR): $(BUILD)
+$(FONTDIR): | $(BUILD)
+	@echo "- Creating $@"
 	@mkdir -p $@
 	# TODO Fix the depenencies on individual font files
 	@cp -f fonts/* $@
