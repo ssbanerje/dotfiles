@@ -2,7 +2,7 @@
 ROOT := $(shell pwd)
 UNAME := $(shell uname)
 BUILD := $(ROOT)/build
-TARGETS := $(BUILD) # This defines the targets built by "all"
+TARGETS := # This defines the targets built by "all"
 
 ######## Main build targets ###########
 all: # Dependencies are set later
@@ -91,4 +91,10 @@ install: all install-common install-$(UNAME)
 clean:
 	@rm -rf $(BUILD)
 
-.PHONY: clean
+listfiles:
+	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)),echo $(file);)
+
+distclean:
+	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)),rm -rf $(file);)
+
+.PHONY: clean distclean listfiles
