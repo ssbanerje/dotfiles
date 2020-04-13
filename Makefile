@@ -6,7 +6,7 @@ TARGETS := # This defines the targets built by "all"
 BACKUPFOLDER := $(HOME)/old_dotfiles
 
 
-######## Main build targets ###########
+######## Build ###########
 .PHONY: all
 all: # Dependencies are set later
 
@@ -24,10 +24,6 @@ $(BUILD)/.config:
 
 
 ######## Init ###########
-.PHONY: init-submodules
-init-submodules:
-	@git submodule update --init --recursive
-
 .PHONY: init-prereqs-Linux
 init-prereqs-Linux:
 	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -40,7 +36,6 @@ init-prereqs-Linux:
 	@npm config set prefix ~/.npm
 	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
 	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
-	@python3 -m pip install --upgrade --user 'python-language-server[all]'
 
 .PHONY: init-prereqs-Darwin
 init-prereqs-Darwin:
@@ -48,12 +43,12 @@ init-prereqs-Darwin:
 	@brew install ctags coreutils git ack python fasd tmux\
 		reattach-to-user-namespace node neovim bash-completion global blueutil
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
-	@python3 -m pip install --upgrade 'python-language-server[all]' # Homebrew python not being able to deal with --user
 
 .PHONY: init
-init: init-prereqs-$(UNAME) init-submodules
+init: init-prereqs-$(UNAME)
+	@git submodule update --init --recursive
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort neovim
+		isort neovim 'python-language-server[all]'
 	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
 		javascript-typescript-langserver vscode-html-languageserver-bin import-js bash-language-server
 
