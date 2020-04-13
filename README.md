@@ -6,8 +6,6 @@
                                             JUST THE WAY I LIKE IT
 
 
-This is a compilation of dotfiles from dotfile repos, blogs and projects from across the web, put together to suit my workflow.
-
 ## Dependencies
 
 ### Mac OS
@@ -18,9 +16,14 @@ This is a compilation of dotfiles from dotfile repos, blogs and projects from ac
 ## Installation
 
 ```bash
-# Install the dotfiles
 git clone https://github.com/ssbanerje/dotfiles.git dotfiles
 cd dotfiles
-make && make install
+make init
+make backup
+make install
 ```
+
+## Listing changes
+- Find files which will be written by executing `make listfiles`
+- Backup all files which will be overwrtiten by executing `make backup`. This will create a backup in `$HOME/old_dotfiles`
 
