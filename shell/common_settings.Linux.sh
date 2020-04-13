@@ -1,5 +1,5 @@
 # Set PATH to include non-standard locations
-export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.powerline/scripts
+export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 
 # Source color schemes
 BASE16_SHELL=$HOME/.config/base16-shell/

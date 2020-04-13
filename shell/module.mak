@@ -42,7 +42,7 @@ TARGETS += $(BUILD)/.config/base16-shell
 
 $(BUILD)/.config/base16-shell: $(shell find shell/base16-shell) | $(BUILD)/.config
 	@echo "- Creating $@"
-	@rsync -a shell/base16-shell $(BUILD)/.config/base16-shell
+	@rsync -a shell/base16-shell $(BUILD)/.config/
 endif
 
 TARGETS += $(BUILD)/.tmux.conf

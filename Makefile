@@ -26,16 +26,15 @@ $(BUILD)/.config:
 ######## Init ###########
 .PHONY: init-prereqs-Linux
 init-prereqs-Linux:
+	@sudo apt-get update && \
+		sudo apt-get install -y global zsh ruby-dev libclang-dev clangd-9 exuberant-ctags\
+		python3-dev python3-pip python3-pygments vim-nox rake tmux cmake xclip psutils\
+		rsync neovim python3-neovim git curl nodejs npm
+	@sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	@echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-	@sudo apt-get update && \
-		sudo apt-get install -y global zsh ruby-dev libclang-dev exuberant-ctags\
-		python3-pip vim-nox vim-gnome rake tmux cmake python3-dev xclip psutils\
-		python3-pygments rsync neovim python3-neovim git curl yarn global
-	@sudo snap install --classic clangd
-	@npm config set prefix ~/.npm
-	@sudo mkdir -p `npm config get prefix`/{lib/node_modules,bin,share}
-	@sudo chown -R $(shell whoami) `npm config get prefix`/{lib/node_modules,bin,share}
+	@sudo apt-get update && sudo apt-get install -y yarn
+	@npm config set prefix $(HOME)/.npm
 
 .PHONY: init-prereqs-Darwin
 init-prereqs-Darwin:
