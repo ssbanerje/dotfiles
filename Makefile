@@ -11,6 +11,7 @@ all: # Dependencies are set later
 
 SUBDIRS := bin editors fonts git interp osx shell ssh
 include $(addsuffix /module.mak, $(SUBDIRS))
+
 all: $(TARGETS)
 
 $(BUILD):
