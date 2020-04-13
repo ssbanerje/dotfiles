@@ -118,7 +118,9 @@ build-ssh:
 build-interp:
 	@cp interp/pyrc $(BUILD)/.pyrc
 	@cp interp/irbrc $(BUILD)/.irbrc
-
+	@cp interp/gdbinit $(BUILD)/.gdbinit
+	@cp interp/curlrc $(BUILD)/.curlrc
+	@cp interp/wgetrc $(BUILD)/.wgetrc
 
 
 ######## For Editors ###########

@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------------------------
 -- Setup default parameters.
 ----------------------------------------------------------------------------------------------------
-hs.logger.defaultLogLevel="info"
+hs.logger.defaultLogLevel='info'
 hs.window.animationDuration = 0
 hs.grid.setGrid('6x4')
 hs.grid.setMargins('0x0')
@@ -11,16 +11,16 @@ hs.grid.setMargins('0x0')
 -- Setup watchers.
 ----------------------------------------------------------------------------------------------------
 -- Watch for configuration changes
-local config_watcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", function(files)
+local config_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', function(files)
   local doReload = false
   for _,file in pairs(files) do
-    if file:sub(-4) == ".lua" then
+    if file:sub(-4) == '.lua' then
       doReload = true
     end
   end
   if doReload then
     hs.reload()
-    hs.notify.new({title="Hammerspoon", informativeText="Hammerspoon configuration reloaded"}):send()
+    hs.notify.new({title='Hammerspoon', informativeText='Hammerspoon configuration reloaded'}):send()
   end
 end)
 config_watcher:start()
@@ -35,9 +35,12 @@ sleep_watcher:start()
 
 -- Wifi status watcher
 local wifi_watcher = hs.wifi.watcher.new(function ()
-  local currentWifi = hs.wifi.currentNetwork()
-  if not currentWifi then return end
-  hs.notify.new({title="Hammerspoon", informativeText="Wi-Fi connected to " .. currentWifi}):send()
+  local net = hs.wifi.currentNetwork()
+  if net == nil then
+    hs.notify.show('Hammerspoon', 'Wi-Fi disconnected','')
+  else
+    hs.notify.show('Hammerspoon', 'Wi-Fi connected to ' .. net,'')
+  end
 end)
 wifi_watcher:start()
 
@@ -45,15 +48,15 @@ wifi_watcher:start()
 ----------------------------------------------------------------------------------------------------
 -- Setup keyboard shortcuts.
 ----------------------------------------------------------------------------------------------------
-hyper = {"ctrl","alt"}
+hyper = {'ctrl','alt'}
 hshelp_keys = {hyper, '/'}
-hs.loadSpoon("ModalMgr")
+hs.loadSpoon('ModalMgr')
 
 
 ----------------------------------------------------------------------------------------------------
 -- Register Window Switcher.
 ----------------------------------------------------------------------------------------------------
-spoon.ModalMgr.supervisor:bind("alt", "tab", 'Show Window Hints', function()
+spoon.ModalMgr.supervisor:bind('alt', 'tab', 'Show Window Hints', function()
 	spoon.ModalMgr:deactivateAll()
 	hs.hints.windowHints()
 end)
@@ -62,7 +65,7 @@ end)
 ----------------------------------------------------------------------------------------------------
 -- Register Hammerspoon console.
 ----------------------------------------------------------------------------------------------------
-spoon.ModalMgr.supervisor:bind(hyper, "c", "Toggle Hammerspoon Console", function()
+spoon.ModalMgr.supervisor:bind(hyper, 'c', 'Toggle Hammerspoon Console', function()
 	spoon.ModalMgr:deactivateAll()
 	hs.toggleConsole()
 end)
@@ -71,7 +74,7 @@ end)
 ----------------------------------------------------------------------------------------------------
 -- Register lock screen.
 ----------------------------------------------------------------------------------------------------
-spoon.ModalMgr.supervisor:bind(hyper, "l", "Lock Screen", function()
+spoon.ModalMgr.supervisor:bind(hyper, 'l', 'Lock Screen', function()
 	spoon.ModalMgr:deactivateAll()
 	hs.caffeinate.lockScreen()
 end)
@@ -79,13 +82,13 @@ end)
 ----------------------------------------------------------------------------------------------------
 -- Register window tiling.
 ----------------------------------------------------------------------------------------------------
-spoon.ModalMgr:new("window")
-local window_modal = spoon.ModalMgr.modal_list["window"]
+spoon.ModalMgr:new('window')
+local window_modal = spoon.ModalMgr.modal_list['window']
 local box = nil
 local text = nil
 local rect = nil
 local space_watcher = hs.spaces.watcher.new(function()
-	spoon.ModalMgr:deactivate({"window"})
+	spoon.ModalMgr:deactivate({'window'})
 end)
 
 -- Maximize window.
@@ -99,24 +102,24 @@ end)
 
 -- Screen positons.
 local positions = {
-  left = {{0, 0, 0.5, 1}, "Halves - L"},
-  up = {{0, 0, 1, 0.5}, "Halves - T"},
-  right = {{0.5, 0, 0.5, 1}, "Halves - R"},
-  down = {{0, 0.5, 1, 0.5}, "Halves - L"},
-  r = {{0, 0, 0.5, 0.5}, "Quarters - TR"},
-  t = {{0.5, 0, 0.5, 0.5}, "Quarters - TL"},
-  g = {{0.5, 0.5, 0.5, 0.5}, "Quarters - BR"},
-  f = {{0, 0.5, 0.5, 0.5}, "Quarters - BL"},
-  q = {{0, 0, 0.33333, 1}, "Thirds - L"},
-  w = {{0.33333, 0, 0.33333, 1}, "Thirds - M"},
-  e = {{0.66666, 0, 0.33333, 1}, "Thirds - R"},
-  v = {{0, 0, 0.66666, 1}, "Two Thirds - L"},
-  a = {{0, 0, 0.33333, 0.5}, "Sixths - TL"},
-  s = {{0.33333, 0, 0.33333, 0.5}, "Sixths - TM"},
-  d = {{0.66666, 0, 0.33333, 0.5}, "Sixths - TR"},
-  z = {{0, 0.5, 0.33333, 0.5}, "Sixths - BL"},
-  x = {{0.33333, 0.5, 0.33333, 0.5}, "Sixths - BM"},
-  c = {{0.66666, 0.5, 0.33333, 0.5}, "Sixths - BR"},
+  left = {{0, 0, 0.5, 1}, 'Halves - L'},
+  up = {{0, 0, 1, 0.5}, 'Halves - T'},
+  right = {{0.5, 0, 0.5, 1}, 'Halves - R'},
+  down = {{0, 0.5, 1, 0.5}, 'Halves - L'},
+  r = {{0, 0, 0.5, 0.5}, 'Quarters - TR'},
+  t = {{0.5, 0, 0.5, 0.5}, 'Quarters - TL'},
+  g = {{0.5, 0.5, 0.5, 0.5}, 'Quarters - BR'},
+  f = {{0, 0.5, 0.5, 0.5}, 'Quarters - BL'},
+  q = {{0, 0, 0.33333, 1}, 'Thirds - L'},
+  w = {{0.33333, 0, 0.33333, 1}, 'Thirds - M'},
+  e = {{0.66666, 0, 0.33333, 1}, 'Thirds - R'},
+  v = {{0, 0, 0.66666, 1}, 'Two Thirds - L'},
+  a = {{0, 0, 0.33333, 0.5}, 'Sixths - TL'},
+  s = {{0.33333, 0, 0.33333, 0.5}, 'Sixths - TM'},
+  d = {{0.66666, 0, 0.33333, 0.5}, 'Sixths - TR'},
+  z = {{0, 0.5, 0.33333, 0.5}, 'Sixths - BL'},
+  x = {{0.33333, 0.5, 0.33333, 0.5}, 'Sixths - BM'},
+  c = {{0.66666, 0.5, 0.33333, 0.5}, 'Sixths - BR'},
 }
 
 for k,v in pairs(positions) do
@@ -130,6 +133,18 @@ end
 -- Grid.
 window_modal:bind('', '\\', 'Toggle grid', function()
 	hs.grid.show()
+end)
+
+spoon.ModalMgr.supervisor:bind(hyper, '\\', 'Toggle grid', function()
+	hs.grid.show()
+end)
+
+window_modal:bind('', ';', 'Snap window to grid', function()
+  hs.grid.snap(hs.window.focusedWindow())
+end)
+
+window_modal:bind('', '\'', 'Snap all windows to grid', function()
+  hs.fnutils.map(hs.window.visibleWindows(), hs.grid.snap)
 end)
 
 -- Cascade windows.
@@ -254,26 +269,26 @@ spoon.ModalMgr.supervisor:bind(hyper, 'w', 'Enter Window Tiling Mode', function(
   local res = hs.window.focusedWindow():screen():frame()
   box = hs.geometry.rect((res.w-600)/2, (res.h-160)/2, 600, 160)
   rect = hs.drawing.rectangle(box)
-  text = hs.drawing.text(box, "Tiling Mode")
-  rect:setLevel("overlay")
+  text = hs.drawing.text(box, 'Tiling Mode')
+  rect:setLevel('overlay')
   rect:setFillColor({white = 0.125, alpha = 0.8})
   rect:setFill(true)
   rect:setStrokeColor({white = 0.625, alpha = 0.8})
   rect:setStrokeWidth(1)
   rect:setStroke(true)
   rect:setRoundedRectRadii(4, 4)
-  text:setLevel("overlay")
+  text:setLevel('overlay')
   text:setTextSize(120)
-  text:setTextStyle({alignment = "center"})
+  text:setTextStyle({alignment = 'center'})
   rect:show()
   text:show()
   space_watcher:start()
-	spoon.ModalMgr:activate({"window"}, "#FFBD2E")
+	spoon.ModalMgr:activate({'window'}, '#FFBD2E')
 end)
 
 -- Exit window modal.
 window_modal:bind('', 'escape', 'Exit', function()
-	spoon.ModalMgr:deactivate({"window"})
+	spoon.ModalMgr:deactivate({'window'})
 end)
 
 window_modal.exited = function()

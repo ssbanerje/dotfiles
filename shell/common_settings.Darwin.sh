@@ -1,10 +1,6 @@
 # Setup path for Homebrew
 export PATH="/usr/local/sbin:$PATH"
 
-# Set environment for MATLAB
-export MATLAB=/Applications/MATLAB_R2015a.app
-export PATH=$PATH:$MATLAB/bin
-
 # Set for MacTex
 export PATH=$PATH:/usr/texbin
 
@@ -39,3 +35,11 @@ eval "$(fasd --init auto)"
 
 # Use LLVM tools from homebrew vs Apple
 export PATH="/usr/local/opt/llvm/bin:$PATH"
+
+# Common functions
+
+# Change working directory to the top-most Finder window location
+function cdf() {
+	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
+}
+
