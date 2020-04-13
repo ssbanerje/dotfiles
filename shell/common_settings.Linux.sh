@@ -10,12 +10,5 @@ source ${HOME}/.config/base16-shell/scripts/base16-monokai.sh
 CUDA=/usr/local/cuda
 export PATH=$PATH:$CUDA/bin
 
-# Matlab on linux
-export MATLAB=/usr/local/MATLAB/R2013b
-export PATH=$PATH:$MATLAB/bin
-
-# Source Intel compilers
-[ -e /opt/intel/parallel_studio_xe_2015/psxevars.sh ] && (source /opt/intel/parallel_studio_xe_2015/psxevars.sh 2>&1 > /dev/null)
-
 # Python Executables
 export PATH=$PATH:$HOME/.local/bin
