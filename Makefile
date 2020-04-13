@@ -68,7 +68,7 @@ install-common:
 install-Darwin: install-common
 
 .PHONY: install-Linux
-install-Linux: install-common install-fonts-Linux
+install-Linux: install-common
 	@if command -v fc-cache; then \
 		fc-cache -vf > /dev/null; \
 	fi
@@ -82,7 +82,7 @@ install-Linux: install-common install-fonts-Linux
 	fi
 
 .PHONY: install
-install: all install-common install-$(UNAME)
+install: all install-$(UNAME)
 
 
 ######## Clean ###########
