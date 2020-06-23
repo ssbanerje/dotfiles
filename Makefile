@@ -29,7 +29,7 @@ init-prereqs-Linux:
 	@sudo apt-get update && \
 		sudo apt-get install -y global zsh ruby-dev libclang-dev clangd-9 exuberant-ctags\
 		python3-dev python3-pip python3-pygments vim-nox rake tmux cmake xclip psutils\
-		rsync neovim python3-neovim git curl nodejs npm
+		rsync neovim python3-neovim git curl nodejs npm silversearcher-ag
 	@sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	@echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
@@ -39,7 +39,7 @@ init-prereqs-Linux:
 .PHONY: init-prereqs-Darwin
 init-prereqs-Darwin:
 	@brew upgrade
-	@brew install ctags coreutils git ack python fasd tmux\
+	@brew install ctags coreutils git ack ag python fasd tmux\
 		reattach-to-user-namespace node neovim bash-completion global blueutil
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 
@@ -47,9 +47,9 @@ init-prereqs-Darwin:
 init: init-prereqs-$(UNAME)
 	@git submodule update --init --recursive
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort neovim 'python-language-server[all]'
+		isort neovim 'python-language-server[all]' pynvim neovim-remote
 	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
-		javascript-typescript-langserver vscode-html-languageserver-bin import-js bash-language-server
+		javascript-typescript-langserver vscode-html-languageserver-bin import-js bash-language-server neovim
 
 
 ######## Install ###########
