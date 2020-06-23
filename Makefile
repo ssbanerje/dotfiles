@@ -47,7 +47,7 @@ init-prereqs-Darwin:
 init: init-prereqs-$(UNAME)
 	@git submodule update --init --recursive
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake\
-		isort neovim 'python-language-server[all]' pynvim neovim-remote
+		isort neovim 'python-language-server[all]' pynvim neovim-remote notedown
 	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth prettier\
 		javascript-typescript-langserver vscode-html-languageserver-bin import-js bash-language-server neovim
 
