@@ -23,6 +23,10 @@ endfunction
 function! myspacevim#before() abort
   " Load Rust tasks into the Spacevim
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:cargo_task'))
+
+  " 100 character line
+  set tw=100
+  set colorcolumn=100
 endfunction
 
 " Called after entering autocmd mode
