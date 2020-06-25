@@ -1,4 +1,4 @@
-TARGETS += $(patsubst %, $(BUILD)/.%, bashrc bash_profile zshrc ackrc hushlogin npmrc)
+TARGETS += $(patsubst %, $(BUILD)/.%, bashrc zshrc zshenv ackrc hushlogin npmrc)
 
 $(BUILD)/.bashrc: shell/bashrc shell/bash.prompt.sh shell/bashrc.$(UNAME).sh | $(BUILD)
 	@echo "- Creating $@"
@@ -6,43 +6,48 @@ $(BUILD)/.bashrc: shell/bashrc shell/bash.prompt.sh shell/bashrc.$(UNAME).sh | $
 	@cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
 	@[ -e shell/bashrc.$(UNAME).sh  ] && cat shell/bashrc.$(UNAME).sh >> $(BUILD)/.bashrc
 
-$(BUILD)/.bash_profile: shell/bash_profile | $(BUILD)
-	@echo "- Creating $@"
-	@cp -f shell/bash_profile $(BUILD)/.bash_profile
-
-$(BUILD)/.zshrc: config/zsh_config_db.json | $(BUILD)/.config
+$(BUILD)/.zshrc: shell/zshrc config/zsh_config_db.json | $(CONFIG)
 	@echo "- Creating $@"
 	@python3 generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json --output-dir $(BUILD)
 	@mv build/zshrc build/.zshrc
+
+$(BUILD)/.zshenv: shell/zshenv | $(BUILD)
+	@echo "- Creating $@"
+	@cp $< $@
 
 $(BUILD)/.%: shell/% | $(BUILD)
 	@echo "- Creating $@"
 	@cp -rf $< $@
 
-TARGETS += $(patsubst %, $(BUILD)/.config/%, oh-my-zsh common_settings aliases)
+TARGETS += $(patsubst %, $(CONFIG)/%, oh-my-zsh common_settings.sh aliases.sh env.sh)
 
-$(BUILD)/.config/oh-my-zsh: $(shell find shell/oh-my-zsh) $(shell find shell/zsh-syntax-highlighting) | $(BUILD)/.config
+$(CONFIG)/env.sh: shell/env.sh shell/env.$(UNAME).sh | $(CONFIG)
 	@echo "- Creating $@"
-	@cp -r shell/oh-my-zsh/ $(BUILD)/.config/oh-my-zsh
-	@mkdir -p $(BUILD)/.config/oh-my-zsh/custom/plugins/
-	@rsync -a shell/zsh-syntax-highlighting/ $(BUILD)/.config/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	@cp shell/env.sh $(CONFIG)/env.sh
+	@[ -e shell/env.$(UNAME).sh ] && cat shell/env.$(UNAME).sh >> $(CONFIG)/env.sh
 
-$(BUILD)/.config/common_settings: shell/common_settings shell/common_settings.$(UNAME).sh | $(BUILD)/.config
+$(CONFIG)/oh-my-zsh: $(shell find shell/oh-my-zsh) $(shell find shell/zsh-syntax-highlighting) | $(CONFIG)
 	@echo "- Creating $@"
-	@cp shell/common_settings $(BUILD)/.config/common_settings
-	@[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(BUILD)/.config/common_settings
+	@cp -r shell/oh-my-zsh/ $(CONFIG)/oh-my-zsh
+	@mkdir -p $(CONFIG)/oh-my-zsh/custom/plugins/
+	@rsync -a shell/zsh-syntax-highlighting/ $(CONFIG)/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
-$(BUILD)/.config/aliases: shell/aliases shell/aliases.$(UNAME).sh | $(BUILD)/.config
+$(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh | $(CONFIG)
 	@echo "- Creating $@"
-	@cp shell/aliases $(BUILD)/.config/aliases
-	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(BUILD)/.config/aliases
+	@cp shell/common_settings.sh $(CONFIG)/common_settings.sh
+	@[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(CONFIG)/common_settings.sh
+
+$(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh | $(CONFIG)
+	@echo "- Creating $@"
+	@cp shell/aliases.sh $(CONFIG)/aliases.sh
+	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(CONFIG)/aliases.sh
 
 ifeq ($(UNAME), Linux)
-TARGETS += $(BUILD)/.config/base16-shell
+TARGETS += $(CONFIG)/base16-shell
 
-$(BUILD)/.config/base16-shell: $(shell find shell/base16-shell) | $(BUILD)/.config
+$(CONFIG)/base16-shell: $(shell find shell/base16-shell) | $(CONFIG)
 	@echo "- Creating $@"
-	@rsync -a shell/base16-shell $(BUILD)/.config/
+	@rsync -a shell/base16-shell $(CONFIG)/
 endif
 
 TARGETS += $(BUILD)/.tmux.conf

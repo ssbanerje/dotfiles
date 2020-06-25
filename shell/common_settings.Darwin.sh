@@ -1,9 +1,3 @@
-# Setup path for Homebrew
-export PATH="/usr/local/sbin:$PATH"
-
-# Set for MacTex
-export PATH=$PATH:/usr/texbin
-
 # Locale
 export LANG="en_US.UTF-8"
 export LANGUAGE="en_US:en"
@@ -19,7 +13,7 @@ export LC_ADDRESS="en_US.UTF-8"
 export LC_TELEPHONE="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export LC_MEASUREMENT="en_US.UTF-8"
-export LC_IDENTIFICATION="en_US.UTF-8"
+export LC_IDENTIFICATION="en_US.TF-8"
 
 # Setup grc
 if $(grc &>/dev/null)
@@ -27,16 +21,8 @@ then
     source `brew --prefix`/etc/grc.bashrc
 fi
 
-# Setup path helper
-eval `/usr/libexec/path_helper -s`
-
 # Setup fasd
 eval "$(fasd --init auto)"
-
-# Use LLVM tools from homebrew vs Apple
-export PATH="/usr/local/opt/llvm/bin:$PATH"
-
-# Common functions
 
 # Change working directory to the top-most Finder window location
 function cdf() {

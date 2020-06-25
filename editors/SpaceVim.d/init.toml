@@ -16,7 +16,7 @@
   statusline_separator = 'arrow'
   statusline_inactive_separator = 'slant'
   enable_statusline_mode=true
-  buffer_index_type = 2
+  buffer_index_type = 4
   enable_tabline_filetype_icon = true
   enable_os_fileformat_icon = true
   enable_tabline_filetype_icon = true

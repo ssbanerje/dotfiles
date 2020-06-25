@@ -1,9 +1,3 @@
-#Vim all the way
-export VISUAL=nvim
-export EDITOR=nvim
-export USE_EDITOR=nvim
-export SVN_EDITOR=nvim
-
 # Set less options
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 if [[ -x $(which less) ]]
@@ -12,19 +6,13 @@ then
   export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 fi
 
-#My scripts
-export PATH=$PATH:$HOME/.bin
-
-#Start Python Shell with sensible settings
-export PYTHONSTARTUP="$HOME/.pyrc"
-
-#Color scheme for terminal
+# Color scheme for terminal
 export TERM="xterm-256color"
 
-#Stuff for rvm
+# Stuff for rvm
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-#Colourful man pages
+# Colourful man pages
 man() {
     env \
         LESS_TERMCAP_mb=$(printf "\e[1;31m") \
@@ -36,19 +24,6 @@ man() {
         LESS_TERMCAP_us=$(printf "\e[1;32m") \
         man "$@"
 }
-
-# Source Rustup
-if [ -d $HOME/.cargo/ ]
-then
-  source $HOME/.cargo/env
-  export PATH="$HOME/.cargo/bin:$PATH"
-fi
-
-# Setup NPM binaries
-export PATH=$HOME/.npm/bin:$PATH
-
-# Setup aliases
-source $HOME/.config/aliases
 
 # Common functions
 

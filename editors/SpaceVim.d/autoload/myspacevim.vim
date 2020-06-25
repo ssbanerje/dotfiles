@@ -24,7 +24,7 @@ function! myspacevim#before() abort
   " Load Rust tasks into the Spacevim
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:cargo_task'))
 
-  " 100 character line
+  " Set text width to 100
   set tw=100
   set colorcolumn=100
 endfunction

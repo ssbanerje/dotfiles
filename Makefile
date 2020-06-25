@@ -1,6 +1,7 @@
 ######## Variables ###########
 UNAME := $(shell uname)
 BUILD := $(shell pwd)/build
+CONFIG := $(BUILD)/.config
 SUBDIRS := bin editors fonts git interp osx shell ssh
 TARGETS := # This defines the targets built by "all"
 BACKUPFOLDER := $(HOME)/old_dotfiles

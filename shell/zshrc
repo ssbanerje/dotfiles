@@ -1,23 +1,16 @@
-#####################################################################
-# .zshrc file
-# Author: Subho Sankar Banerjee
-# EMail: subs.zero[at]gmail[dot]com
-########################################################################
-
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
-#For homebrew
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+# Homebrew
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   FPATH=/usr/local/share/zsh/site-functions:$FPATH
 fi
 
+
+# Setup oh-my-zsh
 export ZSH_THEME="{{ZSH_THEME}}"
 export ZSH=$HOME/.config/oh-my-zsh
 export DISABLE_AUTO_UPDATE="true"
-
-# Plugins
 plugins=(
 {% for plugin in OH_MY_ZSH_PLUGINS %} {{plugin}} {% endfor %}
 {% for plugin in OH_MY_ZSH_PLUGINS_OS_DEP %} {{plugin}} {% endfor %}
@@ -72,7 +65,7 @@ zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z''
 
 # Source common settings
-source $HOME/.config/common_settings
+source $HOME/.config/common_settings.sh
 
 # Iterm2 Shell Intergration
 if [[ -a $HOME/.config/iterm2_shell_integration.zsh ]]; then
