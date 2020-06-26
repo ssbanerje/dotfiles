@@ -51,9 +51,6 @@
   name = 'denite'
 
 [[layers]]
-  name = 'ui'
-
-[[layers]]
   name = 'gtags'
 
 [[layers]]
@@ -139,3 +136,4 @@
 
 [[layers]]
   name = 'tmux'
+
