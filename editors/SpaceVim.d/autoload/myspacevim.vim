@@ -51,12 +51,16 @@ function! myspacevim#before() abort
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:make_tasks'))
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:cargo_tasks'))
 
-  " Set text width to 100
-  set tw=100
-  set colorcolumn=100
+  " Configure custom shortcuts
+  call SpaceVim#custom#SPC('nore', ['r', 'w'], "for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor", "wipe all registers", 1)
+  call SpaceVim#custom#SPC('nore', ['g', 'p'], "Gina patch", "interactively-stage-file", 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['g', 'd'], 'Gina diff HEAD', 'view-git-diff', 1) " This is a fix for SpaceVim bug
 endfunction
 
 " Called after entering autocmd mode
 function! myspacevim#after() abort
+  " Set text width to 100
+  set tw=100
+  set colorcolumn=+1
 endfunction
 

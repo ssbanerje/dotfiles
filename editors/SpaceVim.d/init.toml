@@ -7,7 +7,7 @@
   enable_debug = true
   automatic_update = true
   bootstrap_before = 'myspacevim#before'
-  bootstrap_after = 'myspavevim#after'
+  bootstrap_after = 'myspacevim#after'
 
   colorscheme = 'gruvbox'
   colorscheme_bg = 'dark'
@@ -21,7 +21,7 @@
   enable_os_fileformat_icon = true
   enable_tabline_filetype_icon = true
 
-  enable_vimfiler_welcome = 1
+  enable_vimfiler_welcome = false
 
   auto_disable_touchpad = true
 
@@ -43,6 +43,7 @@
 
 [[layers]]
   name = 'git'
+  git-plugin = 'gina'
 
 [[layers]]
   name = 'sudo'
@@ -75,8 +76,6 @@
   [layer.clang_std]
     c = 'c11'
     cpp = 'c++17'
-    objc = 'c11'
-    objcpp = 'c++17'
 
 [[layers]]
   name = 'lang#assembly'
@@ -94,7 +93,7 @@
 [[layers]]
   name = 'lang#dockerfile'
 
-[[layers]]
+# [[layers]]
   name = 'lang#latex'
 
 [[layers]]
@@ -136,4 +135,8 @@
 
 [[layers]]
   name = 'tmux'
+
+[[custom_plugins]]
+  name = 'tomtom/tcomment_vim'
+  merged = false
 
