@@ -1,9 +1,11 @@
-TARGETS += $(patsubst %, $(BUILD)/.%, SpaceVim.d editorconfig)
+TARGETS += $(patsubst %, $(BUILD)/.%, editorconfig $(shell find editors/SpaceVim.d -type f | sed "s/^editors\///"))
 
-$(BUILD)/.SpaceVim.d: $(shell find editors/SpaceVim.d) | $(BUILD)
-	@echo "- Creating $@"
-	@cp -rf editors/SpaceVim.d/ $@
+$(BUILD)/.SpaceVim.d/%: editors/SpaceVim.d/%
+	@#echo "- Creating $@"
+	@mkdir -p $(@D)
+	@cp $< $@
 
-$(BUILD)/.%: editors/% | $(BUILD)
-	@echo "- Creating $@"
-	@cp -rf $< $@
+$(BUILD)/.%: editors/%
+	@#echo "- Creating $@"
+	@mkdir -p $(@D)
+	@cp $< $@

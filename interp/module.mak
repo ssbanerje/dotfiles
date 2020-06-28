@@ -1,5 +1,5 @@
 TARGETS += $(patsubst %, $(BUILD)/.%, curlrc gdbinit irbrc pyrc wgetrc)
 
 $(BUILD)/.%: interp/% | $(BUILD)
-	@echo "- Creating $@"
+	@#echo "- Creating $@"
 	@cp -rf $< $@

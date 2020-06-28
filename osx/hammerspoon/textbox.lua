@@ -21,6 +21,7 @@ module.show = function(message)
       fillColor = {white = 0.125, alpha = 0.8},
       strokeColor = {white = 0.625, alpha = 0.8},
       strokeWidth = 1,
+      roundedRectRadii = {xRadius = 10, yRadius = 10},
     }
     module.box[2] = {
       type = "text",

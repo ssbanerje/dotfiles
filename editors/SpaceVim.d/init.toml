@@ -8,8 +8,10 @@
   automatic_update = true
   bootstrap_before = 'myspacevim#before'
   bootstrap_after = 'myspacevim#after'
+  auto_disable_touchpad = true
+  realtime_leader_guide = true
 
-  colorscheme = 'gruvbox'
+  colorscheme = 'material'
   colorscheme_bg = 'dark'
   enable_guicolors = true
 
@@ -19,13 +21,8 @@
   buffer_index_type = 4
   enable_tabline_filetype_icon = true
   enable_os_fileformat_icon = true
-  enable_tabline_filetype_icon = true
 
-  enable_vimfiler_welcome = false
-
-  auto_disable_touchpad = true
-
-  realtime_leader_guide = true
+  filemanager = "nerdtree"
 
   github_username = 'ssbanerje'
 
@@ -88,21 +85,16 @@
   format-on-save = true
 
 [[layers]]
-  name = 'lang#ipynb'
-
-[[layers]]
   name = 'lang#dockerfile'
 
-# [[layers]]
+[[layers]]
   name = 'lang#latex'
 
 [[layers]]
-  name = 'lang#html'
+  name = "lang#lua"
 
 [[layers]]
-  name = 'lang#javascript'
-  auto_fix = true
-  enable_flow_syntax = true
+  name = 'lang#html'
 
 [[layers]]
   name = 'lang#extra'
@@ -112,6 +104,9 @@
 
 [[layers]]
   name = 'lang#vim'
+
+[[layers]]
+  name = "lang#sh"
 
 [[layers]]
   name = 'lang#tcl'

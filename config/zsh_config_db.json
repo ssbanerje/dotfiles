@@ -5,7 +5,7 @@
                       "svn", "mercurial", "perl", "pip", "python",
                       "zsh-syntax-highlighting", "sudo", "colored-man-pages", "colorize",
                       "web-search", "tmux", "docker", "scala", "sbt", "aws", "mvn",
-                      "compleat", "extract", "npm"],
+                      "compleat", "extract", "npm", "vi-mode"],
   "__UNAME__": {
     "Darwin": {
       "OH_MY_ZSH_PLUGINS_OS_DEP": ["osx", "brew", "textmate"]

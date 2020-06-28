@@ -6,7 +6,7 @@ endif
 
 TARGETS += $(patsubst %, $(FONTDIR)/%, fontawesome-webfont.ttf Monaco-Powerline.otf)
 
-$(FONTDIR)/%: fonts/% | $(BUILD)
-	@echo "- Creating $@"
-	@mkdir -p $@
-	@cp -rf $< $@
+$(FONTDIR)/%: fonts/%
+	@#echo "- Creating $@"
+	@mkdir -p $(@D)
+	@cp $< $@
