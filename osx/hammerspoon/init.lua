@@ -299,7 +299,7 @@ window_modal:bind('', 'escape', 'Exit', function()
 end)
 
 window_modal.exited = function()
-  textbox:hide()
+  textbox.hide()
   space_watcher:stop()
 end
 
