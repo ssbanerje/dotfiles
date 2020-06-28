@@ -1,4 +1,12 @@
 ----------------------------------------------------------------------------------------------------
+-- Setup keyboard shortcuts.
+----------------------------------------------------------------------------------------------------
+local hyper = {'ctrl','alt'}
+hshelp_keys = {hyper, 'h'}
+hs.loadSpoon('ModalMgr')
+local textbox = require('textbox')
+
+----------------------------------------------------------------------------------------------------
 -- Setup default parameters.
 ----------------------------------------------------------------------------------------------------
 hs.logger.defaultLogLevel='info'
@@ -25,6 +33,11 @@ local config_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/',
 end)
 config_watcher:start()
 
+spoon.ModalMgr.supervisor:bind(hyper, 'r', 'Reload Configuration', function()
+  hs.reload()
+  hs.notify.new({title='Hammerspoon', informativeText='Hammerspoon configuration reloaded'}):send()
+end)
+
 -- Set volume to zero after sleep
 local sleep_watcher = hs.caffeinate.watcher.new(function(eventType)
   if (eventType == hs.caffeinate.watcher.systemDidWake) then
@@ -37,20 +50,12 @@ sleep_watcher:start()
 local wifi_watcher = hs.wifi.watcher.new(function ()
   local net = hs.wifi.currentNetwork()
   if net == nil then
-    hs.notify.show('Hammerspoon', 'Wi-Fi disconnected','')
+    hs.notify.show('Hammerspoon', 'Wi-Fi disconnected', '')
   else
-    hs.notify.show('Hammerspoon', 'Wi-Fi connected to ' .. net,'')
+    hs.notify.show('Hammerspoon', 'Wi-Fi connected to ' .. net, '')
   end
 end)
 wifi_watcher:start()
-
-
-----------------------------------------------------------------------------------------------------
--- Setup keyboard shortcuts.
-----------------------------------------------------------------------------------------------------
-hyper = {'ctrl','alt'}
-hshelp_keys = {hyper, '/'}
-hs.loadSpoon('ModalMgr')
 
 
 ----------------------------------------------------------------------------------------------------
@@ -84,14 +89,13 @@ end)
 ----------------------------------------------------------------------------------------------------
 spoon.ModalMgr:new('window')
 local window_modal = spoon.ModalMgr.modal_list['window']
-local box = nil
-local text = nil
-local rect = nil
 local space_watcher = hs.spaces.watcher.new(function()
 	spoon.ModalMgr:deactivate({'window'})
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Maximize window.
+----------------------------------------------------------------------------------------------------
 window_modal:bind('', 'm', 'Maximize', function()
   hs.grid.maximizeWindow()
 end)
@@ -100,7 +104,9 @@ spoon.ModalMgr.supervisor:bind(hyper, 'm', 'Maximize window', function()
 	hs.grid.maximizeWindow()
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Screen positons.
+----------------------------------------------------------------------------------------------------
 local positions = {
   left = {{0, 0, 0.5, 1}, 'Halves - L'},
   up = {{0, 0, 1, 0.5}, 'Halves - T'},
@@ -130,7 +136,9 @@ for k,v in pairs(positions) do
   end)
 end
 
+----------------------------------------------------------------------------------------------------
 -- Grid.
+----------------------------------------------------------------------------------------------------
 window_modal:bind('', '\\', 'Toggle grid', function()
 	hs.grid.show()
 end)
@@ -147,7 +155,9 @@ window_modal:bind('', '\'', 'Snap all windows to grid', function()
   hs.fnutils.map(hs.window.visibleWindows(), hs.grid.snap)
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Cascade windows.
+----------------------------------------------------------------------------------------------------
 window_modal:bind('', ',', 'Cascade windows', function()
   local cascadeSpacing = 40
   local windows = hs.window.orderedWindows()
@@ -167,7 +177,9 @@ window_modal:bind('', ',', 'Cascade windows', function()
   end
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Move windows
+----------------------------------------------------------------------------------------------------
 window_modal:bind('', 'h', 'Move window left', function()
   local win = hs.window.focusedWindow()
   local f = win:frame()
@@ -196,7 +208,9 @@ window_modal:bind('', 'l', 'Move window right', function()
   win:setFrame(f)
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Shrink windows.
+----------------------------------------------------------------------------------------------------
 window_modal:bind('ctrl', 'h', 'Shrink window left', function()
   local win = hs.window.focusedWindow()
   local f = win:frame()
@@ -227,7 +241,9 @@ window_modal:bind('ctrl', 'l', 'Shrink window right', function()
   win:setFrame(f)
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Grow windows
+----------------------------------------------------------------------------------------------------
 window_modal:bind('shift', 'h', 'Grow window left', function()
   local win = hs.window.focusedWindow()
   local f = win:frame()
@@ -258,47 +274,126 @@ window_modal:bind('shift', 'l', 'Grow window right', function()
   win:setFrame(f)
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Toggle help.
+----------------------------------------------------------------------------------------------------
 window_modal:bind('', '/', 'Toggle cheatsheet', function()
 	spoon.ModalMgr:toggleCheatsheet()
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Enter window modal.
+----------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:bind(hyper, 'w', 'Enter Window Tiling Mode', function()
 	spoon.ModalMgr:deactivateAll()
-  local res = hs.window.focusedWindow():screen():frame()
-  box = hs.geometry.rect((res.w-600)/2, (res.h-160)/2, 600, 160)
-  rect = hs.drawing.rectangle(box)
-  text = hs.drawing.text(box, 'Tiling Mode')
-  rect:setLevel('overlay')
-  rect:setFillColor({white = 0.125, alpha = 0.8})
-  rect:setFill(true)
-  rect:setStrokeColor({white = 0.625, alpha = 0.8})
-  rect:setStrokeWidth(1)
-  rect:setStroke(true)
-  rect:setRoundedRectRadii(4, 4)
-  text:setLevel('overlay')
-  text:setTextSize(120)
-  text:setTextStyle({alignment = 'center'})
-  rect:show()
-  text:show()
+  textbox.show('Tiling Mode')
   space_watcher:start()
 	spoon.ModalMgr:activate({'window'}, '#FFBD2E')
 end)
 
+----------------------------------------------------------------------------------------------------
 -- Exit window modal.
+----------------------------------------------------------------------------------------------------
 window_modal:bind('', 'escape', 'Exit', function()
 	spoon.ModalMgr:deactivate({'window'})
 end)
 
 window_modal.exited = function()
-    text:delete()
-    rect:delete()
-    space_watcher:stop()
+  textbox:hide()
+  space_watcher:stop()
 end
 
+
+----------------------------------------------------------------------------------------------------
+-- Setup keycaster modal.
+----------------------------------------------------------------------------------------------------
+spoon.ModalMgr:new('keycaster')
+local keycaster_modal = spoon.ModalMgr.modal_list['keycaster']
+local keybuffer = ''
+local keybuffer_timer = hs.timer.delayed.new(1.5, function()
+  keybuffer = ''
+  textbox.hide()
+end)
+
+-- Convert key press into displayable string
+function prettify_event_type(tap_event)
+  local result = ''
+  local pretty_keys = {
+    ['return'] = '⏎', ['delete'] = '⌫', ['forwarddelete'] = '⌦', ['escape'] = '⎋', ['space'] =
+    '␣', ['tab'] = '⇥', ['up'] = '↑', ['down'] = '↓', ['left'] = '←', ['right'] = '→', ['home'] =
+    '↖', ['end'] = '↘', ['pageup'] = '⇞', ['pagedown'] = '⇟', ['f1'] = 'f1', ['f2'] = 'f2', ['f3'] =
+    'f3', ['f4'] = 'f4', ['f5'] = 'f5', ['f6'] = 'f6', ['f7'] = 'f7', ['f8'] = 'f8', ['f9'] = 'f9',
+    ['f10'] = 'f10', ['f11'] = 'f11', ['f12'] = 'f12', ['f13'] = 'f13', ['f14'] = 'f14', ['f15'] =
+    'f15', ['f16'] = 'f16', ['f17'] = 'f17', ['f18'] = 'f18', ['f19'] = 'f19', ['f20'] = 'f20',
+    ['pad'] = 'pad', ['pad*'] = '*', ['pad+'] = '+', ['pad/'] = '/', ['pad-'] = '-', ['pad='] = '=',
+    ['pad0'] = '0', ['pad1'] = '1', ['pad2'] = '2', ['pad3'] = '3', ['pad4'] = '4', ['pad5'] = '5',
+    ['pad6'] = '6', ['pad7'] = '7', ['pad8'] = '8', ['pad9'] = '9', ['padclear'] = 'padclear',
+    ['padenter'] = '⏎', ['help'] = 'help',
+  }
+
+  local flags = tap_event:getFlags()
+  local char = hs.keycodes.map[tap_event:getKeyCode()]
+  if (pretty_keys[char] == nil) and not (flags.ctrl or flags.cmd or flags.alt or flags.fn) then
+    char = tap_event:getCharacters(true)
+    flags.shift = false
+  end
+
+  if flags.shift then
+    result = '⇧-' .. result
+  end
+  if flags.alt then
+    result = '⌥-' .. result
+  end
+  if flags.ctrl then
+    result = '⌃-' .. result
+  end
+  if flags.cmd then
+    result = '⌘-' .. result
+  end
+
+  return result .. (pretty_keys[char] ~= nil and pretty_keys[char] or char)
+end
+
+----------------------------------------------------------------------------------------------------
+-- Show a keypress.
+----------------------------------------------------------------------------------------------------
+local key_tap = hs.eventtap.new({hs.eventtap.event.types.keyDown}, function(tap_event)
+  local char = prettify_event_type(tap_event)
+  if utf8.len(keybuffer) + utf8.len(char) > 5 then
+    local off = utf8.len(char) + 1
+    keybuffer = keybuffer:sub(utf8.offset(keybuffer, off), -1)
+  end
+  keybuffer = keybuffer .. prettify_event_type(tap_event)
+
+  keybuffer_timer:start()
+  textbox.show(keybuffer)
+end)
+
+----------------------------------------------------------------------------------------------------
+-- Enter keycaster modal.
+----------------------------------------------------------------------------------------------------
+spoon.ModalMgr.supervisor:bind(hyper, 'k', 'Enter Keycaster Mode', function()
+	spoon.ModalMgr:deactivateAll()
+	spoon.ModalMgr:activate({'keycaster'}, '#C23B22')
+  key_tap:start()
+end)
+
+----------------------------------------------------------------------------------------------------
+-- Exit keycaster.
+----------------------------------------------------------------------------------------------------
+keycaster_modal:bind(hyper, 'k', 'Exit', function()
+	spoon.ModalMgr:deactivate({'keycaster'})
+end)
+
+keycaster_modal.exited = function()
+  keybuffer = ''
+  textbox.hide()
+  keybuffer_timer:stop()
+  key_tap:stop()
+end
 
 ----------------------------------------------------------------------------------------------------
 -- Initialize the modal supervisor
 ----------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:enter()
+

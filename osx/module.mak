@@ -17,7 +17,7 @@ $(PREF)/com.googlecode.iterm2.plist: osx/com.googlecode.iterm2.plist
 
 $(BUILD)/.hammerspoon: $(shell find osx/hammerspoon)
 	@echo "- Creating $@"
-	@cp -r osx/hammerspoon $(BUILD)/.hammerspoon
+	@cp -r osx/hammerspoon/ $(BUILD)/.hammerspoon
 
 $(BUILD)/.config/iterm2_shell_integration.zsh: | $(BUILD)/.config
 	@echo "- Creating $@"
