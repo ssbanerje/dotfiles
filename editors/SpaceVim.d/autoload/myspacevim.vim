@@ -1,4 +1,4 @@
-" Register Rust tasks
+" Register Rust tasks {{{1
 function! s:cargo_tasks() abort
   if filereadable('Cargo.toml')
     let commands = ['build', 'run', 'test', 'fmt']
@@ -18,8 +18,9 @@ function! s:cargo_tasks() abort
     return {}
   endif
 endfunction
+" }}}1
 
-" Register make tasks
+" Register make tasks {{{1
 function! s:make_tasks() abort
   if filereadable('Makefile')
     let commands = filter(readfile('Makefile', ''), "v:val=~#'^.PHONY'")
@@ -44,6 +45,7 @@ function! s:make_tasks() abort
     return {}
   endif
 endfunction
+" }}}1
 
 " Called after custom config is loaded
 function! myspacevim#before() abort
@@ -62,5 +64,9 @@ function! myspacevim#after() abort
   " Set text width to 100
   set tw=100
   set colorcolumn=+1
+
+  " Prevent vimtex preview
+  let g:tex_conceal = ""
 endfunction
 
+" vim:set fdm=marker:
