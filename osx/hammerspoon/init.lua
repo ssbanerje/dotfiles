@@ -1,24 +1,22 @@
-----------------------------------------------------------------------------------------------------
--- Setup keyboard shortcuts.
-----------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+-- Setup default {{{1
+---------------------------------------------------------------------------------------------------
 local hyper = {'ctrl','alt'}
 hshelp_keys = {hyper, 'h'}
 hs.loadSpoon('ModalMgr')
-local textbox = require('textbox')
 
-----------------------------------------------------------------------------------------------------
--- Setup default parameters.
-----------------------------------------------------------------------------------------------------
 hs.logger.defaultLogLevel='info'
 hs.window.animationDuration = 0
 hs.grid.setGrid('6x4')
 hs.grid.setMargins('0x0')
 
+local textbox = require('textbox')
 
-----------------------------------------------------------------------------------------------------
--- Setup watchers.
-----------------------------------------------------------------------------------------------------
--- Watch for configuration changes
+
+---------------------------------------------------------------------------------------------------
+-- Setup watchers {{{1
+---------------------------------------------------------------------------------------------------
+-- Watch for configuration change
 local config_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', function(files)
   local doReload = false
   for _,file in pairs(files) do
@@ -58,55 +56,39 @@ end)
 wifi_watcher:start()
 
 
-----------------------------------------------------------------------------------------------------
--- Register Window Switcher.
-----------------------------------------------------------------------------------------------------
-spoon.ModalMgr.supervisor:bind('alt', 'tab', 'Show Window Hints', function()
-	spoon.ModalMgr:deactivateAll()
-	hs.hints.windowHints()
-end)
+---------------------------------------------------------------------------------------------------
+-- Window Switcher {{{1
+---------------------------------------------------------------------------------------------------
+spoon.ModalMgr.supervisor:bind(hyper, 'tab', 'Show Window Hints', hs.hints.windowHints)
 
 
-----------------------------------------------------------------------------------------------------
--- Register Hammerspoon console.
-----------------------------------------------------------------------------------------------------
-spoon.ModalMgr.supervisor:bind(hyper, 'c', 'Toggle Hammerspoon Console', function()
-	spoon.ModalMgr:deactivateAll()
-	hs.toggleConsole()
-end)
+---------------------------------------------------------------------------------------------------
+-- Hammerspoon console {{{1
+---------------------------------------------------------------------------------------------------
+spoon.ModalMgr.supervisor:bind(hyper, '`', 'Toggle Hammerspoon Console', hs.toggleConsole)
 
 
-----------------------------------------------------------------------------------------------------
--- Register lock screen.
-----------------------------------------------------------------------------------------------------
-spoon.ModalMgr.supervisor:bind(hyper, 'l', 'Lock Screen', function()
-	spoon.ModalMgr:deactivateAll()
-	hs.caffeinate.lockScreen()
-end)
+---------------------------------------------------------------------------------------------------
+-- Lock screen {{{1
+---------------------------------------------------------------------------------------------------
+spoon.ModalMgr.supervisor:bind(hyper, 'l', 'Lock Screen', hs.caffeinate.lockScreen)
 
-----------------------------------------------------------------------------------------------------
--- Register window tiling.
-----------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+-- Window Modal {{{1
+---------------------------------------------------------------------------------------------------
 spoon.ModalMgr:new('window')
 local window_modal = spoon.ModalMgr.modal_list['window']
 local space_watcher = hs.spaces.watcher.new(function()
 	spoon.ModalMgr:deactivate({'window'})
 end)
 
-----------------------------------------------------------------------------------------------------
--- Maximize window.
-----------------------------------------------------------------------------------------------------
-window_modal:bind('', 'm', 'Maximize', function()
-  hs.grid.maximizeWindow()
-end)
+-- Maximize window
+window_modal:bind('', 'm', 'Maximize', hs.grid.maximizeWindow)
 
-spoon.ModalMgr.supervisor:bind(hyper, 'm', 'Maximize window', function()
-	hs.grid.maximizeWindow()
-end)
+spoon.ModalMgr.supervisor:bind(hyper, 'm', 'Maximize window', hs.grid.maximizeWindow)
 
-----------------------------------------------------------------------------------------------------
--- Screen positons.
-----------------------------------------------------------------------------------------------------
+-- Screen positons
 local positions = {
   left = {{0, 0, 0.5, 1}, 'Halves - L'},
   up = {{0, 0, 1, 0.5}, 'Halves - T'},
@@ -136,16 +118,10 @@ for k,v in pairs(positions) do
   end)
 end
 
-----------------------------------------------------------------------------------------------------
--- Grid.
-----------------------------------------------------------------------------------------------------
-window_modal:bind('', '\\', 'Toggle grid', function()
-	hs.grid.show()
-end)
+-- Grid
+window_modal:bind('', '\\', 'Toggle grid', hs.grid.show)
 
-spoon.ModalMgr.supervisor:bind(hyper, '\\', 'Toggle grid', function()
-	hs.grid.show()
-end)
+spoon.ModalMgr.supervisor:bind(hyper, '\\', 'Toggle grid', hs.grid.show)
 
 window_modal:bind('', ';', 'Snap window to grid', function()
   hs.grid.snap(hs.window.focusedWindow())
@@ -155,9 +131,7 @@ window_modal:bind('', '\'', 'Snap all windows to grid', function()
   hs.fnutils.map(hs.window.visibleWindows(), hs.grid.snap)
 end)
 
-----------------------------------------------------------------------------------------------------
--- Cascade windows.
-----------------------------------------------------------------------------------------------------
+-- Cascade windows
 window_modal:bind('', ',', 'Cascade windows', function()
   local cascadeSpacing = 40
   local windows = hs.window.orderedWindows()
@@ -177,142 +151,82 @@ window_modal:bind('', ',', 'Cascade windows', function()
   end
 end)
 
-----------------------------------------------------------------------------------------------------
--- Move windows
-----------------------------------------------------------------------------------------------------
-window_modal:bind('', 'h', 'Move window left', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x - 10
-  win:setFrame(f)
-end)
+-- Move window
+local move_commands = {
+  ['h'] = function(f) f.x = f.x - 10; return f end,
+  ['l'] = function(f) f.x = f.x + 10; return f end,
+  ['j'] = function(f) f.y = f.y + 10; return f end,
+  ['k'] = function(f) f.y = f.y - 10; return f end,
+}
 
-window_modal:bind('', 'j', 'Move window down', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.y = f.y + 10
-  win:setFrame(f)
-end)
+for k, v in pairs(move_commands) do
+  window_modal:bind('', k, 'Move Window', function()
+    local win = hs.window.focusedWindow()
+    local update = v(win:frame())
+    win:setFrame(update)
+  end)
+end
 
-window_modal:bind('', 'k', 'Move window up', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.y = f.y - 10
-  win:setFrame(f)
-end)
+-- Shrink windows
+local shrink_commands = {
+  ['h'] = function(f) f.x = f.x + 10; f.w = f.w - 10; return f end,
+  ['l'] = function(f) f.w = f.w - 10; return f end,
+  ['j'] = function(f) f.h = f.h - 10; return f end,
+  ['k'] = function(f) f.y = f.y + 10; f.h = f.h - 10; return f end,
+}
 
-window_modal:bind('', 'l', 'Move window right', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x + 10
-  win:setFrame(f)
-end)
+for k, v in pairs(shrink_commands) do
+  window_modal:bind('ctrl', k, 'Shrink Window', function()
+    local win = hs.window.focusedWindow()
+    local update = v(win:frame())
+    win:setFrame(update)
+  end)
+end
 
-----------------------------------------------------------------------------------------------------
--- Shrink windows.
-----------------------------------------------------------------------------------------------------
-window_modal:bind('ctrl', 'h', 'Shrink window left', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x + 10
-  f.w = f.w - 10
-  win:setFrame(f)
-end)
+-- Grow window
+local grow_commands = {
+  ['h'] = function(f) f.x = f.x - 10; f.w = f.w + 10; return f end,
+  ['l'] = function(f) f.w = f.w + 10; return f end,
+  ['j'] = function(f) f.h = f.h + 10; return f end,
+  ['k'] = function(f) f.y = f.y - 10; f.h = f.h + 10; return f end,
+}
 
-window_modal:bind('ctrl', 'j', 'Shrink window down', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.h = f.h - 10
-  win:setFrame(f)
-end)
+for k, v in pairs(grow_commands) do
+  window_modal:bind('shift', k, 'Grow Window', function()
+    local win = hs.window.focusedWindow()
+    local update = v(win:frame())
+    win:setFrame(update)
+  end)
+end
 
-window_modal:bind('ctrl', 'k', 'Shrink window up', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.y = f.y + 10
-  f.h = f.h - 10
-  win:setFrame(f)
-end)
-
-window_modal:bind('ctrl', 'l', 'Shrink window right', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.w = f.w - 10
-  win:setFrame(f)
-end)
-
-----------------------------------------------------------------------------------------------------
--- Grow windows
-----------------------------------------------------------------------------------------------------
-window_modal:bind('shift', 'h', 'Grow window left', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.x = f.x - 10
-  f.w = f.w + 10
-  win:setFrame(f)
-end)
-
-window_modal:bind('shift', 'j', 'Grow window down', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.h = f.h + 10
-  win:setFrame(f)
-end)
-
-window_modal:bind('shift', 'k', 'Grow window up', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.y = f.y - 10
-  f.h = f.h + 10
-  win:setFrame(f)
-end)
-
-window_modal:bind('shift', 'l', 'Grow window right', function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  f.w = f.w + 10
-  win:setFrame(f)
-end)
-
-----------------------------------------------------------------------------------------------------
--- Toggle help.
-----------------------------------------------------------------------------------------------------
-window_modal:bind('', '/', 'Toggle cheatsheet', function()
-	spoon.ModalMgr:toggleCheatsheet()
-end)
-
-----------------------------------------------------------------------------------------------------
--- Enter window modal.
-----------------------------------------------------------------------------------------------------
+-- Enter window modal
 spoon.ModalMgr.supervisor:bind(hyper, 'w', 'Enter Window Tiling Mode', function()
 	spoon.ModalMgr:deactivateAll()
-  textbox.show('Tiling Mode')
   space_watcher:start()
 	spoon.ModalMgr:activate({'window'}, '#FFBD2E')
+  textbox:show('Tiling Mode')
 end)
 
-----------------------------------------------------------------------------------------------------
--- Exit window modal.
-----------------------------------------------------------------------------------------------------
+-- Exit window modal
 window_modal:bind('', 'escape', 'Exit', function()
 	spoon.ModalMgr:deactivate({'window'})
 end)
 
 window_modal.exited = function()
-  textbox.hide()
+  textbox:hide()
   space_watcher:stop()
 end
 
 
-----------------------------------------------------------------------------------------------------
--- Setup keycaster modal.
-----------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+-- Keycaster modal {{{1
+---------------------------------------------------------------------------------------------------
 spoon.ModalMgr:new('keycaster')
 local keycaster_modal = spoon.ModalMgr.modal_list['keycaster']
 local keybuffer = ''
 local keybuffer_timer = hs.timer.delayed.new(1.5, function()
   keybuffer = ''
-  textbox.hide()
+  textbox:hide()
 end)
 
 -- Convert key press into displayable string
@@ -321,10 +235,10 @@ function prettify_event_type(tap_event)
   local pretty_keys = {
     ['return'] = '⏎', ['delete'] = '⌫', ['forwarddelete'] = '⌦', ['escape'] = '⎋', ['space'] =
     '␣', ['tab'] = '⇥', ['up'] = '↑', ['down'] = '↓', ['left'] = '←', ['right'] = '→', ['home'] =
-    '↖', ['end'] = '↘', ['pageup'] = '⇞', ['pagedown'] = '⇟', ['f1'] = 'f1', ['f2'] = 'f2', ['f3'] =
-    'f3', ['f4'] = 'f4', ['f5'] = 'f5', ['f6'] = 'f6', ['f7'] = 'f7', ['f8'] = 'f8', ['f9'] = 'f9',
-    ['f10'] = 'f10', ['f11'] = 'f11', ['f12'] = 'f12', ['f13'] = 'f13', ['f14'] = 'f14', ['f15'] =
-    'f15', ['f16'] = 'f16', ['f17'] = 'f17', ['f18'] = 'f18', ['f19'] = 'f19', ['f20'] = 'f20',
+    '↖', ['end'] = '↘', ['pageup'] = '⇞', ['pagedown'] = '⇟', ['f1'] = 'F1', ['f2'] = 'F2', ['f3'] =
+    'F3', ['f4'] = 'F4', ['f5'] = 'F5', ['f6'] = 'F6', ['f7'] = 'F7', ['f8'] = 'F8', ['f9'] = 'F9',
+    ['f10'] = 'F10', ['f11'] = 'F11', ['f12'] = 'F12', ['f13'] = 'F13', ['f14'] = 'F14', ['f15'] =
+    'F15', ['f16'] = 'F16', ['f17'] = 'F17', ['f18'] = 'F18', ['f19'] = 'F19', ['f20'] = 'F20',
     ['pad'] = 'pad', ['pad*'] = '*', ['pad+'] = '+', ['pad/'] = '/', ['pad-'] = '-', ['pad='] = '=',
     ['pad0'] = '0', ['pad1'] = '1', ['pad2'] = '2', ['pad3'] = '3', ['pad4'] = '4', ['pad5'] = '5',
     ['pad6'] = '6', ['pad7'] = '7', ['pad8'] = '8', ['pad9'] = '9', ['padclear'] = 'padclear',
@@ -354,46 +268,42 @@ function prettify_event_type(tap_event)
   return result .. (pretty_keys[char] ~= nil and pretty_keys[char] or char)
 end
 
-----------------------------------------------------------------------------------------------------
--- Show a keypress.
-----------------------------------------------------------------------------------------------------
+-- Show a keypress
 local key_tap = hs.eventtap.new({hs.eventtap.event.types.keyDown}, function(tap_event)
   local char = prettify_event_type(tap_event)
-  if utf8.len(keybuffer) + utf8.len(char) > 5 then
+  if utf8.len(keybuffer) + utf8.len(char) > 15 then
     local off = utf8.len(char) + 1
     keybuffer = keybuffer:sub(utf8.offset(keybuffer, off), -1)
   end
   keybuffer = keybuffer .. prettify_event_type(tap_event)
 
   keybuffer_timer:start()
-  textbox.show(keybuffer)
+  textbox:show(keybuffer)
 end)
 
-----------------------------------------------------------------------------------------------------
--- Enter keycaster modal.
-----------------------------------------------------------------------------------------------------
+-- Enter keycaster modal
 spoon.ModalMgr.supervisor:bind(hyper, 'k', 'Enter Keycaster Mode', function()
 	spoon.ModalMgr:deactivateAll()
 	spoon.ModalMgr:activate({'keycaster'}, '#C23B22')
+  textbox:show('Keycaster Mode')
   key_tap:start()
 end)
 
-----------------------------------------------------------------------------------------------------
--- Exit keycaster.
-----------------------------------------------------------------------------------------------------
+-- Exit keycaster
 keycaster_modal:bind(hyper, 'k', 'Exit', function()
 	spoon.ModalMgr:deactivate({'keycaster'})
 end)
 
 keycaster_modal.exited = function()
   keybuffer = ''
-  textbox.hide()
+  textbox:hide()
   keybuffer_timer:stop()
   key_tap:stop()
 end
 
-----------------------------------------------------------------------------------------------------
--- Initialize the modal supervisor
-----------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+-- Initialize the modal supervisor {{{1
+---------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:enter()
 
+-- vim: set fdm=marker:

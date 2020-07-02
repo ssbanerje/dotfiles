@@ -67,6 +67,11 @@ function! myspacevim#after() abort
 
   " Prevent vimtex preview
   let g:tex_conceal = ""
+
+  if has('nvim')
+    " Show result of substitution commands
+    set inccommand=nosplit
+  endif
 endfunction
 
 " vim:set fdm=marker:
