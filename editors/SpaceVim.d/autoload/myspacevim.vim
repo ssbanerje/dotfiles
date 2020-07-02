@@ -68,9 +68,17 @@ function! myspacevim#after() abort
   " Prevent vimtex preview
   let g:tex_conceal = ""
 
+  " Open new windows at the bottom and right
+  set splitbelow splitright
+
   if has('nvim')
     " Show result of substitution commands
     set inccommand=nosplit
+  endif
+
+  " Highlight changes in diff mode
+  if &diff
+    highlight! link DiffText MatchParen
   endif
 endfunction
 

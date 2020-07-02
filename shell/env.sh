@@ -1,11 +1,11 @@
 # Vim all the way
-export VISUAL=nvim
-export EDITOR=nvim
-export USE_EDITOR=nvim
-export SVN_EDITOR=nvim
+export VISUAL="nvim"
+export EDITOR="nvim"
+export USE_EDITOR="nvim"
+export SVN_EDITOR="nvim"
 
 # My scripts
-export PATH=$PATH:$HOME/.bin
+export PATH="$PATH:$HOME/.bin"
 
 # Python startup settings
 export PYTHONSTARTUP="$HOME/.pyrc"
@@ -18,7 +18,7 @@ then
 fi
 
 # Setup NPM binaries
-export PATH=$HOME/.npm/bin:$PATH
+export PATH="$HOME/.npm/bin:$PATH"
 
 # Setup aliases
 source $HOME/.config/aliases.sh

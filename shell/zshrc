@@ -3,7 +3,7 @@
 
 # Homebrew
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
-  FPATH=/usr/local/share/zsh/site-functions:$FPATH
+  FPATH="/usr/local/share/zsh/site-functions:$FPATH"
 fi
 
 
