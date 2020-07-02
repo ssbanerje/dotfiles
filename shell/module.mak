@@ -71,3 +71,13 @@ $(BUILD)/.tmux.conf: shell/tmux.conf config/tmux_conf_db.json $(TPM_FILES)
 	@#echo "- Creating $@"
 	@python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json --output-dir $(BUILD)
 	@mv $(BUILD)/tmux.conf $(BUILD)/.tmux.conf
+
+ifeq ($(UNAME), Linux)
+
+TARGETS += $(BUILD)/.xinitrc
+
+$(BUILD)/.xinitrc: shell/xinitrc | $(BUILD)
+	@#echo "- Creating $@"
+	@cp $< $@
+
+endif
