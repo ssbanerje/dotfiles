@@ -62,5 +62,13 @@ function! myspacevim#after() abort
   " Set text width to 100
   set tw=100
   set colorcolumn=+1
+
+  " Open new windows at the bottom and right
+  set splitbelow splitright
+
+  " Highlight changes in diff mode
+  if &diff
+    highlight! link DiffText MatchParen
+  endif
 endfunction
 
