@@ -64,8 +64,8 @@ function! myspacevim#after() abort
   set tw=100
   set colorcolumn=+1
 
-  " Prevent vimtex preview
-  let g:tex_conceal = ""
+  " Ignore case in search
+  set ic
 
   " Open new windows at the bottom and right
   set splitbelow splitright
@@ -79,6 +79,9 @@ function! myspacevim#after() abort
   if &diff
     highlight! link DiffText MatchParen
   endif
+
+  " Prevent vimtex preview
+  let g:tex_conceal = ""
 endfunction
 
 " vim:set fdm=marker:
