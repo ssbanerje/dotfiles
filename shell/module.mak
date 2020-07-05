@@ -1,6 +1,6 @@
 TARGETS += $(patsubst %, $(BUILD)/.%, bashrc zshrc zshenv ackrc hushlogin npmrc)
 
-$(BUILD)/.bashrc: shell/bashrc shell/bash.prompt.sh shell/bashrc.$(UNAME).sh | $(BUILD)
+$(BUILD)/.bashrc: shell/bashrc shell/bash.prompt.sh shell/bashrc.$(UNAME).sh shell/module.mak | $(BUILD)
 	@#echo "- Creating $@"
 	@cp -f shell/bashrc $(BUILD)/.bashrc
 	@cat shell/bash.prompt.sh >> $(BUILD)/.bashrc
@@ -8,44 +8,44 @@ $(BUILD)/.bashrc: shell/bashrc shell/bash.prompt.sh shell/bashrc.$(UNAME).sh | $
 
 OH_MY_ZSH_FILES := $(patsubst %, $(CONFIG)/%, $(shell find shell/oh-my-zsh -type f -not -iwholename '*.git*' | sed "s/^shell\///"))
 
-$(CONFIG)/oh-my-zsh/%: shell/oh-my-zsh/%
+$(CONFIG)/oh-my-zsh/%: shell/oh-my-zsh/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
 
 OH_MY_ZSH_FILES += $(patsubst %, $(CONFIG)/oh-my-zsh/custom/plugin/%, $(shell find shell/zsh-syntax-highlighting -type f -not -iwholename '*.git*' | sed "s/^shell\///"))
 
-$(CONFIG)/oh-my-zsh/custom/plugin/zsh-syntax-highlighting/%: shell/zsh-syntax-highlighting/%
+$(CONFIG)/oh-my-zsh/custom/plugin/zsh-syntax-highlighting/%: shell/zsh-syntax-highlighting/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
 
-$(BUILD)/.zshrc: shell/zshrc config/zsh_config_db.json $(OH_MY_ZSH_FILES)
+$(BUILD)/.zshrc: shell/zshrc config/zsh_config_db.json $(OH_MY_ZSH_FILES) shell/module.mak
 	@#echo "- Creating $@"
 	@python3 generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json --output-dir $(BUILD)
 	@mv build/zshrc build/.zshrc
 
-$(BUILD)/.zshenv: shell/zshenv | $(BUILD)
+$(BUILD)/.zshenv: shell/zshenv | $(BUILD) shell/module.mak
 	@#echo "- Creating $@"
 	@cp $< $@
 
-$(BUILD)/.%: shell/% | $(BUILD)
+$(BUILD)/.%: shell/% | $(BUILD) shell/module.mak
 	@#echo "- Creating $@"
 	@cp -rf $< $@
 
 TARGETS += $(patsubst %, $(CONFIG)/%, common_settings.sh aliases.sh env.sh)
 
-$(CONFIG)/env.sh: shell/env.sh shell/env.$(UNAME).sh | $(CONFIG)
+$(CONFIG)/env.sh: shell/env.sh shell/env.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
 	@cp shell/env.sh $(CONFIG)/env.sh
 	@[ -e shell/env.$(UNAME).sh ] && cat shell/env.$(UNAME).sh >> $(CONFIG)/env.sh
 
-$(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh | $(CONFIG)
+$(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
 	@cp shell/common_settings.sh $(CONFIG)/common_settings.sh
 	@[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(CONFIG)/common_settings.sh
 
-$(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh | $(CONFIG)
+$(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
 	@cp shell/aliases.sh $(CONFIG)/aliases.sh
 	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(CONFIG)/aliases.sh
@@ -53,7 +53,7 @@ $(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh | $(CONFIG)
 ifeq ($(UNAME), Linux)
 TARGETS += $(patsubst %, $(CONFIG)/%, $(shell find shell/base16-shell -type f -not -iwholename '*.git*' | sed "s/^shell\///g"))
 
-$(CONFIG)/base16-shell/%: shell/base16-shell/%
+$(CONFIG)/base16-shell/%: shell/base16-shell/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
@@ -62,19 +62,19 @@ endif
 TARGETS += $(BUILD)/.tmux.conf
 TPM_FILES := $(patsubst %, $(BUILD)/.tmux/plugins/tpm/%, $(shell find shell/tpm -type f -not -iwholename '*.git*' | sed "s/^shell\/tpm\///g"))
 
-$(BUILD)/.tmux/plugins/tpm/%: shell/tpm/%
+$(BUILD)/.tmux/plugins/tpm/%: shell/tpm/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
 
-$(BUILD)/.tmux.conf: shell/tmux.conf config/tmux_conf_db.json $(TPM_FILES)
+$(BUILD)/.tmux.conf: shell/tmux.conf config/tmux_conf_db.json $(TPM_FILES) shell/module.mak
 	@#echo "- Creating $@"
 	@python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json --output-dir $(BUILD)
 	@mv $(BUILD)/tmux.conf $(BUILD)/.tmux.conf
 
 TARGETS += $(patsubst %, $(CONFIG)/ranger/%, rc.conf rifle.conf commands.py)
 
-$(CONFIG)/ranger/%: shell/ranger/%
+$(CONFIG)/ranger/%: shell/ranger/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
