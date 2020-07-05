@@ -4,6 +4,10 @@ export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
+# Export XDG_DATA_DIR
+# TODO: Is this required on OSX?
+export XDG_DATA_DIR=$HOME/.config
+
 # My scripts
 export PATH="$PATH:$HOME/.bin"
 

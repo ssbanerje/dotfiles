@@ -30,7 +30,7 @@ init-prereqs-Linux:
 	@sudo apt-get update && \
     sudo apt-get install -y global zsh ruby-dev libclang-dev clangd-9 exuberant-ctags python3-dev \
 			python3-pip python3-pygments vim-nox rake tmux cmake xclip psutils rsync neovim git curl \
-			nodejs npm silversearcher-ag python3-neovim
+			nodejs npm silversearcher-ag python3-neovim ranger atool fzf
 	@sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	@echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
@@ -41,7 +41,7 @@ init-prereqs-Linux:
 init-prereqs-Darwin:
 	@brew upgrade
 	@brew install ctags coreutils git ack ag python fasd tmux reattach-to-user-namespace node neovim \
-		bash-completion global blueutil
+		bash-completion global blueutil ranger atool fzf
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 
 .PHONY: init

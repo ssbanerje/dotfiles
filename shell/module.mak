@@ -71,3 +71,11 @@ $(BUILD)/.tmux.conf: shell/tmux.conf config/tmux_conf_db.json $(TPM_FILES)
 	@#echo "- Creating $@"
 	@python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json --output-dir $(BUILD)
 	@mv $(BUILD)/tmux.conf $(BUILD)/.tmux.conf
+
+TARGETS += $(patsubst %, $(CONFIG)/ranger/%, rc.conf rifle.conf commands.py)
+
+$(CONFIG)/ranger/%: shell/ranger/%
+	@#echo "- Creating $@"
+	@mkdir -p $(@D)
+	@cp $< $@
+
