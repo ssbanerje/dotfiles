@@ -51,7 +51,7 @@ function! SpaceVim#layers#undotree#config() abort
   let g:undotree_SetFocusWhenToggle = 1
 
   " Add mappings
-  noremap <silent> <F4> :UndotreeToggle<CR>
+  call SpaceVim#mapping#def('nnoremap <silent>', '<F9>', ':UndotreeToggle<CR>', 'Toggle undo tree for current file')
 
   " Setup autocmds
   augroup spacevim_layer_undotree
