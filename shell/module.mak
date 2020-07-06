@@ -79,3 +79,10 @@ $(CONFIG)/ranger/%: shell/ranger/% shell/module.mak
 	@mkdir -p $(@D)
 	@cp $< $@
 
+ifeq ($(UNAME), Linux)
+TARGETS += $(BUILD)/.xinitrc
+
+$(BUILD)/.xinitrc: shell/xinitrc | $(BUILD)
+	@#echo "- Creating $@"
+	@cp $< $@
+endif
