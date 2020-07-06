@@ -50,14 +50,12 @@ $(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh shell/module.ma
 	@cp shell/aliases.sh $(CONFIG)/aliases.sh
 	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(CONFIG)/aliases.sh
 
-ifeq ($(UNAME), Linux)
 TARGETS += $(patsubst %, $(CONFIG)/%, $(shell find shell/base16-shell -type f -not -iwholename '*.git*' | sed "s/^shell\///g"))
 
 $(CONFIG)/base16-shell/%: shell/base16-shell/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
-endif
 
 TARGETS += $(BUILD)/.tmux.conf
 TPM_FILES := $(patsubst %, $(BUILD)/.tmux/plugins/tpm/%, $(shell find shell/tpm -type f -not -iwholename '*.git*' | sed "s/^shell\/tpm\///g"))
