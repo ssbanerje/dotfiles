@@ -2,6 +2,8 @@
 # SpaceVim Configuration File
 #=============================================================================
 
+################################################# SPACEVIM CONFIG {{{1
+
 [options]
   vimcompatible = false
   enable_debug = true
@@ -25,6 +27,10 @@
   filemanager = "nerdtree"
 
   github_username = 'ssbanerje'
+
+####################################################################}}}1
+
+################################################# SPACEVIM LAYERS {{{1
 
 [[layers]]
   name = 'default'
@@ -131,7 +137,17 @@
 [[layers]]
   name = 'tmux'
 
+####################################################################}}}1
+
+################################################# CUSTOM PLUGINS {{{1
+
+[[layers]]
+  name = 'undotree'
+
 [[custom_plugins]]
   name = 'tomtom/tcomment_vim'
   merged = false
 
+####################################################################}}}1
+
+# vim: set fdm=marker:
