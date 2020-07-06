@@ -144,10 +144,6 @@
 [[layers]]
   name = 'undotree'
 
-[[custom_plugins]]
-  name = 'tomtom/tcomment_vim'
-  merged = false
-
 ####################################################################}}}1
 
 # vim: set fdm=marker:
