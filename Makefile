@@ -85,6 +85,7 @@ install: all install-$(UNAME)
 .PHONY: clean
 clean:
 	@rm -rf $(BUILD)
+	@find . -name ".DS_Store" -exec rm {} \;
 
 .PHONY: listfiles
 listfiles:

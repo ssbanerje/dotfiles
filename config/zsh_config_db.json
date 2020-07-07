@@ -1,7 +1,6 @@
 {
   "ZSH_THEME": "afowler",
   "OH_MY_ZSH_PLUGINS": [
-    "aws",
     "cargo",
     "colored-man-pages",
     "colorize",
