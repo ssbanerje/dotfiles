@@ -57,7 +57,7 @@ $(CONFIG)/base16-shell/%: shell/base16-shell/% shell/module.mak
 	@mkdir -p $(@D)
 	@cp $< $@
 
-TARGETS += $(BUILD)/.tmux.conf $(BUILD)/.tmux-osx.conf
+TARGETS += $(BUILD)/.tmux.conf
 TPM_FILES := $(patsubst %, $(BUILD)/.tmux/plugins/tpm/%, $(shell find shell/tpm -type f -not -iwholename '*.git*' | sed "s/^shell\/tpm\///g"))
 
 $(BUILD)/.tmux/plugins/tpm/%: shell/tpm/% shell/module.mak
@@ -69,9 +69,13 @@ $(BUILD)/.tmux.conf: shell/tmux.conf $(TPM_FILES) shell/module.mak
 	@#echo "- Creating $@"
 	@cp $< $@
 
+ifeq ($(UNAME), Darwin)
+TARGETS += $(BUILD)/.tmux-osx.conf
+
 $(BUILD)/.tmux-osx.conf: shell/tmux-osx.conf shell/module.mak
 	@#echo "- Creating $@"
 	@cp $< $@
+endif
 
 TARGETS += $(patsubst %, $(CONFIG)/ranger/%, rc.conf rifle.conf commands.py)
 
