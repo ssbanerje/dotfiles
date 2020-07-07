@@ -57,7 +57,7 @@ $(CONFIG)/base16-shell/%: shell/base16-shell/% shell/module.mak
 	@mkdir -p $(@D)
 	@cp $< $@
 
-TARGETS += $(BUILD)/.tmux.conf
+TARGETS += $(BUILD)/.tmux.conf $(BUILD)/.tmux-osx.conf
 TPM_FILES := $(patsubst %, $(BUILD)/.tmux/plugins/tpm/%, $(shell find shell/tpm -type f -not -iwholename '*.git*' | sed "s/^shell\/tpm\///g"))
 
 $(BUILD)/.tmux/plugins/tpm/%: shell/tpm/% shell/module.mak
@@ -65,10 +65,13 @@ $(BUILD)/.tmux/plugins/tpm/%: shell/tpm/% shell/module.mak
 	@mkdir -p $(@D)
 	@cp $< $@
 
-$(BUILD)/.tmux.conf: shell/tmux.conf config/tmux_conf_db.json $(TPM_FILES) shell/module.mak
+$(BUILD)/.tmux.conf: shell/tmux.conf $(TPM_FILES) shell/module.mak
 	@#echo "- Creating $@"
-	@python3 generate_template.py --template-file shell/tmux.conf --json-file config/tmux_conf_db.json --output-dir $(BUILD)
-	@mv $(BUILD)/tmux.conf $(BUILD)/.tmux.conf
+	@cp $< $@
+
+$(BUILD)/.tmux-osx.conf: shell/tmux-osx.conf shell/module.mak
+	@#echo "- Creating $@"
+	@cp $< $@
 
 TARGETS += $(patsubst %, $(CONFIG)/ranger/%, rc.conf rifle.conf commands.py)
 

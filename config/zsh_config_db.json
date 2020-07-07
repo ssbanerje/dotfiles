@@ -10,12 +10,10 @@
     "compleat",
     "docker",
     "extract",
-    "fancy-ctrl-z",
     "git",
     "git-escape-magic",
     "gitfast",
     "gitignore",
-    "globalias",
     "history-substring-search",
     "mosh",
     "mvn",
@@ -35,7 +33,9 @@
     "vscode",
     "web-search",
     "zsh-syntax-highlighting",
-    "fzf"
+
+    "fzf",
+    "fancy-ctrl-z"
   ],
   "__UNAME__": {
     "Darwin": {
