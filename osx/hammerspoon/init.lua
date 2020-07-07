@@ -160,11 +160,12 @@ local move_commands = {
 }
 
 for k, v in pairs(move_commands) do
-  window_modal:bind('', k, 'Move Window', function()
+  local move = function()
     local win = hs.window.focusedWindow()
     local update = v(win:frame())
     win:setFrame(update)
-  end)
+  end
+  window_modal:bind('', k, 'Move Window', move, nil, move)
 end
 
 -- Shrink windows
@@ -176,11 +177,12 @@ local shrink_commands = {
 }
 
 for k, v in pairs(shrink_commands) do
-  window_modal:bind('ctrl', k, 'Shrink Window', function()
+  local shrink = function()
     local win = hs.window.focusedWindow()
     local update = v(win:frame())
     win:setFrame(update)
-  end)
+  end
+  window_modal:bind('ctrl', k, 'Shrink Window', shrink, nil, shrink)
 end
 
 -- Grow window
@@ -192,11 +194,12 @@ local grow_commands = {
 }
 
 for k, v in pairs(grow_commands) do
-  window_modal:bind('shift', k, 'Grow Window', function()
+  local grow = function()
     local win = hs.window.focusedWindow()
     local update = v(win:frame())
     win:setFrame(update)
-  end)
+  end
+  window_modal:bind('shift', k, 'Grow Window', grow, nil, grow)
 end
 
 -- Enter window modal
