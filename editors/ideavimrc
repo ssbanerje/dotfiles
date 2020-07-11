@@ -1,0 +1,49 @@
+set relativenumber
+set number
+
+" https://youtrack.jetbrains.com/issue/VIM-959
+set ideamarks
+
+" https://github.com/JetBrains/ideavim/wiki/%60ideajoin%60-examples
+set ideajoin
+
+" https://youtrack.jetbrains.com/issue/VIM-1521
+set commentary
+
+" dia daa cia caa
+set argtextobj
+
+" die dae cie cae
+set textobj-entire
+
+set surround
+
+nnoremap <SPACE> <Nop>
+let mapleader = "\<Space>"
+
+" Rename symbol... SPC l e in vim...
+map <Leader>e :action RenameElement<CR>
+
+" Tagbar
+map <F2> :action FileStructurePopup<CR>
+
+" Show implementation
+map <Ctrl>] :action GotoImplementation<CR>
+
+" Describe error
+map <Leader>e :action ShowErrorDescription<CR>
+
+" Goto next error
+map <Leader>n :action GotoNextError<CR>
+
+" Find usages in file
+map <Leader>f :action FindUsages<CR>
+
+" Generate code
+map <Leader>g :action Generate<CR>
+
+" Jump to last window
+map <Leader>w :action JumpToLastWindow<CR>
+
+" Choose run config
+map <Leader>r :action ChooseRunConfiguration<CR>

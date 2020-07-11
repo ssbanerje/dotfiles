@@ -82,6 +82,9 @@ function! myspacevim#after() abort
 
   " Prevent vimtex preview
   let g:tex_conceal = ""
+
+  " Markdown Preview
+  let g:mkdp_page_title = '${name}'
 endfunction
 
 " vim:set fdm=marker:
