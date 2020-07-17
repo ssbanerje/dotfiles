@@ -144,6 +144,13 @@
 [[layers]]
   name = 'undotree'
 
+[[layers]]
+  name = 'my_motions'
+
+[[custom_plugins]]
+  name = "xerus2000/argtextobj.vim"
+  merged = false
+
 ####################################################################}}}1
 
 # vim: set fdm=marker:
