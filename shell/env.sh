@@ -12,7 +12,7 @@ export XDG_DATA_DIR=$HOME/.config
 export PATH="$PATH:$HOME/.bin"
 
 # Python startup settings
-export PYTHONSTARTUP="$HOME/.pyrc"
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 # Source Rustup
 if [ -d $HOME/.cargo/ ]

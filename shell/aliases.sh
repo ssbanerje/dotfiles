@@ -27,5 +27,7 @@ alias j='jobs -l'
 alias sudo='sudo '
 
 alias pip3up='pip3 freeze --local | cut -d = -f 1  | xargs pip3 install -U'
+alias ipython='PYTHONSTARTUP="" ipython'
+alias ipython3='PYTHONSTARTUP="" ipython3'
 
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
