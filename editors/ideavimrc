@@ -18,6 +18,11 @@ set textobj-entire
 
 set surround
 
+" escape in insert mode
+imap jk <Esc>
+set timeoutlen=1000
+
+" leader
 nnoremap <SPACE> <Nop>
 let mapleader = "\<Space>"
 
