@@ -6,26 +6,19 @@
                                             JUST THE WAY I LIKE IT
 
 
-## Dependencies
-### Ubuntu
-```bash
-sudo apt install build-essential git
-```
-
-### Mac OS
-* [XCode Tools](http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12#)
-* Install [homebrew](https://github.com/mxcl/homebrew)
-* Install [iTerm2](http://www.iterm2.com/#/section/home), [hammerspoon](http://www.hammerspoon.org)
-
 ## Installation
 
+1. Get dotfiles
 ```bash
 git clone https://github.com/ssbanerje/dotfiles.git dotfiles
 cd dotfiles
-make init # This will install prereq packages
-make backup # This will backup old dotfiles about to be overwrtiten
-# IMPORTANT: Update config/*.json to reflect local configuration
-make install # This will install the dotfiles
+```
+2. Update config/*.json to reflect local configuration
+3. Build the configuration files
+```bash
+make init
+make backup
+make install -j
 ```
 
 ## Listing changes
