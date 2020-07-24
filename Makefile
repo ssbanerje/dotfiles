@@ -88,7 +88,7 @@ clean:
 	@find . -name ".DS_Store" -exec rm {} \;
 
 .PHONY: listfiles
-listfiles:
+listfiles: all
 	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)),echo $(file);)
 
 .PHONY: backup

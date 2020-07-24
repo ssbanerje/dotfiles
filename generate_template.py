@@ -8,9 +8,13 @@ import jinja2
 
 
 @click.command()
-@click.option('--template-file', help='Template file that has to be specialized')
-@click.option('--json-file', help='JSON file from which the template has to be specialized')
-@click.option('--output-dir', default="build", help='Folder where the dotfiles will be staged')
+@click.option('--template-file',
+              help='Template file that has to be specialized')
+@click.option('--json-file',
+              help='JSON file from which the template has to be specialized')
+@click.option('--output-dir',
+              default="build",
+              help='Folder where the dotfiles will be staged')
 def generate(template_file, json_file, output_dir):
     # Read in the JSON DB file
     with open(json_file) as db_file:
