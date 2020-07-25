@@ -39,19 +39,18 @@ init-prereqs-Linux:
 
 .PHONY: init-prereqs-Darwin
 init-prereqs-Darwin:
-	@brew install ctags coreutils git ack ag python fasd tmux reattach-to-user-namespace node neovim yarn \
-		bash-completion global blueutil ranger atool fzf
+	@brew install ctags coreutils git ack ag python fasd tmux reattach-to-user-namespace node neovim \
+	yarn bash-completion global blueutil ranger atool fzf
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 
 .PHONY: init
 init: init-prereqs-$(UNAME)
 	@git submodule update --init --recursive
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake isort neovim \
-		'python-language-server[all]' pynvim neovim-remote notedown
-	@PYTHON=`which python3` yarn global add remark remark-cli remark-stringify remark-frontmatter \
-		wcwidth prettier neovim javascript-typescript-langserver vscode-html-languageserver-bin \
-		bash-language-server import-js
-	@PYTHON=`which python3` yarn global upgrade
+		python-language-server pynvim neovim-remote proselint
+	@yarn global upgrade
+	@yarn global add neovim remark remark-cli remark-stringify remark-frontmatter wcwidth prettier \
+		vscode-html-languageserver-bin bash-language-server dockerfile-language-server-nodejs
 
 
 ######## Install ###########

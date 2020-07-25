@@ -30,68 +30,78 @@
 
 ####################################################################}}}1
 
-################################################# SPACEVIM LAYERS {{{1
+################################################### SPACEVIM PLUGINS {{{1
 
 [[layers]]
-  name = 'default'
+  name = 'autocomplete'
+  autocomplete_method = 'coc'
+  auto-completion-return-key-behavior = 'complete'
+  auto-completion-tab-key-behavior = 'smart'
+  auto-completion-complete-with-key-sequence-delay = 0.1
 
 [[layers]]
   name = 'colorscheme'
 
 [[layers]]
-  name = 'incsearch'
+  name = 'debug'
 
 [[layers]]
-  name = 'VersionControl'
+  name = 'default'
+
+[[layers]]
+  name = 'denite'
+
+[[layers]]
+  name = 'edit'
 
 [[layers]]
   name = 'git'
   git-plugin = 'gina'
 
 [[layers]]
-  name = 'sudo'
-
-[[layers]]
-  name = 'denite'
-
-[[layers]]
   name = 'gtags'
 
 [[layers]]
-  name = 'autocomplete'
-  auto-completion-return-key-behavior = 'complete'
-  auto-completion-tab-key-behavior = 'smart'
-  auto-completion-complete-with-key-sequence-delay = 0.1
+  name = 'incsearch'
 
 [[layers]]
   name = 'shell'
-  default_position = 'top'
-  default_height = 30
+  default_position = 'bottom'
 
 [[layers]]
-  name = 'edit'
+  name = 'sudo'
 
 [[layers]]
-  name = 'debug'
+  name = "tools"
 
 [[layers]]
-  name = 'lang#c'
-  [layer.clang_std]
-    c = 'c11'
-    cpp = 'c++17'
+  name = 'tmux'
+
+[[layers]]
+  name = 'VersionControl'
+
+####################################################################}}}1
+
+################################################# LANGUAGE PLUGINS {{{1
 
 [[layers]]
   name = 'lang#assembly'
 
 [[layers]]
-  name = 'lang#rust'
-
-[[layers]]
-  name = 'lang#python'
-  format-on-save = true
+  name = 'lang#c'
+  enable_clang_syntax_highlight = true
+  [layer.clang_std]
+    c = 'c11'
+    cpp = 'c++17'
 
 [[layers]]
   name = 'lang#dockerfile'
+
+[[layers]]
+  name = 'lang#extra'
+
+[[layers]]
+  name = 'lang#html'
 
 [[layers]]
   name = 'lang#latex'
@@ -100,25 +110,27 @@
   name = "lang#lua"
 
 [[layers]]
-  name = 'lang#html'
-
-[[layers]]
-  name = 'lang#extra'
-
-[[layers]]
   name = 'lang#markdown'
 
 [[layers]]
-  name = 'lang#vim'
+  name = 'lang#python'
+  format-on-save = true
+
+[[layers]]
+  name = 'lang#rust'
+  format-autosave = 1
+
+[[layers]]
+  name = 'lang#scala'
 
 [[layers]]
   name = "lang#sh"
 
 [[layers]]
-  name = 'lang#tcl'
+  name = 'lang#toml'
 
 [[layers]]
-  name = 'lang#scala'
+  name = 'lang#vim'
 
 [[layers]]
   name = 'lsp'
@@ -129,27 +141,16 @@
     'python',
     'sh',
     'html',
-    'javascript'
   ]
   [layers.override_cmd]
     rust = ['rls']
-
-[[layers]]
-  name = 'tmux'
 
 ####################################################################}}}1
 
 ################################################# CUSTOM PLUGINS {{{1
 
 [[layers]]
-  name = 'undotree'
-
-[[layers]]
   name = 'my_motions'
-
-[[custom_plugins]]
-  name = "xerus2000/argtextobj.vim"
-  merged = false
 
 ####################################################################}}}1
 

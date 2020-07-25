@@ -13,7 +13,7 @@ function! SpaceVim#layers#my_motions#plugins() abort
   return plugins
 endfunction
 
-function! SpaceVim#layers#undotree#config() abort
+function! SpaceVim#layers#my_motions#config() abort
   " Restore vim behavior
   nmap dw de
   nmap dW dE
