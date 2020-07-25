@@ -22,7 +22,7 @@ then
 fi
 
 # Setup NPM binaries
-export PATH="$HOME/.npm/bin:$PATH"
+export PATH="`yarn global bin`:$PATH"
 
 # Setup aliases
 source $HOME/.config/aliases.sh

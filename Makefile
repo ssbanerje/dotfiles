@@ -27,20 +27,19 @@ $(BUILD)/.config:
 ######## Init ###########
 .PHONY: init-prereqs-Linux
 init-prereqs-Linux:
-	@sudo apt-get update && \
-    sudo apt-get install -y global zsh ruby-dev libclang-dev clangd-9 exuberant-ctags python3-dev \
-			python3-pip python3-pygments vim-nox rake tmux cmake xclip psutils rsync neovim git curl \
-			nodejs npm silversearcher-ag python3-neovim ranger atool fzf
+	@sudo apt-get update
+	@sudo apt-get install -y global zsh ruby-dev libclang-dev clangd-9 exuberant-ctags python3-dev \
+		python3-pip python3-pygments vim-nox rake tmux cmake xclip psutils rsync neovim git curl \
+		silversearcher-ag python3-neovim ranger atool fzf
 	@sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
+	@curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	@echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-	@sudo apt-get update && sudo apt-get install -y yarn
-	@npm config set prefix $(HOME)/.npm
+	@sudo apt-get update && sudo apt-get install -y nodejs yarn
 
 .PHONY: init-prereqs-Darwin
 init-prereqs-Darwin:
-	@brew upgrade
-	@brew install ctags coreutils git ack ag python fasd tmux reattach-to-user-namespace node neovim \
+	@brew install ctags coreutils git ack ag python fasd tmux reattach-to-user-namespace node neovim yarn \
 		bash-completion global blueutil ranger atool fzf
 	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
 
@@ -48,10 +47,11 @@ init-prereqs-Darwin:
 init: init-prereqs-$(UNAME)
 	@git submodule update --init --recursive
 	@python3 -m pip install --upgrade --user click jinja2 flake8 yapf autoflake isort neovim \
-	'python-language-server[all]' pynvim neovim-remote notedown
-	@npm -g --production install remark remark-cli remark-stringify remark-frontmatter wcwidth \
-	prettier javascript-typescript-langserver vscode-html-languageserver-bin import-js \
-	bash-language-server neovim
+		'python-language-server[all]' pynvim neovim-remote notedown
+	@PYTHON=`which python3` yarn global add remark remark-cli remark-stringify remark-frontmatter \
+		wcwidth prettier neovim javascript-typescript-langserver vscode-html-languageserver-bin \
+		bash-language-server import-js
+	@PYTHON=`which python3` yarn global upgrade
 
 
 ######## Install ###########

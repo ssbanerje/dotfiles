@@ -37,8 +37,9 @@ TARGETS += $(patsubst %, $(CONFIG)/%, common_settings.sh aliases.sh env.sh)
 
 $(CONFIG)/env.sh: shell/env.sh shell/env.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
-	@cp shell/env.sh $(CONFIG)/env.sh
-	@[ -e shell/env.$(UNAME).sh ] && cat shell/env.$(UNAME).sh >> $(CONFIG)/env.sh
+	@touch $@
+	@[ -e shell/env.$(UNAME).sh ] && cat shell/env.$(UNAME).sh >> $@
+	@[ -e shell/env.sh ] && cat shell/env.sh >> $@
 
 $(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
