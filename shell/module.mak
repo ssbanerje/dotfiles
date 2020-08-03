@@ -28,7 +28,9 @@ $(CONFIG)/oh-my-zsh/custom/plugins/zsh-autosuggestions/%: shell/zsh-autosuggesti
 $(BUILD)/.zshrc: shell/zshrc config/zsh_config_db.json $(OH_MY_ZSH_FILES) shell/module.mak
 	@#echo "- Creating $@"
 	@python3 generate_template.py --template-file shell/zshrc --json-file config/zsh_config_db.json --output-dir $(BUILD)
-	@mv build/zshrc build/.zshrc
+	@mv build/zshrc $@
+	@[ -e shell/zshrc.$(UNAME).sh ] && cat shell/zshrc.$(UNAME).sh >> $@
+	@[ -e shell/fzf.sh ] && cat shell/fzf.sh >> $@
 
 $(BUILD)/.zshenv: shell/zshenv | $(BUILD) shell/module.mak
 	@#echo "- Creating $@"
@@ -48,13 +50,13 @@ $(CONFIG)/env.sh: shell/env.sh shell/env.$(UNAME).sh shell/module.mak | $(CONFIG
 
 $(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
-	@cp shell/common_settings.sh $(CONFIG)/common_settings.sh
-	@[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $(CONFIG)/common_settings.sh
+	@cp shell/common_settings.sh $@
+	@[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $@
 
 $(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh shell/module.mak | $(CONFIG)
 	@#echo "- Creating $@"
-	@cp shell/aliases.sh $(CONFIG)/aliases.sh
-	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $(CONFIG)/aliases.sh
+	@cp shell/aliases.sh $@
+	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $@
 
 TARGETS += $(patsubst %, $(CONFIG)/%, $(shell find shell/base16-shell -type f -not -iwholename '*.git*' | sed "s/^shell\///g"))
 
