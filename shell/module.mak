@@ -13,9 +13,14 @@ $(CONFIG)/oh-my-zsh/%: shell/oh-my-zsh/% shell/module.mak
 	@mkdir -p $(@D)
 	@cp $< $@
 
-OH_MY_ZSH_FILES += $(patsubst %, $(CONFIG)/oh-my-zsh/custom/plugin/%, $(shell find shell/zsh-syntax-highlighting -type f -not -iwholename '*.git*' | sed "s/^shell\///"))
+OH_MY_ZSH_FILES += $(patsubst %, $(CONFIG)/oh-my-zsh/custom/plugins/%, $(shell find shell/zsh-syntax-highlighting -type f -not -iwholename '*.git*' | sed "s/^shell\///") $(shell find shell/zsh-autosuggestions -type f -not -iwholename '*.git*' | sed "s/^shell\///"))
 
-$(CONFIG)/oh-my-zsh/custom/plugin/zsh-syntax-highlighting/%: shell/zsh-syntax-highlighting/% shell/module.mak
+$(CONFIG)/oh-my-zsh/custom/plugins/zsh-syntax-highlighting/%: shell/zsh-syntax-highlighting/% shell/module.mak
+	@#echo "- Creating $@"
+	@mkdir -p $(@D)
+	@cp $< $@
+
+$(CONFIG)/oh-my-zsh/custom/plugins/zsh-autosuggestions/%: shell/zsh-autosuggestions/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@

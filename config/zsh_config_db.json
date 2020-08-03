@@ -32,6 +32,7 @@
     "vscode",
     "web-search",
     "zsh-syntax-highlighting",
+    "zsh-autosuggestions",
 
     "fzf",
     "fancy-ctrl-z"

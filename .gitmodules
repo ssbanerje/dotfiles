@@ -13,3 +13,6 @@
 [submodule "shell/tpm"]
 	path = shell/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "shell/zsh-autosuggestions"]
+	path = shell/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
