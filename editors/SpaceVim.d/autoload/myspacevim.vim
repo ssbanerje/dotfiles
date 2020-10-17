@@ -1,24 +1,3 @@
-" Register Rust tasks {{{1
-function! s:cargo_tasks() abort
-  if filereadable('Cargo.toml')
-    let commands = ['build', 'run', 'test', 'fmt']
-    let conf = {}
-    for cmd in commands
-      call extend(conf, {
-            \ cmd : {
-              \ 'command': 'cargo',
-              \ 'args' : [cmd],
-              \ 'isDetected' : 1,
-              \ 'detectedName' : 'cargo: '
-            \ }
-          \ })
-    endfor
-    return conf
-  else
-    return {}
-  endif
-endfunction
-" }}}1
 
 " Register make tasks {{{1
 function! s:make_tasks() abort
@@ -85,6 +64,25 @@ function! myspacevim#after() abort
 
   " Markdown Preview
   let g:mkdp_page_title = '${name}'
+
+  " Make Y consistent with C and D -- yank to end of line
+  nnoremap Y y$
+
+  " Make n always go forward and N backward in search
+  nnoremap <expr> n 'Nn'[v:searchforward]
+  nnoremap <expr> N 'nN'[v:searchforward]
+
+  " Make J, K, L, and H move the cursor MORE
+  nnoremap H ^
+  nnoremap J }
+  nnoremap K {
+  nnoremap L g_
+
+  " Make <c-h>, <c-j>, <c-k>, <c-l>  for scrolling the screen
+  nnoremap <c-h> zh
+  nnoremap <c-j> <c-e>
+  nnoremap <c-k> <c-y>
+  nnoremap <c-l> zl
 endfunction
 
 " vim:set fdm=marker:
