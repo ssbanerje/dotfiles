@@ -30,7 +30,6 @@ endfunction
 function! myspacevim#before() abort
   " Configure tasks
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:make_tasks'))
-  call SpaceVim#plugins#tasks#reg_provider(funcref('s:cargo_tasks'))
 
   " Configure custom shortcuts
   call SpaceVim#custom#SPC('nore', ['r', 'w'], "for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor", "wipe all registers", 1)
