@@ -60,6 +60,7 @@ function! myspacevim#after() abort
 
   " Prevent vimtex preview
   let g:tex_conceal = ""
+  set conceallevel = 0
 
   " Markdown Preview
   let g:mkdp_page_title = '${name}'
