@@ -1,4 +1,3 @@
-
 " Register make tasks {{{1
 function! s:make_tasks() abort
   if filereadable('Makefile')
@@ -26,7 +25,7 @@ function! s:make_tasks() abort
 endfunction
 " }}}1
 
-" Called after custom config is loaded
+" Called after custom config is loaded {{{1
 function! myspacevim#before() abort
   " Configure tasks
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:make_tasks'))
@@ -35,15 +34,16 @@ function! myspacevim#before() abort
   call SpaceVim#custom#SPC('nore', ['r', 'w'], "for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor", "wipe all registers", 1)
   call SpaceVim#custom#SPC('nore', ['g', 'p'], "Gina patch", "interactively-stage-file", 1)
 endfunction
+" }}}1
 
-" Called after entering autocmd mode
+" Called after entering autocmd mode {{{1
 function! myspacevim#after() abort
   " Set text width to 100
   set tw=100
   set colorcolumn=+1
 
   " Ignore case in search
-  set ic
+  set ignorecase smartcase
 
   " Open new windows at the bottom and right
   set splitbelow splitright
@@ -68,6 +68,9 @@ function! myspacevim#after() abort
   " Make Y consistent with C and D -- yank to end of line
   nnoremap Y y$
 
+  " Search visually selected text
+  vnoremap // y/<C-R>"<CR>
+
   " Make n always go forward and N backward in search
   nnoremap <expr> n 'Nn'[v:searchforward]
   nnoremap <expr> N 'nN'[v:searchforward]
@@ -84,5 +87,6 @@ function! myspacevim#after() abort
   nnoremap <c-k> <c-y>
   nnoremap <c-l> zl
 endfunction
+" }}}1
 
 " vim:set fdm=marker:
