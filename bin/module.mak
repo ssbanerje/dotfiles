@@ -1,4 +1,4 @@
-TARGETS += $(patsubst %, $(BUILD)/.bin/%, diffconflicts gzball ports random doi2bib ftwind)
+TARGETS += $(patsubst %, $(BUILD)/.bin/%, diffconflicts gzball ports random doi2bib ftwind term_copy)
 
 $(BUILD)/.bin/%: bin/% bin/module.mak
 	@#echo "- Creating $@"
