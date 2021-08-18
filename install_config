@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIGDIR="${BASEDIR}/config"
+DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
+PLUGINDIR="${BASEDIR}/installer/plugins"
+
+"${DOTBOT}" -d "${BASEDIR}"\
+  -c "${CONFIGDIR}/${1}.yaml"\
+  --plugin-dir "${PLUGINDIR}/brew"\
+  --plugin-dir "${PLUGINDIR}/aptget"
+
