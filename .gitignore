@@ -1,12 +1,20 @@
+# Build products
 build/
-.DS_Store
 *.pyc
+__pycache__/
+
+# Version Control
+.svn
+
+# OS files
+.DS_Store
 Desktop.ini
-._*
 Thumbs.db
 .Spotlight-V100
 .Trashes
-.svn
+
+# Editor files
+._*
 *~
 .*.swp
 .bundle
