@@ -1,0 +1,31 @@
+- bootstraphomebrew:
+
+- tap:
+  - homebrew/cask-fonts
+
+- brew:
+  - ctags
+  - coreutils
+  - git
+  - ack
+  - ag
+  - python
+  - fasd
+  - tmux
+  - reattach-to-user-namespace
+  - node
+  - neovim
+  - yarn
+  - bash-completion
+  - global
+  - blueutil
+  - ranger
+  - atool
+  - fzf
+  - rsync
+
+- cask:
+  - dozer
+  - hammerspoon
+  - iterm2
+  - font-hack-nerd-font

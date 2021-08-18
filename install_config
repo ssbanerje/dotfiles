@@ -9,6 +9,5 @@ PLUGINDIR="${BASEDIR}/installer/plugins"
 
 "${DOTBOT}" -d "${BASEDIR}"\
   -c "${CONFIGDIR}/${1}.yaml"\
-  --plugin-dir "${PLUGINDIR}/brew"\
-  --plugin-dir "${PLUGINDIR}/aptget"
+  --plugin-dir "${PLUGINDIR}"\
 
