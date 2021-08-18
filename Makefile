@@ -39,9 +39,9 @@ init-prereqs-Linux:
 	@npm config set prefix $(HOME)/.npm
 	@if command -v fc-cache; then \
 		mkdir -p ${HOME}/.fonts/; \
-		curl -flo "/tmp/Ubuntu.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Ubuntu.zip \
+		curl -fLo "/tmp/Ubuntu.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Ubuntu.zip \
 			&& unzip -u /tmp/Ubuntu.zip -d ${HOME}/.fonts; \
-		curl -flo "/tmp/UbuntuMono.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/UbuntuMono.zip \
+		curl -fLo "/tmp/UbuntuMono.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/UbuntuMono.zip \
 			&& unzip -u /tmp/UbuntuMono.zip -d ${HOME}/.fonts; \
 	fi
 	@if command -v gconftool-2; then \
@@ -56,8 +56,8 @@ init-prereqs-Linux:
 .PHONY: init-prereqs-Darwin
 init-prereqs-Darwin:
 	@brew install ctags coreutils git ack ag python fasd tmux reattach-to-user-namespace node neovim \
-	yarn bash-completion global blueutil ranger atool fzf
-	@brew tap homebrew/cask-fonts && brew cask install font-hack-nerd-font
+	yarn bash-completion global blueutil ranger atool fzf rsync
+	@brew tap homebrew/cask-fonts && brew install font-hack-nerd-font
 
 .PHONY: init
 init: init-prereqs-$(UNAME)
@@ -91,5 +91,5 @@ listfiles: all
 
 .PHONY: backup
 backup: listfiles
-	@mkdir -p $(BACKUPFOLDER)/{.bin,.ssh,.config,Library/{Preferences,Fonts}}
-	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)), rsync -azh --ignore-errors $(file) $(patsubst $(HOME)/%, $(BACKUPFOLDER)/%, $(file));)
+	@mkdir -p $(BACKUPFOLDER)/{.bin,.ssh,.config/ranger,Library/{Preferences,Fonts},.Spacevim.d/autoload/SpaceVim/layers/,.hammerspoon/Spoons/ModalMgr.spoon/}
+	@$(foreach file,$(patsubst $(BUILD)/%, $(HOME)/%, $(TARGETS)), rsync -aRh --ignore-missing-args --ignore-errors $(file) $(patsubst $(HOME)/%, $(BACKUPFOLDER)/%, $(file));)

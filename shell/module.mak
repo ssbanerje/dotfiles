@@ -48,22 +48,20 @@ $(CONFIG)/env.sh: shell/env.sh shell/env.$(UNAME).sh shell/module.mak | $(CONFIG
 	@[ -e shell/env.$(UNAME).sh ] && cat shell/env.$(UNAME).sh >> $@
 	@[ -e shell/env.sh ] && cat shell/env.sh >> $@
 
-$(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh shell/module.mak | $(CONFIG)
+$(CONFIG)/common_settings.sh: shell/common_settings.sh shell/common_settings.$(UNAME).sh shell/module.mak  $(patsubst %, $(CONFIG)/%, $(shell find shell/base16-shell -type f -not -iwholename '*.git*' | sed "s/^shell\///g")) | $(CONFIG)
 	@#echo "- Creating $@"
 	@cp shell/common_settings.sh $@
 	@[ -e shell/common_settings.$(UNAME).sh ] && cat shell/common_settings.$(UNAME).sh >> $@
-
-$(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh shell/module.mak | $(CONFIG)
-	@#echo "- Creating $@"
-	@cp shell/aliases.sh $@
-	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $@
-
-TARGETS += $(patsubst %, $(CONFIG)/%, $(shell find shell/base16-shell -type f -not -iwholename '*.git*' | sed "s/^shell\///g"))
 
 $(CONFIG)/base16-shell/%: shell/base16-shell/% shell/module.mak
 	@#echo "- Creating $@"
 	@mkdir -p $(@D)
 	@cp $< $@
+
+$(CONFIG)/aliases.sh: shell/aliases.sh shell/aliases.$(UNAME).sh shell/module.mak | $(CONFIG)
+	@#echo "- Creating $@"
+	@cp shell/aliases.sh $@
+	@[ -e shell/aliases.$(UNAME).sh ] && cat shell/aliases.$(UNAME).sh >> $@
 
 TARGETS += $(BUILD)/.tmux.conf
 TPM_FILES := $(patsubst %, $(BUILD)/.tmux/plugins/tpm/%, $(shell find shell/tpm -type f -not -iwholename '*.git*' | sed "s/^shell\/tpm\///g"))
