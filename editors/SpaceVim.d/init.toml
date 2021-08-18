@@ -31,7 +31,7 @@
   enable_os_fileformat_icon = true
 
   # File manager
-  filemanager = "nerdtree"
+  filemanager = "defx"
   filetree_direction = "left"
   filetree_show_hidden = true
 

@@ -30,7 +30,7 @@ init-prereqs-Linux:
 	@sudo apt-get update
 	@sudo apt-get install -y global zsh ruby-dev libclang-dev clangd-9 exuberant-ctags python3-dev \
 		python3-pip python3-pygments vim-nox rake tmux cmake xclip psutils rsync neovim git curl \
-		silversearcher-ag python3-neovim ranger atool fzf gconf2
+		silversearcher-ag python3-neovim ranger atool fzf gconf2 xsel
 	@sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 	@curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 	@curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -

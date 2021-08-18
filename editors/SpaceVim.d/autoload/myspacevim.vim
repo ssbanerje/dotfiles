@@ -1,4 +1,4 @@
-" Register make tasks {{{1
+" Register make tasks {{{
 function! s:make_tasks() abort
   if filereadable('Makefile')
     let commands = filter(readfile('Makefile', ''), "v:val=~#'^.PHONY'")
@@ -25,7 +25,7 @@ function! s:make_tasks() abort
 endfunction
 " }}}1
 
-" Called after custom config is loaded {{{1
+" Called after custom config is loaded {{{
 function! myspacevim#before() abort
   " Configure tasks
   call SpaceVim#plugins#tasks#reg_provider(funcref('s:make_tasks'))
@@ -36,11 +36,14 @@ function! myspacevim#before() abort
 endfunction
 " }}}1
 
-" Called after entering autocmd mode {{{1
+" Called after entering autocmd mode {{{
 function! myspacevim#after() abort
   " Set text width to 100
   set tw=100
   set colorcolumn=+1
+
+  " Diff mode configuration
+  set diffopt=vertical
 
   " Ignore case in search
   set ignorecase smartcase
