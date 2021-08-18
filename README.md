@@ -5,6 +5,7 @@
                                       \__,_/\____/\__/_/   /_/_/\___/____/
                                             JUST THE WAY I LIKE IT
 
+[![Build](https://github.com/ssbanerje/dotfiles/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/ssbanerje/dotfiles/actions/workflows/build.yml)
 
 ## Installation
 
