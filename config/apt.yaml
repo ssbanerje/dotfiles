@@ -1,5 +1,6 @@
-- apt:
+- apt: # This one is to make sure all the shell commands in the next directive run correctly
   - software-properties-common
+  - curl
 
 - apt:
   # Shell
@@ -13,7 +14,6 @@
         - "add-apt-repository universe"
         - "add-apt-repository multiverse"
         - "apt update"
-  - curl
   - git
   - silversearcher-ag
   - fasd

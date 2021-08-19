@@ -1,0 +1,11 @@
+click
+jinja2
+flake8
+yapf
+autoflake
+isort
+neovim
+python-language-server
+pynvim
+neovim-remote
+proselint

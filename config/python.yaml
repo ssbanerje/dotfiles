@@ -1,0 +1,6 @@
+- pip:
+    file: config/pip.txt
+    user: true
+    stdout: true
+    stderr: true
+

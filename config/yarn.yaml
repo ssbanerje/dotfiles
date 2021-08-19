@@ -1,0 +1,11 @@
+- yarn:
+  - neovim
+  - remark
+  - remark-cli
+  - remark-stringify
+  - remark-frontmatter
+  - wcwidth
+  - prettier
+  - vscode-html-languageserver-bin
+  - bash-languageserver
+  - dockerfile-language-server-nodejs
