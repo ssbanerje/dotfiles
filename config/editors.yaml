@@ -1,0 +1,4 @@
+- link:
+    ~/.ideavimrc: editors/ideavimrc
+    ~/.editorconfig: editors/editorconfig
+    ~/.SpaceVim.d: editors/SpaceVim.d

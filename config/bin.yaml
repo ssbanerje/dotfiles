@@ -1,0 +1,17 @@
+- create:
+  - ~/.bin
+
+- link:
+    ~/.bin/diffconflicts: bin/diffconflicts
+    ~/.bin/doi2bib: bin/doi2bib
+    ~/.bin/ftwind: bin/ftwind
+    ~/.bin/gzball: bin/gzball
+    ~/.bin/ports: bin/ports
+    ~/.bin/random: bin/random
+    ~/.bin/term_copy: bin/term_copy
+    ~/.bin/lock-screen:
+        if: '[ `uname` = Darwin ]'
+        path: osx/lock-screen
+    ~/.bin/lyrics:
+        if: '[ `uname` = Darwin ]'
+        path: osx/lyrics
