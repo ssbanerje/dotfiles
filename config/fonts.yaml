@@ -1,0 +1,18 @@
+- link:
+    ~/Library/Fonts/fontawesome-webfont.ttf:
+        if: '[ `uname` = Darwin ]'
+        path: fonts/fontawesome-webfont.ttf
+    ~/.fonts/fontawesome-webfont.ttf:
+        if: '[ `uname` = Linux ]'
+        path: fonts/fontawesome-webfont.ttf
+        create: true
+
+    ~/Library/Fonts/Monaco-Powerline.otf:
+        if: '[ `uname` = Darwin ]'
+        path: fonts/Monaco-Powerline.otf
+    ~/.fonts/Monaco-Powerline.otf:
+        if: '[ `uname` = Linux ]'
+        path: fonts/Monaco-Powerline.otf
+        create: true
+
+

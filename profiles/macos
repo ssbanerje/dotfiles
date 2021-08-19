@@ -1,4 +1,14 @@
 base
 homebrew
-python
+macos
+
+pip
 yarn
+
+bin
+ssh
+interp
+editors
+git
+
+fonts

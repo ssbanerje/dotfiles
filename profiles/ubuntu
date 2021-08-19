@@ -1,4 +1,13 @@
 base
 apt
-python
+
+pip
 yarn
+
+bin
+ssh
+interp
+editors
+git
+
+fonts
