@@ -7,7 +7,7 @@ CONFIGDIR="${BASEDIR}/config"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
-"${DOTBOT}" -d "${BASEDIR}"\
+"${DOTBOT}" -v -d "${BASEDIR}"\
   -c "${CONFIGDIR}/${1}.yaml"\
   --plugin-dir "${PLUGINDIR}"\
 

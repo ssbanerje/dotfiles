@@ -4,25 +4,28 @@
   - homebrew/cask-fonts
 
 - brew:
-  - ctags
-  - coreutils
+  # Shell
+  - tmux
+  - reattach-to-user-namespace
   - git
   - ack
   - ag
-  - python
   - fasd
-  - tmux
-  - reattach-to-user-namespace
-  - node
-  - neovim
-  - yarn
   - bash-completion
-  - global
-  - blueutil
   - ranger
-  - atool
   - fzf
-  - rsync
+  - coreutils
+  # Editors
+  - neovim
+  # Language
+  - ctags
+  - node
+  - yarn
+  - global
+  # Python
+  - python
+  # Archive
+  - atool
 
 - cask:
   - dozer
