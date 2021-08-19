@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIGDIR="${BASEDIR}/config"
+PROFILESDIR="${BASEDIR}/profiles"
+DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
+PLUGINDIR="${BASEDIR}/installer/plugins"
+
+while IFS= read -r config; do
+    CONFIGS+=" ${config}"
+done < "${META_DIR}/${PROFILESDIR}/$1"
+
+shift
+
+CONFIGCONTENT=""
+for config in ${CONFIGS} ${@}; do
+    echo -e "Adding configuration $config"
+    CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
+done
+
+"${DOTBOT}" -v -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+

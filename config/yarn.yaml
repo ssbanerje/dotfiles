@@ -7,5 +7,5 @@
   - wcwidth
   - prettier
   - vscode-html-languageserver-bin
-  - bash-languageserver
+  - bash-language-server
   - dockerfile-language-server-nodejs
