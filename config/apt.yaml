@@ -1,48 +1,50 @@
-- apt: # This one is to make sure all the shell commands in the next directive run correctly
-  - software-properties-common
-  - curl
+- sudo:
+  - apt: # This one is to make sure all the shell commands in the next directive run correctly
+    - software-properties-common
+    - curl
 
-- apt:
-  # Shell
-  - zsh
-  - tmux
-  - ranger
-  - xsel
-  - xclip
-  - fzf:
-      shell_before:
-        - "add-apt-repository universe"
-        - "add-apt-repository multiverse"
-        - "apt update"
-  - git
-  - silversearcher-ag
-  - fasd
-  # Editors
-  - neovim
-  - vim-nox
-  # Language help
-  - global
-  - exuberant-ctags
-  # - ruby-dev << DO I NEED THIS
-  # - rake << DO I NEED THIS
-  - libclang-dev
-  - clangd-9:
-      shell_after:
-        - "update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100"
-  - nodejs:
-      shell_before:
-        - "curl -fsSL https://deb.nodesource.com/setup_16.x | bash -"
-      shell_after:
-        - "npm config set prefix ${HOME}/.npm"
-  - yarn:
-      shell_before:
-        - "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -"
-        - "echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list"
-        - "apt update"
-  # Python
-  - python3-dev
-  - python3-pip
-  - python3-pygments
-  - python3-neovim
-  # Archive
-  - atool
+- sudo:
+  - apt:
+    # Shell
+    - zsh
+    - tmux
+    - ranger
+    - xsel
+    - xclip
+    - fzf:
+        shell_before:
+          - "add-apt-repository universe"
+          - "add-apt-repository multiverse"
+          - "apt update"
+    - git
+    - silversearcher-ag
+    - fasd
+    # Editors
+    - neovim
+    - vim-nox
+    # Language help
+    - global
+    - exuberant-ctags
+    # - ruby-dev << DO I NEED THIS
+    # - rake << DO I NEED THIS
+    - libclang-dev
+    - clangd-9:
+        shell_after:
+          - "update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100"
+    - nodejs:
+        shell_before:
+          - "curl -fsSL https://deb.nodesource.com/setup_16.x | bash -"
+        shell_after:
+          - "npm config set prefix ${HOME}/.npm"
+    - yarn:
+        shell_before:
+          - "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -"
+          - "echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list"
+          - "apt update"
+    # Python
+    - python3-dev
+    - python3-pip
+    - python3-pygments
+    - python3-neovim
+    # Archive
+    - atool
