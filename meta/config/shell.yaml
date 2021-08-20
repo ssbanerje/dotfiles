@@ -49,8 +49,6 @@
         if: '[ `uname` = Linux ]'
         path: shell/aliases.Linux.sh
 
-    ~/.config/ranger: shell/ranger
-
     ~/.hushlogin: shell/hushlogin
     ~/.ackrc: shell/ackrc
     ~/.npmrc: shell/npmrc

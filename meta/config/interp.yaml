@@ -2,5 +2,5 @@
     ~/.curlrc: interp/curlrc
     ~/.gdbinit: interp/gdbinit
     ~/.irbrc: interp/irbrc
-    ~/.pythonrc: interp/pythonrc.py
+    ~/.pythonrc.py: interp/pythonrc.py
     ~/.wgetrc: interp/wgetrc
