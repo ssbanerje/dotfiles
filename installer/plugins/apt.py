@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import subprocess
-import dotbot
 import os
+import subprocess
 from functools import reduce
+
+import dotbot
 
 
 class Apt(dotbot.Plugin):
@@ -52,17 +53,27 @@ class Apt(dotbot.Plugin):
                         post_commands.append(c)
                 except KeyError:
                     pass
+        pkgs = ' '.join(packages)
+
         self._log.info("Running pre-installation commands")
-        res = reduce(
-            lambda x, y: x and y,
-            [self._run_command(c, False, False) == 0
-             for c in pre_commands], True)
-        res = res and self._install(' '.join(packages))
+        res = True
+        for c in pre_commands:
+            res = res and (self._run_command(c, False, False) == 0)
+            if not res:
+                self._log.error("Could not run command: " + c)
+                return False
+
+        res = res and self._install(pkgs)
+        if not res:
+            self._log.error("Could not install packages: " + pkgs)
+            return False
+
         self._log.info("Running post-installation commands")
-        res = res and reduce(
-            lambda x, y: x and y,
-            [self._run_command(c, False, False) == 0
-             for c in post_commands], True)
+        for c in post_commands:
+            res = res and (self._run_command(c, False, False) == 0)
+            if not res:
+                self._log.error("Could not run command: " + c)
+                return False
 
         return res
 
