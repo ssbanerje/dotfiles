@@ -11,7 +11,7 @@
     ~/.bin/term_copy: bin/term_copy
     ~/.bin/lock-screen:
         if: '[ `uname` = Darwin ]'
-        path: macos/lock-screen
+        path: bin/lock-screen
     ~/.bin/lyrics:
         if: '[ `uname` = Darwin ]'
-        path: macos/lyrics
+        path: bin/lyrics
