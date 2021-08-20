@@ -16,7 +16,6 @@
         if: '[ `uname` = Linux ]'
         path: shell/zshrc.Linux.sh
     ~/.config/fzf.sh: shell/fzf.sh
-    # TODO zsh-sytax-highlighting, zsh-autosuggestions
 
     ~/.bashrc: shell/bashrc
     ~/.config/bash.prompt.sh: shell/bash.prompt.sh
