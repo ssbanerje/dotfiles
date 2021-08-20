@@ -2,21 +2,36 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ $default-branch ]
   pull_request:
-    branches: [ master ]
+    branches: [ $default-branch ]
   workflow_dispatch:
 
 jobs:
-  run:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
+  run-on-ubuntu:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
       - name: Initialize dotfiles
-        run: make init
+        run: pip install pyyaml jinja2
       - name: Install dotfiles
-        run: make install
+        run: ./install_profile ubuntu
+
+  run-on-macos:
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Initialize dotfiles
+        run: pip install jinja2 pyyaml
+      - name: Install dotfiles
+        run: ./install_profile macos
