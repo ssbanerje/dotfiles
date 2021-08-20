@@ -59,9 +59,9 @@
 
     ~/.tmux.conf: shell/tmux.conf
     ~/.tmux/plugins/tpm: shell/tpm
-    ~/.tmux-osx.conf:
+    ~/.tmux-macos.conf:
         if: '[ `uname` = Darwin ]'
-        path: shell/tmux-osx.conf
+        path: shell/tmux-macos.conf
     ~/.xinitrc:
         if: '[ `uname` = Linux ]'
         path: shell/xinitrc
