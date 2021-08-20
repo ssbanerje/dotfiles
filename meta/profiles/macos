@@ -6,6 +6,7 @@ pip
 yarn
 
 bin
+tmux
 ssh
 interp
 editors

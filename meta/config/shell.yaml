@@ -1,6 +1,5 @@
 - create:
   - ~/.config
-  - ~/.tmux/plugins
 
 - link:
     ~/.config/base16-shell: shell/base16-shell
@@ -56,11 +55,6 @@
     ~/.ackrc: shell/ackrc
     ~/.npmrc: shell/npmrc
 
-    ~/.tmux.conf: shell/tmux.conf
-    ~/.tmux/plugins/tpm: shell/tpm
-    ~/.tmux-macos.conf:
-        if: '[ `uname` = Darwin ]'
-        path: shell/tmux-macos.conf
     ~/.xinitrc:
         if: '[ `uname` = Linux ]'
         path: shell/xinitrc

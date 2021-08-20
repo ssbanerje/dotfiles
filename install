@@ -7,7 +7,11 @@ CONFIGDIR="${BASEDIR}/meta/config"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
-"${DOTBOT}" -v -d "${BASEDIR}"\
-  -c "${CONFIGDIR}/${1}.yaml"\
-  --plugin-dir "${PLUGINDIR}"\
+CONFIGCONTENT=""
+for config in base ${@}; do
+    echo -e "Adding configuration $config"
+    CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
+done
+
+"${DOTBOT}" -v -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
 

@@ -1,0 +1,10 @@
+- create:
+  - ~/.tmux/plugins
+
+- link:
+    ~/.tmux.conf: tmux/tmux.conf
+    ~/.tmux/plugins/tpm: tmux/tpm
+    ~/.tmux-macos.conf:
+        if: '[ `uname` = Darwin ]'
+        path: tmux/tmux-macos.conf
+
