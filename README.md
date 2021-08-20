@@ -13,15 +13,12 @@
 ```bash
 git clone https://github.com/ssbanerje/dotfiles.git dotfiles
 cd dotfiles
+git submodule init --update --recursive
 ```
-2. Update config/*.json to reflect local configuration
-3. Build the configuration files
+2. Update the configuration files in the `config/` folder
+2. Build the configuration files
 ```bash
-make init
-make backup
-make install -j
-```
+./install_profile ubuntu # On ubuntu machines
+./install_profile macos # On MacOs machines
 
-## Listing changes
-- Find files which will be written by executing `make listfiles`
-- Backup all files which will be overwrtiten by executing `make backup`. This will create a backup in `$HOME/old_dotfiles`
+```
