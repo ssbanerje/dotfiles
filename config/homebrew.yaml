@@ -11,6 +11,7 @@
   - ack
   - ag
   - fasd
+  - bash
   - bash-completion
   - ranger
   - fzf
