@@ -3,7 +3,7 @@
 set -e
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIGDIR="${BASEDIR}/config"
+CONFIGDIR="${BASEDIR}/meta/config"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 

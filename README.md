@@ -15,10 +15,13 @@ git clone https://github.com/ssbanerje/dotfiles.git dotfiles
 cd dotfiles
 git submodule init --update --recursive
 ```
-2. Update the configuration files in the `config/` folder
-2. Build the configuration files
+2. Update the configuration files in the `meta/config/` folder
+  - `meta/config/git.yaml`
+3. Install dependencies
+  - Python3
+  - Packages -- `pip3 install pyyaml jinja2`
+4. Install dotfiles based on profiles in `meta/profiles/` folder
 ```bash
 ./install_profile ubuntu # On ubuntu machines
-./install_profile macos # On MacOs machines
-
+./install_profile macos # On macos machines
 ```
