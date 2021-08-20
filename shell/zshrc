@@ -6,16 +6,9 @@ if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   FPATH="/usr/local/share/zsh/site-functions:$FPATH"
 fi
 
-
-# Setup oh-my-zsh
-export ZSH_THEME="{{ZSH_THEME}}"
-export ZSH=$HOME/.config/oh-my-zsh
-export DISABLE_AUTO_UPDATE="true"
-plugins=(
-{% for plugin in OH_MY_ZSH_PLUGINS %} {{plugin}} {% endfor %}
-{% for plugin in OH_MY_ZSH_PLUGINS_OS_DEP %} {{plugin}} {% endfor %}
-)
-source $ZSH/oh-my-zsh.sh
+# Load antigen
+source "$HOME/.config/antigen.zsh"
+antigen init "$HOME/.config/antigenrc"
 
 setopt LOCAL_OPTIONS # allow functions to have local options
 setopt LOCAL_TRAPS # allow functions to have local traps
@@ -38,7 +31,7 @@ bindkey '^?' backward-delete-char
 
 # Completion for kill
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
+zstyle ':completion:*:*:*:*:processes' command "ps -u $(whoami) -o pid,user,comm -w -w"
 
 # Completion for ssh
 zstyle ':completion:*:ssh:*' tag-order hosts users
@@ -51,5 +44,9 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
 # Source common settings
-source $HOME/.config/common_settings.sh
+source "$HOME/.config/common_settings.sh"
+source "$HOME/.config/fzf.sh"
+
+# Source platform specific setting
+source "$HOME/.config/zshrc.$(uname).sh"
 

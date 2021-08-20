@@ -2,3 +2,7 @@
     ~/.ideavimrc: editors/ideavimrc
     ~/.editorconfig: editors/editorconfig
     ~/.SpaceVim.d: editors/SpaceVim.d
+
+- shell:
+    - ["curl -sLf https://spacevim.org/install.sh | bash", "Installing SpaceVim"]
+

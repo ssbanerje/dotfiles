@@ -15,15 +15,17 @@ export PATH="$PATH:$HOME/.bin"
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 # Source Rustup
-if [ -d $HOME/.cargo/ ]
+if [ -d "$HOME/.cargo/" ]
 then
-  source $HOME/.cargo/env
+  source "$HOME/.cargo/env"
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-# Setup NPM binaries
-export PATH="`yarn global bin`:$PATH"
-
 # Setup aliases
-source $HOME/.config/aliases.sh
+source "$HOME/.config/aliases.sh"
 
+# Platform specific
+source "$HOME/.config/env.$(uname).sh"
+
+# Setup NPM binaries
+export PATH="$(yarn global bin):$PATH"

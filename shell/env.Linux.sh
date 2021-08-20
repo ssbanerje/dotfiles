@@ -7,4 +7,3 @@ CUDA=/usr/local/cuda
 
 # Python Executables
 export PATH="$PATH:$HOME/.local/bin"
-

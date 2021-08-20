@@ -9,4 +9,3 @@ export PATH="$PATH:/usr/texbin"
 
 # Use LLVM tools from homebrew vs Apple
 export PATH="/usr/local/opt/llvm/bin:$PATH"
-

@@ -1,0 +1,68 @@
+- create:
+  - ~/.config
+  - ~/.tmux/plugins
+
+- link:
+    ~/.config/base16-shell: shell/base16-shell
+
+    ~/.config/antigen.zsh: shell/antigen.zsh
+    ~/.config/antigenrc: shell/antigenrc
+    ~/.zshenv: shell/zshenv
+    ~/.zshrc: shell/zshrc
+    ~/.config/zshrc.Darwin.sh:
+        if: '[ `uname` = Darwin ]'
+        path: shell/zshrc.Darwin.sh
+    ~/.config/zshrc.Linux.sh:
+        if: '[ `uname` = Linux ]'
+        path: shell/zshrc.Linux.sh
+    ~/.config/fzf.sh: shell/fzf.sh
+    # TODO zsh-sytax-highlighting, zsh-autosuggestions
+
+    ~/.bashrc: shell/bashrc
+    ~/.config/bash.prompt.sh: shell/bash.prompt.sh
+    ~/.config/bashrc.Darwin.sh:
+        if: '[ `uname` = Darwin ]'
+        path: shell/bashrc.Darwin.sh
+    ~/.config/bashrc.Linux.sh:
+        if: '[ `uname` = Linux ]'
+        path: shell/bashrc.Linux.sh
+
+    ~/.config/env.sh: shell/env.sh
+    ~/.config/env.Darwin.sh:
+        if: '[ `uname` = Darwin ]'
+        path: shell/env.Darwin.sh
+    ~/.config/env.Linux.sh:
+        if: '[ `uname` = Linux ]'
+        path: shell/env.Linux.sh
+
+    ~/.config/common_settings.sh: shell/common_settings.sh
+    ~/.config/common_settings.Darwin.sh:
+        if: '[ `uname` = Darwin ]'
+        path: shell/common_settings.Darwin.sh
+    ~/.config/common_settings.Linux.sh:
+        if: '[ `uname` = Linux ]'
+        path: shell/common_settings.Linux.sh
+
+    ~/.config/aliases.sh: shell/aliases.sh
+    ~/.config/aliases.Darwin.sh:
+        if: '[ `uname` = Darwin ]'
+        path: shell/aliases.Darwin.sh
+    ~/.config/aliases.Linux.sh:
+        if: '[ `uname` = Linux ]'
+        path: shell/aliases.Linux.sh
+
+    ~/.config/ranger: shell/ranger
+
+    ~/.hushlogin: shell/hushlogin
+    ~/.ackrc: shell/ackrc
+    ~/.npmrc: shell/npmrc
+
+    ~/.tmux.conf: shell/tmux.conf
+    ~/.tmux/plugins/tpm: shell/tpm
+    ~/.tmux-osx.conf:
+        if: '[ `uname` = Darwin ]'
+        path: shell/tmux-osx.conf
+    ~/.xinitrc:
+        if: '[ `uname` = Linux ]'
+        path: shell/xinitrc
+
