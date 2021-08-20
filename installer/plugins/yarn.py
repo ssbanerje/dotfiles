@@ -13,8 +13,7 @@ class Yarn(dotbot.Plugin):
     def handle(self, directive, data):
         # Run the directive
         if directive == self._directive:
-            cmd = "yarn global upgrade && yarn global add %s" % (
-                ' '.join(data))
+            cmd = "yarn global add %s" % (' '.join(data))
             print(cmd)
             return self._run_command(cmd) == 0
         else:

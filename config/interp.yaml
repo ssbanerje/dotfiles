@@ -1,6 +1,6 @@
 - link:
     ~/.curlrc: interp/curlrc
-    ~/gdbinit: interp/gdbinit
+    ~/.gdbinit: interp/gdbinit
     ~/.irbrc: interp/irbrc
     ~/.pythonrc: interp/pythonrc.py
     ~/.wgetrc: interp/wgetrc
