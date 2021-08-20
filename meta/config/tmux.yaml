@@ -1,6 +1,15 @@
 - create:
   - ~/.tmux/plugins
 
+- ifubuntu:
+  - apt:
+    - tmux
+
+- ifmacos:
+  - brew:
+    - tmux
+    - reattach-to-user-namespace
+
 - link:
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/tpm

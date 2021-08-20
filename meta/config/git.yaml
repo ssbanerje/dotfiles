@@ -1,3 +1,11 @@
+- ifubuntu:
+  - apt:
+    - git
+
+- ifmacos:
+  - brew:
+    - git
+
 - template:
     - ~/.gitconfig:
         source_file: git/gitconfig

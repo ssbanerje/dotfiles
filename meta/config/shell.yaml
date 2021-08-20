@@ -52,6 +52,11 @@
     ~/.hushlogin: shell/hushlogin
     ~/.ackrc: shell/ackrc
     ~/.npmrc: shell/npmrc
+    ~/.curlrc: shell/curlrc
+    ~/.gdbinit: shell/gdbinit
+    ~/.irbrc: shell/irbrc
+    ~/.pythonrc.py: shell/pythonrc.py
+    ~/.wgetrc: shell/wgetrc
 
     ~/.xinitrc:
         if: '[ `uname` = Linux ]'

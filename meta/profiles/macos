@@ -1,5 +1,4 @@
 base
-homebrew
 macos
 
 pip
@@ -8,7 +7,6 @@ yarn
 bin
 tmux
 ssh
-interp
 editors
 git
 shell

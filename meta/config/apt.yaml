@@ -16,8 +16,6 @@
 - apt:
   # Shell
   - zsh
-  - tmux
-  - ranger
   - xsel
   - xclip
   - fzf

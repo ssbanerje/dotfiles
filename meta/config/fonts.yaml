@@ -1,19 +1,15 @@
-- link:
-    ~/Library/Fonts/fontawesome-webfont.ttf:
-        if: '[ `uname` = Darwin ]'
-        path: fonts/fontawesome-webfont.ttf
-    ~/.fonts/fontawesome-webfont.ttf:
-        if: '[ `uname` = Linux ]'
-        path: fonts/fontawesome-webfont.ttf
-        create: true
+- ifmacos:
+  - link:
+      ~/Library/Fonts/fontawesome-webfont.ttf: fonts/fontawesome-webfont.ttf
+      ~/Library/Fonts/Monaco-Powerline.otf: fonts/Monaco-Powerline.otf
 
-    ~/Library/Fonts/Monaco-Powerline.otf:
-        if: '[ `uname` = Darwin ]'
-        path: fonts/Monaco-Powerline.otf
-    ~/.fonts/Monaco-Powerline.otf:
-        if: '[ `uname` = Linux ]'
-        path: fonts/Monaco-Powerline.otf
-        create: true
+- iflinux:
+  - create:
+    - ~/.fonts
 
-- shell:
-    - ["bash ./fonts/download_install_font.sh", "Downloading Ubuntu fonts"]
+  - link:
+      ~/.fonts/fontawesome-webfont.ttf: fonts/fontawesome-webfont.ttf
+      ~/.fonts/Monaco-Powerline.otf: fonts/Monaco-Powerline.otf
+
+  - shell:
+      - ["bash ./fonts/download_install_font.sh", "Downloading Ubuntu fonts"]
