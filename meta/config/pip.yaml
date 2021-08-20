@@ -1,6 +1,6 @@
 - pip:
-    file: config/pip.txt
+    file: meta/config/pip.txt
     user: true
-    stdout: true
+    stdout: false
     stderr: true
 

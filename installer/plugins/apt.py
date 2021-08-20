@@ -21,11 +21,11 @@ class Apt(dotbot.Plugin):
 
     def _run_update(self):
         self._log.info("Updating APT repository")
-        return self._run_command("apt update") == 0
+        return self._run_command("apt update", True, False) == 0
 
     def _install(self, p):
         self._log.info("Installing %s" % p)
-        res = self._run_command("apt install --yes %s" % p)
+        res = self._run_command("apt install --yes " + p, False, False)
         if res != 0:
             self._log.warning("Could not install %s" % p)
             return False
@@ -53,18 +53,25 @@ class Apt(dotbot.Plugin):
                 except KeyError:
                     pass
         self._log.info("Running pre-installation commands")
-        res = reduce(lambda x, y: x and y,
-                     [self._run_command(c) == 0 for c in pre_commands], True)
+        res = reduce(
+            lambda x, y: x and y,
+            [self._run_command(c, False, False) == 0
+             for c in pre_commands], True)
         res = res and self._install(' '.join(packages))
         self._log.info("Running post-installation commands")
         res = res and reduce(
             lambda x, y: x and y,
-            [self._run_command(c) == 0 for c in post_commands], True)
+            [self._run_command(c, False, False) == 0
+             for c in post_commands], True)
 
         return res
 
-    def _run_command(self, cmd):
+    def _run_command(self, cmd, sup_stdout=True, sup_stderr=False):
         cmd_prefix = "sudo " if os.geteuid() != 0 else ""
+        stdout = subprocess.DEVNULL if sup_stdout else None
+        stderr = subprocess.DEVNULL if sup_stderr else None
         return subprocess.call(cmd_prefix + cmd,
+                               stdout=stdout,
+                               stderr=stderr,
                                shell=True,
                                cwd=self._context.base_directory())

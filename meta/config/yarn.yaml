@@ -1,11 +1,14 @@
 - yarn:
-  - neovim
-  - remark
-  - remark-cli
-  - remark-stringify
-  - remark-frontmatter
-  - wcwidth
-  - prettier
-  - vscode-html-languageserver-bin
-  - bash-language-server
-  - dockerfile-language-server-nodejs
+    stdout: false
+    stderr: true
+    packages:
+      - neovim
+      - remark
+      - remark-cli
+      - remark-stringify
+      - remark-frontmatter
+      - wcwidth
+      - prettier
+      - vscode-html-languageserver-bin
+      - bash-language-server
+      - dockerfile-language-server-nodejs

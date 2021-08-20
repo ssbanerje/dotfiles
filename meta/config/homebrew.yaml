@@ -9,7 +9,7 @@
   - reattach-to-user-namespace
   - git
   - ack
-  - ag
+  - the_silver_searcher
   - fasd
   - bash
   - bash-completion
