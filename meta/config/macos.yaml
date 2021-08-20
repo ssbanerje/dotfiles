@@ -10,16 +10,5 @@
   - "/bin/cp -f macos/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
   - "curl -L https://iterm2.com/shell_integration/zsh -o ~/.config/iterm2_shell_integration.zsh"
   - "curl -L https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash"
-  # Setup keyboard behavior
-  - "defaults write -g KeyRepeat -int 2"
-  - "defaults write -g InitialKeyRepeat -int 15"
-  # Setup finder
-  - "defaults write com.apple.finder ShowPathbar -bool true"
-  # Stop .DS_Store files on network/USB volumes
-  - "defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true"
-  - "defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true"
-  # Restart apps
-  - "killall cfprefsd"
-  - "killall Finder"
-  - "killall SystemUIServer"
+  - "./macos/macos.sh"
 
