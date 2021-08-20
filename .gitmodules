@@ -1,21 +1,12 @@
 [submodule "git/gitignore"]
   path = git/gitignore
   url = https://github.com/github/gitignore.git
-[submodule "shell/oh-my-zsh"]
-	path = shell/oh-my-zsh
-	url = https://github.com/robbyrussell/oh-my-zsh.git
-[submodule "shell/zsh-syntax-highlighting"]
-	path = shell/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 [submodule "shell/base16-shell"]
 	path = shell/base16-shell
 	url = https://github.com/chriskempson/base16-shell
 [submodule "shell/tpm"]
 	path = shell/tpm
 	url = https://github.com/tmux-plugins/tpm
-[submodule "shell/zsh-autosuggestions"]
-	path = shell/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "installer/dotbot"]
 	path = installer/dotbot
   url = https://github.com/anishathalye/dotbot
