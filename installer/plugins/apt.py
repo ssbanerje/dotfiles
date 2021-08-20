@@ -3,6 +3,7 @@
 
 import subprocess
 import dotbot
+import os
 from functools import reduce
 
 
@@ -63,6 +64,7 @@ class Apt(dotbot.Plugin):
         return res
 
     def _run_command(self, cmd):
-        return subprocess.call(cmd,
+        cmd_prefix = "sudo " if os.geteuid() != 0 else ""
+        return subprocess.call(cmd_prefix + cmd,
                                shell=True,
                                cwd=self._context.base_directory())
