@@ -25,4 +25,4 @@
     ~/.gitattributes: git/gitattributes
 
 - shell:
-  - "cat git/gitignore/Global/{Archives,Backup,Diff,Dropbox,Linux,Vim,Xcode,XilinxISE,macOS}.gitignore > ~/.global_gitignore"
+  - "rm -f ~/.global_gitignore; for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do cat git/gitignore/Global/$f.gitignore >> ~/.global_gitignore; done"

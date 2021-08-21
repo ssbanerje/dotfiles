@@ -14,8 +14,6 @@ jobs:
           - base
           - ubuntu
           - macos
-          - pip
-          - yarn
           - bin
           - tmux
           - ssh
@@ -43,7 +41,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Initialize dotfiles
-        run: pip install pyyaml jinja2
+        run: pip install pyyaml jinja2 distro
       - name: Install dotfiles
         run: ./install ${{ matrix.config }}
 
@@ -73,7 +71,6 @@ jobs:
         with:
           python-version: 3.9
       - name: Initialize dotfiles
-        run: pip install pyyaml jinja2
+        run: pip install pyyaml jinja2 distro
       - name: Install dotfiles
         run: ./install_profile ${{ matrix.profile }}
-
