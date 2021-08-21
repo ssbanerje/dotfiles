@@ -89,6 +89,13 @@ function! myspacevim#after() abort
   nnoremap <c-j> <c-e>
   nnoremap <c-k> <c-y>
   nnoremap <c-l> zl
+
+  " Neomake setting
+  let g:neomake_vim_enabled_makers = ['vint']
+  let g:neomake_yaml_enabled_makers = ['yamllint']
+  let g:neomake_zsh_enabled_makers = ['zsh']
+  let g:neomake_text_enabled_makers = ['proselint']
+  let g:neomake_markdown_enabled_makers = ['proselint']
 endfunction
 " }}}1
 

@@ -8,3 +8,5 @@ python-language-server
 pynvim
 neovim-remote
 proselint
+yamllint
+vint

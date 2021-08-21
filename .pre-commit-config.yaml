@@ -1,6 +1,8 @@
 # File introduces automated checks triggered on git events
 # to enable run `pip install pre-commit && pre-commit install`
 
+---
+
 repos:
   - repo: local
     hooks:
@@ -19,3 +21,5 @@ repos:
       - id: check-merge-conflict
       - id: double-quote-string-fixer
       - id: end-of-file-fixer
+
+...

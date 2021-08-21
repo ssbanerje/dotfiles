@@ -1,9 +1,10 @@
+---
+
 - defaults:
     link:
       force: true
       relink: true
 
 - clean:
-  - "~"
-  - "~/.config"
-
+    - "~"
+    - "~/.config"
