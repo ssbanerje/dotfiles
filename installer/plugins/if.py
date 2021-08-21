@@ -7,14 +7,13 @@ import platform
 
 
 class IfPlatform(dotbot.Plugin):
-    _directive_if_macos = "ifmacos"
-    _directive_if_linux = "iflinux"
-    _directive_if_ubuntu = "ifubuntu"
+    _directive_if_macos = 'ifmacos'
+    _directive_if_linux = 'iflinux'
+    _directive_if_ubuntu = 'ifubuntu'
 
     def can_handle(self, directive):
         return directive in [
-            self._directive_if_linux, self._directive_if_ubuntu,
-            self._directive_if_macos
+            self._directive_if_linux, self._directive_if_ubuntu, self._directive_if_macos
         ]
 
     def handle(self, directive, data):
@@ -27,11 +26,11 @@ class IfPlatform(dotbot.Plugin):
             try:
                 import distro
                 dis = distro.linux_distribution()[0]
-                if dis == "Ubuntu" and directive == self._directive_if_ubuntu:
+                if dis == 'Ubuntu' and directive == self._directive_if_ubuntu:
                     return self._run_internal(data)
             except ImportError:
                 self._log.warning(
-                    "Could not check distribution: pip install distro")
+                    'Could not check distribution: pip install distro')
         return True
 
     def _run_internal(self, data):

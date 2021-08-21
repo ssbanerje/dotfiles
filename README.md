@@ -25,3 +25,13 @@ git submodule init --update --recursive
 ./install_profile ubuntu # On ubuntu machines
 ./install_profile macos # On macos machines
 ```
+
+## Install pre-commit Hooks
+1. Install pre-commit
+```bash
+pip install pre-commit
+```
+2. Install hooks
+```bash
+pre-commit install
+```

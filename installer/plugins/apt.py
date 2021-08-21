@@ -3,8 +3,6 @@
 
 import os
 import subprocess
-from functools import reduce
-
 import dotbot
 
 
@@ -18,17 +16,17 @@ class Apt(dotbot.Plugin):
         if self._run_update() and (directive == self._aptDirective):
             return self._install_packages(data)
         else:
-            raise ValueError("Cannot handle this directive %s" % directive)
+            raise ValueError('Cannot handle this directive %s' % directive)
 
     def _run_update(self):
-        self._log.info("Updating APT repository")
-        return self._run_command("apt update", True, False) == 0
+        self._log.info('Updating APT repository')
+        return self._run_command('apt update', True, False) == 0
 
     def _install(self, p):
-        self._log.info("Installing %s" % p)
-        res = self._run_command("apt install --yes " + p, False, False)
+        self._log.info('Installing %s' % p)
+        res = self._run_command('apt install --yes ' + p, False, False)
         if res != 0:
-            self._log.warning("Could not install %s" % p)
+            self._log.warning('Could not install %s' % p)
             return False
         else:
             return True
@@ -55,34 +53,31 @@ class Apt(dotbot.Plugin):
                     pass
         pkgs = ' '.join(packages)
 
-        self._log.info("Running pre-installation commands")
+        self._log.info('Running pre-installation commands')
         res = True
         for c in pre_commands:
             res = res and (self._run_command(c, False, False) == 0)
             if not res:
-                self._log.error("Could not run command: " + c)
+                self._log.error('Could not run command: ' + c)
                 return False
 
         res = res and self._install(pkgs)
         if not res:
-            self._log.error("Could not install packages: " + pkgs)
+            self._log.error('Could not install packages: ' + pkgs)
             return False
 
-        self._log.info("Running post-installation commands")
+        self._log.info('Running post-installation commands')
         for c in post_commands:
             res = res and (self._run_command(c, False, False) == 0)
             if not res:
-                self._log.error("Could not run command: " + c)
+                self._log.error('Could not run command: ' + c)
                 return False
 
         return res
 
     def _run_command(self, cmd, sup_stdout=True, sup_stderr=False):
-        cmd_prefix = "sudo " if os.geteuid() != 0 else ""
+        cmd_prefix = 'sudo ' if os.geteuid() != 0 else ''
         stdout = subprocess.DEVNULL if sup_stdout else None
         stderr = subprocess.DEVNULL if sup_stderr else None
-        return subprocess.call(cmd_prefix + cmd,
-                               stdout=stdout,
-                               stderr=stderr,
-                               shell=True,
-                               cwd=self._context.base_directory())
+        cwd = self._context.base_directory()
+        return subprocess.call(cmd_prefix + cmd, stdout=stdout, stderr=stderr, shell=True, cwd=cwd)
