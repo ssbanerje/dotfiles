@@ -1,6 +1,0 @@
-- pip:
-    file: meta/config/pip.txt
-    user: true
-    stdout: false
-    stderr: true
-

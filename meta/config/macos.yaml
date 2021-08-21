@@ -12,13 +12,6 @@
   - bash-completion
   - fzf
   - coreutils
-  # Editors
-  - neovim
-  # Language
-  - ctags
-  - node
-  - yarn
-  - global
   # Python
   - python
   # Archive

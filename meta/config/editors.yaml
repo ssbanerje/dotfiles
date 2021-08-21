@@ -1,8 +1,58 @@
+# -------------- Install software
+
+- ifubuntu:
+  - shell:
+    - "curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -"
+    - "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -"
+    - "echo 'deb https://dl.yarnpkg.com/debian/ stable main' | sudo tee /etc/apt/sources.list.d/yarn.list"
+
+  - apt:
+    - neovim
+    - vim-nox
+    - exuberant-ctags
+    - libclang-dev
+    - clangd
+    - nodejs:
+        shell_after:
+          - "npm config set prefix ${HOME}/.npm"
+    - yarn
+    - global
+
+- ifmacos:
+  - brew:
+    - neovim
+    - ctags
+    - node
+    - yarn
+    - global
+
+- pip:
+    file: meta/config/requirements.txt
+    user: true
+    stdout: false
+    stderr: true
+
+- yarn:
+    stdout: false
+    stderr: true
+    packages:
+      - neovim
+      - remark
+      - remark-cli
+      - remark-stringify
+      - remark-frontmatter
+      - wcwidth
+      - prettier
+      - vscode-html-languageserver-bin
+      - bash-language-server
+      - dockerfile-language-server-nodejs
+
+# -------------- Link configuration
+
 - link:
     ~/.ideavimrc: editors/ideavimrc
     ~/.editorconfig: editors/editorconfig
     ~/.SpaceVim.d: editors/SpaceVim.d
 
 - shell:
-    - ["curl -sLf https://spacevim.org/install.sh | bash", "Installing SpaceVim"]
-
+  - ["curl -sLf https://spacevim.org/install.sh | bash", "Installing SpaceVim"]

@@ -1,9 +1,6 @@
 base
 ubuntu
 
-pip
-yarn
-
 bin
 tmux
 ssh

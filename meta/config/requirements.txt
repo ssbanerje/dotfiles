@@ -1,0 +1,12 @@
+autoflake
+autoflake
+flake8
+isort
+neovim
+neovim-remote
+proselint
+pynvim
+python-language-server
+vint
+yamllint
+yapf
