@@ -1,9 +1,6 @@
 base
 macos
 
-pip
-yarn
-
 bin
 tmux
 ssh

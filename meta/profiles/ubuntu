@@ -1,9 +1,6 @@
 base
 apt
 
-pip
-yarn
-
 bin
 tmux
 ssh

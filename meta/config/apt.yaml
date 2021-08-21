@@ -7,11 +7,6 @@
   # Enable repos
   - "sudo add-apt-repository -y universe"
   - "sudo add-apt-repository -y multiverse"
-  # Get nodejs
-  - "curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -"
-  # Get yarn
-  - "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -"
-  - "echo 'deb https://dl.yarnpkg.com/debian/ stable main' | sudo tee /etc/apt/sources.list.d/yarn.list"
 
 - apt:
   # Shell
@@ -19,23 +14,8 @@
   - xsel
   - xclip
   - fzf
-  - git
   - silversearcher-ag
   - fasd
-  # Editors
-  - neovim
-  - vim-nox
-  # Language help
-  - global
-  - exuberant-ctags
-  - libclang-dev
-  - clangd-9:
-      shell_after:
-        - "update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100"
-  - nodejs:
-      shell_after:
-        - "npm config set prefix ${HOME}/.npm"
-  - yarn
   # Python
   - python3-dev
   - python3-pip
