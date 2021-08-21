@@ -3,35 +3,57 @@
 
 import dotbot
 from dotbot.dispatcher import Dispatcher
-import platform
+import distro
 
 
 class IfPlatform(dotbot.Plugin):
-    _directive_if_macos = 'ifmacos'
-    _directive_if_linux = 'iflinux'
-    _directive_if_ubuntu = 'ifubuntu'
+    _directives = ['if'+d for d in [
+        'macos',  # MacOS
+        'ubuntu',  # Ubuntu
+        'debian',  # Debian
+        'rhel',  # RedHat Enterprise Linux
+        'centos',  # CentOS
+        'fedora',  # Fedora
+        'sles',  # SUSE Linux Enterprise Server
+        'opensuse',  # openSUSE
+        'amazon',  # Amazon Linux
+        'arch',  # Arch Linux
+        'cloudlinux',  # CloudLinux OS
+        'exherbo',  # Exherbo Linux
+        'gentoo',  # GenToo Linux
+        'ibm_powerkvm',  # IBM PowerKVM
+        'kvmibm',  # KVM for IBM z Systems
+        'linuxmint',  # Linux Mint
+        'mageia',  # Mageia
+        'mandriva',  # Mandriva Linux
+        'parallels',  # Parallels
+        'pidora',  # Pidora
+        'raspbian',  # Raspbian
+        'oracle',  # Oracle Linux (and Oracle Enterprise Linux)
+        'scientific',  # Scientific Linux
+        'slackware',  # Slackware
+        'xenserver',  # XenServer
+        'openbsd',  # OpenBSD
+        'netbsd',  # NetBSD
+        'freebsd',  # FreeBSD
+        'midnightbsd',  # MidnightBSD
+    ]]
 
     def can_handle(self, directive):
-        return directive in [
-            self._directive_if_linux, self._directive_if_ubuntu, self._directive_if_macos
-        ]
+        return directive in self._directives
 
     def handle(self, directive, data):
-        sys = platform.system()
-        if sys == 'Darwin' and directive == self._directive_if_macos:
+        if directive not in self._directives:
+            raise ValueError('Cannot handle this directive %s' % directive)
+
+        did = distro.id()
+        if did == 'darwin':
+            did = 'macos'
+
+        if directive == 'if'+did:
             return self._run_internal(data)
-        elif sys == 'Linux':
-            if directive == self._directive_if_linux:
-                return self._run_internal(data)
-            try:
-                import distro
-                dis = distro.linux_distribution()[0]
-                if dis == 'Ubuntu' and directive == self._directive_if_ubuntu:
-                    return self._run_internal(data)
-            except ImportError:
-                self._log.warning(
-                    'Could not check distribution: pip install distro')
-        return True
+        else:
+            return True
 
     def _run_internal(self, data):
         dispatcher = Dispatcher(self._context.base_directory(),
