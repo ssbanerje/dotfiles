@@ -27,7 +27,7 @@
     - global
 
 - pip:
-    file: meta/config/pip.txt
+    file: meta/config/requirements.txt
     user: true
     stdout: false
     stderr: true
@@ -56,4 +56,3 @@
 
 - shell:
   - ["curl -sLf https://spacevim.org/install.sh | bash", "Installing SpaceVim"]
-

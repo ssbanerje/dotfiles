@@ -1,9 +1,9 @@
-flake8
-yapf
 autoflake
+flake8
 isort
 neovim
-python-language-server
-pynvim
 neovim-remote
 proselint
+pynvim
+python-language-server
+yapf
