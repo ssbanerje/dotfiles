@@ -5,16 +5,16 @@ import dotbot
 
 
 class Brew(dotbot.Plugin):
-    _bootstrapDirective = "bootstraphomebrew"
-    _brewDirective = "brew"
-    _caskDirective = "cask"
-    _tapDirective = "tap"
-    _brewFileDirective = "brewfile"
+    _bootstrapDirective = 'bootstraphomebrew'
+    _brewDirective = 'brew'
+    _caskDirective = 'cask'
+    _tapDirective = 'tap'
+    _brewFileDirective = 'brewfile'
 
     def can_handle(self, directive):
         return directive in [
-            self._brewDirective, self._caskDirective, self._tapDirective,
-            self._brewFileDirective, self._bootstrapDirective
+            self._brewDirective, self._caskDirective, self._tapDirective, self._brewFileDirective,
+            self._bootstrapDirective
         ]
 
     def handle(self, directive, data):
@@ -30,23 +30,18 @@ class Brew(dotbot.Plugin):
         elif directive == self._bootstrapDirective:
             return self._bootstrap_brew()
         else:
-            raise ValueError("Cannot handle this directive %s" % directive)
+            raise ValueError('Cannot handle this directive %s' % directive)
 
     def _run_command(self, cmd, sub_stdout=True, sub_stderr=False):
         stdout = subprocess.DEVNULL if sub_stdout else None
         stderr = subprocess.DEVNULL if sub_stderr else None
-        return subprocess.call(cmd,
-                               stdout=stdout,
-                               stderr=stderr,
-                               shell=True,
-                               cwd=self._context.base_directory())
+        cwd = self._context.base_directory()
+        return subprocess.call(cmd, stdout=stdout, stderr=stderr, shell=True, cwd=cwd)
 
     def _run_command_capture(self, cmd):
-        res = subprocess.run(cmd,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             shell=True,
-                             cwd=self._context.base_directory())
+        cwd = self._context.base_directory()
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+                             cwd=cwd)
         return (res.returncode, res.stdout, res.stderr)
 
     def _bootstrap_brew(self):
@@ -60,26 +55,26 @@ class Brew(dotbot.Plugin):
             return True
 
     def _install_packages(self, packages, isCask=False):
-        cask_option = "--cask " if isCask else ""
-        cmd_pre = "brew install " + cask_option
-        chk_pre = "brew ls --versions " + cask_option
+        cask_option = '--cask ' if isCask else ''
+        cmd_pre = 'brew install ' + cask_option
+        chk_pre = 'brew ls --versions ' + cask_option
         chk_pos = " | awk '{print $1}'"
         pkgs = ' '.join(packages)
 
         # Get installed packages
         (r, so, se) = self._run_command_capture(chk_pre + pkgs + chk_pos)
         if r != 0:
-            self._log.error("Could not get installed homebrew packages")
+            self._log.error('Could not get installed homebrew packages')
             return False
-        installed = so.decode("utf-8").split('\n')[:-1]
+        installed = so.decode('utf-8').split('\n')[:-1]
         installed = list(map(lambda x: x.rsplit('@')[0], installed))
-        self._log.warning("Homebrew already installed: " + ' '.join(installed))
+        self._log.warning('Homebrew already installed: ' + ' '.join(installed))
         packages = [p for p in packages if p not in installed]
 
         # Install remaining packages
         if len(packages) == 0:
             return True
-        self._log.info("Homebrew install: " ' '.join(packages))
+        self._log.info('Homebrew install: ' ' '.join(packages))
         if self._run_command(cmd_pre + ' '.join(packages), False, False) != 0:
             self._log.error('Failed to install %s' % p)
             return False
@@ -87,17 +82,17 @@ class Brew(dotbot.Plugin):
 
     def _install_bundle(self, data):
         for f in data:
-            self._log.info("Installing from file %s" % f)
-            res = self._run_command("brew bundle --file=%s" % f)
+            self._log.info('Installing from file %s' % f)
+            res = self._run_command('brew bundle --file=%s' % f)
             if res != 0:
-                self._log.warning("Failed to install file %f" % f)
+                self._log.warning('Failed to install file %f' % f)
                 return False
         return True
 
     def _install_tap(self, data):
         for t in data:
-            self._log.info("Tapping %s" % t)
-            res = self._run_command("brew tap %s" % t)
+            self._log.info('Tapping %s' % t)
+            res = self._run_command('brew tap %s' % t)
             if res != 0:
                 self._log.warning('Failed to tap %s' % t)
                 return False
