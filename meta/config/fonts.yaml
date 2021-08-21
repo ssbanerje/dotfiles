@@ -1,4 +1,7 @@
 - ifmacos:
+  - create:
+    - ~/Library/Fonts
+
   - link:
       ~/Library/Fonts/fontawesome-webfont.ttf: fonts/fontawesome-webfont.ttf
       ~/Library/Fonts/Monaco-Powerline.otf: fonts/Monaco-Powerline.otf

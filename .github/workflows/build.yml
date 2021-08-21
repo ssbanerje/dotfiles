@@ -5,11 +5,34 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  workflow_dispatch:
 
 jobs:
-  run-on-ubuntu:
-    runs-on: ubuntu-latest
+  install-config:
+    strategy:
+      matrix:
+        config:
+          - base
+          - ubuntu
+          - macos
+          - pip
+          - yarn
+          - bin
+          - tmux
+          - ssh
+          - editors
+          - git
+          - shell
+          - fonts
+          - ranger
+        os:
+          - ubuntu-latest
+          - macOS-latest
+        exclude:
+          - config: ubuntu
+            os: macOS-latest
+          - config: macos
+            os: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v2
@@ -22,20 +45,5 @@ jobs:
       - name: Initialize dotfiles
         run: pip install pyyaml jinja2
       - name: Install dotfiles
-        run: ./install_profile ubuntu
+        run: ./install ${{ matrix.config }}
 
-  run-on-macos:
-    runs-on: macOS-latest
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Initialize dotfiles
-        run: pip install jinja2 pyyaml
-      - name: Install dotfiles
-        run: ./install_profile macos
