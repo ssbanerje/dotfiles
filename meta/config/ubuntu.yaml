@@ -1,27 +1,13 @@
+- aptupdate:
+
 - apt:
-  # Install packages required by subsequent commands
   - software-properties-common
   - sudo
   - curl
 
-- shell:
-  # Enable repos
-  - "sudo add-apt-repository -y universe"
-  - "sudo add-apt-repository -y multiverse"
-
 - apt:
-  # Shell
-  - zsh
-  - xsel
-  - xclip
-  - fzf
-  - git
-  - silversearcher-ag
-  - fasd
-  # Python
   - python3-dev
   - python3-pip
-  - python3-pygments
-  - python3-neovim
-  # Archive
-  - atool
+
+- link:
+    ~/.xinitrc: shell/xinitrc

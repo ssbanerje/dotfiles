@@ -7,13 +7,16 @@ import dotbot
 
 
 class Apt(dotbot.Plugin):
+    _updateDirective = 'aptupdate'
     _aptDirective = 'apt'
 
     def can_handle(self, directive):
-        return directive == self._aptDirective
+        return directive in [self._aptDirective, self._updateDirective]
 
     def handle(self, directive, data):
-        if self._run_update() and (directive == self._aptDirective):
+        if directive == self._updateDirective:
+            return self._run_update()
+        elif directive == self._aptDirective:
             return self._install_packages(data)
         else:
             raise ValueError('Cannot handle this directive %s' % directive)

@@ -1,10 +1,10 @@
 autoflake
-autoflake
 flake8
 isort
 neovim
 neovim-remote
 proselint
+pygments
 pynvim
 python-language-server
 vint

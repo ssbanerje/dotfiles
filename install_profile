@@ -20,4 +20,4 @@ for config in ${CONFIGS} ${@}; do
     CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
 done
 
-"${DOTBOT}" -vvv -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+"${DOTBOT}" -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
