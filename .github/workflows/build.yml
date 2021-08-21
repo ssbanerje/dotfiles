@@ -1,6 +1,5 @@
 ---
-
-name: CI
+name: Check Installer Scripts
 
 on:
   push:
@@ -76,5 +75,10 @@ jobs:
         run: pip install pyyaml jinja2 distro
       - name: Install dotfiles
         run: ./install_profile ${{ matrix.profile }}
-
+      - name: Trigger Container Build
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.CONTAINER_REGISTRY_PAT }}
+          repository: ssbanerje/dotfiles
+          event-type: build_container
 ...
