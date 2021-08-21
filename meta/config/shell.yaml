@@ -9,45 +9,45 @@
     ~/.zshenv: shell/zshenv
     ~/.zshrc: shell/zshrc
     ~/.config/zshrc.Darwin.sh:
-        if: '[ `uname` = Darwin ]'
-        path: shell/zshrc.Darwin.sh
+      if: '[ `uname` = Darwin ]'
+      path: shell/zshrc.Darwin.sh
     ~/.config/zshrc.Linux.sh:
-        if: '[ `uname` = Linux ]'
-        path: shell/zshrc.Linux.sh
+      if: '[ `uname` = Linux ]'
+      path: shell/zshrc.Linux.sh
     ~/.config/fzf.sh: shell/fzf.sh
 
     ~/.bashrc: shell/bashrc
     ~/.config/bash.prompt.sh: shell/bash.prompt.sh
     ~/.config/bashrc.Darwin.sh:
-        if: '[ `uname` = Darwin ]'
-        path: shell/bashrc.Darwin.sh
+      if: '[ `uname` = Darwin ]'
+      path: shell/bashrc.Darwin.sh
     ~/.config/bashrc.Linux.sh:
-        if: '[ `uname` = Linux ]'
-        path: shell/bashrc.Linux.sh
+      if: '[ `uname` = Linux ]'
+      path: shell/bashrc.Linux.sh
 
     ~/.config/env.sh: shell/env.sh
     ~/.config/env.Darwin.sh:
-        if: '[ `uname` = Darwin ]'
-        path: shell/env.Darwin.sh
+      if: '[ `uname` = Darwin ]'
+      path: shell/env.Darwin.sh
     ~/.config/env.Linux.sh:
-        if: '[ `uname` = Linux ]'
-        path: shell/env.Linux.sh
+      if: '[ `uname` = Linux ]'
+      path: shell/env.Linux.sh
 
     ~/.config/common_settings.sh: shell/common_settings.sh
     ~/.config/common_settings.Darwin.sh:
-        if: '[ `uname` = Darwin ]'
-        path: shell/common_settings.Darwin.sh
+      if: '[ `uname` = Darwin ]'
+      path: shell/common_settings.Darwin.sh
     ~/.config/common_settings.Linux.sh:
-        if: '[ `uname` = Linux ]'
-        path: shell/common_settings.Linux.sh
+      if: '[ `uname` = Linux ]'
+      path: shell/common_settings.Linux.sh
 
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.config/aliases.Darwin.sh:
-        if: '[ `uname` = Darwin ]'
-        path: shell/aliases.Darwin.sh
+      if: '[ `uname` = Darwin ]'
+      path: shell/aliases.Darwin.sh
     ~/.config/aliases.Linux.sh:
-        if: '[ `uname` = Linux ]'
-        path: shell/aliases.Linux.sh
+      if: '[ `uname` = Linux ]'
+      path: shell/aliases.Linux.sh
 
     ~/.hushlogin: shell/hushlogin
     ~/.ackrc: shell/ackrc
@@ -59,6 +59,5 @@
     ~/.wgetrc: shell/wgetrc
 
     ~/.xinitrc:
-        if: '[ `uname` = Linux ]'
-        path: shell/xinitrc
-
+      if: '[ `uname` = Linux ]'
+      path: shell/xinitrc

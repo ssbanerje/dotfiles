@@ -31,9 +31,8 @@
     ~/.hammerspoon: macos/hammerspoon
 
 - shell:
-  # Setup iterm2
-  - "/bin/cp -f macos/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
-  - "curl -L https://iterm2.com/shell_integration/zsh -o ~/.config/iterm2_shell_integration.zsh"
-  - "curl -L https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash"
-  - "./macos/macos.sh"
-
+    # Setup iterm2
+    - "/bin/cp -f macos/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
+    - "curl -L https://iterm2.com/shell_integration/zsh -o ~/.config/iterm2_shell_integration.zsh"
+    - "curl -L https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash"
+    - "./macos/macos.sh"

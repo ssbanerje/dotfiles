@@ -2,18 +2,17 @@
   - ~/.tmux/plugins
 
 - ifubuntu:
-  - apt:
-    - tmux
+    - apt:
+        - tmux
 
 - ifmacos:
-  - brew:
-    - tmux
-    - reattach-to-user-namespace
+    - brew:
+        - tmux
+        - reattach-to-user-namespace
 
 - link:
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/tpm
     ~/.tmux-macos.conf:
-        if: '[ `uname` = Darwin ]'
-        path: tmux/tmux-macos.conf
-
+      if: '[ `uname` = Darwin ]'
+      path: tmux/tmux-macos.conf

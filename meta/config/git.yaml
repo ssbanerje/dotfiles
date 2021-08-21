@@ -1,28 +1,32 @@
 - ifubuntu:
-  - apt:
-    - git
+    - apt:
+        - git
 
 - ifmacos:
-  - brew:
-    - git
+    - brew:
+        - git
 
 - template:
     - ~/.gitconfig:
         source_file: git/gitconfig
         params:
-            NAME: Subho Banerjee
-            EMAIL: ssbanerje@gmail.com
-            GITHUB: ssbanerje
-            SMTP_SERVER: smtp.gmail.com
-            SMTP_PORT: 587
-            SMTP_ENCRYPTION: tls
-            __UNAME__:
-                CREDENTIAL_HELPER:
-                    Darwin: osxkeychain
-                    Linux: cache --timeout 36000
+          NAME: Subho Banerjee
+          EMAIL: ssbanerje@gmail.com
+          GITHUB: ssbanerje
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_ENCRYPTION: tls
+          __UNAME__:
+            CREDENTIAL_HELPER:
+              Darwin: osxkeychain
+              Linux: cache --timeout 36000
 
 - link:
     ~/.gitattributes: git/gitattributes
 
 - shell:
-  - "rm -f ~/.global_gitignore; for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do cat git/gitignore/Global/$f.gitignore >> ~/.global_gitignore; done"
+    - rm -f ~/.global_gitignore;
+    - >
+      for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do
+        cat git/gitignore/Global/$f.gitignore >> ~/.global_gitignore
+      done

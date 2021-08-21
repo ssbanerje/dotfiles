@@ -1,5 +1,3 @@
----
-
 - defaults:
     link:
       force: true

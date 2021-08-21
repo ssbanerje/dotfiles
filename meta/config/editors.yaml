@@ -9,6 +9,7 @@
   - apt:
     - neovim
     - vim-nox
+    - global
     - exuberant-ctags
     - libclang-dev
     - clangd
@@ -16,7 +17,6 @@
         shell_after:
           - "npm config set prefix ${HOME}/.npm"
     - yarn
-    - global
 
 - ifmacos:
   - brew:

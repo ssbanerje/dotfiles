@@ -1,10 +1,10 @@
 - ifubuntu:
-  - apt:
-    - ranger
+    - apt:
+        - ranger
 
 - ifmacos:
-  - brew:
-    - ranger
+    - brew:
+        - ranger
 
 - link:
     ~/.config/ranger: ranger
