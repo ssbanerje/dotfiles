@@ -19,7 +19,7 @@ git submodule init --update --recursive
   - `meta/config/git.yaml`
 3. Install dependencies
   - Python3
-  - Packages -- `pip3 install pyyaml jinja2`
+  - Packages `pyyaml`, `jinja2`, `distro`
 4. Install dotfiles based on profiles in `meta/profiles/` folder
 ```bash
 ./install_profile ubuntu # On ubuntu machines
