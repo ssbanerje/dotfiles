@@ -24,10 +24,14 @@ class IfPlatform(dotbot.Plugin):
         elif sys == 'Linux':
             if directive == self._directive_if_linux:
                 return self._run_internal(data)
-            import distro
-            dis = distro.linux_distribution()[0]
-            if dis == "Ubuntu" and directive == self._directive_if_ubuntu:
-                self._run_internal(data)
+            try:
+                import distro
+                dis = distro.linux_distribution()[0]
+                if dis == "Ubuntu" and directive == self._directive_if_ubuntu:
+                    return self._run_internal(data)
+            except ImportError:
+                self._log.warning(
+                    "Could not check distribution: pip install distro")
         return True
 
     def _run_internal(self, data):
