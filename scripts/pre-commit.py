@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+import functools
 import os
 import sys
+
 import yaml
-import functools
 
 
 def check_githubactions_yaml_configs(args=None):
@@ -12,7 +13,7 @@ def check_githubactions_yaml_configs(args=None):
             yaml_configs = yaml.safe_load(github)
         except yaml.YAMLError as exc:
             print(exc)
-    yaml_configs = yaml_configs['jobs']['install-config']['strategy']['matrix']['config']
+    yaml_configs = yaml_configs['jobs']['test-config']['strategy']['matrix']['config']
     configs.sort()
     yaml_configs.sort()
     print(configs == yaml_configs)
