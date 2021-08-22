@@ -49,6 +49,11 @@
       - bash-language-server
       - dockerfile-language-server-nodejs
 
+- shell:
+  - 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
+  - '. ~/.cargo/env && rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy'
+  - '. ~/.cargo/env && rustup component add rls rust-analysis rust-src'
+
 # -------------- Link configuration
 - link:
     ~/.ideavimrc: editors/ideavimrc

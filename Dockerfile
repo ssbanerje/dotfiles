@@ -11,12 +11,12 @@ ARG uid=1000
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y sudo --no-install-recommends python3 python3-pip python3-yaml python3-distro python3-jinja2 && \
+    apt-get install -y --no-install-recommends sudo python3 python3-yaml python3-distro python3-jinja2 && \
     adduser --disabled-password --gecos "" --uid ${uid} ${user} && \
     groupadd docker && \
     usermod -aG docker ${user} && \
     echo "%${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    apt-get clean && rm -rf rm -rf /var/lib/apt-get/lists/*
+    apt-get clean && rm -rf rm -rf /var/lib/apt/lists/*
 
 # Setup dotfiles
 USER ${user}
@@ -25,7 +25,7 @@ COPY . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
     ./install_profile ubuntu && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
-    sudo apt-get clean && sudo rm -rf /var/lib/apt-get/lists/*
+    sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 
 # Take command from user
 CMD []
