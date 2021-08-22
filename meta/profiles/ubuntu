@@ -1,11 +1,11 @@
 base
 ubuntu
 
+shell
 bin
+git
 tmux
 ssh
 editors
-git
-shell
 fonts
 ranger

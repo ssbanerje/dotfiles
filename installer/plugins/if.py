@@ -51,6 +51,7 @@ class IfPlatform(dotbot.Plugin):
             did = 'macos'
 
         if directive == 'if'+did:
+            self._log.debug('Matched paltform %s' % did)
             return self._run_internal(data)
         else:
             return True

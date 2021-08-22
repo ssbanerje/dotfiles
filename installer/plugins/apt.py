@@ -33,7 +33,8 @@ class Apt(dotbot.Plugin):
 
     def _install(self, p):
         self._log.info('Installing %s' % p)
-        res = self._run_command('apt install --yes ' + p, self._sup_stdout, self._sup_stderr)
+        res = self._run_command('apt install --yes ' + p,
+                                self._sup_stdout, self._sup_stderr)
         if res != 0:
             self._log.warning('Could not install %s' % p)
             return False
@@ -65,19 +66,23 @@ class Apt(dotbot.Plugin):
         self._log.info('Running pre-installation commands')
         res = True
         for c in pre_commands:
-            res = res and (self._run_command(c, self._sup_stdout, self._sup_stderr) == 0)
+            self._log.debug('Running pre-installation command: ' + c)
+            res = res and (self._run_command(
+                c, self._sup_stdout, self._sup_stderr) == 0)
             if not res:
                 self._log.error('Could not run command: ' + c)
                 return False
 
+        self._log.debug('Installing packages: ' + pkgs)
         res = res and self._install(pkgs)
         if not res:
             self._log.error('Could not install packages: ' + pkgs)
             return False
 
-        self._log.info('Running post-installation commands')
         for c in post_commands:
-            res = res and (self._run_command(c, self._sup_stdout, self._sup_stderr) == 0)
+            self._log.debug('Running post-installation command: ' + c)
+            res = res and (self._run_command(
+                c, self._sup_stdout, self._sup_stderr) == 0)
             if not res:
                 self._log.error('Could not run command: ' + c)
                 return False
@@ -89,5 +94,5 @@ class Apt(dotbot.Plugin):
         stdout = subprocess.DEVNULL if sup_stdout else None
         stderr = subprocess.DEVNULL if sup_stderr else None
         cwd = self._context.base_directory()
-        self._log.debug('Running command: '+ cmd)
+        self._log.debug('Running command: ' + cmd)
         return subprocess.call(cmd_prefix + cmd, stdout=stdout, stderr=stderr, shell=True, cwd=cwd)

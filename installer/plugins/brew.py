@@ -11,6 +11,11 @@ class Brew(dotbot.Plugin):
     _tapDirective = 'tap'
     _brewFileDirective = 'brewfile'
 
+    def __init__(self, context):
+        super(Brew, self).__init__(context)
+        self._sup_stdout = False if context.options().verbose > 0 else True
+        self._sup_stderr = False
+
     def can_handle(self, directive):
         return directive in [
             self._brewDirective, self._caskDirective, self._tapDirective, self._brewFileDirective,
@@ -48,7 +53,7 @@ class Brew(dotbot.Plugin):
         cmd = """hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)";
               brew update"""
         self._log.info('Bootstrapping Homebrew')
-        res = self._run_command(cmd)
+        res = self._run_command(cmd, self._sup_stdout, self._sup_stderr)
         if res != 0:
             return False
         else:
@@ -75,7 +80,7 @@ class Brew(dotbot.Plugin):
         if len(packages) == 0:
             return True
         self._log.info('Homebrew install: ' ' '.join(packages))
-        if self._run_command(cmd_pre + ' '.join(packages), False, False) != 0:
+        if self._run_command(cmd_pre + ' '.join(packages), self._sup_stdout, self._sup_stderr) != 0:
             self._log.error('Failed to install %s' % p)
             return False
         return True
@@ -83,7 +88,8 @@ class Brew(dotbot.Plugin):
     def _install_bundle(self, data):
         for f in data:
             self._log.info('Installing from file %s' % f)
-            res = self._run_command('brew bundle --file=%s' % f)
+            res = self._run_command('brew bundle --file=%s' % f,
+                                    self._sup_stdout, self._sup_stderr)
             if res != 0:
                 self._log.warning('Failed to install file %f' % f)
                 return False
@@ -92,7 +98,8 @@ class Brew(dotbot.Plugin):
     def _install_tap(self, data):
         for t in data:
             self._log.info('Tapping %s' % t)
-            res = self._run_command('brew tap %s' % t)
+            res = self._run_command('brew tap %s' % t,
+                                    self._sup_stdout, self._sup_stderr)
             if res != 0:
                 self._log.warning('Failed to tap %s' % t)
                 return False

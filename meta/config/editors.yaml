@@ -17,6 +17,7 @@
             shell_after:
               - "npm config set prefix ${HOME}/.npm"
         - yarn
+        - git
 
 - ifmacos:
     - brew:
@@ -25,6 +26,7 @@
         - node
         - yarn
         - global
+        - git
 
 - pip:
     file: meta/config/requirements.txt

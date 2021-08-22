@@ -6,3 +6,9 @@ Host *
    ControlPath /tmp/%r@%h:%p
    ControlPersist yes
 
+Host gihub.com
+  User git
+  Hostname github.com
+  PreferredAuthentications publickey
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/github_ed25519

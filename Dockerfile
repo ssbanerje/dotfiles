@@ -23,8 +23,9 @@ USER ${user}
 ENV DEBIAN_FRONTEND=noninteractive
 COPY . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
-    ./install_profile ubuntu &&\
-    sudo apt-get clean && sudo rm -rf rm -rf /var/lib/apt-get/lists/*
+    ./install_profile ubuntu && \
+    git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    sudo apt-get clean && sudo rm -rf /var/lib/apt-get/lists/*
 
 # Take command from user
 CMD []

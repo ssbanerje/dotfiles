@@ -76,7 +76,6 @@
 
     ~/.hushlogin: shell/hushlogin
     ~/.ackrc: shell/ackrc
-    ~/.npmrc: shell/npmrc
     ~/.curlrc: shell/curlrc
     ~/.gdbinit: shell/gdbinit
     ~/.wgetrc: shell/wgetrc
