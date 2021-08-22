@@ -43,10 +43,9 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 # completing process IDs with menu selection
 zstyle ':completion:*:*:kill:*' menu yes select
 
-# Source common settings
-source "$HOME/.config/common_settings.sh"
-source "$HOME/.config/fzf.sh"
-
 # Source platform specific setting
 source "$HOME/.config/zshrc.$(uname).sh"
 
+# Source common settings
+source "$HOME/.config/fzf.sh"
+source "$HOME/.config/common_settings.sh"

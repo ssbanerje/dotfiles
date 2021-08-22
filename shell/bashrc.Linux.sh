@@ -7,3 +7,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Grc colors on all commands
+[[ -s "/etc/grc.sh" ]] && source /etc/grc.sh

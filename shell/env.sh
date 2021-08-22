@@ -21,11 +21,8 @@ then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-# Setup aliases
-source "$HOME/.config/aliases.sh"
+# Setup NPM binaries
+export PATH="$(yarn global bin):$PATH"
 
 # Platform specific
 source "$HOME/.config/env.$(uname).sh"
-
-# Setup NPM binaries
-export PATH="$(yarn global bin):$PATH"
