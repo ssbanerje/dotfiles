@@ -8,16 +8,35 @@ PROFILESDIR="${BASEDIR}/meta/profiles"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
+# Parse arguement
+while (( "$#" )); do
+  case "$1" in
+    -*|--*)
+      FLAGS=$(echo -e "${FLAGS} $1" | sed -e 's/^[[:space:]]*//')
+      ;;
+    *)
+      ARGS=$(echo -e "${ARGS} $1" | sed -e 's/^[[:space:]]*//')
+      ;;
+  esac
+  shift
+done
+set -- $ARGS
+
+# Read configs from profile
 while IFS= read -r config; do
     CONFIGS+=" ${config}"
 done < "${META_DIR}/${PROFILESDIR}/$1"
-
 shift
 
-CONFIGCONTENT=""
+# Load configurations
 for config in ${CONFIGS} ${@}; do
     echo -e "Adding configuration $config"
     CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
 done
 
-"${DOTBOT}" -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+# Run dotbot
+if [[ ! -z "${FLAGS}" ]]; then
+  "${DOTBOT}" "${FLAGS}" -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+else
+  "${DOTBOT}" -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+fi

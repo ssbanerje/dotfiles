@@ -14,10 +14,11 @@ bind '"\e[B"':history-search-forward
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
 
-# Source common settings"
-source "$HOME/.config/env.sh"
-source "$HOME/.config/common_settings.sh"
-source "$HOME/.config/bash.prompt.sh"
-
 # Source platform specific"
 source "$HOME/.config/bashrc.$(uname).sh"
+
+# Source common settings"
+source "$HOME/.config/common_settings.sh"
+
+# Setup prompt
+source "$HOME/.config/bash.prompt.sh"

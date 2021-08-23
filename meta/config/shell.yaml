@@ -8,9 +8,9 @@
         - xsel
         - xclip
         - fzf
-        - git
         - silversearcher-ag
         - fasd
+        - grc
 
 - ifmacos:
     - brew:
@@ -21,6 +21,7 @@
         - fzf
         - coreutils
         - the_silver_searcher
+        - grc
 
 # ------------------ Install configuration
 - create:

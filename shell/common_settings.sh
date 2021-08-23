@@ -9,9 +9,6 @@ fi
 # Color scheme for terminal
 export TERM="xterm-256color"
 
-# Stuff for rvm
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-
 # Colourful man pages
 man() {
     env \
@@ -29,23 +26,17 @@ man() {
 
 # `tre` is a shorthand for `tree` with hidden files and color enabled
 function tre() {
-	tree -aC -I '.git|.idea|target|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+	tree -aC -I '.git|.idea|target' --dirsfirst "$@" | less -FRNX;
 }
-
-# Normalize `open` across Linux, macOS, and Windows.
-if [ ! $(uname -s) = 'Darwin' ]; then
-	if grep -q Microsoft /proc/version; then
-		# Ubuntu on Windows using the Linux subsystem
-		alias open='explorer.exe';
-	else
-		alias open='xdg-open';
-	fi
-fi
 
 # Source color schemes
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 source ${HOME}/.config/base16-shell/scripts/base16-material.sh
+
+# Source env
+source "$HOME/.config/env.sh"
+source "$HOME/.config/aliases.sh"
 
 # Source platform specific
 source "$HOME/.config/common_settings.$(uname).sh"

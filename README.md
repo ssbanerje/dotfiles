@@ -7,7 +7,18 @@
 
 [![Build](https://github.com/ssbanerje/dotfiles/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/ssbanerje/dotfiles/actions/workflows/build.yml)
 
-## Installation
+## Docker
+Use the packaged docker image to not install any dependecies on the host.
+
+```bash
+git clone https://github.com/ssbanerje/dotfiles.git dotfiles
+<path to dotfiles>/scripts/shim.sh bash # or zsh
+```
+
+The shim will pass the `ssh-agent` into the container and map the current working directory as `/cwd`
+in the container.
+
+## Local Installation
 
 1. Get dotfiles
 ```bash
@@ -26,12 +37,10 @@ git submodule init --update --recursive
 ./install_profile macos # On macos machines
 ```
 
-## Install pre-commit Hooks
-1. Install pre-commit
+## Setup Dev Environment
+
+Setup the git hooks.
 ```bash
 pip install pre-commit
-```
-2. Install hooks
-```bash
 pre-commit install
 ```

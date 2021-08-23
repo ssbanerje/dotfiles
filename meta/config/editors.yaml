@@ -18,6 +18,7 @@
               - "npm config set prefix ${HOME}/.npm"
         - yarn
         - git
+        - build-essential
 
 - ifmacos:
     - brew:
@@ -53,6 +54,7 @@
   - 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
   - '. ~/.cargo/env && rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy'
   - '. ~/.cargo/env && rustup component add rls rust-analysis rust-src'
+  - 'mkdir -p ~/.local/share/nvim/shada/ && touch ~/.local/share/nvim/shada/main.shada'
 
 # -------------- Link configuration
 - link:

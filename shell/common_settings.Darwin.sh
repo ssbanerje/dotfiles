@@ -15,12 +15,6 @@ export LC_ALL="en_US.UTF-8"
 export LC_MEASUREMENT="en_US.UTF-8"
 export LC_IDENTIFICATION="en_US.TF-8"
 
-# Setup grc
-if $(grc &>/dev/null)
-then
-    source `brew --prefix`/etc/grc.bashrc
-fi
-
 # Setup fasd
 eval "$(fasd --init auto)"
 
@@ -28,4 +22,3 @@ eval "$(fasd --init auto)"
 function cdf() {
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
 }
-
