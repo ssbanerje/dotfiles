@@ -21,7 +21,7 @@ RUN apt-get update && \
 # Setup dotfiles
 USER ${user}
 ENV DEBIAN_FRONTEND=noninteractive
-COPY . /home/${user}/.dotfiles
+COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
     ./install_profile ubuntu && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
