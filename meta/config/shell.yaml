@@ -12,6 +12,15 @@
         - fasd
         - grc
 
+- ifarch:
+    - pacman:
+        - zsh
+        - xsel
+        - fzf
+        - the_silver_searcher
+        - fasd
+        - grc
+
 - ifmacos:
     - brew:
         - ack

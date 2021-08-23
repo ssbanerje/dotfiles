@@ -2,6 +2,10 @@
     - apt:
         - git
 
+- ifarch:
+    - pacman:
+        - git
+
 - ifmacos:
     - brew:
         - git

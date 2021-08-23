@@ -8,9 +8,9 @@ import yaml
 
 def check_githubactions_yaml_configs(args=None):
     configs = [
-        f.rsplit('.')[0] for f in os.listdir('meta/config/')
-        if f.endswith('.yaml')
+        f.rsplit('.')[0] for f in os.listdir('meta/config/') if f.endswith('.yaml')
     ]
+    configs.remove('archlinux')
     with open('.github/workflows/build.yml') as github:
         try:
             yaml_configs = yaml.safe_load(github)
@@ -26,6 +26,7 @@ def check_githubactions_yaml_configs(args=None):
 
 def check_githubactions_yaml_profiles(args=None):
     profiles = [f.rsplit('.')[0] for f in os.listdir('meta/profiles/')]
+    profiles.remove('archlinux')
     with open('.github/workflows/build.yml') as github:
         try:
             yaml_configs = yaml.safe_load(github)
@@ -41,7 +42,8 @@ def check_githubactions_yaml_profiles(args=None):
 
 def main(args=None):
     funcs = [
-        check_githubactions_yaml_configs, check_githubactions_yaml_profiles
+        check_githubactions_yaml_configs,
+        check_githubactions_yaml_profiles
     ]
     return functools.reduce(lambda a, f: a and f(args), funcs, True)
 

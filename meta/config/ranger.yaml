@@ -2,6 +2,10 @@
     - apt:
         - ranger
 
+- ifarch:
+    - pacman:
+        - ranger
+
 - ifmacos:
     - brew:
         - ranger

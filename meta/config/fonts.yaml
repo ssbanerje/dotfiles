@@ -21,3 +21,11 @@
         ~/.fonts/Monaco-Powerline.otf: fonts/Monaco-Powerline.otf
     - shell:
         - ["bash ./fonts/download_install_font.sh", "Downloading Ubuntu fonts"]
+
+- ifarch:
+    - pacman:
+        - atool
+    - create:
+        - ~/.fonts
+    - shell:
+        - ["bash ./fonts/download_install_font.sh", "Downloading Ubuntu fonts"]

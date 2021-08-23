@@ -17,7 +17,7 @@ docker run -it --rm \
   -e SSH_AUTH_SOCK=/ssh-auth-socket \
   -v "${PWD}:/cwd/:rw" \
   -w "/cwd" \
-  ghcr.io/ssbanerje/dotfiles:latest "$@"
+  ghcr.io/ssbanerje/dotfiles:archlinux "$@"
 
 # Cleanup
 kill $SSH_AGENT_PID
