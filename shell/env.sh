@@ -4,6 +4,9 @@ export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
+# Setup GPG TTY
+export GPG_TTY="$(tty)"
+
 # Export XDG_DATA_DIR
 # TODO: Is this required on OSX?
 export XDG_DATA_DIR=$HOME/.config
@@ -21,8 +24,8 @@ then
   export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-# Setup NPM binaries
-export PATH="$(yarn global bin):$PATH"
-
 # Platform specific
 source "$HOME/.config/env.$(uname).sh"
+
+# Setup NPM binaries (Needs to come after the homebrew is loaded)
+export PATH="$(yarn global bin):$PATH"
