@@ -13,7 +13,7 @@ docker run -it --rm \
   --network host \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "/run/user/$(id -u)/:/run/user/$(id -u)/:ro" \
-  v "${SSH_AUTH_SOCK}":/ssh-auth-socket \
+  -v "${SSH_AUTH_SOCK}":/ssh-auth-socket \
   -e SSH_AUTH_SOCK=/ssh-auth-socket \
   -v "${PWD}:/cwd/:rw" \
   -w "/cwd" \
