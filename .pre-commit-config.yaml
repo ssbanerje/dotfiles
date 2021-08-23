@@ -14,12 +14,15 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
-      - id: trailing-whitespace
       - id: check-json
       - id: check-yaml
+      - id: check-toml
       - id: requirements-txt-fixer
-      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
       - id: double-quote-string-fixer
+      - id: trailing-whitespace
       - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: detect-private-key
 
 ...
