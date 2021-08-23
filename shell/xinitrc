@@ -1,2 +1,13 @@
+#!/bin/sh
+
 # Set rate for repeated characters
 xset r rate 300 50
+
+# Run the nvidia-xorg.conf
+# TODO Better way to do this?
+if [[ "$(hostname)" == "tagore" ]]; then
+  nvidia-settings --config=$HOME/nvidia-xorg.conf
+fi
+
+# invoke global X session script
+. /etc/X11/Xsession
