@@ -22,9 +22,8 @@ in the container.
 
 1. Get dotfiles
 ```bash
-git clone https://github.com/ssbanerje/dotfiles.git dotfiles
+git clone --recurse-submodules https://github.com/ssbanerje/dotfiles.git dotfiles
 cd dotfiles
-git submodule init --update --recursive
 ```
 2. Update the configuration files in the `meta/config/` folder
   - `meta/config/git.yaml`

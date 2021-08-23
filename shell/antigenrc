@@ -39,10 +39,9 @@ antigen bundle fancy-ctrl-z
 
 # Mac specific plugins
 if [ "$(uname)"="Darwin" ]; then
+  antigen bundle osx
   antigen bundle brew
   antigen bundle iterm2
-  antigen bundle osx
-  antigen bundle textmate
 fi
 
 # Linux specific plugins
