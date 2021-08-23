@@ -5,6 +5,10 @@
     - apt:
         - tmux
 
+- ifarch:
+    - pacman:
+        - tmux
+
 - ifmacos:
     - brew:
         - tmux

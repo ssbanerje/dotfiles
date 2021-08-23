@@ -8,6 +8,7 @@ import yaml
 
 def check_githubactions_yaml_configs(args=None):
     configs = [f.rsplit('.')[0] for f in os.listdir('meta/config/') if f.endswith('.yaml')]
+    configs.remove('archlinux')
     with open('.github/workflows/build.yml') as github:
         try:
             yaml_configs = yaml.safe_load(github)

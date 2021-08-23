@@ -36,6 +36,7 @@ antigen bundle zsh-syntax-highlighting
 antigen bundle zsh-autosuggestions
 antigen bundle fzf
 antigen bundle fancy-ctrl-z
+antigen bundle fasd
 
 # Mac specific plugins
 if [ "$(uname)"="Darwin" ]; then

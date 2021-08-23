@@ -7,33 +7,33 @@ import subprocess
 import dotbot
 
 
-class Apt(dotbot.Plugin):
-    _updateDirective = 'aptupdate'
-    _aptDirective = 'apt'
+class Pacman(dotbot.Plugin):
+    _updateDirective = 'pacmanupdate'
+    _pacmanDirective = 'pacman'
 
     def __init__(self, context):
-        super(Apt, self).__init__(context)
+        super(Pacman, self).__init__(context)
         self._sup_stdout = False if context.options().verbose > 0 else True
         self._sup_stderr = False
 
     def can_handle(self, directive):
-        return directive in [self._aptDirective, self._updateDirective]
+        return directive in [self._pacmanDirective, self._updateDirective]
 
     def handle(self, directive, data):
         if directive == self._updateDirective:
             return self._run_update()
-        elif directive == self._aptDirective:
+        elif directive == self._pacmanDirective:
             return self._install_packages(data)
         else:
             raise ValueError('Cannot handle this directive %s' % directive)
 
     def _run_update(self):
-        self._log.info('Updating list of packages')
-        return self._run_command('apt update', True, False) == 0
+        self._log.info('Updating Pacman')
+        return self._run_command('pacman -Syu --noconfirm', True, False) == 0
 
     def _install(self, p):
         self._log.info('Installing %s' % p)
-        res = self._run_command('apt install --yes ' + p,
+        res = self._run_command('pacman -S --noconfirm ' + p,
                                 self._sup_stdout, self._sup_stderr)
         if res != 0:
             self._log.warning('Could not install %s' % p)

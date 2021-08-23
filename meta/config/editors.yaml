@@ -7,6 +7,7 @@
         - "sudo apt update"
 
     - apt:
+        - git
         - neovim
         - vim-nox
         - global
@@ -17,17 +18,28 @@
             shell_after:
               - "npm config set prefix ${HOME}/.npm"
         - yarn
-        - git
         - build-essential
+
+- ifarch:
+    - pacman:
+        - neovim
+        - vim
+        - global
+        - ctags
+        - clang
+        - nodejs
+        - yarn
+        - base-devel
 
 - ifmacos:
     - brew:
+        - git
         - neovim
+        - global
         - ctags
         - node
+        - npm
         - yarn
-        - global
-        - git
 
 - pip:
     file: meta/config/requirements.txt

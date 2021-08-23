@@ -1,0 +1,10 @@
+- pacmanupdate:
+
+- pacman:
+  - sudo
+  - curl
+  - python
+  - python-pip
+
+- link:
+    ~/.xinitrc: shell/xinitrc
