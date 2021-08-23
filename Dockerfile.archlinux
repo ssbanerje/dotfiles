@@ -1,0 +1,29 @@
+FROM archlinux:latest
+
+MAINTAINER Subho Sankar Banerjee ssbanerje@gmail.com
+LABEL org.opencontainers.image.title Dotfiles
+LABEL org.opencontainers.image.source https://github.com/ssbanerje/dotfiles
+
+ARG user=dotuser
+ARG uid=1000
+
+# Setup prereq packages
+USER root
+RUN pacman-key --init && pacman -Sy --noconfirm && \
+    pacman -S --noconfirm sudo python python-pyaml python-distro python-jinja && \
+    useradd -r -md /home/${user} -s /bin/bash --uid ${uid} ${user} && \
+    groupadd docker && \
+    usermod -aG docker ${user} && \
+    echo "%${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    pacman -Scc --noconfirm
+
+# Setup dotfiles
+USER ${user}
+COPY --chown=${user}:${user} . /home/${user}/.dotfiles
+RUN cd /home/${user}/.dotfiles && \
+    ./install_profile archlinux && \
+    git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    sudo pacman -Scc --noconfirm
+
+# Take command from user
+CMD []

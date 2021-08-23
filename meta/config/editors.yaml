@@ -16,7 +16,7 @@
         - clangd
         - nodejs:
             shell_after:
-              - "npm config set prefix ${HOME}/.npm"
+              - "sudo npm -g install npm@latest"
         - yarn
         - build-essential
 
