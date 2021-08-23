@@ -1,12 +1,14 @@
 Host *
-   TCPKeepAlive yes
-   ServerAliveInterval 15
-   ServerAliveCountMax 6
-   ControlMaster auto
-   ControlPath /tmp/%r@%h:%p
-   ControlPersist yes
+  TCPKeepAlive yes
+  ServerAliveInterval 15
+  ServerAliveCountMax 6
+  ControlMaster auto
+  ControlPath /tmp/%r@%h:%p
+  ControlPersist yes
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/id_rsa
 
-Host gihub.com
+Host github.com
   User git
   Hostname github.com
   PreferredAuthentications publickey
