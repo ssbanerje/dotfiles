@@ -5,3 +5,4 @@ fi
 
 # Enable grc on all commands
 [[ -s "$(brew --prefix)/etc/grc.zsh" ]] && source "$(brew --prefix)/etc/grc.zsh"
+[ -z ls ] && unset -f ls # Do not want this from grc

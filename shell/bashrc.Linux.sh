@@ -7,5 +7,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Grc colors on all commands
+# Setup GRC for commands
 [[ -s "/etc/grc.sh" ]] && source /etc/grc.sh
+[ -z ls ] && unset -f ls # Do not want this from grc

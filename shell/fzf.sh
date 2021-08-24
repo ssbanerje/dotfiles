@@ -1,5 +1,6 @@
+#!/usr/bin/env bash
 
-########################################################################## Docker {{{1
+########################################################################## Docker {{{
 
 # Select a docker container to start and attach to
 function da() {
@@ -25,9 +26,9 @@ function drm() {
   [ -n "$cid" ] && docker rm "$cid"
 }
 
-#}}}1
+#}}}
 
-########################################################################## Tmux {{{1
+########################################################################## Tmux {{{
 
 # tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)
 function tm() {
@@ -57,7 +58,6 @@ function ftpane() {
     tmux select-window -t $target_window
   fi
 }
-#}}}1
+#}}}
 
 # vim: set fdm=marker:
-

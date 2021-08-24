@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Check if this is an interactive shell
 if [ -z "$PS1" ]; then
    return
@@ -11,14 +13,36 @@ shopt -s histappend
 bind '"\e[A"':history-search-backward
 bind '"\e[B"':history-search-forward
 
+# Extract common archives using one command
+function extract() {
+   if [ -f $1 ] ; then
+       case $1 in
+           *.tar.bz2)   tar xvjf $1    ;;
+           *.tar.gz)    tar xvzf $1    ;;
+           *.bz2)       bunzip2 $1     ;;
+           *.rar)       unrar x $1       ;;
+           *.gz)        gunzip $1      ;;
+           *.tar)       tar xvf $1     ;;
+           *.tbz2)      tar xvjf $1    ;;
+           *.tgz)       tar xvzf $1    ;;
+           *.zip)       unzip $1       ;;
+           *.Z)         uncompress $1  ;;
+           *.7z)        7z x $1        ;;
+           *)           echo "don't know how to extract '$1'..." ;;
+       esac
+   else
+       echo "'$1' is not a valid file!"
+   fi
+ }
+
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
-
-# Source platform specific"
-source "$HOME/.config/bashrc.$(uname).sh"
 
 # Source common settings"
 source "$HOME/.config/common_settings.sh"
 
 # Setup prompt
 source "$HOME/.config/bash.prompt.sh"
+
+# Source platform specific"
+source "$HOME/.config/bashrc.$(uname -s).sh"

@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
@@ -45,7 +47,7 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
 # Source platform specific setting
-source "$HOME/.config/zshrc.$(uname).sh"
+source "$HOME/.config/zshrc.$(uname -s).sh"
 
 # Source common settings
 source "$HOME/.config/fzf.sh"

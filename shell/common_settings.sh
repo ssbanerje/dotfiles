@@ -22,41 +22,23 @@ function man() {
         man "$@"
 }
 
-# Extract common archives using one command
-function extract() {
-   if [ -f $1 ] ; then
-       case $1 in
-           *.tar.bz2)   tar xvjf $1    ;;
-           *.tar.gz)    tar xvzf $1    ;;
-           *.bz2)       bunzip2 $1     ;;
-           *.rar)       unrar x $1       ;;
-           *.gz)        gunzip $1      ;;
-           *.tar)       tar xvf $1     ;;
-           *.tbz2)      tar xvjf $1    ;;
-           *.tgz)       tar xvzf $1    ;;
-           *.zip)       unzip $1       ;;
-           *.Z)         uncompress $1  ;;
-           *.7z)        7z x $1        ;;
-           *)           echo "don't know how to extract '$1'..." ;;
-       esac
-   else
-       echo "'$1' is not a valid file!"
-   fi
- }
-
 # `tre` is a shorthand for `tree` with hidden files and color enabled
 function tre() {
 	tree -aC -I '.git|.idea|target' --dirsfirst "$@" | less -FRNX;
 }
+
+# Setup fasd
+eval "$(fasd --init auto)"
+
+# Source env
+source "$HOME/.config/env.sh"
+source "$HOME/.config/fzf.sh"
+source "$HOME/.config/aliases.sh"
 
 # Source color schemes
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 source ${HOME}/.config/base16-shell/scripts/base16-material.sh
 
-# Source env
-source "$HOME/.config/env.sh"
-source "$HOME/.config/aliases.sh"
-
 # Source platform specific
-source "$HOME/.config/common_settings.$(uname).sh"
+source "$HOME/.config/common_settings.$(uname -s).sh"

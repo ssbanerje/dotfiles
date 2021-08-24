@@ -1,5 +1,3 @@
-alias r='ranger'
-
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
@@ -28,10 +26,10 @@ alias dus='du -hs * | sort -n'
 
 alias j='jobs -l'
 
+alias r='ranger'
+
 alias pipup='pip freeze --local | cut -d = -f 1  | xargs pip install -U'
 alias pip3up='pip3 freeze --local | cut -d = -f 1  | xargs pip3 install -U'
-alias ipython='PYTHONSTARTUP="" ipython'
-alias ipython3='PYTHONSTARTUP="" ipython3'
 
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
@@ -46,4 +44,4 @@ if [ ! $(uname -s) = 'Darwin' ]; then
 fi
 
 # Load platform specific
-source "$HOME/.config/aliases.$(uname).sh"
+source "$HOME/.config/aliases.$(uname -s).sh"

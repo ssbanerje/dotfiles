@@ -20,15 +20,14 @@
     status
     command_execution_time
     background_jobs
-    anaconda
-    kubecontext
+    # anaconda
+    # kubecontext
     context
     ranger
     vim_shell
-    # kubecontext
     # load
-    # disk_usage
     # ram
+    # disk_usage
     # swap
     # ip
     # public_ip
@@ -233,7 +232,7 @@
   # Context
   typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=16
   typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=4
-  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=14
+  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=183 #14
   typeset -g POWERLEVEL9K_CONTEXT_ROOT_TEMPLATE='%B%n@%m'
   typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_TEMPLATE='%n@%m'
   typeset -g POWERLEVEL9K_CONTEXT_TEMPLATE='%n@%m'

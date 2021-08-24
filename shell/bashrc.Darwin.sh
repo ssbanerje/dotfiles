@@ -6,3 +6,4 @@
 
 # Grc color on all commands
 [[ -s "$(brew --prefix)/etc/grc.sh" ]] && source "$(brew --prefix)/etc/grc.sh"
+[ -z ls ] && unset -f ls # Do not want this from grc

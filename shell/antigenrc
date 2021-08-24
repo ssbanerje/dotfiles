@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 # Load oh-my-zsh library
 antigen use oh-my-zsh
 
@@ -7,36 +9,28 @@ antigen bundle colored-man-pages
 antigen bundle colorize
 antigen bundle command-not-found
 antigen bundle common-aliases
-antigen bundle compleat
 antigen bundle docker
 antigen bundle extract
-antigen bundle git
+antigen bundle fzf
 antigen bundle git-escape-magic
 antigen bundle gitfast
-antigen bundle gitignore
 antigen bundle history-substring-search
 antigen bundle mosh
-antigen bundle mvn
 antigen bundle npm
-antigen bundle perl
 antigen bundle pip
-antigen bundle profiles
 antigen bundle python
-antigen bundle rsync
 antigen bundle rust
 antigen bundle rustup
-antigen bundle sbt
-antigen bundle scala
+# antigen bundle sbt
+# antigen bundle scala
 antigen bundle sudo
 antigen bundle tmux
 antigen bundle vi-mode
 antigen bundle vscode
 antigen bundle web-search
-antigen bundle zsh-syntax-highlighting
-antigen bundle zsh-autosuggestions
-antigen bundle fzf
-antigen bundle fancy-ctrl-z
-antigen bundle fasd
+antigen bundle yarn
+
+antigen bundle fancy-ctrl-z # This gets overwritten
 
 # Mac specific plugins
 if [ "$(uname)"="Darwin" ]; then
@@ -47,10 +41,12 @@ fi
 
 # Linux specific plugins
 if [ "$(uname)"="Linux" ]; then
-  antigen bundle debian
-  antigen bundle git-extras
-  antigen bundle systemd
-  antigen bundle ubuntu
+  if command -v apt-get &> /dev/null; then # This is ubuntu
+    antigen bundle debian
+    antigen bundle ubuntu
+  elif command -v pacman &> /dev/null; then # This is archlinux
+    antigen bundle archlinux
+  fi
 fi
 
 # Load bundles from external repos
@@ -64,3 +60,5 @@ antigen theme romkatv/powerlevel10k
 
 # Tell Antigen that you're done
 antigen apply
+
+# vi: ft=zsh

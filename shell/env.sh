@@ -24,7 +24,7 @@ then
 fi
 
 # Platform specific
-source "$HOME/.config/env.$(uname).sh"
+source "$HOME/.config/env.$(uname -s).sh"
 
 # Setup NPM binaries (Needs to come after the homebrew is loaded)
 export PATH="$(yarn global bin):$PATH"

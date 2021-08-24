@@ -15,9 +15,6 @@ export LC_ALL="en_US.UTF-8"
 export LC_MEASUREMENT="en_US.UTF-8"
 export LC_IDENTIFICATION="en_US.TF-8"
 
-# Setup fasd
-eval "$(fasd --init auto)"
-
 # Change working directory to the top-most Finder window location
 function cdf() {
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
