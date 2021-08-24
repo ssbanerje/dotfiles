@@ -8,7 +8,6 @@ export SVN_EDITOR="nvim"
 export GPG_TTY="$(tty)"
 
 # Export XDG_DATA_DIR
-# TODO: Is this required on OSX?
 export XDG_DATA_DIR=$HOME/.config
 
 # My scripts

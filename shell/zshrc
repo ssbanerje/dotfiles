@@ -7,6 +7,7 @@ if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
 fi
 
 # Load antigen
+export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 source "$HOME/.config/antigen.zsh"
 antigen init "$HOME/.config/antigenrc"
 
@@ -49,3 +50,6 @@ source "$HOME/.config/zshrc.$(uname).sh"
 # Source common settings
 source "$HOME/.config/fzf.sh"
 source "$HOME/.config/common_settings.sh"
+
+# Prompt settings
+source "$HOME/.p10k.zsh"
