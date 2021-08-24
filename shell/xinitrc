@@ -3,10 +3,9 @@
 # Set rate for repeated characters
 xset r rate 300 50
 
-# Run the nvidia-xorg.conf
-# TODO Better way to do this?
-if [[ "$(hostname)" == "tagore" ]]; then
-  nvidia-settings --config=$HOME/nvidia-xorg.conf
+# Load any modified keys
+if [ -s "$(HOME)/.Xmodmap" ]; then
+  xmodmap "${HOME}/.Xmodmap"
 fi
 
 # invoke global X session script

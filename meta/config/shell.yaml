@@ -85,6 +85,10 @@
       if: '[ `uname` = Linux ]'
       path: shell/aliases.Linux.sh
 
+    ~/.xinitrc:
+      if: '[ `uname` = Darwin ]'
+      path: shell/xinitrc
+
     ~/.hushlogin: shell/hushlogin
 
     ~/.ackrc: shell/ackrc
