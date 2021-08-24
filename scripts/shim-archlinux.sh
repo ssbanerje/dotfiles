@@ -2,11 +2,15 @@
 
 set -e
 
+IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux"
+
 # Get the ssh-agent
 eval "$(ssh-agent)" > /dev/null
 ssh-add
 
 # Run docker
+docker pull "$IMAGE"
+
 docker run -it --rm \
   --privileged \
   -u "$(id -u):$(id -g)" \
@@ -17,7 +21,7 @@ docker run -it --rm \
   -e SSH_AUTH_SOCK=/ssh-auth-socket \
   -v "${PWD}:/cwd/:rw" \
   -w "/cwd" \
-  ghcr.io/ssbanerje/dotfiles:archlinux "$@"
+  "$IMAGE" "$@"
 
 # Cleanup
 kill $SSH_AGENT_PID

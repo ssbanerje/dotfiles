@@ -86,10 +86,14 @@
       path: shell/aliases.Linux.sh
 
     ~/.hushlogin: shell/hushlogin
+
     ~/.ackrc: shell/ackrc
+
     ~/.curlrc: shell/curlrc
+
     ~/.gdbinit: shell/gdbinit
     ~/.gdbinit.local: shell/gdbinit.local
+
     ~/.wgetrc: shell/wgetrc
 
     ~/.pythonrc.py: shell/pythonrc.py
