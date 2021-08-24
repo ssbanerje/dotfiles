@@ -95,10 +95,10 @@
 
     if (( $1 )); then
       local       meta='%f'
-      local      clean='%76F'
-      local   modified='%184F'
-      local  untracked='%45F'
-      local conflicted='%196F'
+      local      clean='%3F'
+      local   modified='%16F'
+      local  untracked='%6F'
+      local conflicted='%9F'
     else # old value
       local       meta='%244F'
       local      clean='%244F'
@@ -230,14 +230,13 @@
   typeset -g POWERLEVEL9K_LOAD_WARNING_FOREGROUND=3
   typeset -g POWERLEVEL9K_LOAD_CRITICAL_FOREGROUND=1
 
-  # Context color when running with privileges.
-  typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=178
-  typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=180
-  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=180
+  # Context
+  typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=16
+  typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=4
+  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=14
   typeset -g POWERLEVEL9K_CONTEXT_ROOT_TEMPLATE='%B%n@%m'
   typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_TEMPLATE='%n@%m'
   typeset -g POWERLEVEL9K_CONTEXT_TEMPLATE='%n@%m'
-  typeset -g POWERLEVEL9K_CONTEXT_{DEFAULT,SUDO}_{CONTENT,VISUAL_IDENTIFIER}_EXPANSION='%n@%m'
   typeset -g POWERLEVEL9K_CONTEXT_PREFIX='%fon '
 
   # Anaconda
