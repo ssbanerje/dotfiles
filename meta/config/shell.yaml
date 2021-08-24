@@ -50,6 +50,7 @@
       if: '[ `uname` = Linux ]'
       path: shell/zshrc.Linux.sh
     ~/.config/fzf.sh: shell/fzf.sh
+    ~/.p10k.zsh: shell/p10k.zsh
 
     ~/.bashrc: shell/bashrc
     ~/.config/bash.prompt.sh: shell/bash.prompt.sh
