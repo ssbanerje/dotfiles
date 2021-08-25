@@ -2,8 +2,17 @@
 eval "$(/usr/libexec/path_helper -s)"
 
 # Homebrew
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-export PATH="/usr/local/opt/python/libexec/bin:$PATH" #< TODO Remove when Python3 is default
+if [[ ! "$PATH" == *"/usr/local/bin"* ]]; then
+  export PATH="/usr/local/bin:$PATH"
+fi
+if [[ ! "$PATH" == *"/usr/local/sbin"* ]]; then
+  export PATH="/usr/local/sbin:$PATH"
+fi
+if [[ ! "$PATH" == *"/usr/local/opt/python/libexec/bin"* ]]; then
+  export PATH="/usr/local/opt/python/libexec/bin:$PATH" #< TODO Remove when Python3 is default
+fi
 
 # Use LLVM tools from homebrew vs Apple
-export PATH="/usr/local/opt/llvm/bin:$PATH"
+if [[ ! "$PATH" == *"/usr/local/opt/llvm/bin"* ]]; then
+  export PATH="/usr/local/opt/llvm/bin:$PATH"
+fi

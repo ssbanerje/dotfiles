@@ -11,7 +11,9 @@ export GPG_TTY="$(tty)"
 export XDG_DATA_DIR=$HOME/.config
 
 # My scripts
-export PATH="$PATH:$HOME/.bin"
+if [[ ! "$PATH" == *"$HOME/.bin"* ]]; then
+  export PATH="${PATH:+${PATH}:}$HOME/.bin"
+fi
 
 # Python startup settings
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
@@ -20,11 +22,17 @@ export PYTHONSTARTUP="$HOME/.pythonrc.py"
 if [ -d "$HOME/.cargo/" ]
 then
   source "$HOME/.cargo/env"
-  export PATH="$HOME/.cargo/bin:$PATH"
+  if [[ ! "$PATH" == *"$HOME/.cargo.bin"* ]]; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+  fi
 fi
 
 # Platform specific
 source "$HOME/.config/env.$(uname -s).sh"
 
 # Setup NPM binaries (Needs to come after the homebrew is loaded)
-export PATH="$(yarn global bin):$PATH"
+YARN_PATH="$(yarn global bin)"
+if [[ ! "$PATH" == *"$YARN_PATH"* ]]; then
+  export PATH="YARN_PATH:${PATH}"
+fi
+unset YARN_PATH
