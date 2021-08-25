@@ -4,6 +4,10 @@
 # Iterm2 Bash Integration
 [[ -r "$HOME/.config/iterm2_shell_integration.bash" ]] && source $HOME/.config/iterm2_shell_integration.bash
 
+# Setup fzf
+[[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.bash" 2> /dev/null
+source "$(brew --prefix)/opt/fzf/shell/key-bindings.bash"
+
 # Grc color on all commands
 [[ -s "$(brew --prefix)/etc/grc.sh" ]] && source "$(brew --prefix)/etc/grc.sh"
-[ -z ls ] && unset -f ls # Do not want this from grc
+type ls &> /dev/null && unset -f ls # Do not want this from grc

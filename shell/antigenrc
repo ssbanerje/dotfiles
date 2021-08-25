@@ -3,6 +3,23 @@
 # Load oh-my-zsh library
 antigen use oh-my-zsh
 
+# Mac specific plugins
+if [ "$(uname)"="Darwin" ]; then
+  antigen bundle osx
+  antigen bundle brew
+  antigen bundle iterm2
+fi
+
+# Linux specific plugins
+if [ "$(uname)"="Linux" ]; then
+  if command -v apt-get &> /dev/null; then # This is ubuntu
+    antigen bundle debian
+    antigen bundle ubuntu
+  elif command -v pacman &> /dev/null; then # This is archlinux
+    antigen bundle archlinux
+  fi
+fi
+
 # Load bundles from the default repo (oh-my-zsh)
 antigen bundle cargo
 antigen bundle colored-man-pages
@@ -29,25 +46,8 @@ antigen bundle vi-mode
 antigen bundle vscode
 antigen bundle web-search
 antigen bundle yarn
-
 antigen bundle fancy-ctrl-z # This gets overwritten
 
-# Mac specific plugins
-if [ "$(uname)"="Darwin" ]; then
-  antigen bundle osx
-  antigen bundle brew
-  antigen bundle iterm2
-fi
-
-# Linux specific plugins
-if [ "$(uname)"="Linux" ]; then
-  if command -v apt-get &> /dev/null; then # This is ubuntu
-    antigen bundle debian
-    antigen bundle ubuntu
-  elif command -v pacman &> /dev/null; then # This is archlinux
-    antigen bundle archlinux
-  fi
-fi
 
 # Load bundles from external repos
 antigen bundle zsh-users/zsh-completions
