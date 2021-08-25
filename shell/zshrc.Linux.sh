@@ -5,3 +5,5 @@
 # Enable fzf
 [[ -s "/usr/share/doc/fzf/examples/completion.zsh" ]] && \
   source /usr/share/doc/fzf/examples/completion.zsh
+[[ -s "/usr/share/doc/fzf/examples/key-bindings.zsh" ]] && \
+  source /usr/share/doc/fzf/examples/key-bindings.zsh

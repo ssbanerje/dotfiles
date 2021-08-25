@@ -14,3 +14,5 @@ type ls &> /dev/null && unset -f ls # Do not want this from grc
 # Setup fzf
 [[ -s "/usr/share/doc/fzf/examples/completion.bash" ]] && \
   source /usr/share/doc/fzf/examples/completion.bash
+[[ -s "/usr/share/doc/fzf/examples/key-bindings.bash" ]] && \
+  source /usr/share/doc/fzf/examples/key-bindings.bash
