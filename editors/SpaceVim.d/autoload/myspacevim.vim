@@ -90,6 +90,10 @@ function! myspacevim#after() abort
   nnoremap <c-k> <c-y>
   nnoremap <c-l> zl
 
+  " Scroll before hitting the end
+  set scrolloff=5
+  set sidescroll=1
+
   " Neomake setting
   let g:neomake_vim_enabled_makers = ['vint']
   let g:neomake_yaml_enabled_makers = ['yamllint']
