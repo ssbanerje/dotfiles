@@ -1,5 +1,8 @@
 #Aliases specifically for the Mac
 
+# SSH X forwarding
+alias ssh='ssh -o "XAuthLocation=/opt/X11/bin/xauth"'
+
 #Apple apps
 alias vncviewer='/System/Library/CoreServices/Screen\ Sharing.app/Contents/MacOS/Screen\ Sharing'
 alias preview='open -a '$PREVIEW''
