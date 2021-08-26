@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------------------------
--- Setup default {{{1
+-- Setup default
 ---------------------------------------------------------------------------------------------------
-local hyper = {'cmd', 'ctrl','alt', 'shift'}
+local hyper = {'cmd', 'ctrl', 'alt', 'shift'}
 local textbox = require('textbox')
 hs.loadSpoon('ModalMgr')
 
@@ -12,7 +12,7 @@ hs.grid.setMargins('0x0')
 
 
 ---------------------------------------------------------------------------------------------------
--- Setup watchers {{{1
+-- Setup watchers
 ---------------------------------------------------------------------------------------------------
 -- Watch for configuration change
 local config_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', function(files)
@@ -28,11 +28,6 @@ local config_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/',
   end
 end)
 config_watcher:start()
-
-spoon.ModalMgr.supervisor:bind(hyper, 'r', 'Reload Configuration', function()
-  hs.reload()
-  hs.notify.new({title='Hammerspoon', informativeText='Hammerspoon configuration reloaded'}):send()
-end)
 
 -- Set volume to zero after sleep
 local sleep_watcher = hs.caffeinate.watcher.new(function(eventType)
@@ -55,7 +50,7 @@ wifi_watcher:start()
 
 
 ---------------------------------------------------------------------------------------------------
--- iTerm {{{1
+-- iTerm
 ---------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:bind('alt', 'return', 'Open iTerm', function()
   if hs.application.find("iTerm") then
@@ -70,70 +65,71 @@ spoon.ModalMgr.supervisor:bind('alt', 'return', 'Open iTerm', function()
 end)
 
 ---------------------------------------------------------------------------------------------------
--- Yabai keys {{{1
+-- Yabai keys
 ---------------------------------------------------------------------------------------------------
 -- Function to interact with the Yabai instance
-local function yabai(command, callback)
-  callback = callback or function(x) return x end
-  hs.task.new(
-    "/usr/local/bin/yabai",
-    callback,
-    function(ud, ...)
-      print("Yabai Output =>", hs.inspect(table.pack(...)))
-      return true
-    end,
-    command):start()
-end
+local yabai = require('yabai')
+-- local function yabai(command, callback)
+--   callback = callback or function(x) return x end
+--   hs.task.new(
+--     "/usr/local/bin/yabai",
+--     callback,
+--     function(ud, ...)
+--       print("Yabai Output =>", hs.inspect(table.pack(...)))
+--       return true
+--     end,
+--     command):start()
+-- end
 
 -- Window movement keys
 local yabai_keys = {
-  {'alt', 'space', 'Toggle Float', {'-m', 'window', '--toggle', 'float'}},
-  {'alt', 'v', 'Toggle Split', {'-m', 'window', '--toggle', 'split'}},
-  {'alt', 'm', 'Fullscreen', {'-m', 'window', '--toggle', 'zoom-fullscreen'}},
-  {{'alt', 'shift'}, 'm', 'Fullscreen', {'-m', 'window', '--toggle', 'native-fullscreen'}},
+  {'alt', 'space', 'Toggle Float', {'window', '--toggle', 'float'}},
+  {'alt', 'v', 'Toggle Split', {'window', '--toggle', 'split'}},
+  {'alt', 'm', 'Fullscreen', {'window', '--toggle', 'zoom-fullscreen'}},
+  {{'alt', 'shift'}, 'm', 'Fullscreen', {'window', '--toggle', 'native-fullscreen'}},
 
-  {'alt', 'h', 'Focus Left', {'-m', 'window', '--focus', 'west'}},
-  {'alt', 'j', 'Focus Down', {'-m', 'window', '--focus', 'south'}},
-  {'alt', 'k', 'Focus Up', {'-m', 'window', '--focus', 'north'}},
-  {'alt', 'l', 'Focus Right', {'-m', 'window', '--focus', 'east'}},
+  {'alt', 'h', 'Focus Left', {'window', '--focus', 'west'}},
+  {'alt', 'j', 'Focus Down', {'window', '--focus', 'south'}},
+  {'alt', 'k', 'Focus Up', {'window', '--focus', 'north'}},
+  {'alt', 'l', 'Focus Right', {'window', '--focus', 'east'}},
 
-  {'alt', 'left', 'swap left', {'-m', 'window', '--swap', 'west'}},
-  {'alt', 'up', 'swap up', {'-m', 'window', '--swap', 'north'}},
-  {'alt', 'down', 'swap down', {'-m', 'window', '--swap', 'south'}},
-  {'alt', 'right', 'swap right', {'-m', 'window', '--swap', 'east'}},
+  {'alt', 'left', 'swap left', {'window', '--swap', 'west'}},
+  {'alt', 'up', 'swap up', {'window', '--swap', 'north'}},
+  {'alt', 'down', 'swap down', {'window', '--swap', 'south'}},
+  {'alt', 'right', 'swap right', {'window', '--swap', 'east'}},
 
-  {hyper, 'e', 'Equalize windows', {'-m', 'space', '--balance'}},
+  {hyper, 'e', 'Equalize windows', {'space', '--balance'}},
 
-  {hyper, 'left', 'Rotate Clockwise', {'-m', 'space', '--rotate', '270'}},
-  {hyper, 'right', 'Rotate Anticlockwise', {'-m', 'space', '--rotate', '90'}},
-  {hyper, 'up', 'Flip on X', {'-m', 'space', '--mirror', 'x-axis'}},
-  {hyper, 'down', 'Flip on Y', {'-m', 'space', '--mirror', 'y-axis'}},
+  {hyper, 'left', 'Rotate Clockwise', {'space', '--rotate', '270'}},
+  {hyper, 'right', 'Rotate Anticlockwise', {'space', '--rotate', '90'}},
+  {hyper, 'up', 'Flip on X', {'space', '--mirror', 'x-axis'}},
+  {hyper, 'down', 'Flip on Y', {'space', '--mirror', 'y-axis'}},
 }
 for k, c in pairs(yabai_keys) do
-  spoon.ModalMgr.supervisor:bind(c[1], c[2], c[3], function() yabai(c[4]) end)
+  spoon.ModalMgr.supervisor:bind(c[1], c[2], c[3], function() yabai.ipc(c[4]) end)
 end
 
 -- Window resize keys
 spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'h', "Resize Window", function()
-  yabai({'-m', 'window', '--resize', 'left:-50:0'})
-  yabai({'-m', 'window', '--resize', 'right:-50:0'})
+  yabai.ipc({'window', '--resize', 'left:-50:0'})
+  yabai.ipc({'window', '--resize', 'right:-50:0'})
 end)
 spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'j', "Resize Window", function()
-  yabai({'-m', 'window', '--resize', 'bottom:0:50'})
-  yabai({'-m', 'window', '--resize', 'top:0:50'})
+  yabai.ipc({'window', '--resize', 'bottom:0:50'})
+  yabai.ipc({'window', '--resize', 'top:0:50'})
 end)
 spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'k', "Resize Window", function()
-  yabai({'-m', 'window', '--resize', 'bottom:0:-50'})
-  yabai({'-m', 'window', '--resize', 'top:0:-50'})
+  yabai.ipc({'window', '--resize', 'bottom:0:-50'})
+  yabai.ipc({'window', '--resize', 'top:0:-50'})
 end)
 spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'l', "Resize Window", function()
-  yabai({'-m', 'window', '--resize', 'left:50:0'})
-  yabai({'-m', 'window', '--resize', 'right:50:0'})
+  yabai.ipc({'window', '--resize', 'left:50:0'})
+  yabai.ipc({'window', '--resize', 'right:50:0'})
 end)
 
 -- Move window to space
 spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'left', "Move Window", function()
-  yabai({'-m', 'window', '--space', 'prev'})
+  yabai.ipc({'window', '--space', 'prev'})
   hs.timer.doAfter(.2, function()
     hs.eventtap.event.newKeyEvent('ctrl', true):post()
     hs.eventtap.event.newKeyEvent('left', true):post()
@@ -142,7 +138,7 @@ spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'left', "Move Window", function
   end)
 end)
 spoon.ModalMgr.supervisor:bind({'alt', 'shift'}, 'right', "Move Window", function()
-  yabai({'-m', 'window', '--space', 'next'})
+  yabai.ipc({'window', '--space', 'next'})
   hs.timer.doAfter(.2, function()
     hs.eventtap.event.newKeyEvent('ctrl', true):post()
     hs.eventtap.event.newKeyEvent('right', true):post()
@@ -158,27 +154,27 @@ spoon.ModalMgr.supervisor:bind('alt', '-', 'Decrease Gap', function()
   if (gap < 0) then
       gap = 0;
   end
-  yabai({'-m', 'space', '--gap', string.format('abs:%d', gap)})
+  yabai.ipc({'space', '--gap', string.format('abs:%d', gap)})
 end)
 spoon.ModalMgr.supervisor:bind('alt', '=', 'Increase Gap', function()
   gap = gap + 10
-  yabai({'-m', 'space', '--gap', string.format('abs:%d', gap)})
+  yabai.ipc({'space', '--gap', string.format('abs:%d', gap)})
 end)
 
 ---------------------------------------------------------------------------------------------------
--- Window Switcher {{{1
+-- Window Switcher
 ---------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:bind(hyper, 'tab', 'Show Window Hints', hs.hints.windowHints)
 
 
 ---------------------------------------------------------------------------------------------------
--- Hammerspoon console {{{1
+-- Hammerspoon console
 ---------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:bind(hyper, '`', 'Toggle Hammerspoon Console', hs.toggleConsole)
 
 
 ---------------------------------------------------------------------------------------------------
--- Window Modal {{{1
+-- Window Modal
 ---------------------------------------------------------------------------------------------------
 spoon.ModalMgr:new('window')
 local window_modal = spoon.ModalMgr.modal_list['window']
@@ -328,7 +324,7 @@ end
 
 
 ---------------------------------------------------------------------------------------------------
--- Keycaster modal {{{1
+-- Keycaster modal
 ---------------------------------------------------------------------------------------------------
 spoon.ModalMgr:new('keycaster')
 local keycaster_modal = spoon.ModalMgr.modal_list['keycaster']
@@ -411,8 +407,6 @@ keycaster_modal.exited = function()
 end
 
 ---------------------------------------------------------------------------------------------------
--- Initialize the modal supervisor {{{1
+-- Initialize the modal supervisor
 ---------------------------------------------------------------------------------------------------
 spoon.ModalMgr.supervisor:enter()
-
--- vim:set fdm=marker:
