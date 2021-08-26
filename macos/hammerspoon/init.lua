@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 -- Setup default {{{1
 ---------------------------------------------------------------------------------------------------
-local hyper = {'ctrl','alt'}
+local hyper = {'cmd', 'ctrl','alt', 'shift'}
 hshelp_keys = {hyper, 'h'}
 hs.loadSpoon('ModalMgr')
 
@@ -208,6 +208,11 @@ spoon.ModalMgr.supervisor:bind(hyper, 'w', 'Enter Window Tiling Mode', function(
   space_watcher:start()
 	spoon.ModalMgr:activate({'window'}, '#FFBD2E')
   textbox:show('Tiling Mode')
+end)
+
+-- Toggle cheat sheet
+window_modal:bind('shift', '/', 'Toggle Cheat Sheet', function()
+	spoon.ModalMgr:toggleCheatsheet()
 end)
 
 -- Exit window modal
