@@ -12,12 +12,3 @@ function! SpaceVim#layers#my_motions#plugins() abort
   call add(plugins, ['chaoren/vim-wordmotion', {'merged': 0}])
   return plugins
 endfunction
-
-function! SpaceVim#layers#my_motions#config() abort
-  " Restore vim behavior
-  nmap dw de
-  nmap dW dE
-  nmap cw ce
-  nmap cW cE
-endfunction
-
