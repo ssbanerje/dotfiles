@@ -13,10 +13,10 @@
     - ~/Library/Preferences
 
 - link:
-    ~/.hammerspoon: macos/hammerspoon
+    ~/.hammerspoon: hammerspoon
 
 - shell:
-    - "command cp -f macos/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
+    - "command cp -f iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
     - "curl -L https://iterm2.com/shell_integration/zsh -o ~/.config/iterm2_shell_integration.zsh"
     - "curl -L https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash"
-    - "./macos/macos.sh"
+    - "./scripts/macos.sh"
