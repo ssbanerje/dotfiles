@@ -40,9 +40,7 @@ antigen bundle rust
 antigen bundle rustup
 # antigen bundle sbt
 # antigen bundle scala
-antigen bundle sudo
 antigen bundle tmux
-antigen bundle vi-mode
 antigen bundle vscode
 antigen bundle web-search
 antigen bundle yarn
@@ -53,6 +51,7 @@ antigen bundle fancy-ctrl-z # This gets overwritten
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle jeffreytse/zsh-vi-mode
 
 # Select theme
 antigen theme romkatv/powerlevel10k
