@@ -5,7 +5,6 @@ Host *
   ControlMaster auto
   ControlPath /tmp/ssh_%r@%h:%p
   ControlPersist yes
-  ForwardX11 yes
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_rsa
 
