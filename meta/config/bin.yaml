@@ -9,6 +9,8 @@
     ~/.bin/ports: bin/ports
     ~/.bin/random: bin/random
     ~/.bin/term_copy: bin/term_copy
+    ~/.bin/shim: scripts/shim.sh
+    ~/.bin/shim-al: scripts/shim-archlinux.sh
     ~/.bin/lock-screen:
       if: '[ `uname` = Darwin ]'
       path: bin/lock-screen
