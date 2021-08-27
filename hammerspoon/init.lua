@@ -1,3 +1,5 @@
+hs.console.clearConsole()
+
 ---------------------------------------------------------------------------------------------------
 -- Setup default
 ---------------------------------------------------------------------------------------------------
@@ -63,6 +65,7 @@ spoon.ModalMgr.supervisor:bind('alt', 'return', 'Open iTerm', function()
     hs.application.open("iTerm")
   end
 end)
+
 
 ---------------------------------------------------------------------------------------------------
 -- Yabai keys
@@ -160,6 +163,33 @@ spoon.ModalMgr.supervisor:bind('alt', '=', 'Increase Gap', function()
   gap = gap + 10
   yabai.ipc({'space', '--gap', string.format('abs:%d', gap)})
 end)
+
+-- Draw borders around window
+local global_border = nil
+
+local function redrawBorder()
+  if global_border ~= nil then
+    global_border:delete()
+    global_border = nil
+  end
+  win = hs.window.focusedWindow()
+  if win == nil or win:isFullScreen() or win:application():name() == "Hammerspoon" then
+    return
+  end
+  top_left = win:topLeft()
+  size = win:size()
+  global_border = hs.drawing.rectangle(hs.geometry.rect(top_left['x'], top_left['y'], size['w'], size['h']))
+  global_border:setStrokeColor({["red"]=1,["blue"]=0.25,["green"]=0.75,["alpha"]=0.8})
+  global_border:setFill(false)
+  global_border:setStrokeWidth(4)
+  global_border:show()
+end
+
+local allwindows = hs.window.filter.new(nil)
+for i, e in pairs({hs.window.filter.windowCreated, hs.window.filter.windowDestroyed, hs.window.filter.windowFocused, hs.window.filter.windowFullscreened, hs.window.filter.windowHidden, hs.window.filter.windowMinimized, hs.window.filter.windowMoved, hs.window.filter.windowUnfocused, hs.window.filter.windowUnfullscreened, hs.window.filter.windowUnhidden, hs.window.filter.windowUnminimized}) do
+  allwindows:subscribe(e, redrawBorder)
+end
+redrawBorder()
 
 ---------------------------------------------------------------------------------------------------
 -- Window Switcher
