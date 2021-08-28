@@ -2,7 +2,7 @@
 --  > Hyper + ` -> Hammerspoon console
 --
 -- Normal Mode:
---  * Super -> Navigate
+--  * Alt + N -> Navigate
 --  * Hyper + K -> Keycaster Mode
 --  > Alt + Enter -> iTerm2
 --  > Alt + Cmd + Enter -> Safari
@@ -15,17 +15,22 @@
 --  * Z -> Resize mode
 --  * Esc -> Normal mode
 --  > HJKL/Arrows -> Navigate
---  > Cmd HJKL/Arrows -> Move
+--  > Cmd HJKL/Arrows -> Swap windows
 --  > Shift + HL/Arrows -> Move Space
 --  > Shift + JK/Arrows -> Rotate (counter)clockwise
 --  > | -> Flip on Y
 --  > - -> Flip on X
+--  > Hyper + HJKL (on floating) -> Move window
 --
 -- Resize Mode:
 --   * Esc -> Normal Mode
 --   > HJKL + Arrows -> Resize
 --   > +- -> Increase decrease gaps
 --   > 0 -> Equalize windows
+--   > Arrows (on floating window) -> Half screen windows
+--   > RTFG (on floating window) -> Quarter screen windows
+--   > QWE (on floating window) -> Third screen windows
+--   > ASDZXC (on floating window) -> Sixth screen windows
 --
 -- Keycaster Mode:
 --   * Hyper + K -> Normal Mode
@@ -38,7 +43,6 @@ hs.console.clearConsole()
 hs.logger.defaultLogLevel='info'
 hs.window.animationDuration = 0
 
-local yabai = require('yabai')
 local hyper = {'cmd', 'ctrl', 'alt', 'shift'}
 
 
@@ -106,6 +110,7 @@ local yabai_commands = {
   {{{'alt', 'shift'}, 'm'}, 'Fullscreen', {'window', '--toggle', 'native-fullscreen'}},
   {{'alt', 's'}, 'Toggle Split', {'window', '--toggle', 'split'}},
 }
+local yabai = require('yabai')
 for _, c in pairs(yabai_commands) do
   state_machine:bind(state_machine.base_state_id, c[1], c[2], function() yabai:ipc(c[3]) end)
 end
@@ -174,42 +179,25 @@ state_machine:bind('navigation', {'shift', 'left'}, 'Move Window', move_window('
 state_machine:bind('navigation', {'shift', 'l'}, 'Move Window', move_window('next', 'right'))
 state_machine:bind('navigation', {'shift', 'right'}, 'Move Window', move_window('next', 'right'))
 
--- -- Cascade windows
--- window_modal:bind('', ',', 'Cascade windows', function()
---   local cascadeSpacing = 40
---   local windows = hs.window.orderedWindows()
---   local screen = windows[1]:screen():frame()
---   local nOfSpaces = #windows - 1
---   local xMargin = screen.w / 10
---   local yMargin = 20
---   for i, win in ipairs(windows) do
---     local offset = (i - 1) * cascadeSpacing
---     local rect = {
---       x = xMargin + offset,
---       y = screen.y + yMargin + offset,
---       w = screen.w - (2 * xMargin) - (nOfSpaces * cascadeSpacing),
---       h = screen.h - (2 * yMargin) - (nOfSpaces * cascadeSpacing),
---     }
---     win:setFrame(rect)
---   end
--- end)
+-- BINDING: Move floating window
+local move_commands = {
+  h = function(f) f.x = f.x - 10; return f end,
+  l = function(f) f.x = f.x + 10; return f end,
+  j = function(f) f.y = f.y + 10; return f end,
+  k = function(f) f.y = f.y - 10; return f end,
+}
+for k, v in pairs(move_commands) do
+  state_machine:bind('navigation', {hyper, k}, 'Move Window', function()
+    local win = hs.window.focusedWindow()
+    if not win then return end
+    yabai:is_floating(win:id(), function()
+      local update = v(win:frame())
+      win:setFrame(update)
+    end)
+  end)
+end
 
--- -- Move window
--- local move_commands = {
---   ['h'] = function(f) f.x = f.x - 10; return f end,
---   ['l'] = function(f) f.x = f.x + 10; return f end,
---   ['j'] = function(f) f.y = f.y + 10; return f end,
---   ['k'] = function(f) f.y = f.y - 10; return f end,
--- }
---
--- for k, v in pairs(move_commands) do
---   local move = function()
---     local win = hs.window.focusedWindow()
---     local update = v(win:frame())
---     win:setFrame(update)
---   end
---   window_modal:bind('', k, 'Move Window', move, nil, move)
--- end
+
 ---------------------------------------------------------------------------------------------------
 -- Resize mode
 ---------------------------------------------------------------------------------------------------
@@ -261,36 +249,38 @@ state_machine:bind('resize', {'', 'l'}, 'Resize Window', function()
   yabai:ipc({'window', '--resize', 'right:50:0'})
 end)
 
--- -- Screen positons
--- local positions = {
---   left = {{0, 0, 0.5, 1}, 'Halves - L'},
---   up = {{0, 0, 1, 0.5}, 'Halves - T'},
---   right = {{0.5, 0, 0.5, 1}, 'Halves - R'},
---   down = {{0, 0.5, 1, 0.5}, 'Halves - L'},
---   r = {{0, 0, 0.5, 0.5}, 'Quarters - TR'},
---   t = {{0.5, 0, 0.5, 0.5}, 'Quarters - TL'},
---   g = {{0.5, 0.5, 0.5, 0.5}, 'Quarters - BR'},
---   f = {{0, 0.5, 0.5, 0.5}, 'Quarters - BL'},
---   q = {{0, 0, 0.33333, 1}, 'Thirds - L'},
---   w = {{0.33333, 0, 0.33333, 1}, 'Thirds - M'},
---   e = {{0.66666, 0, 0.33333, 1}, 'Thirds - R'},
---   v = {{0, 0, 0.66666, 1}, 'Two Thirds - L'},
---   a = {{0, 0, 0.33333, 0.5}, 'Sixths - TL'},
---   s = {{0.33333, 0, 0.33333, 0.5}, 'Sixths - TM'},
---   d = {{0.66666, 0, 0.33333, 0.5}, 'Sixths - TR'},
---   z = {{0, 0.5, 0.33333, 0.5}, 'Sixths - BL'},
---   x = {{0.33333, 0.5, 0.33333, 0.5}, 'Sixths - BM'},
---   c = {{0.66666, 0.5, 0.33333, 0.5}, 'Sixths - BR'},
--- }
---
--- for k,v in pairs(positions) do
---   window_modal:bind({}, k, v[2], function()
---     local window = hs.window.focusedWindow()
---     if not window then return end
---     window:move(v[1])
---   end)
--- end
---
+-- BINDING: Screen positons
+local positions = {
+  left = {{0, 0, 0.5, 1}, 'Halves - L'},
+  up = {{0, 0, 1, 0.5}, 'Halves - T'},
+  right = {{0.5, 0, 0.5, 1}, 'Halves - R'},
+  down = {{0, 0.5, 1, 0.5}, 'Halves - L'},
+  r = {{0, 0, 0.5, 0.5}, 'Quarters - TR'},
+  t = {{0.5, 0, 0.5, 0.5}, 'Quarters - TL'},
+  g = {{0.5, 0.5, 0.5, 0.5}, 'Quarters - BR'},
+  f = {{0, 0.5, 0.5, 0.5}, 'Quarters - BL'},
+  q = {{0, 0, 0.33333, 1}, 'Thirds - L'},
+  w = {{0.33333, 0, 0.33333, 1}, 'Thirds - M'},
+  e = {{0.66666, 0, 0.33333, 1}, 'Thirds - R'},
+  v = {{0, 0, 0.66666, 1}, 'Two Thirds - L'},
+  a = {{0, 0, 0.33333, 0.5}, 'Sixths - TL'},
+  s = {{0.33333, 0, 0.33333, 0.5}, 'Sixths - TM'},
+  d = {{0.66666, 0, 0.33333, 0.5}, 'Sixths - TR'},
+  z = {{0, 0.5, 0.33333, 0.5}, 'Sixths - BL'},
+  x = {{0.33333, 0.5, 0.33333, 0.5}, 'Sixths - BM'},
+  c = {{0.66666, 0.5, 0.33333, 0.5}, 'Sixths - BR'},
+}
+for k,v in pairs(positions) do
+  state_machine:bind('resize', {{'cmd'}, k}, v[2], function()
+    local window = hs.window.focusedWindow()
+    if not window then
+      return
+    end
+    yabai:is_floating(window:id(), function()
+      window:move(v[1])
+    end)
+  end)
+end
 
 ---------------------------------------------------------------------------------------------------
 -- Keycaster Mode

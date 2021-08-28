@@ -46,7 +46,7 @@ yabai -m rule --add label="Activity Monitor" app="^Activity Monitor$" manage=off
 yabai -m rule --add label="About This Mac" app="System Information" title="About This Mac" manage=off
 yabai -m rule --add label="mpv" app="^mpv$" manage=off
 yabai -m rule --add label="Hammerspoon" app="^Hammerspoon$" manage=off
-yabai -m rule --add label="CleanMyMax X" app="^CleanMyMax X$" manage=off
+yabai -m rule --add label="CleanMyMac X" app="^CleanMyMac X$" manage=off
 
 set +x
 printf "yabai: configuration loaded...\\n"

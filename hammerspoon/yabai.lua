@@ -45,4 +45,14 @@ function module:exec(command, callback)
     {'-m', table.unpack(command)}):start()
 end
 
+-- Check if a window is floating and run call back if it is
+function module:is_floating(window_id, callback)
+  module:ipc({'query', '--windows', '--window', tostring(window_id)}, function(x)
+      local meta = hs.json.decode(x)
+      if meta.floating == 1 then
+        callback()
+      end
+  end)
+end
+
 return module
