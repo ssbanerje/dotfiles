@@ -2,18 +2,18 @@ local module = {}
 
 module.sock_file = string.format("/tmp/yabai_%s.socket", os.getenv("USER"))
 module.sock_timeout = 5
-module.socket = hs.socket
 
-module.ipc = function(args, callback)
+-- Interact with the Yabai instance with a UNIX domain socket
+function module:ipc(command, callback)
   callback = callback or function(x) return x end
 
   local msg = ""
-  for k, c in pairs(args) do
+  for _, c in ipairs(command) do
     msg = msg .. tostring(c) .. string.char(0)
   end
   msg = msg .. string.char(0)
 
-  local sock = module.socket.new()
+  local sock = hs.socket.new()
   local res = ""
   sock:setTimeout(module.sock_timeout or -1)
   sock:connect(module.sock_file, function()
@@ -29,6 +29,20 @@ module.ipc = function(args, callback)
       sock:read('\n')
     end)
   end)
+end
+
+-- Interact with the Yabai instance over the CLI
+function module:exec(command, callback)
+  callback = callback or function(x) return x end
+
+  hs.task.new(
+    "/usr/local/bin/yabai",
+    callback,
+    function(ud, ...)
+      print("Yabai Output =>", hs.inspect(table.pack(...)))
+      return true
+    end,
+    {'-m', table.unpack(command)}):start()
 end
 
 return module
