@@ -3,7 +3,7 @@ Host *
   ServerAliveInterval 15
   ServerAliveCountMax 6
   ControlMaster auto
-  ControlPath /tmp/ssh_%r@%h:%p
+  ControlPath /tmp/ssh_%r@%h:%p.socket
   ControlPersist yes
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_rsa
