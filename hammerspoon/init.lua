@@ -4,6 +4,7 @@
 -- Normal Mode:
 --  * Alt + N -> Navigate
 --  * Hyper + K -> Keycaster Mode
+--  > Hyper + Enter -> Toggle yabai for space
 --  > Alt + Enter -> iTerm2
 --  > Alt + Cmd + Enter -> Safari
 --  > Alt + Space -> Toggle Float
@@ -15,22 +16,27 @@
 --  * Z -> Resize mode
 --  * Esc -> Normal mode
 --  > HJKL/Arrows -> Navigate
---  > Cmd HJKL/Arrows -> Swap windows
---  > Shift + HL/Arrows -> Move Space
---  > Shift + JK/Arrows -> Rotate (counter)clockwise
+--  > Shfit HJKL/Arrows -> Warp windows
+--  > Cmd + Shift + HJKL/Arrows -> Swap windows
+--  > Cmd + HL/Arrows -> Move Space
+--  > Cmd + JK/Arrows -> Rotate (counter)clockwise
 --  > | -> Flip on Y
 --  > - -> Flip on X
---  > Hyper + HJKL (on floating) -> Move window
+--  > Hyper + HJKL/Arrows (on floating) -> Move window
+--  > Alt + HJKL -> Stack window
+--  > Tab -> Move through stack
+--  > Shift + Tab -> Move through stack
 --
 -- Resize Mode:
---   * Esc -> Normal Mode
---   > HJKL + Arrows -> Resize
---   > +- -> Increase decrease gaps
---   > 0 -> Equalize windows
---   > Arrows (on floating window) -> Half screen windows
---   > RTFG (on floating window) -> Quarter screen windows
---   > QWE (on floating window) -> Third screen windows
---   > ASDZXC (on floating window) -> Sixth screen windows
+--  * Esc -> Normal Mode
+--  > HJKL + Arrows -> Resize
+--  > +- -> Increase decrease gaps
+--  > 0 -> Equalize windows
+--  > p -> Toggle zoom parent (occupy parent space as well)
+--  > Arrows (on floating window) -> Half screen windows
+--  > RTFG (on floating window) -> Quarter screen windows
+--  > QWE (on floating window) -> Third screen windows
+--  > ASDZXC (on floating window) -> Sixth screen windows
 --
 -- Keycaster Mode:
 --   * Hyper + K -> Normal Mode
@@ -40,7 +46,7 @@
 -- Default
 ---------------------------------------------------------------------------------------------------
 hs.console.clearConsole()
-hs.logger.defaultLogLevel='info'
+hs.logger.defaultLogLevel='warning'
 hs.window.animationDuration = 0
 
 local hyper = {'cmd', 'ctrl', 'alt', 'shift'}
@@ -74,6 +80,20 @@ end)
 local keycaster = require('keycaster')
 state_machine:transition(state_machine.base_state_id, 'keycaster', {hyper, 'k'}, 'Keycaster Mode', function()
   keycaster:start()
+end)
+
+-- BINDING: Turn on/off BSP splitting
+local yabai = require('yabai')
+local yabai_toggle = true
+state_machine:bind('base', {hyper, 'return'}, 'Toggle Yabai', function()
+  local layout = nil
+  if yabai_toggle then
+    layout = 'float'
+  else
+    layout = 'bsp'
+  end
+  yabai_toggle = not yabai_toggle
+  yabai:ipc({'space', '--layout', layout})
 end)
 
 -- BINDING: Open a iTerm2 window
@@ -110,7 +130,6 @@ local yabai_commands = {
   {{{'alt', 'shift'}, 'm'}, 'Fullscreen', {'window', '--toggle', 'native-fullscreen'}},
   {{'alt', 's'}, 'Toggle Split', {'window', '--toggle', 'split'}},
 }
-local yabai = require('yabai')
 for _, c in pairs(yabai_commands) do
   state_machine:bind(state_machine.base_state_id, c[1], c[2], function() yabai:ipc(c[3]) end)
 end
@@ -141,22 +160,39 @@ local yabai_keys = {
   {{'', 'up'}, 'Focus Up', {'window', '--focus', 'north'}},
   {{'', 'right'}, 'Focus Right', {'window', '--focus', 'east'}},
 
-  {{'cmd', 'h'}, 'Swap left', {'window', '--swap', 'west'}},
-  {{'cmd', 'j'}, 'Swap down', {'window', '--swap', 'south'}},
-  {{'cmd', 'k'}, 'Swap up', {'window', '--swap', 'north'}},
-  {{'cmd', 'l'}, 'Swap right', {'window', '--swap', 'east'}},
-  {{'cmd', 'left'}, 'Swap left', {'window', '--swap', 'west'}},
-  {{'cmd', 'up'}, 'Swap up', {'window', '--swap', 'north'}},
-  {{'cmd', 'down'}, 'Swap down', {'window', '--swap', 'south'}},
-  {{'cmd', 'right'}, 'Swap right', {'window', '--swap', 'east'}},
+  {{'shift', 'h'}, 'Warp left', {'window', '--warp', 'west'}},
+  {{'shift', 'j'}, 'Warp down', {'window', '--warp', 'south'}},
+  {{'shift', 'k'}, 'Warp up', {'window', '--warp', 'north'}},
+  {{'shift', 'l'}, 'Warp right', {'window', '--warp', 'east'}},
+  {{'shift', 'left'}, 'Warp left', {'window', '--warp', 'west'}},
+  {{'shift', 'up'}, 'Warp up', {'window', '--warp', 'north'}},
+  {{'shift', 'down'}, 'Warp down', {'window', '--warp', 'south'}},
+  {{'shift', 'right'}, 'Warp right', {'window', '--warp', 'east'}},
+  {{{'cmd', 'shift'}, 'h'}, 'Swap left', {'window', '--swap', 'west'}},
+  {{{'cmd', 'shift'}, 'j'}, 'Swap down', {'window', '--swap', 'south'}},
+  {{{'cmd', 'shift'}, 'k'}, 'Swap up', {'window', '--swap', 'north'}},
+  {{{'cmd', 'shift'}, 'l'}, 'Swap right', {'window', '--swap', 'east'}},
+  {{{'cmd', 'shift'}, 'left'}, 'Swap left', {'window', '--swap', 'west'}},
+  {{{'cmd', 'shift'}, 'up'}, 'Swap up', {'window', '--swap', 'north'}},
+  {{{'cmd', 'shift'}, 'down'}, 'Swap down', {'window', '--swap', 'south'}},
+  {{{'cmd', 'shift'}, 'right'}, 'Swap right', {'window', '--swap', 'east'}},
 
-  {{'shift', 'k'}, 'Rotate Clockwise', {'space', '--rotate', '270'}},
-  {{'shift', 'j'}, 'Rotate Anticlockwise', {'space', '--rotate', '90'}},
-  {{'shift', 'up'}, 'Rotate Clockwise', {'space', '--rotate', '270'}},
-  {{'shift', 'down'}, 'Rotate Anticlockwise', {'space', '--rotate', '90'}},
+  {{'cmd', 'k'}, 'Rotate Clockwise', {'space', '--rotate', '270'}},
+  {{'cmd', 'j'}, 'Rotate Anticlockwise', {'space', '--rotate', '90'}},
+  {{'cmd', 'up'}, 'Rotate Clockwise', {'space', '--rotate', '270'}},
+  {{'cmd', 'down'}, 'Rotate Anticlockwise', {'space', '--rotate', '90'}},
 
   {{'shift', '\\'}, 'Flip on Y', {'space', '--mirror', 'y-axis'}},
   {{'', '-'}, 'Flip on X', {'space', '--mirror', 'x-axis'}},
+
+  {{'alt', 'h'}, 'Stack left', {'window', '--stack', 'west'}},
+  {{'alt', 'j'}, 'Stack down', {'window', '--stack', 'south'}},
+  {{'alt', 'k'}, 'Stack up', {'window', '--stack', 'north'}},
+  {{'alt', 'l'}, 'Stack right', {'window', '--stack', 'east'}},
+  {{'alt', 'left'}, 'Stack left', {'window', '--stack', 'west'}},
+  {{'alt', 'down'}, 'Stack down', {'window', '--stack', 'south'}},
+  {{'alt', 'up'}, 'Stack up', {'window', '--stack', 'north'}},
+  {{'alt', 'right'}, 'Stack right', {'window', '--stack', 'east'}},
 }
 for k, c in pairs(yabai_keys) do
   state_machine:bind('navigation', c[1], c[2], function() yabai:ipc(c[3]) end)
@@ -174,10 +210,10 @@ local function move_window(yk, kk)
     end)
   end
 end
-state_machine:bind('navigation', {'shift', 'h'}, 'Move Window', move_window('prev', 'left'))
-state_machine:bind('navigation', {'shift', 'left'}, 'Move Window', move_window('prev', 'left'))
-state_machine:bind('navigation', {'shift', 'l'}, 'Move Window', move_window('next', 'right'))
-state_machine:bind('navigation', {'shift', 'right'}, 'Move Window', move_window('next', 'right'))
+state_machine:bind('navigation', {'cmd', 'h'}, 'Move Window', move_window('prev', 'left'))
+state_machine:bind('navigation', {'cmd', 'left'}, 'Move Window', move_window('prev', 'left'))
+state_machine:bind('navigation', {'cmd', 'l'}, 'Move Window', move_window('next', 'right'))
+state_machine:bind('navigation', {'cmd', 'right'}, 'Move Window', move_window('next', 'right'))
 
 -- BINDING: Move floating window
 local move_commands = {
@@ -185,6 +221,10 @@ local move_commands = {
   l = function(f) f.x = f.x + 10; return f end,
   j = function(f) f.y = f.y + 10; return f end,
   k = function(f) f.y = f.y - 10; return f end,
+  left = function(f) f.x = f.x - 10; return f end,
+  right = function(f) f.x = f.x + 10; return f end,
+  down = function(f) f.y = f.y + 10; return f end,
+  up = function(f) f.y = f.y - 10; return f end,
 }
 for k, v in pairs(move_commands) do
   state_machine:bind('navigation', {hyper, k}, 'Move Window', function()
@@ -197,6 +237,18 @@ for k, v in pairs(move_commands) do
   end)
 end
 
+-- BINDING: Move in stack
+state_machine:bind('navigation', {'', 'tab'}, 'Stack move forward', function()
+  yabai:ipc({'window', '--focus', 'stack.next'}, nil, function(_)
+    yabai:ipc({'window', '--focus', 'stack.first'})
+  end)
+end)
+
+state_machine:bind('navigation', {'shift', 'tab'}, 'Stack move backward', function()
+  yabai:ipc({'window', '--focus', 'stack.prev'}, nil, function(_)
+    yabai:ipc({'window', '--focus', 'stack.last'})
+  end)
+end)
 
 ---------------------------------------------------------------------------------------------------
 -- Resize mode
@@ -205,13 +257,11 @@ end
 state_machine:transition('resize', state_machine.base_state_id, {'', 'escape'}, 'Exit', function()
   borders:stop()
 end)
-state_machine:transition('resize', state_machine.base_state_id, {'', 'return'}, 'Exit', function()
-  borders:stop()
-end)
 
 -- BINDINGS: Yabai resize keys Window movement keys
 local yabai_keys = {
   {{'', '0'}, 'Equalize windows', {'space', '--balance'}},
+  {{'', 'p'}, 'Zoom parent', {'window', '--toggle', 'zoom-parent'}},
 }
 for k, c in pairs(yabai_keys) do
   state_machine:bind('resize', c[1], c[2], function() yabai:ipc(c[3]) end)
@@ -232,22 +282,22 @@ state_machine:bind('resize', {'shift', '='}, 'Increase Gap', function()
 end)
 
 -- BINDINGS: Window resize keys
-state_machine:bind('resize', {'', 'h'}, 'Resize Window', function()
-  yabai:ipc({'window', '--resize', 'left:-50:0'})
-  yabai:ipc({'window', '--resize', 'right:-50:0'})
-end)
-state_machine:bind('resize', {'', 'j'}, 'Resize Window', function()
-  yabai:ipc({'window', '--resize', 'bottom:0:50'})
-  yabai:ipc({'window', '--resize', 'top:0:50'})
-end)
-state_machine:bind('resize', {'', 'k'}, 'Resize Window', function()
-  yabai:ipc({'window', '--resize', 'bottom:0:-50'})
-  yabai:ipc({'window', '--resize', 'top:0:-50'})
-end)
-state_machine:bind('resize', {'', 'l'}, 'Resize Window', function()
-  yabai:ipc({'window', '--resize', 'left:50:0'})
-  yabai:ipc({'window', '--resize', 'right:50:0'})
-end)
+local yabai_keys = {
+  h = {'left:-20:0', 'right:-20:0'},
+  j = {'bottom:0:20', 'top:0:20'},
+  k = {'bottom:0:-20', 'top:0:-20'},
+  l = {'left:20:0', 'right:20:0'},
+  left = {'left:-20:0', 'right:-20:0'},
+  down = {'bottom:0:20', 'top:0:20'},
+  up = {'bottom:0:-20', 'top:0:-20'},
+  right = {'left:20:0', 'right:20:0'},
+}
+for k, c in pairs(yabai_keys) do
+  state_machine:bind('resize', {'', k}, 'Resize Window', function()
+    yabai:ipc({'window', '--resize', c[1]})
+    yabai:ipc({'window', '--resize', c[2]})
+  end)
+end
 
 -- BINDING: Screen positons
 local positions = {
