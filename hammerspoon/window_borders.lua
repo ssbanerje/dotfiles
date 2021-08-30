@@ -4,6 +4,10 @@ module.__index = module
 -- Graphics object for drawing borders
 module.border = nil
 
+-- Colors used for stroking windows
+module.stroke_color_src = {red=1, blue=0.25, green=0.75, alpha=0.8}
+module.stroke_color_tgt = {red=1, blue=0.25, green=0.75, alpha=0.8}
+
 -- Handlers listening for window events
 module.handler = nil
 module.events = {
@@ -21,6 +25,7 @@ module.events = {
 -- Start drawing borders
 function module:start()
   module.handler = hs.window.filter.new(nil)
+  module.handler.setLogLevel(hs.logger.defaultLogLevel)
   for _, e in ipairs(module.events) do
     module.handler:subscribe(e, function()
       module:redraw()
