@@ -1,6 +1,5 @@
 # Enable grc on all commands
 [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
-#type ls &> /dev/null && unset -f ls # Do not want this from grc
 
 # Enable fzf
 function fzf_init() {
