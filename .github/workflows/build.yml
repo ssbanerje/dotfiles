@@ -24,6 +24,7 @@ jobs:
           - shell
           - fonts
           - ranger
+          - i3wm
         os:
           - ubuntu-latest
           - macOS-latest
@@ -32,6 +33,8 @@ jobs:
             os: macOS-latest
           - config: macos
             os: ubuntu-latest
+          - config: i3wm
+            os: macOS-latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository code
