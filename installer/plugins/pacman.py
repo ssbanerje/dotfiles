@@ -8,8 +8,10 @@ import dotbot
 
 
 class Pacman(dotbot.Plugin):
-    _updateDirective = 'pacmanupdate'
+    _pacmanUpdateDirective = 'pacmanupdate'
+    _yayUpdateDirective = 'yayupdate'
     _pacmanDirective = 'pacman'
+    _yayDirective = 'yay'
 
     def __init__(self, context):
         super(Pacman, self).__init__(context)
@@ -17,31 +19,35 @@ class Pacman(dotbot.Plugin):
         self._sup_stderr = False
 
     def can_handle(self, directive):
-        return directive in [self._pacmanDirective, self._updateDirective]
+        return directive in [self._pacmanDirective, self._pacmanUpdateDirective,
+                             self._yayUpdateDirective, self._yayDirective]
 
     def handle(self, directive, data):
-        if directive == self._updateDirective:
-            return self._run_update()
+        if directive == self._pacmanUpdateDirective:
+            return self._run_update('pacman')
         elif directive == self._pacmanDirective:
-            return self._install_packages(data)
+            return self._install_packages(data, 'pacman')
+        elif directive == self._yayUpdateDirective:
+            return self._run_update('yay')
+        elif directive == self._yayDirective:
+            return self._install_packages(data, 'yay')
         else:
             raise ValueError('Cannot handle this directive %s' % directive)
 
-    def _run_update(self):
-        self._log.info('Updating Pacman')
-        return self._run_command('pacman -Syu --noconfirm', True, False) == 0
+    def _run_update(self, cmd='pacman'):
+        self._log.info('Updating '+cmd)
+        return self._run_command(cmd + ' -Syu --noconfirm', True, False) == 0
 
-    def _install(self, p):
+    def _install(self, p, cmd='pacman'):
         self._log.info('Installing %s' % p)
-        res = self._run_command('pacman -S --noconfirm ' + p,
-                                self._sup_stdout, self._sup_stderr)
+        res = self._run_command(cmd + ' -S --noconfirm ' + p, self._sup_stdout, self._sup_stderr)
         if res != 0:
             self._log.warning('Could not install %s' % p)
             return False
         else:
             return True
 
-    def _install_packages(self, data):
+    def _install_packages(self, data, cmd='pacman'):
         pre_commands = []
         post_commands = []
         packages = []
@@ -74,7 +80,7 @@ class Pacman(dotbot.Plugin):
                 return False
 
         self._log.debug('Installing packages: ' + pkgs)
-        res = res and self._install(pkgs)
+        res = res and self._install(pkgs, cmd)
         if not res:
             self._log.error('Could not install packages: ' + pkgs)
             return False
@@ -89,8 +95,13 @@ class Pacman(dotbot.Plugin):
 
         return res
 
+    def use_sudo(self, cmd):
+        is_not_root = os.geteuid() != 0
+        using_pacman = cmd.startswith('pacman')
+        return is_not_root and using_pacman
+
     def _run_command(self, cmd, sup_stdout=True, sup_stderr=False):
-        cmd_prefix = 'sudo -E ' if os.geteuid() != 0 else ''
+        cmd_prefix = 'sudo -E ' if self.use_sudo(cmd) else ''
         stdout = subprocess.DEVNULL if sup_stdout else None
         stderr = subprocess.DEVNULL if sup_stderr else None
         cwd = self._context.base_directory()

@@ -12,4 +12,3 @@ zvm_after_init_commands+=(fzf_init)
 
 # Enable grc on all commands
 [[ -s "$(brew --prefix)/etc/grc.zsh" ]] && source "$(brew --prefix)/etc/grc.zsh"
-type ls &> /dev/null && unset -f ls # Do not want this from grc
