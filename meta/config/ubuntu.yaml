@@ -1,5 +1,3 @@
-- aptupdate:
-
 - apt:
   - software-properties-common
   - sudo
