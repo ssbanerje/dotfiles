@@ -1,5 +1,3 @@
-- pacmanupdate:
-
 - pacman:
   - sudo
   - curl

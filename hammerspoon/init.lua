@@ -110,7 +110,7 @@ state_machine:bind('base', {'alt', 'return'}, 'Open iTerm', function()
 end)
 
 -- BINDING: Open a Safari window
-state_machine:bind('base', {{'alt', 'cmd'}, 'return'}, 'Open Safari', function()
+state_machine:bind('base', {{'alt', 'shift'}, 'return'}, 'Open Safari', function()
   if hs.application.find("Safari") then
     hs.applescript.applescript([[
 			tell application "Safari"

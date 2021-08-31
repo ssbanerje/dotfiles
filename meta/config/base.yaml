@@ -6,3 +6,12 @@
 - clean:
     - "~"
     - "~/.config"
+
+- ifubuntu:
+    - aptupdate:
+
+- ifarch:
+    - pacmanupdate:
+
+- ifmacos:
+    - bootstraphomebrew:
