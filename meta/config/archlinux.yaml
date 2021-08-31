@@ -5,6 +5,14 @@
   - curl
   - python
   - python-pip
+  - git
+  - base-devel
+
+- shell:
+  - "git clone https://aur.archlinux.org/yay.git ~/yay"
+  - "cd ~/yay && makepkg -si --noconfirm"
+
+- yayupdate:
 
 - link:
     ~/.xinitrc: shell/xinitrc
