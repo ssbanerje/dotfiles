@@ -27,9 +27,11 @@
     - ~/.config/i3
     - ~/.config/i3status
     - ~/.config/polybar
+    - ~/.config/rofi
 
 - link:
     ~/.config/i3/config: i3wm/i3.conf
     ~/.config/i3status/config: i3wm/i3status.conf
+    ~/.config/rofi/config.rasi: i3wm/rofi.conf
     ~/.config/polybar/config: i3wm/polybar.conf
     ~/.config/polybar/launch.sh: i3wm/polybar_launch.sh
