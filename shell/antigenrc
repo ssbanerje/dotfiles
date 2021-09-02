@@ -28,6 +28,7 @@ antigen bundle command-not-found
 antigen bundle common-aliases
 antigen bundle docker
 antigen bundle extract
+antigen bundle fancy-ctrl-z
 antigen bundle fzf
 antigen bundle git-escape-magic
 antigen bundle gitfast
@@ -44,8 +45,6 @@ antigen bundle tmux
 antigen bundle vscode
 antigen bundle web-search
 antigen bundle yarn
-antigen bundle fancy-ctrl-z # This gets overwritten
-
 
 # Load bundles from external repos
 antigen bundle zsh-users/zsh-completions

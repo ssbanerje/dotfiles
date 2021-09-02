@@ -3,6 +3,15 @@
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
+setopt LOCAL_OPTIONS
+setopt LOCAL_TRAPS
+setopt SHARE_HISTORY
+setopt CORRECT
+setopt COMPLETE_ALIASES
+setopt COMPLETE_IN_WORD
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+
 # Homebrew
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
   FPATH="/usr/local/share/zsh/site-functions:$FPATH"
@@ -13,24 +22,9 @@ export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 source "$HOME/.config/antigen.zsh"
 antigen init "$HOME/.config/antigenrc"
 
-setopt LOCAL_OPTIONS # allow functions to have local options
-setopt LOCAL_TRAPS # allow functions to have local traps
-setopt SHARE_HISTORY # share history between sessions
-setopt CORRECT
-setopt COMPLETE_IN_WORD
-setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
-setopt HIST_REDUCE_BLANKS
-setopt complete_aliases
-
-zle -N newtab
-
-bindkey '^[^[[D' backward-word
-bindkey '^[^[[C' forward-word
-bindkey '^[[5D' beginning-of-line
-bindkey '^[[5C' end-of-line
-bindkey '^[[3~' delete-char
-bindkey '^[^N' newtab
-bindkey '^?' backward-delete-char
+# Make fancy-ctrl-z work with zvm
+zvm_define_widget fancy-ctrl-z fancy-ctrl-z
+zvm_bindkey viins '^Z' fancy-ctrl-z
 
 # Completion for kill
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
@@ -46,12 +40,8 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 # completing process IDs with menu selection
 zstyle ':completion:*:*:kill:*' menu yes select
 
-# Source platform specific setting
+# Source stuff
 source "$HOME/.config/zshrc.$(uname -s).sh"
-
-# Source common settings
 source "$HOME/.config/fzf.sh"
 source "$HOME/.config/common_settings.sh"
-
-# Prompt settings
 source "$HOME/.p10k.zsh"
