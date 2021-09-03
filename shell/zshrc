@@ -3,6 +3,12 @@
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
+# Enable Powerlevel10k instant prompt.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+[[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
+
 setopt LOCAL_OPTIONS
 setopt LOCAL_TRAPS
 setopt SHARE_HISTORY
@@ -26,22 +32,15 @@ antigen init "$HOME/.config/antigenrc"
 zvm_define_widget fancy-ctrl-z fancy-ctrl-z
 zvm_bindkey viins '^Z' fancy-ctrl-z
 
-# Completion for kill
+# Setup completions
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $(whoami) -o pid,user,comm -w -w"
-
-# Completion for ssh
 zstyle ':completion:*:ssh:*' tag-order hosts users
 zstyle ':completion:*:ssh:*' group-order hosts-domain hosts-host users hosts-ipaddr
-
-# ignore completion functions (until the _ignored completer)
 zstyle ':completion:*:functions' ignored-patterns '_*'
-
-# completing process IDs with menu selection
 zstyle ':completion:*:*:kill:*' menu yes select
 
 # Source stuff
+source "$HOME/.config/common_settings.sh"
 source "$HOME/.config/zshrc.$(uname -s).sh"
 source "$HOME/.config/fzf.sh"
-source "$HOME/.config/common_settings.sh"
-source "$HOME/.p10k.zsh"
