@@ -45,7 +45,6 @@ antigen bundle tmux
 antigen bundle vscode
 antigen bundle web-search
 antigen bundle yarn
-antigen bundle zsh-reload
 
 # Load bundles from external repos
 antigen bundle zsh-users/zsh-completions
