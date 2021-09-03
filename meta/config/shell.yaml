@@ -22,6 +22,8 @@
         - grc
 
 - ifmacos:
+    - tap:
+        - homebrew/command-not-found
     - brew:
         - ack
         - fasd
