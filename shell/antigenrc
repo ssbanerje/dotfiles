@@ -8,6 +8,7 @@ if [ "$(uname)"="Darwin" ]; then
   antigen bundle osx
   antigen bundle brew
   antigen bundle iterm2
+  antigen bundle gnu-utils
 fi
 
 # Linux specific plugins
@@ -44,6 +45,7 @@ antigen bundle tmux
 antigen bundle vscode
 antigen bundle web-search
 antigen bundle yarn
+antigen bundle zsh-reload
 antigen bundle fancy-ctrl-z # This gets overwritten
 
 
