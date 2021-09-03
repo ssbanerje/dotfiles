@@ -33,6 +33,6 @@ source "$HOME/.config/env.$(uname -s).sh"
 # Setup NPM binaries (Needs to come after the homebrew is loaded)
 YARN_PATH="$(yarn global bin)"
 if [[ ! "$PATH" == *"$YARN_PATH"* ]]; then
-  export PATH="YARN_PATH:${PATH}"
+  export PATH="$YARN_PATH:${PATH}"
 fi
 unset YARN_PATH
