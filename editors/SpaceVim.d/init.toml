@@ -29,6 +29,8 @@
   buffer_index_type = 4
   enable_tabline_filetype_icon = true
   enable_os_fileformat_icon = true
+  enable_vimfiler_filetypeicon = true
+  enable_vimfiler_gitstatus = true
 
   # File manager
   filemanager = "defx"
