@@ -31,10 +31,10 @@ jobs:
         exclude:
           - config: ubuntu
             os: macOS-latest
-          - config: macos
-            os: ubuntu-latest
           - config: i3wm
             os: macOS-latest
+          - config: macos
+            os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository code
@@ -46,9 +46,11 @@ jobs:
         with:
           python-version: 3.x
       - name: Initialize dependencies
-        run: pip install pyyaml jinja2 distro
+        run: |
+          [[ -f /usr/local/bin/2to3 ]] && rm -rf /usr/local/bin/2to3  # TODO: HOEMBREW ERROR
+          pip install pyyaml jinja2 distro
       - name: Install dotfiles
-        run: ./install ${{ matrix.config }}
+        run: ./install -vv ${{ matrix.config }}
   # }}}
 
   test-profiles:  # {{{
@@ -78,9 +80,11 @@ jobs:
         with:
           python-version: 3.9
       - name: Initialize dependencies
-        run: pip install pyyaml jinja2 distro
+        run: |
+          [[ -f /usr/local/bin/2to3 ]] && rm -rf /usr/local/bin/2to3  # TODO: HOEMBREW ERROR
+          pip install pyyaml jinja2 distro
       - name: Install dotfiles
-        run: ./install_profile ${{ matrix.profile }}
+        run: ./install_profile -vv ${{ matrix.profile }}
   # }}}
 
   build-docker-ubuntu:  # {{{
