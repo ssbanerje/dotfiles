@@ -3,20 +3,22 @@
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
+HISTSIZE=10000
+SAVEHIST=10000
+setopt AUTOCD
+setopt ALWAYS_TO_END COMPLETE_IN_WORD
+setopt AUTOPUSHD PUSHDMINUS PUSHDSILENT PUSHDTOHOME PUSHDIGNOREDUPS
+setopt CORRECT
+setopt COMPLETE_ALIASES COMPLETE_IN_WORD
+setopt EXTENDED_GLOB
+setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
+setopt LOCAL_OPTIONS LOCAL_TRAPS
+
 # Enable Powerlevel10k instant prompt.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 [[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
-
-setopt LOCAL_OPTIONS
-setopt LOCAL_TRAPS
-setopt SHARE_HISTORY
-setopt CORRECT
-setopt COMPLETE_ALIASES
-setopt COMPLETE_IN_WORD
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS
 
 # Homebrew
 if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
@@ -33,6 +35,7 @@ zvm_define_widget fancy-ctrl-z fancy-ctrl-z
 zvm_bindkey viins '^Z' fancy-ctrl-z
 
 # Setup completions
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $(whoami) -o pid,user,comm -w -w"
 zstyle ':completion:*:ssh:*' tag-order hosts users
