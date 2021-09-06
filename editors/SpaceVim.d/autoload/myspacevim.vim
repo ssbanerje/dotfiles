@@ -38,7 +38,7 @@ endfunction
 
 " Called after entering autocmd mode {{{
 function! myspacevim#after() abort
-  " Color 100 chars
+  " Color column width
   set colorcolumn=+1
 
   " Diff mode configuration
@@ -66,6 +66,9 @@ function! myspacevim#after() abort
 
   " Markdown Preview
   let g:mkdp_page_title = '${name}'
+
+  " Undo behavior
+  nnoremap U :MundoToggle<CR>
 
   " Make Y consistent with C and D -- yank to end of line
   nnoremap Y y$

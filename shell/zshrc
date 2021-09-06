@@ -44,6 +44,6 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
 # Source stuff
-source "$HOME/.config/common_settings.sh"
 source "$HOME/.config/zshrc.$(uname -s).sh"
+source "$HOME/.config/env.sh"
 source "$HOME/.config/fzf.sh"

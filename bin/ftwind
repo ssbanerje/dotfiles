@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ftwind - switch window (based on @george-b)
+# Call from inside tmux
+
 GREEN='\033[00;32m'
 RESTORE='\033[0m'
 

@@ -39,7 +39,7 @@ function extract() {
 shopt -s checkwinsize
 
 # Source common settings"
-source "$HOME/.config/common_settings.sh"
+source "$HOME/.config/env.sh"
 
 # Setup prompt
 source "$HOME/.config/bash.prompt.sh"

@@ -9,7 +9,6 @@
         - xclip
         - fzf
         - silversearcher-ag
-        - fasd
         - grc
 
 - ifarch:
@@ -18,7 +17,6 @@
         - xsel
         - fzf
         - the_silver_searcher
-        - fasd
         - grc
 
 - ifmacos:
@@ -26,7 +24,6 @@
         - homebrew/command-not-found
     - brew:
         - ack
-        - fasd
         - bash
         - bash-completion
         - fzf
@@ -70,14 +67,6 @@
     ~/.config/env.Linux.sh:
       if: '[ `uname` = Linux ]'
       path: shell/env.Linux.sh
-
-    ~/.config/common_settings.sh: shell/common_settings.sh
-    ~/.config/common_settings.Darwin.sh:
-      if: '[ `uname` = Darwin ]'
-      path: shell/common_settings.Darwin.sh
-    ~/.config/common_settings.Linux.sh:
-      if: '[ `uname` = Linux ]'
-      path: shell/common_settings.Linux.sh
 
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.config/aliases.Darwin.sh:
