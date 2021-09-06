@@ -1,11 +1,14 @@
 base
 ubuntu
 
-shell
+i3wm
+terminal
+ubuntu-ui
+
 bin
-git
-tmux
-ssh
 editors
-fonts
+git
 ranger
+shell
+ssh
+tmux

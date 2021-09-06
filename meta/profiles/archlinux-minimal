@@ -1,10 +1,6 @@
 base
 archlinux
 
-archlinux-ui
-i3wm
-terminal
-
 bin
 editors
 git

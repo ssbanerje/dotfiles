@@ -1,0 +1,36 @@
+# Install software and fonts
+- ifmacos:
+    - tap:
+        - homebrew/cask-fonts
+    - cask:
+        - kitty
+        - iterm2
+        - font-hack-nerd-font
+- ifubuntu:
+    - apt:
+        - kitty
+- ifarch:
+    - pacman:
+        - kitty
+- ifanylinux:
+    - shell:
+        - git clone https://github.com/ryanoasis/nerd-fonts /tmp/nerd-fonts
+        - /tmp/nerd-fonts/install.sh Ubuntu
+        - /tmp/nerd-fonts/install.sh UbuntuMono
+        - /tmp/nerd-fonts/install.sh Hack
+        - rm -rf /tmp/nerd-fonts
+
+# Install kitty config
+- create:
+    - ~/.config/kitty
+- link:
+    ~/.config/kitty/kitty.conf: kitty/kitty.conf
+
+# Install iTerm2
+- ifmacos:
+    - create:
+        - ~/Library/Preferences
+    - shell:
+        - "command cp -f iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
+        - "curl -L https://iterm2.com/shell_integration/zsh -o ~/.config/iterm2_shell_integration.zsh"
+        - "curl -L https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash"

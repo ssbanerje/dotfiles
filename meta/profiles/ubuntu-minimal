@@ -1,9 +1,5 @@
 base
-archlinux
-
-archlinux-ui
-i3wm
-terminal
+ubuntu
 
 bin
 editors

@@ -8,33 +8,14 @@ on:
     branches: [master]
 
 jobs:
-  test-config:  # {{{
-    name: Test Configs
+  test-profiles:  # {{{
+    name: Test Profiles
     strategy:
       matrix:
-        config:
-          - base
-          - ubuntu
-          - macos
-          - bin
-          - tmux
-          - ssh
-          - editors
-          - git
-          - shell
-          - fonts
-          - ranger
-          - i3wm
-        os:
-          - ubuntu-latest
-          - macOS-latest
-        exclude:
-          - config: ubuntu
-            os: macOS-latest
-          - config: i3wm
-            os: macOS-latest
-          - config: macos
-            os: ubuntu-latest
+        include:
+          - {profile: macos, os: macOS-latest}
+          - {profile: ubuntu, os: ubuntu-latest}
+          - {profile: ubuntu-minimal, os: ubuntu-latest}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository code
@@ -50,77 +31,11 @@ jobs:
           [[ -f /usr/local/bin/2to3 ]] && rm -rf /usr/local/bin/2to3  # TODO: HOEMBREW ERROR
           pip install pyyaml jinja2 distro
       - name: Install dotfiles
-        run: ./install -vv ${{ matrix.config }}
-  # }}}
-
-  test-profiles:  # {{{
-    name: Test Profiles
-    needs: [test-config]
-    strategy:
-      matrix:
-        profile:
-          - ubuntu
-          - macos
-        os:
-          - ubuntu-latest
-          - macOS-latest
-        exclude:
-          - profile: ubuntu
-            os: macOS-latest
-          - profile: macos
-            os: ubuntu-latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Initialize dependencies
-        run: |
-          [[ -f /usr/local/bin/2to3 ]] && rm -rf /usr/local/bin/2to3  # TODO: HOEMBREW ERROR
-          pip install pyyaml jinja2 distro
-      - name: Install dotfiles
         run: ./install_profile -vv ${{ matrix.profile }}
   # }}}
 
-  build-docker-ubuntu:  # {{{
-    name: Build Ubuntu docker
-    needs: [test-profiles]
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-      - name: Build Ubuntu Container
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          platforms: linux/amd64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:ubuntu
-          file: Dockerfile.ubuntu
-  # }}}
-
-  build-docker-arch:  # {{{
-    name: Build Archlinux docker
+  build-docker:  # {{{
+    name: Build Docker Containers
     needs: [test-profiles]
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
