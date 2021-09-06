@@ -5,7 +5,7 @@ export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
 # Setup GPG TTY
-export GPG_TTY="$(tty)"
+export GPG_TTY="$TTY"
 
 # Export XDG_DATA_DIR
 export XDG_DATA_DIR=$HOME/.config
