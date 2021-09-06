@@ -13,7 +13,9 @@
   bootstrap_after = 'myspacevim#after'
   auto_disable_touchpad = true
   realtime_leader_guide = true
-  enable_vimfiler_gitstatus = true
+
+  # Editor
+  max_column = 100
 
   # Colors
   colorscheme = 'material'
