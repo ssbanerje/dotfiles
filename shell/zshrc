@@ -15,14 +15,11 @@ setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE
 setopt LOCAL_OPTIONS LOCAL_TRAPS
 
 # Enable Powerlevel10k instant prompt.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-[[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
-
-# Homebrew
-if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
-  FPATH="/usr/local/share/zsh/site-functions:$FPATH"
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  # source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
+if [[ -f "$HOME/.p10k.zsh" ]]; then
+  source "$HOME/.p10k.zsh"
 fi
 
 # Load antigen
@@ -44,6 +41,5 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
 # Source stuff
-source "$HOME/.config/common_settings.sh"
-source "$HOME/.config/zshrc.$(uname -s).sh"
-source "$HOME/.config/fzf.sh"
+zsh-defer source "$HOME/.config/zshrc.$(uname -s).sh"
+zsh-defer source "$HOME/.config/env.sh"

@@ -5,6 +5,7 @@
     ~/.bin/diffconflicts: bin/diffconflicts
     ~/.bin/doi2bib: bin/doi2bib
     ~/.bin/ftwind: bin/ftwind
+    ~/.bin/ftpane: bin/ftpane
     ~/.bin/gzball: bin/gzball
     ~/.bin/ports: bin/ports
     ~/.bin/random: bin/random

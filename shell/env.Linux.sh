@@ -11,7 +11,7 @@ fi
 
 # Set for CUDA
 CUDA=/usr/local/cuda
-[ -d $CUDA ] && if [[ ! "$PATH" == *"$CUDA/bin"* ]]; then
+if [[ -d "$CUDA" && ! "$PATH" == *"$CUDA/bin"* ]]; then
   export PATH="$PATH:$CUDA/bin"
 fi
 unset CUDA
