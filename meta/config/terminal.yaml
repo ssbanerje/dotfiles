@@ -25,6 +25,9 @@
     - ~/.config/kitty
 - link:
     ~/.config/kitty/kitty.conf: kitty/kitty.conf
+    ~/.config/kitty/macos-launch-services-cmdline:
+      if: '[ `uname` = Darwin ]'
+      path: kitty/macos-launch-services-cmdline
 
 # Install iTerm2
 - ifmacos:

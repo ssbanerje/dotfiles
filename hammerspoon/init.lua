@@ -98,8 +98,12 @@ end)
 
 -- BINDING: Open a terminal window
 state_machine:bind('base', {'alt', 'return'}, 'Open kitty', function()
-  local unit = function(...) end
-  hs.task.new("/usr/local/bin/kitty", unit, unit, {'-1'}):start()
+  if hs.application.find("kitty") then
+    local nop = function(...) end
+    hs.task.new("/usr/local/bin/kitty", nop, nop, {'-1', '-d='..os.getenv("HOME")}):start()
+  else
+    hs.application.open("kitty")
+  end
 end)
 
 state_machine:bind('base', {{'cmd', 'alt'}, 'return'}, 'Open iTerm', function()
