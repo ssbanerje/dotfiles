@@ -1,9 +1,9 @@
 base
 archlinux
 
-archlinux-ui
 i3wm
 terminal
+x11
 
 bin
 editors

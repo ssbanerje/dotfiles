@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Set rate for repeated characters
+xset r rate 300 50
+
+# Load any modified keys
+if [ -s "$HOME/.Xmodmap" ]; then
+  xmodmap "$HOME/.Xmodmap"
+fi

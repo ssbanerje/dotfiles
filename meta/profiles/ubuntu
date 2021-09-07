@@ -3,7 +3,7 @@ ubuntu
 
 i3wm
 terminal
-ubuntu-ui
+x11
 
 bin
 editors

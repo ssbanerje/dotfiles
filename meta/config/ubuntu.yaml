@@ -1,6 +1,7 @@
-- apt:
-  - software-properties-common
-  - sudo
-  - curl
-  - python3-dev
-  - python3-pip
+- ifubuntu:
+    - apt:
+        - software-properties-common
+        - sudo
+        - curl
+        - python3-dev
+        - python3-pip

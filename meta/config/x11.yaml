@@ -1,0 +1,3 @@
+- ifanylinux:
+    - link:
+        ~/.xsession: shell/xsession
