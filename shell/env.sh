@@ -17,7 +17,7 @@ export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
 # Color scheme for terminal
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 BASE16_SHELL=$HOME/.config/base16-shell/
 if [[ "$-" == *i* && -f $BASE16_SHELL/scripts/base16-material.sh ]]; then
   source ${BASE16_SHELL}/scripts/base16-material.sh
