@@ -27,7 +27,7 @@ export PYTHONSTARTUP="$HOME/.pythonrc.py"
 # Source Rustup
 if [[ -d "$HOME/.cargo/" ]]; then
   source "$HOME/.cargo/env"
-  if [[ ! "$PATH" == *"$HOME/.cargo.bin"* ]]; then
+  if [[ ! "$PATH" == *"$HOME/.cargo/bin"* ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
   fi
 fi
