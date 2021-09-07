@@ -51,22 +51,24 @@
     stdout: false
     stderr: true
     packages:
-      - neovim
-      - remark
-      - remark-cli
-      - remark-stringify
-      - remark-frontmatter
-      - wcwidth
-      - prettier
-      - vscode-html-languageserver-bin
-      - bash-language-server
-      - dockerfile-language-server-nodejs
+      - remark  # Spacevim layer lang#markdown
+      - remark-cli  # Spacevim layer lang#markdown
+      - remark-stringify  # Spacevim layer lang#markdown
+      - remark-frontmatter  # Spacevim layer lang#markdown
+      - wcwidth  # Spacevim layer lang#markdown
+      - prettier  # Spacevim layer lang#markdown, neoformat (several filetypes)
+      - vscode-html-languageserver-bin  # Spacevim layer lang#html
+      - bash-language-server  # Spacevim layer language_server_protocol
+      - dockerfile-language-server-nodejs  # Spacevim layer lang#dockerfile
+
+- create:
+    - ~/.local/share/nvim/shada/
 
 - shell:
-  - 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
-  - '. ~/.cargo/env && rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy'
-  - '. ~/.cargo/env && rustup component add rls rust-analysis rust-src'
-  - 'mkdir -p ~/.local/share/nvim/shada/ && touch ~/.local/share/nvim/shada/main.shada'
+    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path', 'Installing Rust']
+    - ['. ~/.cargo/env && rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy', 'Adding Rust Nightly + Clippy']
+    - ['. ~/.cargo/env && rustup component add rls rust-analysis rust-src', 'Adding RLS']
+    - ['touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
 
 # -------------- Link configuration
 - link:
