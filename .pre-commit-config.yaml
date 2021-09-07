@@ -4,13 +4,6 @@
 ---
 
 repos:
-  - repo: local
-    hooks:
-      - id: dotfiles-checker
-        name: dotfiles-checker
-        language: system
-        entry: scripts/pre-commit.py
-        always_run: true
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:

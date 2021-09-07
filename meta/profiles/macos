@@ -1,11 +1,13 @@
 base
 macos
 
-shell
+macos-ui
+terminal
+
 bin
-git
-tmux
-ssh
 editors
-fonts
+git
 ranger
+shell
+ssh
+tmux

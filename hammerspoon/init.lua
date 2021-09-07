@@ -96,14 +96,19 @@ state_machine:bind('base', {hyper, 'return'}, 'Toggle Yabai', function()
   yabai:ipc({'space', '--layout', layout})
 end)
 
--- BINDING: Open a iTerm2 window
-state_machine:bind('base', {'alt', 'return'}, 'Open iTerm', function()
+-- BINDING: Open a terminal window
+state_machine:bind('base', {'alt', 'return'}, 'Open kitty', function()
+  local unit = function(...) end
+  hs.task.new("/usr/local/bin/kitty", unit, unit, {'-1'}):start()
+end)
+
+state_machine:bind('base', {{'cmd', 'alt'}, 'return'}, 'Open iTerm', function()
   if hs.application.find("iTerm") then
     hs.applescript.applescript([[
-			tell application "iTerm"
-				create window with default profile
-			end tell
-		]])
+      tell application "iTerm"
+        create window with default profile
+      end tell
+    ]])
   else
     hs.application.open("iTerm")
   end

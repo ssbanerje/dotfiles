@@ -174,8 +174,13 @@
 
 ################################################# CUSTOM PLUGINS {{{1
 
-[[layers]]
-  name = 'my_motions'
+[[custom_plugins]]
+  repo = 'xerus2000/argtextobj.vim'
+  merged = false
+
+[[custom_plugins]]
+  repo = 'chaoren/vim-wordmotion'
+  merged = false
 
 ####################################################################}}}1
 

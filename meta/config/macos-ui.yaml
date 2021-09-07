@@ -1,0 +1,21 @@
+- tap:
+  - koekeishiya/formulae
+
+- brew:
+  - python
+  - yabai
+
+- cask:
+  - dozer
+  - hammerspoon
+
+- create:
+    - ~/.config
+
+- link:
+    ~/.yabairc: yabai/yabairc
+    ~/.hammerspoon: hammerspoon
+
+- shell:
+    - "brew services start yabai"
+    - "./scripts/macos.sh"

@@ -1,13 +1,20 @@
 #Homebrew bash completion
-[[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+if [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]]; then
+  source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+fi
 
 # Iterm2 Bash Integration
-[[ -r "$HOME/.config/iterm2_shell_integration.bash" ]] && source $HOME/.config/iterm2_shell_integration.bash
+if [[ -r "$HOME/.config/iterm2_shell_integration.bash" ]]; then
+  source $HOME/.config/iterm2_shell_integration.bash
+fi
 
 # Setup fzf
-[[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.bash" 2> /dev/null
+if [[ $- == *i* ]]; then
+  source "$(brew --prefix)/opt/fzf/shell/completion.bash" 2> /dev/null
+fi
 source "$(brew --prefix)/opt/fzf/shell/key-bindings.bash"
 
 # Grc color on all commands
-[[ -s "$(brew --prefix)/etc/grc.sh" ]] && source "$(brew --prefix)/etc/grc.sh"
-type ls &> /dev/null && unset -f ls # Do not want this from grc
+if [[ -s "$(brew --prefix)/etc/grc.sh" ]]; then
+  source "$(brew --prefix)/etc/grc.sh"
+fi

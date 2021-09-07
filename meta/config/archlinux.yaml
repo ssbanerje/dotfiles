@@ -11,6 +11,3 @@
   - "cd ~/yay && makepkg -si --noconfirm"
 
 - yayupdate:
-
-- link:
-    ~/.xinitrc: shell/xinitrc
