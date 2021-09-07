@@ -1,44 +1,55 @@
-                                             __      __  _______ __
-                                        ____/ /___  / /_/ ____(_) /__  _____
-                                       / __  / __ \/ __/ /_  / / / _ \/ ___/
-                                      / /_/ / /_/ / /_/ __/ / / /  __(__  )
-                                      \__,_/\____/\__/_/   /_/_/\___/____/
-                                            JUST THE WAY I LIKE IT
+               __      __  _______ __
+          ____/ /___  / /_/ ____(_) /__  _____
+         / __  / __ \/ __/ /_  / / / _ \/ ___/
+        / /_/ / /_/ / /_/ __/ / / /  __(__  )
+        \__,_/\____/\__/_/   /_/_/\___/____/
 
 [![Build](https://github.com/ssbanerje/dotfiles/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/ssbanerje/dotfiles/actions/workflows/build.yml)
 
-## Docker
-Use the packaged docker image to not install any dependecies on the host.
+## Container-based Installation
+Use the packaged container to install dotfiles and all dependencies.
 
+Run this:
 ```bash
-git clone https://github.com/ssbanerje/dotfiles.git dotfiles
-<path to dotfiles>/scripts/shim.sh bash # or zsh
+git clone https://github.com/ssbanerje/dotfiles.git
+./dotfiles/scripts/shim.sh <command>
 ```
 
-The shim will pass the `ssh-agent` into the container and map the current working directory as `/cwd`
-in the container.
+### Details
+- Script uses docker to run the container.
+- For an Ubuntu container use `scripts/shim.sh`.
+- For an Archlinux container use `scripts/shim-archlinux.sh`.
+- Shim passes `ssh-agent` keys to container.
+- Shim mounts host's current working directory to `/cwd`.
+
 
 ## Local Installation
+Install the dotfiles and dependencies on the local machine.
 
-1. Get dotfiles
+Run this:
 ```bash
-git clone --recurse-submodules https://github.com/ssbanerje/dotfiles.git dotfiles
+git clone --recurse-submodules https://github.com/ssbanerje/dotfiles.git
+pip install pyyaml jinja2 distro
 cd dotfiles
+./install_profile <profile>
 ```
-2. Update the configuration files in the `meta/config/` folder
+
+### Details
+- Update configuration files for user.
   - `meta/config/git.yaml`
-3. Install dependencies
-  - Python3
-  - Packages `pyyaml`, `jinja2`, `distro`
-4. Install dotfiles based on profiles in `meta/profiles/` folder
-```bash
-./install_profile ubuntu # On ubuntu machines
-./install_profile macos # On macos machines
-```
+- The installer script requires `python3` and the `pyyaml`, `jinja2`, and `distro` python packages.
+- The installer script can load multiple profiles (located in `meta/profiles/`):
+  - `macos`: For MacOS
+  - `ubuntu`: For Ubuntu desktop
+  - `ubuntu-minimal`: For text-based Ubuntu distributions
+  - `archlinux`: For Archlinux desktop
+  - `archlinux-minimal`: For text-based Archlinux distributions
+- Individual components (from `meta/config/`) can be installed using the `install.sh` script.
 
-## Setup Dev Environment
 
-Setup the git hooks.
+## Setup Development Environment
+
+Install pre-commit hooks:
 ```bash
 pip install pre-commit
 pre-commit install
