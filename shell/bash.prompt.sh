@@ -3,7 +3,7 @@
 
 # Check device type
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+    xterm-color|xterm-kitty|*-256color) color_prompt=yes;;
 esac
 
 if [ "$color_prompt" = yes ]; then
@@ -124,4 +124,3 @@ function set_prompt {
   PS1="$PS1${debian_chroot:+($debian_chroot)}[${GREEN}\u${COLOR_NONE}@${BLUE}\h${COLOR_NONE}:${PURPLE}\w${COLOR_NONE}]$(parse_git_branch)${COLOR_NONE}\$ "
 }
 export PROMPT_COMMAND=set_prompt
-
