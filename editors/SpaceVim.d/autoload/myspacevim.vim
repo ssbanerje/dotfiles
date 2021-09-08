@@ -42,6 +42,7 @@ endfunction
 " Called after entering autocmd mode {{{
 function! myspacevim#after() abort
   " Color column width
+  set tw=100
   set colorcolumn=+1
 
   " Diff mode configuration

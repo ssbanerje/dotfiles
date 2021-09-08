@@ -1,5 +1,7 @@
 # Enable grc on all commands
-[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+if [[ -s "/etc/grc.zsh" ]]; then
+  source /etc/grc.zsh
+fi
 
 # Enable fzf
 if [[ -s "/usr/share/doc/fzf/examples/completion.zsh" ]]; then

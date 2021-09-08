@@ -43,3 +43,10 @@ zstyle ':completion:*:*:kill:*' menu yes select
 # Source stuff
 zsh-defer source "$HOME/.config/zshrc.$(uname -s).sh"
 zsh-defer source "$HOME/.config/env.sh"
+
+# Setup color scheme
+BASE16_SHELL=$HOME/.config/base16-shell/
+if [[ "$-" == *i* && -f $BASE16_SHELL/scripts/base16-material.sh ]]; then
+  zsh-defer -1 source ${BASE16_SHELL}/scripts/base16-material.sh
+fi
+unset BASE16_SHELL

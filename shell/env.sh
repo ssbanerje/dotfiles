@@ -16,14 +16,6 @@ export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
-# Color scheme for terminal
-# export TERM="xterm-256color"
-BASE16_SHELL=$HOME/.config/base16-shell/
-if [[ "$-" == *i* && -f $BASE16_SHELL/scripts/base16-material.sh ]]; then
-  source ${BASE16_SHELL}/scripts/base16-material.sh
-fi
-unset BASE16_SHELL
-
 # Binaries from dotfiles
 if [[ ! "$PATH" == *"$HOME/.bin"* ]]; then
   export PATH="${PATH:+${PATH}:}$HOME/.bin"
@@ -35,7 +27,7 @@ export PYTHONSTARTUP="$HOME/.pythonrc.py"
 # Source Rustup
 if [[ -d "$HOME/.cargo/" ]]; then
   source "$HOME/.cargo/env"
-  if [[ ! "$PATH" == *"$HOME/.cargo.bin"* ]]; then
+  if [[ ! "$PATH" == *"$HOME/.cargo/bin"* ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
   fi
 fi
