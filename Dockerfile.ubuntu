@@ -13,8 +13,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends sudo python3 python3-yaml python3-distro python3-jinja2 && \
     adduser --disabled-password --gecos "" --uid ${uid} ${user} && \
-    groupadd docker && \
-    usermod -aG docker ${user} && \
     echo "%${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
@@ -25,6 +23,7 @@ COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
     ./install_profile ubuntu-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    zsh -i -c exit && nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall && \
     sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Take command from user
