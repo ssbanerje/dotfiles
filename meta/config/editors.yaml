@@ -36,7 +36,6 @@
         - global
         - ctags
         - node
-        - npm
         - yarn
 
 - pip:
@@ -63,10 +62,10 @@
     - ~/.local/share/nvim/shada/
 
 - shell:
-    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path', 'Installing Rust']
-    - ['. ~/.cargo/env && rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy', 'Adding Rust Nightly + Clippy']
+    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal', 'Installing Rust']
     - ['. ~/.cargo/env && rustup component add rls rust-analysis rust-src', 'Adding RLS']
     - ['touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
+    - ["curl -sLf https://spacevim.org/install.sh | bash -s -- --no-fonts", "Installing SpaceVim"]
 
 # -------------- Link configuration
 - link:
@@ -76,6 +75,5 @@
     ~/.SpaceVim/coc-settings.json: editors/coc-settings.json
 
 - shell:
-    - ["curl -sLf https://spacevim.org/install.sh | bash", "Installing SpaceVim"]
     - ["nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall", "Install VIM Plugins"]
-    - ["nvim --headless +'CocInstall coc-clangd coc-rls coc-pyright' +qall", "Install Coc Extensions"]
+    - ["nvim --headless +'CocInstall -sync coc-clangd coc-rls coc-pyright' +qall", "Install Coc Extensions"]

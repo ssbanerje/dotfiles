@@ -1,3 +1,13 @@
+- ifubuntu:
+    - apt:
+        - xsel
+        - xclip
+
+- ifarch:
+    - pacman:
+        - xsel
+        - xclip
+
 - ifanylinux:
     - link:
         ~/.xsession: shell/xsession

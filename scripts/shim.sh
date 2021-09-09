@@ -27,6 +27,7 @@ docker run -it --rm \
   -v "/run/user/$(id -u)/:/run/user/$(id -u)/:ro" \
   -v "${SSH_AUTH_SOCK}":/ssh-auth-socket \
   -e SSH_AUTH_SOCK=/ssh-auth-socket \
+  -e TERM="$TERM" \
   -v "${PWD}:/cwd/:rw" \
   -w "/cwd" \
   "$IMAGE" "$@"
