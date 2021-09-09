@@ -24,8 +24,8 @@ COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
     ./install_profile archlinux-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
-    sudo pacman -Scc --noconfirm && \
-    sudo rm -rf /tmp/*
+    zsh -i -c exit && nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall && \
+    sudo pacman -Scc --noconfirm && sudo rm -rf /tmp/*
 
 # Take command from user
 CMD []

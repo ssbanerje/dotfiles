@@ -13,4 +13,4 @@ Host github.com
   Hostname github.com
   PreferredAuthentications publickey
   AddKeysToAgent yes
-  IdentityFile ~/.ssh/github_ed25519
+  IdentityFile ~/.ssh/id_ed25519

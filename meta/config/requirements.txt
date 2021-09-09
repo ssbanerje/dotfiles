@@ -4,6 +4,8 @@ proselint
 pygments
 pynvim
 python-language-server
+sexpdata
 vint
+websocket-client
 yamllint
 yapf
