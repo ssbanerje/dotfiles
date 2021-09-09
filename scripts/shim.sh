@@ -3,7 +3,7 @@
 set -e
 
 # Get the correct image
-if [[ -n "ARCHLINUX" ]]; then
+if [[ -n "$ARCHLINUX" ]]; then
   IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux"
 else
   IMAGE="ghcr.io/ssbanerje/dotfiles:latest"
