@@ -1,12 +1,10 @@
 # ------------------ Install software
 - ifubuntu:
-    - shell:
-        - "sudo add-apt-repository -y universe"
-        - "sudo add-apt-repository -y multiverse"
+    # - shell:
+        # - "sudo add-apt-repository -y universe"
+        # - "sudo add-apt-repository -y multiverse"
     - apt:
         - zsh
-        - xsel
-        - xclip
         - fzf
         - silversearcher-ag
         - grc
@@ -14,7 +12,6 @@
 - ifarch:
     - pacman:
         - zsh
-        - xsel
         - fzf
         - the_silver_searcher
         - grc
@@ -23,8 +20,7 @@
     - tap:
         - homebrew/command-not-found
     - brew:
-        - ack
-        - bash
+        - zsh
         - bash-completion
         - fzf
         - coreutils

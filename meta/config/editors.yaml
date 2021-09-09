@@ -63,8 +63,7 @@
     - ~/.local/share/nvim/shada/
 
 - shell:
-    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path', 'Installing Rust']
-    - ['. ~/.cargo/env && rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy', 'Adding Rust Nightly + Clippy']
+    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal', 'Installing Rust']
     - ['. ~/.cargo/env && rustup component add rls rust-analysis rust-src', 'Adding RLS']
     - ['touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
 
