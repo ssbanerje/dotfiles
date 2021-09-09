@@ -2,7 +2,12 @@
 
 set -e
 
-IMAGE="ghcr.io/ssbanerje/dotfiles:latest"
+# Get the correct image
+if [[ -n "ARCHLINUX" ]]; then
+  IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux"
+else
+  IMAGE="ghcr.io/ssbanerje/dotfiles:latest"
+fi
 
 # Get the ssh-agent
 if [[ ! -n "${SSH_AUTH_SOCK}" ]]; then
@@ -28,5 +33,5 @@ docker run -it --rm \
 
 # Cleanup
 if [[ -n "${STARTED_SSH_AGENT}" ]]; then
-  eval $(ssh-agent -k)
+  eval $(ssh-agent -k) > /dev/null
 fi
