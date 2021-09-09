@@ -5,8 +5,11 @@ set -e
 IMAGE="ghcr.io/ssbanerje/dotfiles:latest"
 
 # Get the ssh-agent
-eval "$(ssh-agent)" > /dev/null
-ssh-add
+if [[ ! -n "${SSH_AUTH_SOCK}" ]]; then
+  STARTED_SSH_AGENT=1
+  eval "$(ssh-agent)" > /dev/null
+  ssh-add
+fi
 
 # Run docker
 docker pull "$IMAGE"
@@ -24,4 +27,6 @@ docker run -it --rm \
   "$IMAGE" "$@"
 
 # Cleanup
-kill $SSH_AGENT_PID
+if [[ -n "${STARTED_SSH_AGENT}" ]]; then
+  eval $(ssh-agent -k)
+fi
