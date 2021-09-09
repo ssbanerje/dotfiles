@@ -16,7 +16,7 @@
         params:
           NAME: Subho Banerjee
           EMAIL: ssbanerje@gmail.com
-          GITHUB: ssbanerje
+          GITHUB_USERNAME: ssbanerje
           SIGNING_KEY: 02AF2E69BA7B1C8B
           SMTP_SERVER: smtp.gmail.com
           SMTP_PORT: 587
