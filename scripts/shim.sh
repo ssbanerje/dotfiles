@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 # Get the correct image
 if [[ -n "$ARCHLINUX" ]]; then
   IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux"

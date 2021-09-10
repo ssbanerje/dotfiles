@@ -83,3 +83,5 @@
     ~/.wgetrc: shell/wgetrc
 
     ~/.pythonrc.py: shell/pythonrc.py
+- shell:
+    - ["zsh -i -c exit", "Install ZSH plugins"]

@@ -4,11 +4,8 @@
       relink: true
 
 - clean:
-    ~/:
-      force: true
-    ~/.config:
-      force: true
-      recursive: true
+    - ~/
+    - ~/.config
 
 - ifubuntu:
     - aptupdate:
