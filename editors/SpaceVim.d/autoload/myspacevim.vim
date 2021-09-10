@@ -1,38 +1,8 @@
-" Register make tasks {{{
-function! s:make_tasks() abort
-  if filereadable('Makefile')
-    let commands = filter(readfile('Makefile', ''), "v:val=~#'^.PHONY'")
-    if !empty(commands)
-      call flatten(map(commands, {k, v -> split(v)[1:]}))
-      let conf = {}
-      for cmd in commands
-        call extend(conf, {
-              \ cmd: {
-                \ 'command': 'make',
-                \ 'args': [cmd],
-                \ 'isDetected' : 1,
-                \ 'detectedName' : 'make: '
-              \ }
-            \ })
-      endfor
-      return conf
-    else
-      return {}
-    endif
-  else
-    return {}
-  endif
-endfunction
-" }}}1
-
 " Called after custom config is loaded {{{
 function! myspacevim#before() abort
-  " Configure tasks
-  call SpaceVim#plugins#tasks#reg_provider(funcref('s:make_tasks'))
-
   " Configure custom shortcuts
-  call SpaceVim#custom#SPC('nore', ['r', 'w'], "for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor", "wipe all registers", 1)
-  call SpaceVim#custom#SPC('nore', ['g', 'p'], "Gina patch", "interactively-stage-file", 1)
+  call SpaceVim#custom#SPC('nore', ['r', 'w'], 'for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor', 'wipe all registers', 1)
+  call SpaceVim#custom#SPC('nore', ['g', 'p'], 'Gina patch', 'interactively-stage-file', 1)
 
   " Set timeout for spacevim menus
   set timeoutlen=100
@@ -42,7 +12,7 @@ endfunction
 " Called after entering autocmd mode {{{
 function! myspacevim#after() abort
   " Color column width
-  set tw=100
+  set textwidth=100
   set colorcolumn=+1
 
   " Diff mode configuration
@@ -65,7 +35,7 @@ function! myspacevim#after() abort
   endif
 
   " Prevent vimtex preview
-  let g:tex_conceal=""
+  let g:tex_conceal=''
   set conceallevel=0
 
   " Markdown Preview
@@ -106,7 +76,37 @@ function! myspacevim#after() abort
   let g:neomake_zsh_enabled_makers = ['zsh']
   let g:neomake_text_enabled_makers = ['proselint']
   let g:neomake_markdown_enabled_makers = ['proselint']
+
+  " Get coc completion on TAB
+  inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+  " Remap keys for coc gotos
+  nmap gd <Plug>(coc-definition)
+  nmap gy <Plug>(coc-type-definition)
+  nmap gi <Plug>(coc-implementation)
+  nmap gr <Plug>(coc-references)
+
+  " Use K to show documentation in preview window
+  nnoremap K :call <SID>show_documentation()<CR>
 endfunction
+
+" Helpers for coc shortcut
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+function! s:show_documentation() abort
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
 " }}}1
 
 " vim:set fdm=marker:

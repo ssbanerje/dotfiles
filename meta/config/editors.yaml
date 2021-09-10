@@ -73,6 +73,9 @@
     ~/.ideavimrc: editors/ideavimrc
     ~/.editorconfig: editors/editorconfig
     ~/.SpaceVim.d: editors/SpaceVim.d
+    ~/.SpaceVim/coc-settings.json: editors/coc-settings.json
 
 - shell:
     - ["curl -sLf https://spacevim.org/install.sh | bash", "Installing SpaceVim"]
+    - ["nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall", "Install VIM Plugins"]
+    - ["nvim --headless +'CocInstall coc-clangd coc-rls coc-pyright' +qall", "Install Coc Extensions"]

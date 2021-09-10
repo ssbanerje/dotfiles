@@ -5,7 +5,7 @@ pygments
 pynvim
 python-language-server
 sexpdata
-vint
+vim-vint
 websocket-client
 yamllint
 yapf
