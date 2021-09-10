@@ -12,7 +12,6 @@
         - vim-nox
         - global
         - exuberant-ctags
-        - libclang-dev
         - clangd
         - nodejs
         - yarn
@@ -54,9 +53,6 @@
       - remark-frontmatter  # Spacevim layer lang#markdown
       - wcwidth  # Spacevim layer lang#markdown
       - prettier  # Spacevim layer lang#markdown, neoformat (several filetypes)
-      - vscode-html-languageserver-bin  # Spacevim layer lang#html
-      - bash-language-server  # Spacevim layer language_server_protocol
-      - dockerfile-language-server-nodejs  # Spacevim layer lang#dockerfile
 
 - create:
     - ~/.local/share/nvim/shada/
@@ -76,4 +72,4 @@
 
 - shell:
     - ["nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall", "Install VIM Plugins"]
-    - ["nvim --headless +'CocInstall -sync coc-clangd coc-rls coc-pyright' +qall", "Install Coc Extensions"]
+    - ["nvim --headless +'CocInstall -sync coc-clangd coc-rls coc-pyright coc-cmake coc-texlab' +qall", "Install Coc Extensions"]

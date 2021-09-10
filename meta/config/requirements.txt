@@ -3,7 +3,6 @@ neovim-remote
 proselint
 pygments
 pynvim
-python-language-server
 sexpdata
 vim-vint
 websocket-client

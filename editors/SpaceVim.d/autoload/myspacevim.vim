@@ -34,9 +34,10 @@ function! myspacevim#after() abort
     highlight! link DiffText MatchParen
   endif
 
-  " Prevent vimtex preview
-  let g:tex_conceal=''
+  " Dont conceal chars
   set conceallevel=0
+  let g:tex_conceal=''
+  let g:neosnippet#enable_conceal_markers=0
 
   " Markdown Preview
   let g:mkdp_page_title = '${name}'
@@ -48,7 +49,7 @@ function! myspacevim#after() abort
   nnoremap Y y$
 
   " Search visually selected text
-  vnoremap // y/<C-R>"<CR>
+  vnoremap / y/<C-R>"<CR>
 
   " Make n always go forward and N backward in search
   nnoremap <expr> n 'Nn'[v:searchforward]
@@ -77,11 +78,8 @@ function! myspacevim#after() abort
   let g:neomake_text_enabled_makers = ['proselint']
   let g:neomake_markdown_enabled_makers = ['proselint']
 
-  " Get coc completion on TAB
-  inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+  " Get coc completion
+  inoremap <expr> <C-c> coc#refresh()
 
   " Remap keys for coc gotos
   nmap gd <Plug>(coc-definition)
@@ -90,15 +88,10 @@ function! myspacevim#after() abort
   nmap gr <Plug>(coc-references)
 
   " Use K to show documentation in preview window
-  nnoremap K :call <SID>show_documentation()<CR>
+  nnoremap <expr> K <SID>show_documentation()
 endfunction
 
-" Helpers for coc shortcut
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
+" Show documentation for current word
 function! s:show_documentation() abort
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -106,7 +99,6 @@ function! s:show_documentation() abort
     call CocAction('doHover')
   endif
 endfunction
-
 " }}}1
 
 " vim:set fdm=marker:

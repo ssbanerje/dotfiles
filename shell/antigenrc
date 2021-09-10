@@ -41,6 +41,7 @@ antigen bundle rust
 antigen bundle rustup
 # antigen bundle sbt
 # antigen bundle scala
+antigen bundle ssh-agent
 antigen bundle tmux
 antigen bundle vscode
 antigen bundle web-search
