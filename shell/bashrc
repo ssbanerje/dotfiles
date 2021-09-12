@@ -33,21 +33,21 @@ CHECK_AND_SOURCE \
   "$HOME/.config/env.sh" \
   "$HOME/.config/aliases.sh"
 
-# Bash Completion {{{
+# Bash Completion + Keybindings {{{
 
-if [[ "${UNAME:=$(uname -s)}" = "Linux" ]]; then
+if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
   CHECK_AND_SOURCE \
     "$(shopt -oq posix || echo '/usr/share/bash-completion/bash_completion')" \
     /usr/share/doc/fzf/examples/completion.bash \
     /usr/share/doc/fzf/examples/key-bindings.bash \
     /etc/grc.sh
-elif [[ "${UNAME:=$(uname -s)}" = "Darwin" ]]; then
+elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   CHECK_AND_SOURCE \
-    "$(brew --prefix)/etc/profile.d/bash_completion.sh" \
-    "$(brew --prefix)/opt/fzf/shell/completion.bash" \
-    "$(brew --prefix)/opt/fzf/shell/key-bindings.bash" \
-    "$(brew --prefix)/etc/grc.sh" \
-    "$HOME/.config/iterm2_shell_integration.bash"
+    "${BREW_PREFIX:=$(brew --prefix)}/etc/profile.d/bash_completion.sh" \
+    "$BREW_PREFIX/opt/fzf/shell/completion.bash" \
+    "$BREW_PREFIX/opt/fzf/shell/key-bindings.bash" \
+    "$BREW_PREFIX/etc/grc.sh" \
+    $([[ "$term_program" == "iterm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.bash")
 fi
 
 # }}}

@@ -7,10 +7,12 @@ alias cp='cp -i'
 
 # ls variants
 # This comes from OMZ in ZSH. This is for bash.
-# alias ls='ls --color=auto'
-alias ll='ls -alF'
-alias la='ls -A'
-alias grep='grep --color=auto'
+if [[ -n "$BASH" ]]; then
+  alias ls='ls --color=auto'
+  alias ll='ls -alF'
+  alias la='ls -A'
+  alias grep='grep --color=auto'
+fi
 
 # Update all python packages in pip
 alias pipup='pip freeze --local | cut -d = -f 1  | xargs pip install -U'
