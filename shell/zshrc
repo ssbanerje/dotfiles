@@ -1,7 +1,11 @@
 #!/usr/bin/env zsh
 
-# Skip all this for non-interactive shells
-[[ -z "$PS1" ]] && return
+# Skip this file for non-interactive shells
+if [[ "$-" != *i* ]]; then
+  return
+fi
+
+# ZSH Options {{{
 
 HISTSIZE=10000
 SAVEHIST=10000
@@ -14,16 +18,34 @@ setopt EXTENDED_GLOB
 setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
 setopt LOCAL_OPTIONS LOCAL_TRAPS
 
-# Enable Powerlevel10k instant prompt.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  # source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-if [[ -f "$HOME/.p10k.zsh" ]]; then
-  source "$HOME/.p10k.zsh"
+# TODO Why is this required
+[[ $+_comps -eq 0 ]] && declare -A _comps
+
+# }}}
+
+# Setup environment {{{
+
+# Environement config
+source "$HOME/.config/env.sh"
+
+# Prompt config
+source "$HOME/.p10k.zsh"
+
+# Setup Homebrew FPATH
+if [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
+  if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
+    fpath=("/usr/local/share/zsh/site-functions" "${fpath[@]}")
+  fi
 fi
 
-# Load antigen
+# }}}
+#
+# Load Plugins {{{
+
+# Disable P10K prompt
 export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+
+# Load antigen + plugins
 source "$HOME/.config/antigen.zsh"
 antigen init "$HOME/.config/antigenrc"
 
@@ -31,7 +53,33 @@ antigen init "$HOME/.config/antigenrc"
 zvm_define_widget fancy-ctrl-z fancy-ctrl-z
 zvm_bindkey viins '^Z' fancy-ctrl-z
 
-# Setup completions
+# }}}
+
+# Deferred Loading Helper {{{
+
+function CHECK_AND_SOURCE_DEFERRED() {
+  local DEFER_ARG
+  local FILE_ARG
+  while [[ "$#" -ne 0 ]]; do
+    if [[ -r "$1" ]]; then
+      DEFER_ARG=''
+      FILE_ARG="$1"
+      if [[ "$2" == deferarg* ]]; then
+        DEFER_ARG=$(echo "$2" | sed 's/^deferarg(\(.*\))$/\1/')
+        zsh-defer "$DEFER_ARG" source "$FILE_ARG"
+        shift
+      else
+        zsh-defer source "$FILE_ARG"
+      fi
+    fi
+    shift
+  done
+}
+
+# }}}
+
+# Completion and Keybindings {{{
+
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $(whoami) -o pid,user,comm -w -w"
@@ -40,13 +88,36 @@ zstyle ':completion:*:ssh:*' group-order hosts-domain hosts-host users hosts-ipa
 zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
-# Source stuff
-zsh-defer source "$HOME/.config/zshrc.$(uname -s).sh"
-zsh-defer source "$HOME/.config/env.sh"
+if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
 
-# Setup color scheme
-BASE16_SHELL=$HOME/.config/base16-shell/
-if [[ "$-" == *i* && -f $BASE16_SHELL/scripts/base16-material.sh ]]; then
-  zsh-defer -1 source ${BASE16_SHELL}/scripts/base16-material.sh
+  CHECK_AND_SOURCE_DEFERRED \
+    /etc/grc.zsh \
+    /usr/share/doc/fzf/examples/completion.zsh \
+    /usr/share/doc/fzf/examples/key-bindings.zsh
+
+elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
+  # Setup Homebrew FPATH
+  if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
+    fpath=("/usr/local/share/zsh/site-functions" "${fpath[@]}")
+  fi
+
+  BREW_PREFIX="$(brew --prefix)"
+  CHECK_AND_SOURCE_DEFERRED \
+    $([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.zsh") \
+    "$BREW_PREFIX/etc/grc.zsh" \
+    "$BREW_PREFIX/opt/fzf/shell/completion.zsh" \
+    "$BREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+  unset BREW_PREFIX
+
 fi
-unset BASE16_SHELL
+
+# }}}
+
+# Load aliases and colors
+CHECK_AND_SOURCE_DEFERRED \
+  "$HOME/.config/aliases.sh" \
+  "$HOME/.config/base16-shell/scripts/base16-material.sh" "deferarg(-1)"
+
+unset CHECK_AND_SOURCE_DEFERRED
+
+# vim:foldmethod=marker

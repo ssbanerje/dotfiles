@@ -1,7 +1,6 @@
---ignore-dir=log,tmp,vendor,public/generated
+--ignore-dir=log,tmp,build
 --sort-files
 --color
 --context=1
 --follow
 --group
---all

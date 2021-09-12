@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+# Setup environment variables {{{
+
+# Set locale
+export LANG='en_US.UTF-8'
+export LANGUAGE='en_US:en'
+export LC_CTYPE='UTF-8'
+export LC_NUMERIC='en_US.UTF-8'
+export LC_TIME='en_US.UTF-8'
+export LC_COLLATE='en_US.UTF-8'
+export LC_MONETARY='en_US.UTF-8'
+export LC_MESSAGES='en_US.UTF-8'
+export LC_PAPER='en_US.UTF-8'
+export LC_NAME='en_US.UTF-8'
+export LC_ADDRESS='en_US.UTF-8'
+export LC_TELEPHONE='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+export LC_MEASUREMENT='en_US.UTF-8'
+export LC_IDENTIFICATION='en_US.TF-8'
+
 # Setup less
 [[ -x /usr/bin/lesspipe ]] && eval "$(/usr/bin/lesspipe)"
 if type less &> /dev/null; then
@@ -16,31 +35,59 @@ export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
-# Binaries from dotfiles
-if [[ ! "$PATH" == *"$HOME/.bin"* ]]; then
-  export PATH="${PATH:+${PATH}:}$HOME/.bin"
-fi
-
 # Python startup settings
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
-# Source Rustup
-if [[ -d "$HOME/.cargo/" ]]; then
-  source "$HOME/.cargo/env"
-  if [[ ! "$PATH" == *"$HOME/.cargo/bin"* ]]; then
-    export PATH="$HOME/.cargo/bin:$PATH"
-  fi
+# }}}
+
+# Setup PATH {{{
+
+# Helper Functions {{{
+function PREPEND_PATH() {
+  while [[ "$#" -ne 0 ]]; do
+    if [[ "$PATH" != *:$1:* ]]; then
+      export PATH="$1:$PATH"
+    fi
+    shift
+  done
+}
+
+function APPEND_PATH() {
+  while [[ "$#" -ne 0 ]]; do
+    if [[ "$PATH" != *:$1:* ]]; then
+      export PATH="$PATH:$1"
+    fi
+    shift
+  done
+}
+# }}}
+
+if [[ -x /usr/libexec/path_helper ]]; then
+  eval "$(/usr/libexec/path_helper -s)"
 fi
 
-# Platform specific
-source "$HOME/.config/env.$(uname -s).sh"
-
-# Setup NPM binaries (Needs to come after the homebrew is loaded)
-YARN_PATH="$(yarn global bin)"
-if [[ ! "$PATH" == *"$YARN_PATH"* ]]; then
-  export PATH="$YARN_PATH:${PATH}"
+if [[ "${UNAME:=$(uname -s)}" == 'Linux' ]]; then
+  APPEND_PATH \
+    /sbin \
+    /usr/sbin \
+    /usr/local/sbin \
+    "$HOME/.local/bin" \
+    "$([[ -d /usr/local/cuda ]] && echo /usr/local/cuda/bin)"
+elif [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
+  PREPEND_PATH \
+    /usr/local/bin \
+    /usr/local/sbin \
+    /usr/local/opt/llvm/bin \
+    /usr/local/opt/python/libexec/bin
 fi
-unset YARN_PATH
 
-# Load aliases
-source "$HOME/.config/aliases.sh"
+APPEND_PATH \
+  "$HOME/.bin" \
+  "$HOME/.cargo/bin"
+
+unset PREPEND_PATH
+unset APPEND_PATH
+
+# }}}
+
+# vim:foldmethod=marker

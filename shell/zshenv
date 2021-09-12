@@ -1,5 +1,0 @@
-#!/usr/bin/env zsh
-
-if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.config/env.sh" ]]; then
-  source "$HOME/.config/env.sh"
-fi

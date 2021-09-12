@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # Check if this is an interactive shell
-if [ -z "$PS1" ]; then
-   return
+if [[ "$-" != *i* ]]; then
+  return
 fi
 
+# Bash Options {{{
 #Control history saves
 HISTCONTROL=ignoreboth:ignoredups:ignorespace
 shopt -s histappend
@@ -15,15 +16,47 @@ bind '"\e[B"':history-search-forward
 
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
+# }}}
 
-# Source stuff
-source "$HOME/.config/env.sh"
-source "$HOME/.config/bashrc.$(uname -s).sh"
-source "$HOME/.config/bash.prompt.sh"
+# Helper function
+function CHECK_AND_SOURCE() {
+  while [[ "$#" -ne 0 ]]; do
+    if [[ -r "$1" ]]; then
+      source "$1"
+    fi
+    shift
+  done
+}
 
-# Setup color scheme
-BASE16_SHELL=$HOME/.config/base16-shell/
-if [[ "$-" == *i* && -f $BASE16_SHELL/scripts/base16-material.sh ]]; then
-  source ${BASE16_SHELL}/scripts/base16-material.sh
+# Environment variables
+CHECK_AND_SOURCE \
+  "$HOME/.config/env.sh" \
+  "$HOME/.config/aliases.sh"
+
+# Bash Completion {{{
+
+if [[ "${UNAME:=$(uname -s)}" = "Linux" ]]; then
+  CHECK_AND_SOURCE \
+    "$(shopt -oq posix || echo '/usr/share/bash-completion/bash_completion')" \
+    /usr/share/doc/fzf/examples/completion.bash \
+    /usr/share/doc/fzf/examples/key-bindings.bash \
+    /etc/grc.sh
+elif [[ "${UNAME:=$(uname -s)}" = "Darwin" ]]; then
+  CHECK_AND_SOURCE \
+    "$(brew --prefix)/etc/profile.d/bash_completion.sh" \
+    "$(brew --prefix)/opt/fzf/shell/completion.bash" \
+    "$(brew --prefix)/opt/fzf/shell/key-bindings.bash" \
+    "$(brew --prefix)/etc/grc.sh" \
+    "$HOME/.config/iterm2_shell_integration.bash"
 fi
-unset BASE16_SHELL
+
+# }}}
+
+# Theme
+CHECK_AND_SOURCE \
+  "$HOME/.config/bash.prompt.sh" \
+  "$HOME/.config/base16-shell/scripts/base16-material.sh"
+
+unset CHECK_AND_SOURCE
+
+# vim:foldmethod=marker
