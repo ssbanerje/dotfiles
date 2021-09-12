@@ -7,7 +7,7 @@ alias cp='cp -i'
 
 # ls variants
 # This comes from OMZ in ZSH. This is for bash.
-# alias ls='ls --color=auto'
+alias ls='ls --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias grep='grep --color=auto'

@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# Check if this is an interactive shell
-if [[ "$-" != *i* ]]; then
-  return
-fi
-
 # Bash Options {{{
 #Control history saves
 HISTCONTROL=ignoreboth:ignoredups:ignorespace
@@ -18,7 +13,8 @@ bind '"\e[B"':history-search-forward
 shopt -s checkwinsize
 # }}}
 
-# Helper function
+# Helper function {{{
+
 function CHECK_AND_SOURCE() {
   while [[ "$#" -ne 0 ]]; do
     if [[ -r "$1" ]]; then
@@ -28,10 +24,18 @@ function CHECK_AND_SOURCE() {
   done
 }
 
+# }}}
+
 # Environment variables
 CHECK_AND_SOURCE \
   "$HOME/.config/env.sh" \
   "$HOME/.config/aliases.sh"
+
+# Skip the remaining file for non-interactive shells
+if [[ "$-" != *i* ]]; then
+  unset CHECK_AND_SOURCE
+  return
+fi
 
 # Bash Completion {{{
 

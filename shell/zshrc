@@ -1,10 +1,5 @@
 #!/usr/bin/env zsh
 
-# Skip this file for non-interactive shells
-if [[ "$-" != *i* ]]; then
-  return
-fi
-
 # ZSH Options {{{
 
 HISTSIZE=10000
@@ -34,12 +29,17 @@ source "$HOME/.p10k.zsh"
 # Setup Homebrew FPATH
 if [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
-    fpath=("/usr/local/share/zsh/site-functions" "${fpath[@]}")
+    fpath+=("${BREW_PREFIX:=$(brew --prefix)}/share/zsh/site-functions")
   fi
 fi
 
 # }}}
-#
+
+# Skip the remaining file for non-interactive shells
+if [[ "$-" != *i* ]]; then
+  return
+fi
+
 # Load Plugins {{{
 
 # Disable P10K prompt
@@ -58,18 +58,13 @@ zvm_bindkey viins '^Z' fancy-ctrl-z
 # Deferred Loading Helper {{{
 
 function CHECK_AND_SOURCE_DEFERRED() {
-  local DEFER_ARG
-  local FILE_ARG
   while [[ "$#" -ne 0 ]]; do
     if [[ -r "$1" ]]; then
-      DEFER_ARG=''
-      FILE_ARG="$1"
       if [[ "$2" == deferarg* ]]; then
-        DEFER_ARG=$(echo "$2" | sed 's/^deferarg(\(.*\))$/\1/')
-        zsh-defer "$DEFER_ARG" source "$FILE_ARG"
+        zsh-defer "$(echo $2 | sed 's/^deferarg(\(.*\))$/\1/')" source "$1"
         shift
       else
-        zsh-defer source "$FILE_ARG"
+        zsh-defer source "$1"
       fi
     fi
     shift
@@ -89,26 +84,16 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
 if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
-
   CHECK_AND_SOURCE_DEFERRED \
     /etc/grc.zsh \
     /usr/share/doc/fzf/examples/completion.zsh \
     /usr/share/doc/fzf/examples/key-bindings.zsh
-
 elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
-  # Setup Homebrew FPATH
-  if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
-    fpath=("/usr/local/share/zsh/site-functions" "${fpath[@]}")
-  fi
-
-  BREW_PREFIX="$(brew --prefix)"
   CHECK_AND_SOURCE_DEFERRED \
     $([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.zsh") \
-    "$BREW_PREFIX/etc/grc.zsh" \
-    "$BREW_PREFIX/opt/fzf/shell/completion.zsh" \
-    "$BREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
-  unset BREW_PREFIX
-
+    "${BREW_PREFIX:=$(brew --prefix)}/etc/grc.zsh" \
+    "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/completion.zsh" \
+    "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/key-bindings.zsh"
 fi
 
 # }}}
