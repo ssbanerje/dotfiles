@@ -30,6 +30,7 @@ jobs:
         run: |
           [[ -f /usr/local/bin/2to3 ]] && rm -rf /usr/local/bin/2to3  # TODO: HOEMBREW ERROR
           pip install pyyaml jinja2 distro
+          git config --global core.symlinks false
       - name: Install dotfiles
         run: ./install_profile -vv ${{ matrix.profile }}
   # }}}
