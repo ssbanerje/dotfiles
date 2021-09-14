@@ -3,10 +3,15 @@
   "diagnostic.errorSign": "✘",
   "diagnostic.warningSign": "",
   "diagnostic.infoSign": "",
-  "git.realtimeGutters": true,
-  "git.enableGutters": true,
   "suggest.noselect": true,
   "suggest.enablePreselect": true,
+  "diagnostic-languageserver.filetypes": {
+    "bash": "shellcheck",
+    "sh": "shellcheck",
+    "systemd": "systemd-analyze",
+    "vim": "vint",
+    "zsh": "shellcheck"
+  },
   "suggest.completionItemKindLabels": {
     "method": " ƒ Method",
     "function": " ƒ Function",

@@ -89,6 +89,13 @@ function! myspacevim#after() abort
 
   " Use K to show documentation in preview window
   nnoremap <expr> K <SID>show_documentation()
+
+  " Setup coc colors
+  " TODO Can this be taken directly from the vim theme
+  hi CocErrorSign ctermfg=15 guifg=#FF5370 guibg=#222222
+  hi CocWarningSign ctermfg=121 guifg=#FFCB6B guibg=#222222
+  hi CocInfoSign ctermfg=159 guifg=#82AAFF guibg=#222222
+  hi CocHintSign ctermfg=11 guifg=#89DDFF guibg=#222222
 endfunction
 
 " Show documentation for current word
