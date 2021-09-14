@@ -14,9 +14,10 @@ if [[ -n "$BASH" ]]; then
   alias grep='grep --color=auto'
 fi
 
-# Update all python packages in pip
+# Python
 alias pipup='pip freeze --local | cut -d = -f 1  | xargs pip install -U'
 alias pip3up='pip3 freeze --local | cut -d = -f 1  | xargs pip3 install -U'
+alias ipython='ipython --TerminalInteractiveShell.editing_mode=vi'
 
 # Normalize `open` and clipboard {{{
 if [[ ! "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
