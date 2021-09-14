@@ -37,9 +37,6 @@ export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
-# Python startup settings
-export PYTHONSTARTUP="$HOME/.pythonrc.py"
-
 # }}}
 
 # Setup PATH {{{
