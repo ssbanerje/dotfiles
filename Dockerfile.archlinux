@@ -10,7 +10,7 @@ ARG uid=1000
 # Setup prereq packages
 USER root
 RUN pacman-key --init && pacman -Sy --noconfirm && \
-    pacman -S --noconfirm sudo python python-pyaml python-distro python-jinja && \
+    pacman -S --noconfirm sudo python python-distro python-jinja && \
     useradd -r -md /home/${user} -s /bin/bash --uid ${uid} ${user} && \
     groupadd docker && \
     usermod -aG docker ${user} && \
