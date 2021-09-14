@@ -35,8 +35,14 @@ for config in ${CONFIGS} ${@}; do
 done
 
 # Run dotbot
+PLUGINS=$(cat <<-END
+  --plugin-dir ${PLUGINDIR} --plugin-dir ${PLUGINDIR}/dotbot-ifplatform \
+  --plugin-dir ${PLUGINDIR}/dotbot-template --plugin-dir ${PLUGINDIR}/dotbot-pip \
+  --plugin-dir ${PLUGINDIR}/dotbot-sudo
+END
+)
 if [[ ! -z "${FLAGS}" ]]; then
-  "${DOTBOT}" "${FLAGS}" -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+  "${DOTBOT}" "${FLAGS}" -d "${BASEDIR}" ${PLUGINS} -c <(echo -e "${CONFIGCONTENT}")
 else
-  "${DOTBOT}" -d "${BASEDIR}" --plugin-dir "${PLUGINDIR}" -c <(echo -e "${CONFIGCONTENT}")
+  "${DOTBOT}" -d "${BASEDIR}" ${PLUGINS} -c <(echo -e "${CONFIGCONTENT}")
 fi

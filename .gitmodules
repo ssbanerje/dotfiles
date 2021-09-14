@@ -11,3 +11,15 @@
 	path = installer/dotbot
   url = https://github.com/anishathalye/dotbot
   ignore = dirty
+[submodule "installer/dotbot-ifplatform"]
+	path = installer/plugins/dotbot-ifplatform
+	url = git@github.com:ssbanerje/dotbot-ifplatform.git
+[submodule "installer/dotbot-template"]
+	path = installer/plugins/dotbot-template
+	url = git@github.com:ssbanerje/dotbot-template.git
+[submodule "installer/dotbot-sudo"]
+	path = installer/plugins/dotbot-sudo
+	url = git@github.com:DrDynamic/dotbot-sudo.git
+[submodule "installer/dotbot-pip"]
+	path = installer/plugins/dotbot-pip
+	url = git@github.com:sobolevn/dotbot-pip.git

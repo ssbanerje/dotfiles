@@ -29,7 +29,6 @@ Install the dotfiles and dependencies on the local machine.
 Run this:
 ```bash
 git clone --recurse-submodules https://github.com/ssbanerje/dotfiles.git
-pip install pyyaml jinja2 distro
 cd dotfiles
 ./install_profile <profile>
 ```
@@ -37,7 +36,6 @@ cd dotfiles
 ### Details
 - Update configuration files for user.
   - `meta/config/git.yaml`
-- The installer script requires `python3` and the `pyyaml`, `jinja2`, and `distro` python packages.
 - The installer script can load multiple profiles (located in `meta/profiles/`):
   - `macos`: For MacOS
   - `ubuntu`: For Ubuntu desktop
