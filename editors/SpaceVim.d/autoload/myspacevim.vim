@@ -71,13 +71,6 @@ function! myspacevim#after() abort
   set scrolloff=5
   set sidescroll=1
 
-  " Neomake setting
-  let g:neomake_vim_enabled_makers = ['vint']
-  let g:neomake_yaml_enabled_makers = ['yamllint']
-  let g:neomake_zsh_enabled_makers = ['zsh']
-  let g:neomake_text_enabled_makers = ['proselint']
-  let g:neomake_markdown_enabled_makers = ['proselint']
-
   " Get coc completion
   inoremap <expr> <C-c> coc#refresh()
 
@@ -86,6 +79,7 @@ function! myspacevim#after() abort
   nmap gy <Plug>(coc-type-definition)
   nmap gi <Plug>(coc-implementation)
   nmap gr <Plug>(coc-references)
+  nmap gk <SID>show_documentation()
 
   " Use K to show documentation in preview window
   nnoremap <expr> K <SID>show_documentation()

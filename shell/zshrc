@@ -13,9 +13,6 @@ setopt EXTENDED_GLOB
 setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
 setopt LOCAL_OPTIONS LOCAL_TRAPS
 
-# TODO Why is this required
-[[ $+_comps -eq 0 ]] && declare -A _comps
-
 # }}}
 
 # Setup environment {{{

@@ -5,10 +5,15 @@
   "diagnostic.infoSign": "",
   "suggest.noselect": true,
   "suggest.enablePreselect": true,
+  "clangd.arguments": ["--clang-tidy", "--completion-style=detailed", "--fallback-style=google", "--header-insertion=iwyu", "--suggest-missing-includes"],
+  "diagnostic-languageserver.mergeConfig": true,
   "diagnostic-languageserver.filetypes": {
     "bash": "shellcheck",
+    "markdown": "proselint",
     "sh": "shellcheck",
     "systemd": "systemd-analyze",
+    "tex": "proselint",
+    "text": "proselint",
     "vim": "vint",
     "zsh": "shellcheck"
   },
