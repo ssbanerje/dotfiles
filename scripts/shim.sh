@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # Get the correct image
-if [[ -n "$ARCHLINUX" ]]; then
+if [[ "$1" == "-archlinux" ]]; then
   IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux"
+  shift
 else
   IMAGE="ghcr.io/ssbanerje/dotfiles:latest"
 fi

@@ -10,7 +10,7 @@ ARG uid=1000
 # Setup prereq packages
 USER root
 RUN pacman-key --init && pacman -Sy --noconfirm && \
-    pacman -S --noconfirm sudo python && \
+    pacman -S --noconfirm sudo python openssh && \
     useradd -r -md /home/${user} -s /bin/bash --uid ${uid} ${user} && \
     groupadd docker && \
     usermod -aG docker ${user} && \

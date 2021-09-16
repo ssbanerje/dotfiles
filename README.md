@@ -18,9 +18,9 @@ git clone https://github.com/ssbanerje/dotfiles.git
 ### Details
 - Script uses docker to run the container.
 - By default, the shim will use an Ubuntu container.
-- For an Archlinux container use `ARCHLINUX= scritps/shim.sh <command>`
-- Shim passes `ssh-agent` keys to the container.
-- Shim mounts the host's current working directory to `/cwd`.
+- For an Archlinux container use `scritps/shim.sh -archlinux <command>`
+- Shim passes `ssh-agent` keys to container.
+- Shim mounts host's current working directory to `/cwd`.
 
 
 ## Local Installation
@@ -43,6 +43,7 @@ cd dotfiles
   - `archlinux`: For Archlinux desktop
   - `archlinux-minimal`: For text-based Archlinux distributions
 - Individual components (from `meta/config/`) can be installed using the `install.sh` script.
+- The `scripts/shim.sh` script can be accessed as the `shim` command.
 
 
 ## Setup Development Environment
