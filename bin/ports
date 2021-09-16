@@ -1,7 +1,7 @@
 #!/bin/sh
-#/ Usage: ports [<options>]
-#/ Show processes listening on ports.
-#/ Any <options> are passed to lsof
+#// Usage: ports [<options>]
+#// Show processes listening on ports.
+#// Any <options> are passed to lsof
 set -e
 
 test "$1" = "--help" && {

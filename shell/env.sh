@@ -70,7 +70,6 @@ if [[ "${UNAME:=$(uname -s)}" == 'Linux' ]]; then
     /sbin \
     /usr/sbin \
     /usr/local/sbin \
-    "$HOME/.local/bin" \
     "$([[ -d /usr/local/cuda ]] && echo /usr/local/cuda/bin)"
 elif [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
   PREPEND_PATH \
@@ -81,7 +80,7 @@ elif [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
 fi
 
 APPEND_PATH \
-  "$HOME/.bin" \
+  "$HOME/.local/bin" \
   "$HOME/.cargo/bin"
 
 unset PREPEND_PATH

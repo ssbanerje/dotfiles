@@ -1,19 +1,18 @@
 - create:
-  - ~/.bin
+  - ~/.local/bin
 
 - link:
-    ~/.bin/diffconflicts: bin/diffconflicts
-    ~/.bin/doi2bib: bin/doi2bib
-    ~/.bin/ftwind: bin/ftwind
-    ~/.bin/ftpane: bin/ftpane
-    ~/.bin/gzball: bin/gzball
-    ~/.bin/ports: bin/ports
-    ~/.bin/random: bin/random
-    ~/.bin/term_copy: bin/term_copy
-    ~/.bin/shim: scripts/shim.sh
-    ~/.bin/lock-screen:
+    ~/.local/bin/diffconflicts: bin/diffconflicts
+    ~/.local/bin/doi2bib: bin/doi2bib
+    ~/.local/bin/ftwind: bin/ftwind
+    ~/.local/bin/ftpane: bin/ftpane
+    ~/.local/bin/gzball: bin/gzball
+    ~/.local/bin/ports: bin/ports
+    ~/.local/bin/random: bin/random
+    ~/.local/bin/shim: scripts/shim.sh
+    ~/.local/bin/lock-screen:
       if: '[ `uname` = Darwin ]'
       path: bin/lock-screen
-    ~/.bin/lyrics:
+    ~/.local/bin/lyrics:
       if: '[ `uname` = Darwin ]'
       path: bin/lyrics

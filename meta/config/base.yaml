@@ -6,6 +6,8 @@
 - clean:
     ~/:
       force: true
+    ~/.local/bin:
+      force: true
     ~/.config:
       recursive: true
 
