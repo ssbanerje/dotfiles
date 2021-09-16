@@ -73,4 +73,4 @@
 
 - shell:
     - ["nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall", "Install VIM Plugins"]
-    - ["nvim --headless +'CocInstall -sync coc-clangd coc-diagnostic coc-pyright coc-rls coc-texlab coc-yaml' +qall", "Install Coc Extensions"]
+    - ["nvim --headless +'CocInstall -sync coc-clangd coc-diagnostic coc-marketplace coc-pyright coc-rls coc-texlab coc-yaml' +qall", "Install Coc Extensions"]

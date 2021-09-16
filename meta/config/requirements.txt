@@ -1,4 +1,5 @@
 isort
+ipython
 neovim-remote
 proselint
 pygments
