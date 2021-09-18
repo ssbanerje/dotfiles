@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
 
 # Get the correct image
+declare PLATFORM_POST
+if [[ $(uname -s) == "Darwin" ]]; then
+  PLATFORM_POST="-mac"
+fi
 if [[ "$1" == "-archlinux" ]]; then
-  IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux"
+  IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux${PLATFORM_POST}"
   shift
 else
-  IMAGE="ghcr.io/ssbanerje/dotfiles:latest"
+  IMAGE="ghcr.io/ssbanerje/dotfiles:ubuntu${PLATFORM_POST}"
 fi
 
 # Get the ssh-agent
-if [[ ! -n "$SSH_AUTH_SOCK" ]]; then
+if [[ -z "$SSH_AUTH_SOCK" ]]; then
   STARTED_SSH_AGENT=1
   eval "$(ssh-agent)" > /dev/null
   ssh-add
 fi
 
 # Get GPG socket
-export GPG_EXTRA_SOCK="$(gpgconf --list-dirs agent-extra-socket)"
+declare GPG_EXTRA_SOCK
+GPG_EXTRA_SOCK="$(gpgconf --list-dirs agent-extra-socket)"
 gpgconf --launch gpg-agent
 
 # Run docker
@@ -36,5 +41,5 @@ docker run -it --rm \
 
 # Cleanup
 if [[ -n "$STARTED_SSH_AGENT" ]]; then
-  eval $(ssh-agent -k) > /dev/null
+  eval "$(ssh-agent -k)" > /dev/null
 fi
