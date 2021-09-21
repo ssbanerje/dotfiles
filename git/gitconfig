@@ -132,3 +132,5 @@
 
 [commit]
   gpgsign = true
+
+# vi: ft=gitconfig

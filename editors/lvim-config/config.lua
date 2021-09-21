@@ -1,4 +1,7 @@
--- Deps: sytlua, lazygit
+-- TODO FIXME Install using dotbot Deps: sytlua, lazygit
+-- TODO FIXME Pyright does not work
+-- TODO FIXME clagnd does not work
+-- TODO FIXME rust-analysis does not work
 
 local helpers = require("helpers")
 
@@ -14,8 +17,9 @@ vim.opt.backup = false
 vim.opt.writebackup = true
 vim.opt.swapfile = true
 
--- Background
+-- Themeing
 vim.opt.background = "dark"
+vim.opt.cmdheight = 1
 
 -- Line numbers
 vim.opt.number = true
@@ -41,16 +45,20 @@ vim.opt.inccommand = "nosplit"
 
 -- Dont conceal chars
 vim.opt.conceallevel = 0
+
 -- }}}
 
 -- Lunarvim Builtins {{{
 
 -- Dashboard
 lvim.builtin.dashboard.active = true
-lvim.builtin.dashboard.custom_section["0"] = {
-	description = { "  <empty buffer>     " },
-	command = "ene!",
-}
+local custom_section = helpers.dashboard.custom_section
+custom_section "00" "  <empty buffer>" "ene!"
+custom_section "d1" "  Marks" "Telescope marks"
+
+-- NvimTree
+lvim.builtin.nvimtree.side = "left"
+lvim.builtin.nvimtree.show_icons.git = true
 
 -- Terminal
 lvim.builtin.terminal.active = true
@@ -115,13 +123,9 @@ lualine "y" {
 }
 lualine "z" { components.location, "progress" }
 
--- NvimTree
-lvim.builtin.nvimtree.side = "left"
-lvim.builtin.nvimtree.show_icons.git = true
-
 -- TreeSitter
 lvim.builtin.treesitter.ensure_installed = "maintained"
-lvim.builtin.treesitter.highlight.enabled = true
+lvim.builtin.treesitter.matchup.enable = true
 lvim.builtin.treesitter.textobjects = {
   lookahead = true,
   select = {
@@ -152,6 +156,72 @@ lvim.builtin.treesitter.textobjects = {
 
 -- DAP
 lvim.builtin.dap.active = true
+lvim.builtin.dap.on_config_done = function(dap)
+  -- Setup adapters
+  dap.adapters.lldb = {
+    type = "executable",
+    attach = { pidProperty = "pid", pidSelect = "ask" },
+    command = "lldb-vscode",
+    name = "lldb",
+    env = { LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES" },
+  }
+  dap.adapters.python = {
+    type = 'executable';
+    command = 'python';
+    args = { '-m', 'debugpy.adapter' };
+  }
+
+  -- Setup configurations
+  dap.configurations.cpp = {
+    {
+      name = "Launch executable",
+      type = "lldb",
+      request = "launch",
+      program = function()
+        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+      end,
+      cwd = "${workspaceFolder}",
+      stopOnEntry = true,
+      args = {},
+      runInTerminal = false,
+      env = function()
+        local variables = {}
+        for k, v in pairs(vim.fn.environ()) do
+          table.insert(variables, string.format("%s=%s", k, v))
+        end
+        return variables
+      end
+    },
+    {
+      name = "Attach to process",
+      type = 'lldb',
+      request = 'attach',
+      pid = require('dap.utils').pick_process,
+      args = {},
+    },
+  }
+  dap.configurations.c = dap.configurations.cpp
+  dap.configurations.rust = dap.configurations.cpp
+  dap.configurations.python = {
+  {
+    name = "Launch file",
+    type = 'python',
+    request = 'launch',
+    program = "${file}";
+    pythonPath = function()
+      local cwd = vim.fn.getcwd()
+      if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
+        return cwd .. '/venv/bin/python'
+      elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
+        return cwd .. '/.venv/bin/python'
+      else
+        return 'python'
+      end
+    end;
+  },
+}
+
+end
 
 -- }}}
 
@@ -192,16 +262,16 @@ nnoremap "vv" "viw"
 nnoremap "<ESC>" ":nohl<CR><ESC>"
 
 -- Cycle Tabs
-nnoremap "gt" ":tabNext<CR>"
+nnoremap "gt" "<CMD>tabNext<CR>"
 
 -- Undotree
-nnoremap "U" ":UndotreeToggle<CR>"
+nnoremap "U" "<CMD>UndotreeToggle<CR>"
 
 -- Tagbar
-nnoremap "<F2>" ":TagbarToggle<CR>"
+nnoremap "<F2>" "<CMD>SymbolsOutline<CR>"
 
 -- File tree
-nnoremap "<F3>" ":NvimTreeToggle<CR>"
+nnoremap "<F3>" "<CMD>NvimTreeToggle<CR>"
 
 -- Search highlighted
 vnoremap "/" 'y/<C-R>"<CR>'
@@ -210,18 +280,19 @@ vnoremap "/" 'y/<C-R>"<CR>'
 vnoremap "p" '"_dp'
 
 -- Remove defaults
-lvim.builtin.which_key.mappings["e"] = nil
-lvim.builtin.which_key.mappings["c"] = nil
-lvim.builtin.which_key.mappings["h"] = nil
-lvim.builtin.which_key.mappings["q"] = nil
-lvim.builtin.which_key.mappings["w"] = nil
+lvim.builtin.which_key.mappings["e"] = nil -- File tree
+lvim.builtin.which_key.mappings["c"] = nil -- Close buffer
+lvim.builtin.which_key.mappings["h"] = nil -- No Highlight
+lvim.builtin.which_key.mappings["q"] = nil -- Quit
+lvim.builtin.which_key.mappings["w"] = nil -- Save
+lvim.builtin.which_key.mappings["T"] = nil -- Tresitter
 
 -- Fast window switching
 for i = 1, 9 do
 	which_key(i) {
 		function()
 			if #vim.api.nvim_list_wins() >= i then
-				vim.cmd(":" .. i .. "wincmd w")
+				vim.api.nvim_command(":" .. i .. "wincmd w")
 			end
 		end,
 		"Goto window " .. i,
@@ -239,7 +310,8 @@ which_key "P" { '"+p', "Paste from clipboard" }
 which_key "b" {
 	p = { '<CMD>normal ggdG"+P<CR>', "Paste from clipboard" },
 	y = { '<CMD>normal ggVG"+y``<CR>', "Copy buffer to clipboard" },
-	c = { "<CMD>setlocal cursorcolumn!<CR>", "Toggle cursor column" },
+	c = { "<CMD>ColorizerToggle<CR>", "Toggle colorizer" },
+	C = { "<CMD>setlocal cursorcolumn!<CR>", "Toggle cursor column" },
 	n = { "<CMD>setlocal nonumber! norelativenumber!<CR>", "Toggle line numbers" },
 	r = { "<CMD>setlocal readonly!<CR>", "Toogle read only" },
 	W = { "<CMD>setlocal wrap!<CR>", "Toggle Wrap" },
@@ -247,7 +319,10 @@ which_key "b" {
 
 -- Troulble
 which_key "l" {
-	t = { "<cmd>TroubleToggle", "Trouble" },
+  a = { "<CMD>Telescope lsp_code_actions<CR>", "Code Action" },
+	t = { "<CMD>TroubleToggle<CR>", "Trouble" },
+  I = { "<CMD>Telescope lsp_implementations<CR>", "LSP Implementations"},
+  R = { "<CMD>Trouble lsp_references<CR>", "Goto References" },
 }
 
 -- Windows and Tabs
@@ -272,89 +347,147 @@ which_key "w" {
 -- Align
 which_vkey "a" {
 	name = "+Align",
-	["<Space>"] = { "<CMD>Tabularize /\\s<CR>", "Align at space" },
-	["o"] = { "<CMD>Tabularize /&&\\|||\\|\\.\\.\\|\\*\\*\\|<<\\|>>\\|\\/\\/\\|[-+*/.%^><&|?]<CR>", "Align at " },
-	["#"] = { "<CMD>Tabularize /#<CR>", "Align at #" },
-	["%"] = { "<CMD>Tabularize /%<CR>", "Align at %" },
-	["&"] = { "<CMD>Tabularize /&<CR>", "Align at &" },
-	["("] = { "<CMD>Tabularize /(<CR>", "Align at (" },
-	[")"] = { "<CMD>Tabularize /)<CR>", "Align at )" },
-	[","] = { "<CMD>Tabularize /,<CR>", "Align at ," },
-	["."] = { "<CMD>Tabularize /\\.<CR>", "Align at ." },
-	[":"] = { "<CMD>Tabularize /:<CR>", "Align at :" },
-	[";"] = { "<CMD>Tabularize /;<CR>", "Align at ;" },
-	["="] = {
-		"<CMD>Tabularize /===\\|<=>\\|\\(&&\\|||\\|<<\\|>>\\|\\/\\/\\)=\\|=\\~[#?]\\?\\|=>\\|[:+/*!%^=><&|.?-]\\?=[#?]\\?<CR>",
-		"Align at =",
-	},
-	["["] = { "<CMD>Tabularize /[<CR>", "Align at [" },
-	["]"] = { "<CMD>Tabularize /]<CR>", "Align at ]" },
-	["{"] = { "<CMD>Tabularize /{<CR>", "Align at {" },
-	["|"] = { "<CMD>Tabularize /|<CR>", "Align at |" },
-	["}"] = { "<CMD>Tabularize /}<CR>", "Align at }" },
-	["¦"] = { "<CMD>Tabularize /¦<CR>", "Align at ¦" },
+	["<Space>"] = { [[<CMD>Tabularize /\s<CR>]], "Align at space" },
+	["o"] = { [[<CMD>Tabularize /&&\|||\|\.\.\|\*\*\|<<\|>>\|\/\/\|[-+*/.%^><&|?]<CR>]], "Align at " },
+	["#"] = { [[<CMD>Tabularize /#<CR>]], "Align at #" },
+	["%"] = { [[<CMD>Tabularize /%<CR>]], "Align at %" },
+	["&"] = { [[<CMD>Tabularize /&<CR>]], "Align at &" },
+	["("] = { [[<CMD>Tabularize /(<CR>]], "Align at (" },
+	[")"] = { [[<CMD>Tabularize /)<CR>]], "Align at )" },
+	[","] = { [[<CMD>Tabularize /,<CR>]], "Align at ," },
+	["."] = { [[<CMD>Tabularize /\.<CR>]], "Align at ." },
+	[":"] = { [[<CMD>Tabularize /:<CR>]], "Align at :" },
+	[";"] = { [[<CMD>Tabularize /;<CR>]], "Align at ;" },
+	["="] = { [[<CMD>Tabularize /===\|<=>\|\(&&\|||\|<<\|>>\|\/\/\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.?-]\?=[#?]\?<CR>"]], "Align at =" },
+	["["] = { [[<CMD>Tabularize /[<CR>]], "Align at [" },
+	["]"] = { [[<CMD>Tabularize /]<CR>]], "Align at ]" },
+	["{"] = { [[<CMD>Tabularize /{<CR>]], "Align at {" },
+	["|"] = { [[<CMD>Tabularize /|<CR>]], "Align at |" },
+	["}"] = { [[<CMD>Tabularize /}<CR>]], "Align at }" },
+	["¦"] = { [[<CMD>Tabularize /¦<CR>]], "Align at ¦" },
 }
 
 -- }}}
 
--- Language specific settings {{{
+-- LSP Configs {{{
 
+-- No virtual text. Use trouble instead
 lvim.lsp.diagnostics.virtual_text = false
 
--- you can set a custom on_attach function that will be used for all the language servers
--- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
--- lvim.lsp.on_attach_callback = function(client, bufnr)
---   local function buf_set_option(...)
---     vim.api.nvim_buf_set_option(bufnr, ...)
---   end
---   --Enable completion triggered by <c-x><c-o>
---   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
--- end
--- you can overwrite the null_ls setup table (useful for setting the root_dir function)
--- lvim.lsp.null_ls.setup = {
---   root_dir = require('lspconfig').util.root_pattern('Makefile', '.git', 'node_modules'),
--- }
--- or if you need something more advanced
--- lvim.lsp.null_ls.setup.root_dir = function(fname)
---   if vim.bo.filetype == 'javascript' then
---     return require('lspconfig/util').root_pattern('Makefile', '.git', 'node_modules')(fname)
---       or require('lspconfig/util').path.dirname(fname)
---   elseif vim.bo.filetype == 'php' then
---     return require('lspconfig/util').root_pattern('Makefile', '.git', 'composer.json')(fname) or vim.fn.getcwd()
---   else
---     return require('lspconfig/util').root_pattern('Makefile', '.git')(fname) or require('lspconfig/util').path.dirname(fname)
---   end
--- end
+-- Docker LSP
+lvim.lang.dockerfile.lsp.setup.filetypes = { "Dockerfile*", "dockerfile*" }
+lvim.lang.dockerfile.lsp.setup.root_dir = require("lspconfig").util.root_pattern("Dockerfile*")
 
--- set a formatter if you want to override the default lsp one (if it exists)
--- lvim.lang.python.formatters = {
---   {
---     exe = 'black',
---   }
--- }
--- set an additional linter
--- lvim.lang.python.linters = {
---   {
---     exe = 'flake8',
---   }
--- }
+-- YAML LSP
+lvim.lang.yaml.lsp.setup.settings = {
+  yaml = {
+    hover = true,
+    completion = true,
+    validate = true,
+    schemaStore = {
+      enable = true,
+      url = "https://www.schemastore.org/api/json/catalog.json",
+    },
+  },
+}
+
+-- Lua LSP
+local lua_libs = {}
+if helpers.is_mac_os() then  -- Add path to Hammerspoon when on MacOS
+  lua_libs["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/"] = true
+  table.insert(lvim.lang.lua.lsp.setup.settings.Lua.diagnostics.globals, "hs")
+end
+lvim.lang.lua.lsp.setup.settings.Lua.workspace.library = lua_libs
+
+-- Latex LSP {{{
+vim.g.vimtex_compiler_method = "latexmk"
+vim.g.vimtex_compiler_latexmk = { build_dir = "build" }
+vim.g.vimtex_view_skim_activate = 1
+vim.g.vimtex_view_skim_reading_bar = 0
+vim.g.vimtex_fold_enabled = 0
+vim.g.vimtex_quickfix_ignore_filters = {}
+vim.g.vimtex_compiler_latexmk_engines = {
+  _ = "-pdflatex",
+  pdflatex = "-pdf",
+  dvipdftex = "-pdfdvi",
+  pspdftex = "-pdfps",
+  lualatex = "-lualatex",
+  xelatex = "-xelatex",
+}
+vim.g.vimtex_compiler_latexrun_engines = {
+  _ = "pdflatex",
+  pdflatex = "pdflatex",
+  lualatex = "lualatex",
+  xelatex = "xelatex",
+}
+local forward_search_exe = ""
+local tex_preview_args = ""
+if helpers.is_mac_os() then
+  vim.g.vimtex_view_method = "skim"
+  forward_search_exe = "/Applications/Skim.app/Contents/SharedSupport/displayline"
+  tex_preview_args = { "%l", "%p", "%f" }
+else
+  vim.g.vimtex_view_method = "evince"
+  forward_search_exe = "evince-synctex"
+  tex_preview_args = { "-f", "%l", "%p", '"code -g %f:%l"' }
+end
+local latexmk_args = { "-xelatex", "-file-line-error", "-interaction=nonstopmode", "-synctex=1", "%f" }
+lvim.lang.tex.lsp.setup = {
+  cmd = { vim.fn.stdpath "data" .. "/lspinstall/latex/texlab" },
+  filetypes = { "tex", "bib" },
+  settings = {
+    texlab = {
+      auxDirectory = nil,
+      bibtexFormatter = "texlab",
+      build = {
+        executable = "latexmk",
+        args = latexmk_args,
+        on_save = false,
+        forward_search_after = false,
+      },
+      chktex = {
+        on_open_and_save = false,
+        on_edit = false,
+      },
+      forward_search = {
+        executable = nil,
+        args = {},
+      },
+      latexindent = {
+        ["local"] = nil,
+        modify_line_breaks = false,
+      },
+      linters = { "chktex" },
+      auto_save = false,
+      ignore_errors = {},
+      diagnosticsDelay = 300,
+      formatterLineLength = 120,
+      forwardSearch = {
+        args = tex_preview_args,
+        executable = forward_search_exe,
+      },
+      latexFormatter = "latexindent",
+    },
+  },
+}
+-- }}}
 
 -- Linters
 lvim.lang.sh.linters = { { exe = "shellcheck" } }
 
 -- Formatters
 lvim.lang.lua.formatters = { { exe = "stylua" } }
+lvim.lang.python.formatters = { { exe = "yapf" } }
 
 -- }}}
 
--- Plugins {{{
-
+-- Plugins
 lvim.plugins = {
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    branch = "0.5-compat",
-    before = "nvim-treesitter"
-  },
+  -- Motions and Text Objects {{{
+	{ "chaoren/vim-wordmotion" },
+	{ "tpope/vim-surround" },
+  -- }}}
+  -- LSP {{{
 	{
 		"folke/trouble.nvim",
 		config = function()
@@ -364,17 +497,62 @@ lvim.plugins = {
 			})
 		end,
 	},
-	{ "preservim/tagbar", cmd = "TagbarToggle" },
-	{
-		"andymass/vim-matchup",
-		event = "CursorMoved",
-		config = function()
-			vim.g.matchup_matchparen_offscreen = { method = "popup" }
-		end,
-	},
-	{ "chaoren/vim-wordmotion" },
-	-- { "wellle/targets.vim" },
-	{ "tpope/vim-surround" },
+  {
+    "folke/lua-dev.nvim",
+    config = function()
+      local luadev = require("lua-dev").setup {
+        library = {
+          vimruntime = true,
+          types = true,
+          plugins = true,
+        },
+        lspconfig = lvim.lang.lua.lsp.setup,
+      }
+      lvim.lang.lua.lsp.setup = luadev
+    end,
+    ft = { "lua" },
+  },
+  { -- TODO FIXME
+    "simrat39/rust-tools.nvim",
+    config = function()
+      require("rust-tools").setup({
+        tools = {
+          autoSetHints = true,
+          hover_with_actions = true,
+          runnables = {
+            use_telescope = true,
+          },
+          inlay_hints = {
+            only_current_line = false,
+            show_parameter_hints = true,
+            parameter_hints_prefix = "<-",
+            other_hints_prefix = "=>",
+            max_len_align = false,
+            max_len_align_padding = 1,
+            right_align = false,
+            right_align_padding = 7,
+            highlight = "Comment",
+          },
+        },
+        server = {
+          cmd = { vim.fn.stdpath "data" .. "/lspinstall/rust/rust-analyzer" },
+          on_attach = require("lsp").common_on_attach,
+          on_init = require("lsp").common_on_init,
+        },
+      })
+    end,
+    ft = { "rust", "rs" },
+  },
+  -- }}}
+  -- Treesitter {{{
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "0.5-compat",
+    before = "nvim-treesitter"
+  },
+  -- }}}
+  -- Utils {{{
+  { "simrat39/symbols-outline.nvim", cmd="SymbolsOutline" },
 	{ "godlygeek/tabular", cmd = "Tabularize" },
 	{ "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
 	{
@@ -393,16 +571,56 @@ lvim.plugins = {
     end,
 	},
   {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    run = "make",
+    after = "telescope.nvim",
+    config = function()
+      require("telescope").load_extension("fzf")
+    end,
+  },
+  --}}}
+  -- UI {{{
+  {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup({
-        filetype_exclude = { "dashboard" }
+        filetype_exclude = { "dashboard" },
+        buftype_exclude = { "terminal", "nofile" },
+        show_current_context = true,
+        show_trailing_blankline_indent = false,
       })
     end
   },
+  { "norcalli/nvim-colorizer.lua", cmd = "ColorizerToggle" },
+  { "Pocco81/Catppuccino.nvim", disable = true },
+  { "folke/tokyonight.nvim", disable = true },
+  { "NTBBloodbath/doom-one.nvim", disable = true },
+  -- }}}
+  -- Markdown {{{
+  {
+    "iamcco/markdown-preview.nvim",
+    run = "cd app && npm install",
+    config = function()
+      vim.g.mkdp_page_title = "${name}"
+    end,
+    ft = "markdown",
+  },
+  -- }}}
+  -- Latex {{{
+  { "lervag/vimtex", ft = "tex" },
+  -- }}}
+  -- Debugger {{{
+  {
+    "rcarriga/nvim-dap-ui",
+    config = function()
+      require("dapui").setup()
+    end,
+    ft = { "python", "rust", "cpp", "c" },
+    requires = { "mfussenegger/nvim-dap" },
+    disable = not lvim.builtin.dap.active,
+  },
+  -- }}}
 }
-
--- }}}
 
 -- Autocommands {{{
 

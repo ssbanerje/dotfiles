@@ -1,3 +1,4 @@
+debugpy
 isort
 ipython
 neovim-remote

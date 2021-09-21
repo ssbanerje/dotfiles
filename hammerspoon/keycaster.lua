@@ -95,8 +95,9 @@ function module:_prettify_event_type(tap_event)
   return result .. (module.pretty_keys[char] or char)
 end
 
--- Show a keypress
+-- Show a keypresses
 module.key_tap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(tap_event)
+  local utf8 = require("utf8")
   local char = module:_prettify_event_type(tap_event)
   if utf8.len(module.keybuffer) + utf8.len(char) > 15 then
     local off = utf8.len(char) + 1

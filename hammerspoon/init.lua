@@ -200,7 +200,7 @@ local yabai_keys = {
   { { "alt", "up" }, "Stack up", { "window", "--stack", "north" } },
   { { "alt", "right" }, "Stack right", { "window", "--stack", "east" } },
 }
-for k, c in pairs(yabai_keys) do
+for _, c in pairs(yabai_keys) do
   state_machine:bind("navigation", c[1], c[2], function()
     yabai:ipc(c[3])
   end)
@@ -293,11 +293,11 @@ state_machine:transition("resize", state_machine.base_state_id, { "", "escape" }
 end)
 
 -- BINDINGS: Yabai resize keys Window movement keys
-local yabai_keys = {
+yabai_keys = {
   { { "", "0" }, "Equalize windows", { "space", "--balance" } },
   { { "", "p" }, "Zoom parent", { "window", "--toggle", "zoom-parent" } },
 }
-for k, c in pairs(yabai_keys) do
+for _, c in pairs(yabai_keys) do
   state_machine:bind("resize", c[1], c[2], function()
     yabai:ipc(c[3])
   end)
@@ -318,7 +318,7 @@ state_machine:bind("resize", { "shift", "=" }, "Increase Gap", function()
 end)
 
 -- BINDINGS: Window resize keys
-local yabai_keys = {
+yabai_keys = {
   h = { "left:-20:0", "right:-20:0" },
   j = { "bottom:0:20", "top:0:20" },
   k = { "bottom:0:-20", "top:0:-20" },
