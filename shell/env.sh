@@ -79,7 +79,7 @@ elif [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
     /usr/local/opt/python/libexec/bin
 fi
 
-APPEND_PATH \
+PREPEND_PATH \
   "$HOME/.local/bin" \
   "$HOME/.cargo/bin"
 
