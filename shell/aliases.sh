@@ -7,11 +7,15 @@ alias cp='cp -i'
 
 # ls variants
 # This comes from OMZ in ZSH. This is for bash.
-alias ls='ls --color=auto'
+if [[ "${UNAME:=$(uname -s)}" == "Darwin" ]] && command -v gls &>/dev/null; then
+  alias ls="gls --color=auto"
+else
+  alias ls="ls --color=auto"
+fi
 if [[ -n "$BASH" ]]; then
-  alias ll='ls -alF'
-  alias la='ls -A'
-  alias grep='grep --color=auto'
+  alias ll="ls -alF"
+  alias la="ls -A"
+  alias grep="grep --color=auto"
 fi
 
 # Python
