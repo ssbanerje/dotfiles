@@ -5,8 +5,8 @@ module.__index = module
 module.border = nil
 
 -- Colors used for stroking windows
-module.stroke_color_src = {red=1, blue=0.25, green=0.75, alpha=0.8}
-module.stroke_color_tgt = {red=1, blue=0.25, green=0.75, alpha=0.8}
+module.stroke_color_src = { red = 1, blue = 0.25, green = 0.75, alpha = 0.8 }
+module.stroke_color_tgt = { red = 1, blue = 0.25, green = 0.75, alpha = 0.8 }
 
 -- Handlers listening for window events
 module.handler = nil
@@ -19,7 +19,7 @@ module.events = {
   hs.window.filter.windowMoved,
   hs.window.filter.windowUnfocused,
   hs.window.filter.windowUnhidden,
-  hs.window.filter.windowUnminimized
+  hs.window.filter.windowUnminimized,
 }
 
 -- Start drawing borders
@@ -60,14 +60,16 @@ function module:redraw()
   end
   local winframe = win:frame()
   local max = win:screen():frame()
-  module.border = hs.canvas.new({x=max.x, y=max.y, w=max.w, h=max.h})
-  module.border:appendElements({
-    type = 'rectangle',
-    action = 'stroke',
-    strokeColor = {red=1, blue=0.25, green=0.75, alpha=0.8},
-    strokeWidth = 4,
-    frame = {x=winframe.x, y=winframe.y - max.y, w=winframe.w, h=winframe.h},
-  }):show()
+  module.border = hs.canvas.new({ x = max.x, y = max.y, w = max.w, h = max.h })
+  module.border
+    :appendElements({
+      type = "rectangle",
+      action = "stroke",
+      strokeColor = { red = 1, blue = 0.25, green = 0.75, alpha = 0.8 },
+      strokeWidth = 4,
+      frame = { x = winframe.x, y = winframe.y - max.y, w = winframe.w, h = winframe.h },
+    })
+    :show()
 end
 
 return module

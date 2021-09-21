@@ -18,17 +18,17 @@ function obj:show(message, pos)
   end
   obj._box = hs.canvas.new(pos)
   obj._box:appendElements({
-    type = 'rectangle',
-    fillColor = {white = 0.125, alpha = 0.8},
-    strokeColor = {white = 0.625, alpha = 0.8},
+    type = "rectangle",
+    fillColor = { white = 0.125, alpha = 0.8 },
+    strokeColor = { white = 0.625, alpha = 0.8 },
     strokeWidth = 1,
-    roundedRectRadii = {xRadius = 10, yRadius = 10},
+    roundedRectRadii = { xRadius = 10, yRadius = 10 },
   })
   obj._box:appendElements({
-    type = 'text',
+    type = "text",
     text = message,
     textSize = 120,
-    textAlignment = 'center',
+    textAlignment = "center",
   })
   obj._box:show()
 end
@@ -42,4 +42,3 @@ function obj:hide()
 end
 
 return obj
-
