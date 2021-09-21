@@ -64,7 +64,7 @@
     - ['mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
     - ["curl -sLf https://spacevim.org/install.sh | bash -s -- --no-fonts", "Installing SpaceVim"]
 
-# -------------- Link configuration
+# -------------- Configuration
 - create:
   - ~/.config/lvim
 
@@ -73,7 +73,8 @@
     ~/.editorconfig: editors/editorconfig
     ~/.SpaceVim.d: editors/SpaceVim.d
     ~/.SpaceVim/coc-settings.json: editors/coc-settings.json
-    ~/.config/lvim/config.lua: editors/lunarvim-config.lua
+    ~/.config/lvim/config.lua: editors/lvim-config/config.lua
+    ~/.config/lvim/lua: editors/lvim-config/lua
 
 - shell:
     - ["nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall", "Install VIM Plugins"]
