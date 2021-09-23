@@ -28,7 +28,7 @@ RUN cd /home/${user}/.dotfiles && \
     sudo rm -rf /tmp/*
 
 # Take command from user
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
 CMD []
 
 # vi: ft=dockerfile

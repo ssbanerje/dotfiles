@@ -32,7 +32,7 @@ RUN cd /home/${user}/.dotfiles && \
     yarn cache clean
 
 # Take command from user
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
 CMD []
 
 # vi: ft=dockerfile
