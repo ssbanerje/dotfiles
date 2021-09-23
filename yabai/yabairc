@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -x
-
 #------------------------------------------ Tiling -------------------------------------------------
 yabai -m config layout                       bsp
 yabai -m config split_ratio                  0.50
@@ -51,5 +49,4 @@ yabai -m rule --add label="CleanMyMac X" app="^CleanMyMac X$" manage=off
 yabai -m rule --add label="Zoom" app="^zoom.us$" manage=off
 yabai -m rule --add label="Skype" app="^Skype$" manage=off
 
-set +x
 printf "yabai: configuration loaded...\\n"

@@ -1,7 +1,4 @@
 -- TODO FIXME Install using dotbot Deps: sytlua, lazygit
--- TODO FIXME Pyright does not work
--- TODO FIXME clagnd does not work
--- TODO FIXME rust-analysis does not work
 
 local helpers = require("helpers")
 
@@ -374,6 +371,9 @@ which_vkey "a" {
 -- No virtual text. Use trouble instead
 lvim.lsp.diagnostics.virtual_text = false
 
+-- Rust LSP
+lvim.lsp.override = { "rust" }
+
 -- Docker LSP
 lvim.lang.dockerfile.lsp.setup.filetypes = { "Dockerfile*", "dockerfile*" }
 lvim.lang.dockerfile.lsp.setup.root_dir = require("lspconfig").util.root_pattern("Dockerfile*")
@@ -476,6 +476,7 @@ lvim.lang.tex.lsp.setup = {
 lvim.lang.sh.linters = { { exe = "shellcheck" } }
 
 -- Formatters
+lvim.lang.rust.formatters = { { exe = "rustfmt" } }
 lvim.lang.lua.formatters = { { exe = "stylua" } }
 lvim.lang.python.formatters = { { exe = "yapf" } }
 
@@ -512,16 +513,15 @@ lvim.plugins = {
     end,
     ft = { "lua" },
   },
-  { -- TODO FIXME
+  {
     "simrat39/rust-tools.nvim",
     config = function()
       require("rust-tools").setup({
         tools = {
           autoSetHints = true,
           hover_with_actions = true,
-          runnables = {
-            use_telescope = true,
-          },
+          runnables = { use_telescope = true },
+          debuggables = { use_telescope = true },
           inlay_hints = {
             only_current_line = false,
             show_parameter_hints = true,
@@ -535,9 +535,19 @@ lvim.plugins = {
           },
         },
         server = {
-          cmd = { vim.fn.stdpath "data" .. "/lspinstall/rust/rust-analyzer" },
+          cmd = { vim.fn.stdpath("data") .. "/lspinstall/rust/rust-analyzer" },
           on_attach = require("lsp").common_on_attach,
           on_init = require("lsp").common_on_init,
+          capabilities = require("lsp").capabilities,
+          flags = require("lsp").flags,
+          settings = {
+            ["rust-analyzer"] = {
+              assist = { importGranularity = "crate" },
+              cargo = { allFeatures = true },
+              checkOnSave = { allTargets = true, command = "clippy" },
+              procMacro = { enable = true },
+            },
+          },
         },
       })
     end,
@@ -631,5 +641,4 @@ lvim.autocommands.custom_groups = {
 }
 
 -- }}}
-
 -- vim:set fdm=marker:
