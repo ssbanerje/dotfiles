@@ -7,10 +7,15 @@ lvim.leader = "space"
 lvim.format_on_save = false
 lvim.colorscheme = "onedarker"
 
+-- Confirm before quit
+vim.opt.confirm = true
+
 -- Backup files
 vim.opt.backup = false
 vim.opt.writebackup = true
 vim.opt.swapfile = true
+vim.opt.undofile = true
+vim.opt.undolevels = 1000
 
 -- Themeing
 vim.opt.background = "dark"
@@ -679,7 +684,15 @@ lvim.autocommands.custom_groups = {
 	-- Toggle line numbering style
 	{ "BufEnter,FocusGained,InsertLeave,WinEnter", "*", 'if &nu && mode() != "i" | set rnu | endif' },
 	{ "BufLeave,FocusLost,InsertEnter,WinLeave", "*", "if &nu | set nornu | endif" },
+  -- Reload file on change
+  { "FocusGained", "*", ":checktime" },
+  -- Show cursor in active buffer
+  { "WinEnter", "*", "set cursorline" },
+  { "WinLeave", "*", "set nocursorline" },
+  -- Windows to close on q
+  { "Filetype", "help,man", "nnoremap <buffer><silent> q <CMD>close<CR>" },
 }
 
 -- }}}
+
 -- vim:set fdm=marker:
