@@ -1,3 +1,4 @@
+# --- Archlinux Base Config ---
 - ifarch:
     - pacman:
         - sudo

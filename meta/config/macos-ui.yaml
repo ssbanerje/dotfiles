@@ -1,3 +1,4 @@
+# --- MacOS UI Elements Configuration ---
 - tap:
   - koekeishiya/formulae
 
@@ -8,9 +9,6 @@
 - cask:
   - dozer
   - hammerspoon
-
-- create:
-    - ~/.config
 
 - link:
     ~/.yabairc: yabai/yabairc

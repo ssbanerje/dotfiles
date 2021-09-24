@@ -1,3 +1,4 @@
+# --- MacOS Base Configuration ---
 - ifmacos:
     - brew:
         - python

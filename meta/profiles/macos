@@ -1,13 +1,14 @@
 base
 macos
 
-macos-ui
-terminal
-
+shell
+git
 bin
 spacevim
-git
+lunarvim
 ranger
-shell
 ssh
 tmux
+
+macos-ui
+terminal

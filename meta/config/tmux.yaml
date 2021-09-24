@@ -1,6 +1,4 @@
-- create:
-  - ~/.tmux/plugins
-
+# --- TMUX Configuration ---
 - ifubuntu:
     - apt:
         - tmux
@@ -14,9 +12,12 @@
         - tmux
         - reattach-to-user-namespace
 
+- create:
+  - ~/.tmux/plugins
+
 - link:
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/tpm
     ~/.tmux-macos.conf:
-      if: '[ `uname` = Darwin ]'
+      if: '[[ $(uname -s) = Darwin ]]'
       path: tmux/tmux-macos.conf

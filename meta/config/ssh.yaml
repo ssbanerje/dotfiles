@@ -1,3 +1,4 @@
+# --- SSH Configuration ---
 - create:
     ~/.ssh:
       mode: 0700

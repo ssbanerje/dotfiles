@@ -1,3 +1,4 @@
+# --- Ubuntu Base Configuration ---
 - ifubuntu:
     - apt:
         - software-properties-common

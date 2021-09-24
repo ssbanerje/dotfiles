@@ -1,14 +1,15 @@
 base
 ubuntu
 
+shell
+git
+bin
+spacevim
+lunarvim
+ranger
+ssh
+tmux
+
 i3wm
 terminal
 x11
-
-bin
-spacevim
-git
-ranger
-shell
-ssh
-tmux

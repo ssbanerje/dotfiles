@@ -1,3 +1,4 @@
+# --- X11 Configuration ---
 - ifubuntu:
     - apt:
         - xsel

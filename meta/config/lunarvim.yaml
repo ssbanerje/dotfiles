@@ -1,0 +1,54 @@
+# --- LunarVim Configuration ---
+- ifubuntu:
+    - shell:
+        - ["curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -", "Add NodeJS PPA"]
+        - "curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null"
+        - "echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list"
+        - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add NeoVim PPA"]
+        - ["sudo apt-get update", "Update repositories"]
+
+    - apt:
+        - neovim
+        - nodejs
+        - yarn
+        - unzip
+        - shellcheck
+        - luarocks
+
+- ifarch:
+    - pacman:
+        - neovim
+        - nodejs
+        - yarn
+        - uzip
+        - shellcheck
+        - luarocks
+
+- ifmacos:
+    - brew:
+        - neovim
+        - node
+        - yarn
+        - shellcheck
+        - luarocks
+
+- pip:
+    file: meta/config/requirements.txt
+    user: true
+    stdout: false
+    stderr: true
+
+- shell:
+    - ["curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal", "Installing Rust"]
+    - [". ~/.cargo/env && rustup component add rust-src", "Adding RLS"]
+    - ["mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada", "TODO FIX NVIM THROWS ERRORS ON STARTUP"]
+    - ["LVBRANCH=rolling . ~/.cargo/env && curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | bash -s -- -y", "Install Lunarvim"]
+    - ["rm -rf ~/.config/lvim", "Install Lunarvim"]
+
+- create:
+  - ~/.config/lvim
+
+- link:
+    ~/.editorconfig: editors/editorconfig
+    ~/.config/lvim/config.lua: editors/lvim-config/config.lua
+    ~/.config/lvim/lua: editors/lvim-config/lua

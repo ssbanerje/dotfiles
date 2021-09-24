@@ -10,10 +10,10 @@ ARG uid=1000
 # Setup prereq packages
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
-RUN echo 'APT::Install-Recommends "false";' >> /etc/apt/apt.conf.d/99norecos && \
-    echo 'APT::AutoRemove::RecommendsImportant "false";' >> /etc/apt/apt.conf.d/99norecos && \
-    echo 'APT::AutoRemove::SuggestsImportant "false";'  >> /etc/apt/apt.conf.d/99norecos && \
-    apt-get update && \
+# RUN echo 'APT::Install-Recommends "false";' >> /etc/apt/apt.conf.d/99norecos && \
+#     echo 'APT::AutoRemove::RecommendsImportant "false";' >> /etc/apt/apt.conf.d/99norecos && \
+#     echo 'APT::AutoRemove::SuggestsImportant "false";'  >> /etc/apt/apt.conf.d/99norecos && \
+RUN apt-get update && \
     apt-get install -y sudo python3 python3-pip openssh-client && \
     adduser --disabled-password --gecos "" --uid ${uid} ${user} && \
     echo "%${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
@@ -24,7 +24,7 @@ USER ${user}
 ENV DEBIAN_FRONTEND=noninteractive
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
-    ./install_profile ubuntu-minimal && \
+    ./install_profile -vv ubuntu-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos && \

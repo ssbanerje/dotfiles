@@ -1,4 +1,4 @@
-# -------------- Install software
+# --- SpaceVim Configuration ---
 - ifubuntu:
     - shell:
         - "curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -"
@@ -64,17 +64,13 @@
     - ['mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
     - ["curl -sLf https://spacevim.org/install.sh | bash -s -- --no-fonts", "Installing SpaceVim"]
 
-# -------------- Configuration
 - create:
   - ~/.config/lvim
 
 - link:
-    ~/.ideavimrc: editors/ideavimrc
     ~/.editorconfig: editors/editorconfig
     ~/.SpaceVim.d: editors/spacevim-config
     ~/.SpaceVim/coc-settings.json: editors/spacevim-config/coc-settings.json
-    ~/.config/lvim/config.lua: editors/lvim-config/config.lua
-    ~/.config/lvim/lua: editors/lvim-config/lua
 
 - shell:
     - ["nvim --headless +'call dein#install()' +UpdateRemotePlugins +qall", "Install VIM Plugins"]

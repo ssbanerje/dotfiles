@@ -1,3 +1,4 @@
+# --- i3wm Configuration ---
 - ifubuntu:
     - apt:
         - i3
@@ -21,7 +22,6 @@
     - yay:
         - polybar
         - i3lock-fancy
-
 
 - create:
     - ~/.config/i3

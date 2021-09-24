@@ -1,4 +1,4 @@
-# Install software and fonts
+# --- Terminal Emulator Configuration ---
 - ifmacos:
     - tap:
         - homebrew/cask-fonts
@@ -15,12 +15,9 @@
 - ifanylinux:
     - shell:
         - git clone https://github.com/ryanoasis/nerd-fonts /tmp/nerd-fonts
-        - /tmp/nerd-fonts/install.sh Ubuntu
-        - /tmp/nerd-fonts/install.sh UbuntuMono
         - /tmp/nerd-fonts/install.sh Hack
         - rm -rf /tmp/nerd-fonts
 
-# Install kitty config
 - create:
     - ~/.config/kitty
 - link:
@@ -29,7 +26,6 @@
       if: '[ `uname` = Darwin ]'
       path: kitty/macos-launch-services-cmdline
 
-# Install iTerm2
 - ifmacos:
     - create:
         - ~/Library/Preferences

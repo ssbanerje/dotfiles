@@ -1,3 +1,4 @@
+# --- Git Configuration ---
 - ifubuntu:
     - apt:
         - git

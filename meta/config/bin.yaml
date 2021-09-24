@@ -1,3 +1,4 @@
+# --- Dotfile Binaries Config ---
 - create:
   - ~/.local/bin
 
@@ -11,8 +12,8 @@
     ~/.local/bin/random: bin/random
     ~/.local/bin/shim: scripts/shim.sh
     ~/.local/bin/lock-screen:
-      if: '[ `uname` = Darwin ]'
+      if: '[[ $(uname -s) = Darwin ]]'
       path: bin/lock-screen
     ~/.local/bin/lyrics:
-      if: '[ `uname` = Darwin ]'
+      if: '[[ $(uname -s) = Darwin ]]'
       path: bin/lyrics

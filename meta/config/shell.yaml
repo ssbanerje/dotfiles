@@ -1,4 +1,4 @@
-# ------------------ Install software
+# --- Shell Configuration ---
 - ifubuntu:
     - apt:
         - zsh
@@ -27,7 +27,6 @@
         - grc
         - ack
 
-# ------------------ Install configuration
 - create:
     - ~/.config
 
@@ -41,7 +40,6 @@
     ~/.config/bash.prompt.sh: shell/bash.prompt.sh
     ~/.config/env.sh: shell/env.sh
     ~/.config/aliases.sh: shell/aliases.sh
-
     ~/.hushlogin: shell/hushlogin
     ~/.ackrc: shell/ackrc
     ~/.curlrc: shell/curlrc

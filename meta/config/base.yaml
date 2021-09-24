@@ -1,3 +1,5 @@
+
+# --- Base Configuration ---
 - defaults:
     link:
       force: true
