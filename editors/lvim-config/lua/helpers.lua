@@ -77,7 +77,7 @@ local function lualine(section)
 			if type(v[1]) == "string" and v[1]:find("components.", 1, true) == 1 then
 				local a = v.active
 				local i = v.inactive
-				v = components[string.sub(v[1], #"components." + 1)]
+				v = vim.deepcopy(components[string.sub(v[1], #"components." + 1)])
 				v["active"] = a
 				v["inactive"] = i
 			end

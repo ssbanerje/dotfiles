@@ -71,8 +71,8 @@
 - link:
     ~/.ideavimrc: editors/ideavimrc
     ~/.editorconfig: editors/editorconfig
-    ~/.SpaceVim.d: editors/SpaceVim.d
-    ~/.SpaceVim/coc-settings.json: editors/coc-settings.json
+    ~/.SpaceVim.d: editors/spacevim-config
+    ~/.SpaceVim/coc-settings.json: editors/spacevim-config/coc-settings.json
     ~/.config/lvim/config.lua: editors/lvim-config/config.lua
     ~/.config/lvim/lua: editors/lvim-config/lua
 

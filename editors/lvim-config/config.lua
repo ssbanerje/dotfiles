@@ -1,5 +1,3 @@
--- TODO FIXME Install using dotbot Deps: sytlua, lazygit
-
 local helpers = require("helpers")
 
 -- Options and settings {{{
@@ -23,7 +21,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 -- Color column width
-vim.opt.tw = 100
+vim.opt.tw = 120
 vim.opt.colorcolumn = "+1"
 
 -- Diff mode configuration
@@ -66,10 +64,10 @@ lvim.builtin.terminal.shell = "bash"
 local lualine = helpers.statusline.lualine
 local lualine_color = helpers.statusline.lualine_color
 local components = require("core.lualine.components")
+components.location.icon = ""
 
--- Set separators
-lvim.builtin.lualine.options.section_separators = { left = "", right = "" }
-lvim.builtin.lualine.options.component_separators = { left = "", right = "" }
+lvim.builtin.lualine.options.section_separators = { left = "", right = "" }
+lvim.builtin.lualine.options.component_separators = { left = "", right = "" }
 
 -- Setup theme for lualine
 lvim.builtin.lualine.options.theme = require("lualine.themes.onedarker")
@@ -99,7 +97,6 @@ lualine_color "a" "inactive" { fg = colors.black, bg = colors.violet, gui = "bol
 lualine_color "b" "inactive" { fg = colors.violet, bg = colors.black }
 lualine_color "c" "inactive" { fg = colors.violet, bg = colors.black }
 
--- Lualine sections
 lualine "a" {
 	"mode",
 	{
@@ -113,9 +110,9 @@ lualine "b" { { "components.filename", inactive = true }, { "components.branch",
 lualine "x" { components.treesitter, components.diagnostics, components.lsp }
 lualine "y" {
 	components.filetype,
-	components.encoding,
 	"fileformat",
-	{ "location", active = false, inactive = true },
+	components.encoding,
+	{ "components.location", active = false, inactive = true },
 	{ "progress", active = false, inactive = true },
 }
 lualine "z" { components.location, "progress" }
@@ -123,6 +120,7 @@ lualine "z" { components.location, "progress" }
 -- TreeSitter
 lvim.builtin.treesitter.ensure_installed = "maintained"
 lvim.builtin.treesitter.matchup.enable = true
+lvim.builtin.treesitter.highlight.disable = {}
 lvim.builtin.treesitter.textobjects = {
   lookahead = true,
   select = {
@@ -148,8 +146,9 @@ lvim.builtin.treesitter.textobjects = {
   },
   swap = { enable = false },
   move = { enable = false },
-  lsp_interop = { enable = false },
+  lsp_interop = { enable = true },
 }
+lvim.builtin.treesitter.playground.enable = true
 
 -- DAP
 lvim.builtin.dap.active = true
@@ -325,7 +324,7 @@ which_key "l" {
 -- Windows and Tabs
 which_key "w" {
 	name = "+Windows",
-	b = { "<CMD>wincmd =<CR>", "Balance" },
+	["="] = { "<CMD>wincmd =<CR>", "Balance" },
 	f = { "<CMD>setlocal scrollbind!", "Toggle follow mode" },
 	s = { "<CMD>split<CR>", "Split horizontal" },
 	t = { "<CMD>tabnew<CR>", "Create new tab" },
@@ -355,7 +354,10 @@ which_vkey "a" {
 	["."] = { [[<CMD>Tabularize /\.<CR>]], "Align at ." },
 	[":"] = { [[<CMD>Tabularize /:<CR>]], "Align at :" },
 	[";"] = { [[<CMD>Tabularize /;<CR>]], "Align at ;" },
-	["="] = { [[<CMD>Tabularize /===\|<=>\|\(&&\|||\|<<\|>>\|\/\/\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.?-]\?=[#?]\?<CR>"]], "Align at =" },
+	["="] = {
+    [[<CMD>Tabularize /===\|<=>\|\(&&\|||\|<<\|>>\|\/\/\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.?-]\?=[#?]\?<CR>"]],
+    "Align at ="
+  },
 	["["] = { [[<CMD>Tabularize /[<CR>]], "Align at [" },
 	["]"] = { [[<CMD>Tabularize /]<CR>]], "Align at ]" },
 	["{"] = { [[<CMD>Tabularize /{<CR>]], "Align at {" },
@@ -371,8 +373,8 @@ which_vkey "a" {
 -- No virtual text. Use trouble instead
 lvim.lsp.diagnostics.virtual_text = false
 
--- Rust LSP
-lvim.lsp.override = { "rust" }
+-- Overrides
+lvim.lsp.override = { "rust", "tex" }
 
 -- Docker LSP
 lvim.lang.dockerfile.lsp.setup.filetypes = { "Dockerfile*", "dockerfile*" }
@@ -399,81 +401,11 @@ if helpers.is_mac_os() then  -- Add path to Hammerspoon when on MacOS
 end
 lvim.lang.lua.lsp.setup.settings.Lua.workspace.library = lua_libs
 
--- Latex LSP {{{
-vim.g.vimtex_compiler_method = "latexmk"
-vim.g.vimtex_compiler_latexmk = { build_dir = "build" }
-vim.g.vimtex_view_skim_activate = 1
-vim.g.vimtex_view_skim_reading_bar = 0
-vim.g.vimtex_fold_enabled = 0
-vim.g.vimtex_quickfix_ignore_filters = {}
-vim.g.vimtex_compiler_latexmk_engines = {
-  _ = "-pdflatex",
-  pdflatex = "-pdf",
-  dvipdftex = "-pdfdvi",
-  pspdftex = "-pdfps",
-  lualatex = "-lualatex",
-  xelatex = "-xelatex",
-}
-vim.g.vimtex_compiler_latexrun_engines = {
-  _ = "pdflatex",
-  pdflatex = "pdflatex",
-  lualatex = "lualatex",
-  xelatex = "xelatex",
-}
-local forward_search_exe = ""
-local tex_preview_args = ""
-if helpers.is_mac_os() then
-  vim.g.vimtex_view_method = "skim"
-  forward_search_exe = "/Applications/Skim.app/Contents/SharedSupport/displayline"
-  tex_preview_args = { "%l", "%p", "%f" }
-else
-  vim.g.vimtex_view_method = "evince"
-  forward_search_exe = "evince-synctex"
-  tex_preview_args = { "-f", "%l", "%p", '"code -g %f:%l"' }
-end
-local latexmk_args = { "-xelatex", "-file-line-error", "-interaction=nonstopmode", "-synctex=1", "%f" }
-lvim.lang.tex.lsp.setup = {
-  cmd = { vim.fn.stdpath "data" .. "/lspinstall/latex/texlab" },
-  filetypes = { "tex", "bib" },
-  settings = {
-    texlab = {
-      auxDirectory = nil,
-      bibtexFormatter = "texlab",
-      build = {
-        executable = "latexmk",
-        args = latexmk_args,
-        on_save = false,
-        forward_search_after = false,
-      },
-      chktex = {
-        on_open_and_save = false,
-        on_edit = false,
-      },
-      forward_search = {
-        executable = nil,
-        args = {},
-      },
-      latexindent = {
-        ["local"] = nil,
-        modify_line_breaks = false,
-      },
-      linters = { "chktex" },
-      auto_save = false,
-      ignore_errors = {},
-      diagnosticsDelay = 300,
-      formatterLineLength = 120,
-      forwardSearch = {
-        args = tex_preview_args,
-        executable = forward_search_exe,
-      },
-      latexFormatter = "latexindent",
-    },
-  },
-}
--- }}}
-
 -- Linters
+lvim.lang.lua.linters = { { exe = "luacheck", args = { "-g" } } }
 lvim.lang.sh.linters = { { exe = "shellcheck" } }
+lvim.lang.vim.linters = { { exe = "vint" } }
+lvim.lang.tex.linters = { { exe = "vale" }, { exe = "chktex" } }
 
 -- Formatters
 lvim.lang.rust.formatters = { { exe = "rustfmt" } }
@@ -489,15 +421,19 @@ lvim.plugins = {
 	{ "tpope/vim-surround" },
   -- }}}
   -- LSP {{{
+  -- Trouble {{{
 	{
 		"folke/trouble.nvim",
 		config = function()
 			require("trouble").setup({
 				auto_open = true,
 				auto_close = true,
+        mode = "lsp_document_diagnostics",
 			})
 		end,
 	},
+  -- }}}
+  -- lua-dev {{{
   {
     "folke/lua-dev.nvim",
     config = function()
@@ -513,9 +449,12 @@ lvim.plugins = {
     end,
     ft = { "lua" },
   },
+  -- }}}
+  -- Rust-tools {{{
   {
     "simrat39/rust-tools.nvim",
     config = function()
+      -- Setup rust-tools
       require("rust-tools").setup({
         tools = {
           autoSetHints = true,
@@ -550,20 +489,124 @@ lvim.plugins = {
           },
         },
       })
+
+      -- Setup keymap
+      require("helpers").key.which_key "l" {
+        X = {
+          name = "Rust",
+          a = { "<CMD>RustEmitAsm<CR>", "Emit ASM" },
+          c = { "<CMD>RustOpenCargo<CR>", "Open Cargo" },
+          d = { "<CMD>RustDebuggables<CR>", "Debuggables" },
+          h = { "<CMD>RustToggleInlayHints<CR>", "Toggle Hints" },
+          j = { "<CMD>RustJoinLines<CR>", "Join Lines" },
+          r = { "<CMD>RustRunnables<CR>", "Runnables" },
+          m = { "<CMD>RustExpandMacro<CR>", "Expand Macro" },
+          p = { "<CMD>RustParentModule<CR>", "Goto Parent Module" },
+        }
+      }
     end,
     depends = "nvim-lspconfig",
     ft = { "rust", "rs" },
   },
   -- }}}
-  -- Treesitter {{{
+  -- Texmagic {{{
   {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    branch = "0.5-compat",
-    before = "nvim-treesitter"
+    "jakewvincent/texmagic.nvim",
+    config = function()
+      -- Setup Texmagic
+      vim.g.texflavor = "latex"
+      require("texmagic").setup({
+        engines = {
+          pdflatex = {
+            executable = "latexmk",
+            args = {
+              "-pdflatex",
+              "-synctex=1",
+              "-interaction=nonstopmode",
+              "-shell-escape",
+              "-outdir=build",
+              "%f"
+            },
+            isContinuous = false
+          },
+          xelatex = {
+            executable = "latexmk",
+            args = {
+              "-xelatex",
+              "-synctex=1",
+              "-interaction=nonstopmode",
+              "-shell-escape",
+              "-outdir=build",
+              "%f"
+            },
+            isContinuous = false
+          },
+        }
+      })
+
+      -- Start LSP server
+      local forward_search_exe
+      local forward_search_args
+      if require("helpers").is_mac_os() then
+        forward_search_exe = "/Applications/Skim.app/Contents/SharedSupport/displayline"
+        forward_search_args = { "%l", "%p", "%f" }
+      else
+        forward_search_exe = "okular"
+        forward_search_args = { "--unique", "file:%p#src:%l%f" }
+      end
+      _G.TeXMagicBuildConfig = {}
+      require("lspconfig").texlab.setup({
+        cmd = { vim.fn.stdpath "data" .. "/lspinstall/latex/texlab" },
+        filetypes = { "tex", "bib" },
+        on_attach = require("lsp").common_on_attach,
+        on_init = require("lsp").common_on_init,
+        capabilities = require("lsp").capabilities,
+        flags = require("lsp").flags,
+        settings = {
+          texlab = {
+            auxDirectory = "build",
+            bibtexFormatter = "texlab",
+            build = _G.TeXMagicBuildConfig,
+            linters = { "chktex" },
+            chktex = {
+              on_open_and_save = true,
+              on_edit = true,
+            },
+            formatterLineLength = 120,
+            forwardSearch = {
+              executable = forward_search_exe,
+              args = forward_search_args,
+            },
+          },
+        },
+      })
+
+      -- Bind keys
+      require("helpers").key.which_key "l" {
+        X = {
+          name = "TeX",
+          b = { "<CMD>TexlabBuild<CR>", "Build document" },
+          f = { "<CMD>TexlabForward<CR>", "Forward search preview" },
+        }
+      }
+    end,
+    ft = { "bib", "tex" },
   },
   -- }}}
+  -- }}}
+  -- Treesitter {{{
+  { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", after = "nvim-treesitter" },
+  { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
+  -- }}}
   -- Utils {{{
-  { "simrat39/symbols-outline.nvim", cmd="SymbolsOutline" },
+  {
+    "simrat39/symbols-outline.nvim",
+    config = function()
+      require("symbols-outline").setup({ auto_preview = false })
+    end,
+    cmd="SymbolsOutline"
+  },
+  { "editorconfig/editorconfig-vim" },
 	{ "godlygeek/tabular", cmd = "Tabularize" },
 	{ "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
 	{
@@ -595,17 +638,17 @@ lvim.plugins = {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup({
-        filetype_exclude = { "dashboard" },
-        buftype_exclude = { "terminal", "nofile" },
+        filetype_exclude = { "help", "terminal", "dashboard", "packer" },
+        buftype_exclude = { "terminal" },
         show_current_context = true,
+        show_first_indent_level = false,
         show_trailing_blankline_indent = false,
       })
-    end
+    end,
+    event = "BufRead",
   },
   { "norcalli/nvim-colorizer.lua", cmd = "ColorizerToggle" },
-  { "Pocco81/Catppuccino.nvim", disable = true },
   { "folke/tokyonight.nvim", disable = true },
-  { "NTBBloodbath/doom-one.nvim", disable = true },
   -- }}}
   -- Markdown {{{
   {
@@ -616,9 +659,6 @@ lvim.plugins = {
     end,
     ft = "markdown",
   },
-  -- }}}
-  -- Latex {{{
-  { "lervag/vimtex", ft = "tex" },
   -- }}}
   -- Debugger {{{
   {
