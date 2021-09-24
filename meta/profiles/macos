@@ -5,7 +5,7 @@ macos-ui
 terminal
 
 bin
-editors
+spacevim
 git
 ranger
 shell

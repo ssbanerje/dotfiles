@@ -2,7 +2,7 @@ base
 archlinux
 
 bin
-editors
+spacevim
 git
 ranger
 shell

@@ -50,7 +50,7 @@ function module:new_state(id, color)
 end
 
 -- Activate the state machine enviroment
-function module:activate(id, color)
+function module:activate(id)
   module.log.d("Transitioning from " .. module.current_state .. " to " .. id)
 
   if module.avail_states[id] == nil then

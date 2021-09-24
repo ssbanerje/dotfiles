@@ -6,7 +6,7 @@ terminal
 x11
 
 bin
-editors
+spacevim
 git
 ranger
 shell
