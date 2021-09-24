@@ -12,12 +12,3 @@
       force: true
     ~/.config:
       recursive: true
-
-- ifubuntu:
-    - aptupdate:
-
-- ifarch:
-    - pacmanupdate:
-
-- ifmacos:
-    - bootstraphomebrew:

@@ -1,4 +1,7 @@
 # --- MacOS Base Configuration ---
 - ifmacos:
+    - bootstraphomebrew:
+
     - brew:
         - python
+        - git

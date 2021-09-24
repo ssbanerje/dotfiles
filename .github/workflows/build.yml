@@ -26,16 +26,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - name: Initialize dependencies
-        run: |
-          [[ -f /usr/local/bin/2to3 ]] && rm -rf /usr/local/bin/2to3  # TODO: HOEMBREW ERROR
-          pip install pyyaml jinja2 distro
       - name: Install dotfiles
         run: ./install_profile -vv ${{ matrix.profile }}
   # }}}
 
-  build-docker-ubuntu:  # {{{
-    name: Build Ubuntu Docker Containers
+  build-container-ubuntu:  # {{{
+    name: Build Ubuntu Containers
     needs: [test-profiles]
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
@@ -81,8 +77,8 @@ jobs:
           push: true
   # }}}
 
-  build-docker-arch:  # {{{
-    name: Build Archlinux Docker Containers
+  build-container-arch:  # {{{
+    name: Build Archlinux Containers
     needs: [test-profiles]
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}

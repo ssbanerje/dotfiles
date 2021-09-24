@@ -1,5 +1,7 @@
 # --- Archlinux Base Config ---
 - ifarch:
+    - pacmanupdate:
+
     - pacman:
         - sudo
         - curl

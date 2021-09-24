@@ -13,3 +13,9 @@
 
 - link:
     ~/.config/ranger: ranger
+
+- pip:
+    file: ranger/requirements.txt
+    user: true
+    stdout: false
+    stderr: true

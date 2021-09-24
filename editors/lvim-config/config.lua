@@ -395,6 +395,11 @@ lvim.lang.yaml.lsp.setup.settings = {
       enable = true,
       url = "https://www.schemastore.org/api/json/catalog.json",
     },
+    schemas = {
+      ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
+      ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+      ["http://json.schemastore.org/gitlab-ci"] = "/*lab-ci.{yml,yaml}",
+    },
   },
 }
 
@@ -519,17 +524,18 @@ lvim.plugins = {
     "jakewvincent/texmagic.nvim",
     config = function()
       -- Setup Texmagic
+      _G.TeXMagicBuildConfig = {}
       vim.g.texflavor = "latex"
       require("texmagic").setup({
         engines = {
           pdflatex = {
             executable = "latexmk",
             args = {
+              "-pdf",
               "-pdflatex",
-              "-synctex=1",
-              "-interaction=nonstopmode",
-              "-shell-escape",
               "-outdir=build",
+              "-interaction=nonstopmode",
+              "-synctex=1",
               "%f"
             },
             isContinuous = false
@@ -537,11 +543,11 @@ lvim.plugins = {
           xelatex = {
             executable = "latexmk",
             args = {
+              "-pdf",
               "-xelatex",
-              "-synctex=1",
-              "-interaction=nonstopmode",
-              "-shell-escape",
               "-outdir=build",
+              "-interaction=nonstopmode",
+              "-synctex=1",
               "%f"
             },
             isContinuous = false
@@ -559,7 +565,6 @@ lvim.plugins = {
         forward_search_exe = "okular"
         forward_search_args = { "--unique", "file:%p#src:%l%f" }
       end
-      _G.TeXMagicBuildConfig = {}
       require("lspconfig").texlab.setup({
         cmd = { vim.fn.stdpath "data" .. "/lspinstall/latex/texlab" },
         filetypes = { "tex", "bib" },

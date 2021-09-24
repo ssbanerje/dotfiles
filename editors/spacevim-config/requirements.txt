@@ -1,6 +1,6 @@
 debugpy
-isort
 ipython
+isort
 neovim-remote
 proselint
 pygments

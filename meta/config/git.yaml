@@ -1,16 +1,4 @@
 # --- Git Configuration ---
-- ifubuntu:
-    - apt:
-        - git
-
-- ifarch:
-    - pacman:
-        - git
-
-- ifmacos:
-    - brew:
-        - git
-
 - template:
     - ~/.gitconfig:
         source_file: git/gitconfig

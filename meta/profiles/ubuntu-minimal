@@ -1,10 +1,10 @@
 base
 ubuntu
 
-shell
-git
-bin
-lunarvim
-ranger
 ssh
 tmux
+git
+bin
+shell
+lunarvim
+ranger

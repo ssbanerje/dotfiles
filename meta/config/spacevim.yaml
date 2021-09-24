@@ -7,7 +7,6 @@
         - "sudo apt update"
 
     - apt:
-        - git
         - neovim
         - vim-nox
         - global
@@ -32,7 +31,6 @@
 
 - ifmacos:
     - brew:
-        - git
         - neovim
         - global
         - ctags
@@ -41,7 +39,7 @@
         - shellcheck
 
 - pip:
-    file: meta/config/requirements.txt
+    file: editors/spacevim-config/requirements.txt
     user: true
     stdout: false
     stderr: true

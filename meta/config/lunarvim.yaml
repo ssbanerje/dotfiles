@@ -2,8 +2,8 @@
 - ifubuntu:
     - shell:
         - ["curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -", "Add NodeJS PPA"]
-        - "curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null"
-        - "echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list"
+        - ["curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null", "Install yarn"]
+        - ["echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list", "Install yarn"]
         - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add NeoVim PPA"]
         - ["sudo apt-get update", "Update repositories"]
 
@@ -20,7 +20,7 @@
         - neovim
         - nodejs
         - yarn
-        - uzip
+        - unzip
         - shellcheck
         - luarocks
 
@@ -29,11 +29,12 @@
         - neovim
         - node
         - yarn
+        - unzip
         - shellcheck
         - luarocks
 
 - pip:
-    file: meta/config/requirements.txt
+    file: editors/spacevim-config/requirements.txt
     user: true
     stdout: false
     stderr: true
@@ -41,9 +42,7 @@
 - shell:
     - ["curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal", "Installing Rust"]
     - [". ~/.cargo/env && rustup component add rust-src", "Adding RLS"]
-    - ["mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada", "TODO FIX NVIM THROWS ERRORS ON STARTUP"]
     - ["LVBRANCH=rolling . ~/.cargo/env && curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | bash -s -- -y", "Install Lunarvim"]
-    - ["rm -rf ~/.config/lvim", "Install Lunarvim"]
 
 - create:
   - ~/.config/lvim

@@ -1,14 +1,13 @@
 base
 ubuntu
 
-shell
-git
-bin
-spacevim
-lunarvim
-ranger
 ssh
 tmux
+git
+bin
+shell
+lunarvim
+ranger
 
 i3wm
 terminal
