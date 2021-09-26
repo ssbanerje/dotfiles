@@ -1,21 +1,9 @@
 # --- Ranger Configuration ---
-- ifubuntu:
-    - apt:
-        - ranger
-
-- ifarch:
-    - pacman:
-        - ranger
-
-- ifmacos:
-    - brew:
-        - ranger
-
-- link:
-    ~/.config/ranger: ranger
-
 - pip:
     file: ranger/requirements.txt
     user: true
     stdout: false
     stderr: true
+
+- link:
+    ~/.config/ranger: ranger
