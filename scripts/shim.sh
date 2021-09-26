@@ -27,7 +27,6 @@ gpgconf --launch gpg-agent
 # Run docker
 docker pull "$IMAGE"
 docker run -it --rm \
-  --privileged \
   -u "$(id -u):$(id -g)" \
   --network host \
   -v /var/run/docker.sock:/var/run/docker.sock \
