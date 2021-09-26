@@ -153,6 +153,13 @@ lvim.builtin.treesitter.textobjects = {
   move = { enable = false },
   lsp_interop = { enable = true },
 }
+lvim.builtin.treesitter.textsubjects = {
+  enable = true,
+  keymaps = {
+    ["."] = "textsubjects-smart",
+    [";"] = "textsubjects-container-outer",
+  },
+}
 lvim.builtin.treesitter.playground.enable = true
 
 -- DAP
@@ -607,6 +614,7 @@ lvim.plugins = {
   -- Treesitter {{{
   { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", after = "nvim-treesitter" },
   { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
+  { "RRethy/nvim-treesitter-textsubjects", after = "nvim-treesitter" },
   -- }}}
   -- Utils {{{
   {
