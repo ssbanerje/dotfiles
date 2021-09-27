@@ -19,8 +19,8 @@
     ~/.gitattributes: git/gitattributes
 
 - shell:
-    - rm -f ~/.global_gitignore;
     - >
+      rm -f ~/.global_gitignore;
       for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do
         cat git/gitignore/Global/$f.gitignore >> ~/.global_gitignore
       done

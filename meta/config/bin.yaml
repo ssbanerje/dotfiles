@@ -1,7 +1,4 @@
 # --- Dotfile Binaries Config ---
-- create:
-  - ~/.local/bin
-
 - link:
     ~/.local/bin/diffconflicts: bin/diffconflicts
     ~/.local/bin/doi2bib: bin/doi2bib
@@ -11,9 +8,8 @@
     ~/.local/bin/ports: bin/ports
     ~/.local/bin/random: bin/random
     ~/.local/bin/shim: scripts/shim.sh
-    ~/.local/bin/lock-screen:
-      if: '[[ $(uname -s) = Darwin ]]'
-      path: bin/lock-screen
-    ~/.local/bin/lyrics:
-      if: '[[ $(uname -s) = Darwin ]]'
-      path: bin/lyrics
+
+- ifmacos:
+    - link:
+        ~/.local/bin/lock-screen: bin/lock-screen
+        ~/.local/bin/lyrics: bin/lyrics

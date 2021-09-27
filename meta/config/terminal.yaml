@@ -6,6 +6,7 @@
         - kitty
         - iterm2
         - font-hack-nerd-font
+
 - ifubuntu:
     - apt:
         - kitty
@@ -20,6 +21,7 @@
 
 - create:
     - ~/.config/kitty
+
 - link:
     ~/.config/kitty/kitty.conf: kitty/kitty.conf
     ~/.config/kitty/macos-launch-services-cmdline:

@@ -5,7 +5,6 @@
         - fzf
         - silversearcher-ag
         - grc
-        - ack
 
 - ifarch:
     - pacman:
@@ -13,7 +12,6 @@
         - fzf
         - the_silver_searcher
         - grc
-        - ack
 
 - ifmacos:
     - tap:
@@ -25,10 +23,6 @@
         - coreutils
         - the_silver_searcher
         - grc
-        - ack
-
-- create:
-    - ~/.config
 
 - link:
     ~/.config/base16-shell: shell/base16-shell
@@ -41,10 +35,8 @@
     ~/.config/env.sh: shell/env.sh
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.hushlogin: shell/hushlogin
-    ~/.ackrc: shell/ackrc
     ~/.curlrc: shell/curlrc
     ~/.gdbinit: shell/gdbinit
-    ~/.gdbinit.local: shell/gdbinit.local
     ~/.wgetrc: shell/wgetrc
 
 - shell:

@@ -62,9 +62,6 @@
     - ['mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
     - ["curl -sLf https://spacevim.org/install.sh | bash -s -- --no-fonts", "Installing SpaceVim"]
 
-- create:
-  - ~/.config/lvim
-
 - link:
     ~/.editorconfig: editors/editorconfig
     ~/.SpaceVim.d: editors/spacevim-config

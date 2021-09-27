@@ -2,10 +2,10 @@
 - ifubuntu:
     - shell:
         - ["curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -", "Add NodeJS PPA"]
-        - ["curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null", "Install yarn"]
-        - ["echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list", "Install yarn"]
-        - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add NeoVim PPA"]
-        - ["sudo apt-get update", "Update repositories"]
+        - ["curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null", "Add Yarn GPG Key"]
+        - ["echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list", "Add Yarn PPA"]
+        - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add Neovim PPA"]  # TODO FIX THIS
+        - "sudo apt-get update"
 
     - apt:
         - neovim
@@ -34,15 +34,15 @@
         - luarocks
 
 - pip:
-    file: editors/spacevim-config/requirements.txt
+    file: editors/lvim-config/requirements.txt
     user: true
     stdout: false
     stderr: true
 
 - shell:
     - ["curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal", "Installing Rust"]
-    - [". ~/.cargo/env && rustup component add rust-src", "Adding RLS"]
-    - ["LVBRANCH=rolling . ~/.cargo/env && curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | bash -s -- -y", "Install Lunarvim"]
+    - [". ~/.cargo/env && rustup component add rust-src", "Adding Rust Source"]
+    - ["LVBRANCH=rolling . ~/.cargo/env && curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | bash -s -- -y", "Installing Lunarvim"]
 
 - create:
   - ~/.config/lvim
@@ -51,3 +51,7 @@
     ~/.editorconfig: editors/editorconfig
     ~/.config/lvim/config.lua: editors/lvim-config/config.lua
     ~/.config/lvim/lua: editors/lvim-config/lua
+
+- shell:
+    # - ["~/.local/bin/lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'", "Install lvim plugins"]
+    - ["~/.local/bin/lvim --headless +'PackerSync' +'TSInstallSync all' +qall", "Install lvim plugins"]

@@ -11,3 +11,7 @@
       force: true
     ~/.config:
       recursive: true
+
+- create:
+  - ~/.config
+  - ~/.local/bin
