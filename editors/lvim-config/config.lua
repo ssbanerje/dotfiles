@@ -56,25 +56,20 @@ local custom_section = helpers.dashboard.custom_section
 custom_section "00" "  <empty buffer>" "ene!"
 custom_section "d1" "  Marks" "Telescope marks"
 
--- NvimTree
-lvim.builtin.nvimtree.side = "left"
-lvim.builtin.nvimtree.show_icons.git = true
-
 -- Terminal
 lvim.builtin.terminal.active = true
 lvim.builtin.terminal.open_mapping = [[<C-\>]]
-lvim.builtin.terminal.shell = "bash"
 
 -- Lualine
 local lualine = helpers.statusline.lualine
 local lualine_color = helpers.statusline.lualine_color
+
 local components = require("core.lualine.components")
 components.location.icon = ""
 
 lvim.builtin.lualine.options.section_separators = { left = "", right = "" }
 lvim.builtin.lualine.options.component_separators = { left = "", right = "" }
 
--- Setup theme for lualine
 lvim.builtin.lualine.options.theme = require("lualine.themes.onedarker")
 
 local colors = {
@@ -613,8 +608,8 @@ lvim.plugins = {
   -- }}}
   -- Treesitter {{{
   { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", after = "nvim-treesitter" },
-  { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
   { "RRethy/nvim-treesitter-textsubjects", after = "nvim-treesitter" },
+  { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
   -- }}}
   -- Utils {{{
   {
