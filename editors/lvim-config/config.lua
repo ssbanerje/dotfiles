@@ -48,6 +48,159 @@ vim.opt.conceallevel = 0
 
 -- }}}
 
+-- Key Remapping {{{
+
+local nnoremap = helpers.key.nnoremap
+local vnoremap = helpers.key.vnoremap
+local which_key = helpers.key.which_key
+local which_vkey = helpers.key.which_vkey
+
+-- Indent
+nnoremap "<" "<<_"
+nnoremap ">" ">>_"
+
+-- Create windows
+nnoremap "ss" "<CMD>split<CR>"
+nnoremap "sv" "<CMD>vsplit<CR>"
+
+-- Make consistent with C and D
+nnoremap "Y" "y$"
+
+-- Easier scrolling
+nnoremap "<C-h>" "<C-w>h"
+nnoremap "<C-j>" "<C-w>j"
+nnoremap "<C-k>" "<C-w>k"
+nnoremap "<C-l>" "<C-w>l"
+
+-- Easier scrolling
+nnoremap "H" "zh"
+nnoremap "J" "<C-e>"
+nnoremap "K" "<C-y>"
+nnoremap "L" "zl"
+
+-- Select word
+nnoremap "vv" "viw"
+
+-- Clear search highlight
+nnoremap "<ESC>" ":nohl<CR><ESC>"
+
+-- Cycle Tabs
+nnoremap "gt" "<CMD>tabNext<CR>"
+
+-- Undotree
+nnoremap "U" "<CMD>MundoToggle<CR>"
+
+-- Tagbar
+nnoremap "<F2>" "<CMD>SymbolsOutline<CR>"
+
+-- File tree
+nnoremap "<F3>" "<CMD>NvimTreeToggle<CR>"
+
+-- Search highlighted
+vnoremap "/" 'y/<C-R>"<CR>'
+
+-- Paste over selected
+vnoremap "p" '"_dp'
+
+-- Remove defaults
+lvim.builtin.which_key.mappings["e"] = nil -- File tree
+lvim.builtin.which_key.mappings["c"] = nil -- Close buffer
+lvim.builtin.which_key.mappings["h"] = nil -- No Highlight
+lvim.builtin.which_key.mappings["q"] = nil -- Quit
+lvim.builtin.which_key.mappings["w"] = nil -- Save
+lvim.builtin.which_key.mappings["T"] = nil -- Tresitter
+
+-- Fast window switching
+for i = 1, 9 do
+	which_key(i) {
+		function()
+			if #vim.api.nvim_list_wins() >= i then
+				vim.api.nvim_command(":" .. i .. "wincmd w")
+			end
+		end,
+		"Goto window " .. i,
+	}
+end
+
+-- Swtich to last buffer
+which_key "<Tab>" { "<CMD>try | b# | catch | endtry<CR>", "Previous buffer" }
+
+-- Copy and paste from system clipboard
+which_vkey "Y" { '"+y', "Copy to clipboard" }
+which_key "P" { '"+p', "Paste from clipboard" }
+
+-- Buffer
+which_key "b" {
+	p = { '<CMD>normal ggdG"+P<CR>', "Paste from clipboard" },
+	y = { '<CMD>normal ggVG"+y``<CR>', "Copy buffer to clipboard" },
+	c = { "<CMD>ColorizerToggle<CR>", "Toggle colorizer" },
+	C = { "<CMD>setlocal cursorcolumn!<CR>", "Toggle cursor column" },
+	n = { "<CMD>setlocal nonumber! norelativenumber!<CR>", "Toggle line numbers" },
+	r = { "<CMD>setlocal readonly!<CR>", "Toogle read only" },
+	W = { "<CMD>setlocal wrap!<CR>", "Toggle Wrap" },
+}
+
+-- Troulble
+which_key "l" {
+  a = { "<CMD>Telescope lsp_code_actions<CR>", "Code Action" },
+	t = { "<CMD>TroubleToggle<CR>", "Trouble" },
+  I = { "<CMD>Telescope lsp_implementations<CR>", "LSP Implementations"},
+  R = { "<CMD>Trouble lsp_references<CR>", "Goto References" },
+}
+
+-- Windows and Tabs
+which_key "w" {
+	name = "+Windows",
+	["="] = { "<CMD>wincmd =<CR>", "Balance" },
+	f = { "<CMD>setlocal scrollbind!", "Toggle follow mode" },
+	s = { "<CMD>split<CR>", "Split horizontal" },
+	t = { "<CMD>tabnew<CR>", "Create new tab" },
+	v = { "<CMD>vsplit<CR>", "Split vertical" },
+	w = { "<CMD>ChooseWin<CR>", "Chose window" },
+	H = { "<CMD>wincmd H<CR>", "Move far left" },
+	J = { "<CMD>wincmd J<CR>", "Move far down" },
+	K = { "<CMD>wincmd K<CR>", "Move far up" },
+	L = { "<CMD>wincmd L<CR>", "Move far right" },
+	h = { "<CMD>wincmd h<CR>", "Move left" },
+	j = { "<CMD>wincmd j<CR>", "Move down" },
+	k = { "<CMD>wincmd k<CR>", "Move up" },
+	l = { "<CMD>wincmd l<CR>", "Move right" },
+}
+
+-- Align
+which_vkey "a" {
+	name = "+Align",
+	["<Space>"] = { [[<CMD>Tabularize /\s<CR>]], "Align at space" },
+	["o"] = { [[<CMD>Tabularize /&&\|||\|\.\.\|\*\*\|<<\|>>\|\/\/\|[-+*/.%^><&|?]<CR>]], "Align at " },
+	["#"] = { [[<CMD>Tabularize /#<CR>]], "Align at #" },
+	["%"] = { [[<CMD>Tabularize /%<CR>]], "Align at %" },
+	["&"] = { [[<CMD>Tabularize /&<CR>]], "Align at &" },
+	["("] = { [[<CMD>Tabularize /(<CR>]], "Align at (" },
+	[")"] = { [[<CMD>Tabularize /)<CR>]], "Align at )" },
+	[","] = { [[<CMD>Tabularize /,<CR>]], "Align at ," },
+	["."] = { [[<CMD>Tabularize /\.<CR>]], "Align at ." },
+	[":"] = { [[<CMD>Tabularize /:<CR>]], "Align at :" },
+	[";"] = { [[<CMD>Tabularize /;<CR>]], "Align at ;" },
+	["="] = {
+    [[<CMD>Tabularize /===\|<=>\|\(&&\|||\|<<\|>>\|\/\/\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.?-]\?=[#?]\?<CR>"]],
+    "Align at ="
+  },
+	["["] = { [[<CMD>Tabularize /[<CR>]], "Align at [" },
+	["]"] = { [[<CMD>Tabularize /]<CR>]], "Align at ]" },
+	["{"] = { [[<CMD>Tabularize /{<CR>]], "Align at {" },
+	["|"] = { [[<CMD>Tabularize /|<CR>]], "Align at |" },
+	["}"] = { [[<CMD>Tabularize /}<CR>]], "Align at }" },
+	["¦"] = { [[<CMD>Tabularize /¦<CR>]], "Align at ¦" },
+}
+
+-- Applications
+which_key "x" {
+  name = "+Execute Apps",
+  -- entries in builtin section
+}
+
+-- }}}
+
 -- Lunarvim Builtins {{{
 
 -- Dashboard
@@ -59,6 +212,11 @@ custom_section "d1" "  Marks" "Telescope marks"
 -- Terminal
 lvim.builtin.terminal.active = true
 lvim.builtin.terminal.open_mapping = [[<C-\>]]
+lvim.builtin.terminal.execs = {
+  { "lazygit", "gg", "LazyGit" },
+  { "lazygit", "xg", "LazyGit" },
+  { "ranger", "xr", "Ranger" },
+}
 
 -- Lualine
 local lualine = helpers.statusline.lualine
@@ -225,153 +383,6 @@ lvim.builtin.dap.on_config_done = function(dap)
 }
 
 end
-
--- }}}
-
--- Key Remapping {{{
-
-local nnoremap = helpers.key.nnoremap
-local vnoremap = helpers.key.vnoremap
-local which_key = helpers.key.which_key
-local which_vkey = helpers.key.which_vkey
-
--- Indent
-nnoremap "<" "<<_"
-nnoremap ">" ">>_"
-
--- Create windows
-nnoremap "ss" "<CMD>split<CR>"
-nnoremap "sv" "<CMD>vsplit<CR>"
-
--- Make consistent with C and D
-nnoremap "Y" "y$"
-
--- Easier scrolling
-nnoremap "<C-h>" "<C-w>h"
-nnoremap "<C-j>" "<C-w>j"
-nnoremap "<C-k>" "<C-w>k"
-nnoremap "<C-l>" "<C-w>l"
-
--- Easier scrolling
-nnoremap "H" "zh"
-nnoremap "J" "<C-e>"
-nnoremap "K" "<C-y>"
-nnoremap "L" "zl"
-
--- Select word
-nnoremap "vv" "viw"
-
--- Clear search highlight
-nnoremap "<ESC>" ":nohl<CR><ESC>"
-
--- Cycle Tabs
-nnoremap "gt" "<CMD>tabNext<CR>"
-
--- Undotree
-nnoremap "U" "<CMD>UndotreeToggle<CR>"
-
--- Tagbar
-nnoremap "<F2>" "<CMD>SymbolsOutline<CR>"
-
--- File tree
-nnoremap "<F3>" "<CMD>NvimTreeToggle<CR>"
-
--- Search highlighted
-vnoremap "/" 'y/<C-R>"<CR>'
-
--- Paste over selected
-vnoremap "p" '"_dp'
-
--- Remove defaults
-lvim.builtin.which_key.mappings["e"] = nil -- File tree
-lvim.builtin.which_key.mappings["c"] = nil -- Close buffer
-lvim.builtin.which_key.mappings["h"] = nil -- No Highlight
-lvim.builtin.which_key.mappings["q"] = nil -- Quit
-lvim.builtin.which_key.mappings["w"] = nil -- Save
-lvim.builtin.which_key.mappings["T"] = nil -- Tresitter
-
--- Fast window switching
-for i = 1, 9 do
-	which_key(i) {
-		function()
-			if #vim.api.nvim_list_wins() >= i then
-				vim.api.nvim_command(":" .. i .. "wincmd w")
-			end
-		end,
-		"Goto window " .. i,
-	}
-end
-
--- Swtich to last buffer
-which_key "<Tab>" { "<CMD>try | b# | catch | endtry<CR>", "Previous buffer" }
-
--- Copy and paste from system clipboard
-which_vkey "Y" { '"+y', "Copy to clipboard" }
-which_key "P" { '"+p', "Paste from clipboard" }
-
--- Buffer
-which_key "b" {
-	p = { '<CMD>normal ggdG"+P<CR>', "Paste from clipboard" },
-	y = { '<CMD>normal ggVG"+y``<CR>', "Copy buffer to clipboard" },
-	c = { "<CMD>ColorizerToggle<CR>", "Toggle colorizer" },
-	C = { "<CMD>setlocal cursorcolumn!<CR>", "Toggle cursor column" },
-	n = { "<CMD>setlocal nonumber! norelativenumber!<CR>", "Toggle line numbers" },
-	r = { "<CMD>setlocal readonly!<CR>", "Toogle read only" },
-	W = { "<CMD>setlocal wrap!<CR>", "Toggle Wrap" },
-}
-
--- Troulble
-which_key "l" {
-  a = { "<CMD>Telescope lsp_code_actions<CR>", "Code Action" },
-	t = { "<CMD>TroubleToggle<CR>", "Trouble" },
-  I = { "<CMD>Telescope lsp_implementations<CR>", "LSP Implementations"},
-  R = { "<CMD>Trouble lsp_references<CR>", "Goto References" },
-}
-
--- Windows and Tabs
-which_key "w" {
-	name = "+Windows",
-	["="] = { "<CMD>wincmd =<CR>", "Balance" },
-	f = { "<CMD>setlocal scrollbind!", "Toggle follow mode" },
-	s = { "<CMD>split<CR>", "Split horizontal" },
-	t = { "<CMD>tabnew<CR>", "Create new tab" },
-	v = { "<CMD>vsplit<CR>", "Split vertical" },
-	w = { "<CMD>ChooseWin<CR>", "Chose window" },
-	H = { "<CMD>wincmd H<CR>", "Move far left" },
-	J = { "<CMD>wincmd J<CR>", "Move far down" },
-	K = { "<CMD>wincmd K<CR>", "Move far up" },
-	L = { "<CMD>wincmd L<CR>", "Move far right" },
-	h = { "<CMD>wincmd h<CR>", "Move left" },
-	j = { "<CMD>wincmd j<CR>", "Move down" },
-	k = { "<CMD>wincmd k<CR>", "Move up" },
-	l = { "<CMD>wincmd l<CR>", "Move right" },
-}
-
--- Align
-which_vkey "a" {
-	name = "+Align",
-	["<Space>"] = { [[<CMD>Tabularize /\s<CR>]], "Align at space" },
-	["o"] = { [[<CMD>Tabularize /&&\|||\|\.\.\|\*\*\|<<\|>>\|\/\/\|[-+*/.%^><&|?]<CR>]], "Align at " },
-	["#"] = { [[<CMD>Tabularize /#<CR>]], "Align at #" },
-	["%"] = { [[<CMD>Tabularize /%<CR>]], "Align at %" },
-	["&"] = { [[<CMD>Tabularize /&<CR>]], "Align at &" },
-	["("] = { [[<CMD>Tabularize /(<CR>]], "Align at (" },
-	[")"] = { [[<CMD>Tabularize /)<CR>]], "Align at )" },
-	[","] = { [[<CMD>Tabularize /,<CR>]], "Align at ," },
-	["."] = { [[<CMD>Tabularize /\.<CR>]], "Align at ." },
-	[":"] = { [[<CMD>Tabularize /:<CR>]], "Align at :" },
-	[";"] = { [[<CMD>Tabularize /;<CR>]], "Align at ;" },
-	["="] = {
-    [[<CMD>Tabularize /===\|<=>\|\(&&\|||\|<<\|>>\|\/\/\)=\|=\~[#?]\?\|=>\|[:+/*!%^=><&|.?-]\?=[#?]\?<CR>"]],
-    "Align at ="
-  },
-	["["] = { [[<CMD>Tabularize /[<CR>]], "Align at [" },
-	["]"] = { [[<CMD>Tabularize /]<CR>]], "Align at ]" },
-	["{"] = { [[<CMD>Tabularize /{<CR>]], "Align at {" },
-	["|"] = { [[<CMD>Tabularize /|<CR>]], "Align at |" },
-	["}"] = { [[<CMD>Tabularize /}<CR>]], "Align at }" },
-	["¦"] = { [[<CMD>Tabularize /¦<CR>]], "Align at ¦" },
-}
 
 -- }}}
 
@@ -612,6 +623,9 @@ lvim.plugins = {
   { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
   -- }}}
   -- Utils {{{
+  { "editorconfig/editorconfig-vim" },
+	{ "godlygeek/tabular", cmd = "Tabularize" },
+  { "simnalamburt/vim-mundo", cmd = "MundoToggle" },
   {
     "simrat39/symbols-outline.nvim",
     config = function()
@@ -619,17 +633,6 @@ lvim.plugins = {
     end,
     cmd="SymbolsOutline"
   },
-  { "editorconfig/editorconfig-vim" },
-	{ "godlygeek/tabular", cmd = "Tabularize" },
-	{ "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
-	{
-		"mbbill/undotree",
-		cmd = "UndotreeToggle",
-		config = function()
-			vim.g.undotree_WindowLayout = 2
-			vim.g.undotree_SplitWidth = 35
-		end,
-	},
 	{
 		"lambdalisue/suda.vim",
 		cmd = { "SudaWrite", "W" },
@@ -647,6 +650,7 @@ lvim.plugins = {
   },
   --}}}
   -- UI {{{
+	{ "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
   {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
@@ -688,17 +692,24 @@ lvim.plugins = {
 
 -- Autocommands {{{
 
+function _G.set_terminal_keymaps()
+  local opts = {noremap = true}
+  vim.api.nvim_buf_set_keymap(0, 't', '<ESC>', [[<C-\><C-n>]], opts)
+  vim.api.nvim_buf_set_keymap(0, 't', 'jk', [[<C-\><C-n>]], opts)
+end
+
 lvim.autocommands.custom_groups = {
-	-- Toggle line numbering style
+	-- Style when leaving and entering buffers
 	{ "BufEnter,FocusGained,InsertLeave,WinEnter", "*", 'if &nu && mode() != "i" | set rnu | endif' },
+  { "BufEnter,FocusGained,InsertLeave,WinEnter", "*", "set cursorline" },
 	{ "BufLeave,FocusLost,InsertEnter,WinLeave", "*", "if &nu | set nornu | endif" },
+  { "BufLeave,FocusLost,InsertEnter,WinLeave", "*", "set nocursorline" },
   -- Reload file on change
   { "FocusGained", "*", ":checktime" },
-  -- Show cursor in active buffer
-  { "WinEnter", "*", "set cursorline" },
-  { "WinLeave", "*", "set nocursorline" },
   -- Windows to close on q
   { "Filetype", "help,man", "nnoremap <buffer><silent> q <CMD>close<CR>" },
+  -- Terminal keymaps
+  { "TermOpen", "term://*", "lua set_terminal_keymaps()" }
 }
 
 -- }}}
