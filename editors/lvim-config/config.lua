@@ -279,6 +279,10 @@ nnoremap "<F3>" "<CMD>NvimTreeToggle<CR>"
 -- Search highlighted
 vnoremap "/" 'y/<C-R>"<CR>'
 
+-- Traversing search results
+nnoremap "n" "nzz<BS>n"
+nnoremap "N" "Nzz<Space>N"
+
 -- Paste over selected
 vnoremap "p" '"_dp'
 
@@ -666,11 +670,14 @@ lvim.plugins = {
   -- Markdown {{{
   {
     "iamcco/markdown-preview.nvim",
-    run = "cd app && npm install",
+    run = function()
+      vim.fn['mkdp#util#install']()
+    end,
     config = function()
       vim.g.mkdp_page_title = "${name}"
     end,
     ft = "markdown",
+    cmd = "MarkdownPreview",
   },
   -- }}}
   -- Debugger {{{
