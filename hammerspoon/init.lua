@@ -5,7 +5,7 @@
 --  * Alt + N -> Navigate
 --  * Hyper + K -> Keycaster Mode
 --  > Hyper + Enter -> Toggle yabai for space
---  > Alt + Enter -> iTerm2
+--  > Alt + Enter -> Terminal
 --  > Alt + Cmd + Enter -> Safari
 --  > Alt + Space -> Toggle Float
 --  > Alt + s -> Toggle last split
@@ -69,7 +69,7 @@ state_machine:new_state("keycaster", "#3288bd")
 -- STATE TRANSITION: Navigation
 local borders = require("window_borders")
 state_machine:transition(state_machine.base_state_id, "navigation", { "alt", "n" }, "Navigation Mode", function()
-  borders:start()
+  borders.start()
 end)
 
 -- STATE TRANSITION: Keycaster
@@ -82,20 +82,20 @@ end)
 local yabai = require("yabai")
 local yabai_toggle = true
 state_machine:bind("base", { hyper, "return" }, "Toggle Yabai", function()
-  local layout = nil
+  local layout
   if yabai_toggle then
     layout = "float"
   else
     layout = "bsp"
   end
   yabai_toggle = not yabai_toggle
-  yabai:ipc({ "space", "--layout", layout })
+  yabai.ipc({ "space", "--layout", layout })
 end)
 
 -- BINDING: Open a terminal window
 state_machine:bind("base", { "alt", "return" }, "Open kitty", function()
   if hs.application.find("kitty") then
-    local nop = function(...) end
+    local nop = function(_) end
     hs.task.new("/usr/local/bin/kitty", nop, nop, { "-1", "-d=" .. os.getenv("HOME") }):start()
   else
     hs.application.open("kitty")
@@ -137,7 +137,7 @@ local yabai_commands = {
 }
 for _, c in pairs(yabai_commands) do
   state_machine:bind(state_machine.base_state_id, c[1], c[2], function()
-    yabai:ipc(c[3])
+    yabai.ipc(c[3])
   end)
 end
 
@@ -146,10 +146,10 @@ end
 ---------------------------------------------------------------------------------------------------
 -- STATE TRANSITION: Exit navigation state
 state_machine:transition("navigation", state_machine.base_state_id, { "", "escape" }, "Exit", function()
-  borders:stop()
+  borders.stop()
 end)
 state_machine:transition("navigation", state_machine.base_state_id, { "", "return" }, "Exit", function()
-  borders:stop()
+  borders.stop()
 end)
 
 -- STATE TRANSITION: Resize state
@@ -202,14 +202,14 @@ local yabai_keys = {
 }
 for _, c in pairs(yabai_keys) do
   state_machine:bind("navigation", c[1], c[2], function()
-    yabai:ipc(c[3])
+    yabai.ipc(c[3])
   end)
 end
 
 -- BIDNING: Move window to space
 local function move_window(yk, kk)
   return function()
-    yabai:ipc({ "window", "--space", yk })
+    yabai.ipc({ "window", "--space", yk })
     hs.timer.doAfter(0.2, function()
       hs.eventtap.event.newKeyEvent("ctrl", true):post()
       hs.eventtap.event.newKeyEvent(kk, true):post()
@@ -264,7 +264,7 @@ for k, v in pairs(move_commands) do
     if not win then
       return
     end
-    yabai:is_floating(win:id(), function()
+    yabai.is_floating(win:id(), function()
       local update = v(win:frame())
       win:setFrame(update)
     end)
@@ -273,14 +273,14 @@ end
 
 -- BINDING: Move in stack
 state_machine:bind("navigation", { "", "tab" }, "Stack move forward", function()
-  yabai:ipc({ "window", "--focus", "stack.next" }, nil, function(_)
-    yabai:ipc({ "window", "--focus", "stack.first" })
+  yabai.ipc({ "window", "--focus", "stack.next" }, nil, function(_)
+    yabai.ipc({ "window", "--focus", "stack.first" })
   end)
 end)
 
 state_machine:bind("navigation", { "shift", "tab" }, "Stack move backward", function()
-  yabai:ipc({ "window", "--focus", "stack.prev" }, nil, function(_)
-    yabai:ipc({ "window", "--focus", "stack.last" })
+  yabai.ipc({ "window", "--focus", "stack.prev" }, nil, function(_)
+    yabai.ipc({ "window", "--focus", "stack.last" })
   end)
 end)
 
@@ -299,7 +299,7 @@ yabai_keys = {
 }
 for _, c in pairs(yabai_keys) do
   state_machine:bind("resize", c[1], c[2], function()
-    yabai:ipc(c[3])
+    yabai.ipc(c[3])
   end)
 end
 
@@ -310,11 +310,11 @@ state_machine:bind("resize", { "", "-" }, "Decrease Gap", function()
   if gap < 0 then
     gap = 0
   end
-  yabai:ipc({ "space", "--gap", string.format("abs:%d", gap) })
+  yabai.ipc({ "space", "--gap", string.format("abs:%d", gap) })
 end)
 state_machine:bind("resize", { "shift", "=" }, "Increase Gap", function()
   gap = gap + 10
-  yabai:ipc({ "space", "--gap", string.format("abs:%d", gap) })
+  yabai.ipc({ "space", "--gap", string.format("abs:%d", gap) })
 end)
 
 -- BINDINGS: Window resize keys
@@ -330,8 +330,8 @@ yabai_keys = {
 }
 for k, c in pairs(yabai_keys) do
   state_machine:bind("resize", { "", k }, "Resize Window", function()
-    yabai:ipc({ "window", "--resize", c[1] })
-    yabai:ipc({ "window", "--resize", c[2] })
+    yabai.ipc({ "window", "--resize", c[1] })
+    yabai.ipc({ "window", "--resize", c[2] })
   end)
 end
 
@@ -362,7 +362,7 @@ for k, v in pairs(positions) do
     if not window then
       return
     end
-    yabai:is_floating(window:id(), function()
+    yabai.is_floating(window:id(), function()
       window:move(v[1])
     end)
   end)

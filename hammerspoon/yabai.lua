@@ -4,7 +4,7 @@ module.sock_file = string.format("/tmp/yabai_%s.socket", os.getenv("USER"))
 module.sock_timeout = 5
 
 -- Interact with the Yabai instance with a UNIX domain socket
-function module:ipc(command, callback_success, callback_failure)
+function module.ipc(command, callback_success, callback_failure)
   callback_success = callback_success or function(x)
     return x
   end
@@ -41,12 +41,12 @@ function module:ipc(command, callback_success, callback_failure)
 end
 
 -- Interact with the Yabai instance over the CLI
-function module:exec(command, callback)
+function module.exec(command, callback)
   callback = callback or function(x)
     return x
   end
 
-  hs.task.new("/usr/local/bin/yabai", callback, function(ud, ...)
+  hs.task.new("/usr/local/bin/yabai", callback, function(_, ...)
     print("Yabai Output =>", hs.inspect(table.pack(...)))
     return true
   end, {
@@ -56,7 +56,7 @@ function module:exec(command, callback)
 end
 
 -- Check if a window is floating and run call back if it is
-function module:is_floating(window_id, callback)
+function module.is_floating(window_id, callback)
   module:ipc({ "query", "--windows", "--window", tostring(window_id) }, function(x)
     local meta = hs.json.decode(x)
     if meta.floating == 1 then

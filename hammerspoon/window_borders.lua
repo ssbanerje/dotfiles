@@ -23,19 +23,19 @@ module.events = {
 }
 
 -- Start drawing borders
-function module:start()
-  module.handler = hs.window.filter.new(nil)
+function module.start()
+  module.handler = hs.window.filter.new()
   module.handler.setLogLevel(hs.logger.defaultLogLevel)
+  module.handler:setDefaultFilter({})
+  module.handler:setSortOrder(hs.window.filter.sortByFocusedLast)
   for _, e in ipairs(module.events) do
-    module.handler:subscribe(e, function()
-      module:redraw()
-    end)
+    module.handler:subscribe(e, module.redraw)
   end
-  module:redraw()
+  module.redraw()
 end
 
 -- Stop drawing borders
-function module:stop()
+function module.stop()
   if module.handler then
     for _, e in ipairs(module.events) do
       module.handler:unsubscribe(e)
@@ -49,7 +49,7 @@ function module:stop()
 end
 
 -- Draw borders around window
-function module:redraw()
+function module.redraw()
   if module.border ~= nil then
     module.border:delete()
     module.border = nil
