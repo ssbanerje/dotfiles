@@ -1,82 +1,48 @@
-local components = require("core.lualine.components")
-
--- Helper functions {{{
-
--- Setup colors for lualine sections
-local function lualine_color(section)
-	return function(mode)
-		return function(color)
-			-- Set mode
-			if type(mode) == "string" then
-				if mode == "all" then
-					mode = { "normal", "command", "replace", "visual" }
-				else
-					mode = { mode }
-				end
-			end
-
-			-- Set color
-			for _, m in pairs(mode) do
-				lvim.builtin.lualine.options.theme[m][section] = color
-			end
-		end
-	end
-end
-
--- Setup contents of lualine sections
-local function lualine(section)
-	return function(config)
-		local cfg = {}
-		local cfg_in = {}
-		for _, v in pairs(config) do
-			-- Clean components
-			if type(v[1]) == "string" and v[1]:find("components.", 1, true) == 1 then
-				local a = v.active
-				local i = v.inactive
-				v = vim.deepcopy(components[string.sub(v[1], #"components." + 1)])
-				v["active"] = a
-				v["inactive"] = i
-			end
-
-			-- Load active
-			if v.active == nil or v.active then
-				table.insert(cfg, v)
-			end
-
-			-- Load inactive
-			if v.inactive then
-				table.insert(cfg_in, v)
-			end
-		end
-		lvim.builtin.lualine.sections["lualine_" .. section] = cfg
-		lvim.builtin.lualine.inactive_sections["lualine_" .. section] = cfg_in
-	end
-end
-
--- }}}
-
-components.location.icon = ""
-
 lvim.builtin.lualine.options.section_separators = { left = "", right = "" }
+
 lvim.builtin.lualine.options.component_separators = { left = "", right = "" }
+
+-- Setup Colors {{{
 
 lvim.builtin.lualine.options.theme = require("lualine.themes.onedarker")
 
+-- Setup colors for lualine sections
+local function lualine_color(section)
+  return function(mode)
+    return function(color)
+      -- Set mode
+      if type(mode) == "string" then
+        if mode == "all" then
+          mode = { "normal", "command", "replace", "visual" }
+        else
+          mode = { mode }
+        end
+      end
+
+      -- Set color
+      for _, m in pairs(mode) do
+        lvim.builtin.lualine.options.theme[m][section] = color
+      end
+    end
+  end
+end
+
 local colors = {
-	black = "#000000",
-	white = "#FFFFFF",
-	gray = "#3d3d3d",
-	blue = "#51AFEF",
-	cyan = "#008080",
-	darkblue = "#081633",
-	green = "#98BE65",
-	magenta = "#C678DD",
-	orange = "#FF8800",
-	red = "#EC5F67",
-	violet = "#A9A1E1",
-	yellow = "#ECBE7B",
+  black = "#000000",
+  white = "#FFFFFF",
+  gray = "#3d3d3d",
+  blue = "#51AFEF",
+  cyan = "#008080",
+  darkblue = "#081633",
+  green = "#98BE65",
+  magenta = "#C678DD",
+  orange = "#FF8800",
+  red = "#EC5F67",
+  violet = "#A9A1E1",
+  yellow = "#ECBE7B",
 }
 
+-- Lualine colors
 lualine_color "a" "normal" { fg = colors.black, bg = colors.blue, gui = "bold" }
 lualine_color "a" "insert" { fg = colors.black, bg = colors.green, gui = "bold" }
 lualine_color "a" "visual" { fg = colors.black, bg = colors.orange, gui = "bold" }
@@ -87,35 +53,115 @@ lualine_color "a" "inactive" { fg = colors.black, bg = colors.violet, gui = "bol
 lualine_color "b" "inactive" { fg = colors.violet, bg = colors.black }
 lualine_color "c" "inactive" { fg = colors.violet, bg = colors.black }
 
+-- }}}
+
+-- Setup Sections {{{
+
+-- Setup contents of lualine sections
+local function lualine(section)
+  return function(config)
+    local cfg = {}
+    local cfg_in = {}
+    for _, v in pairs(config) do
+      -- Load active
+      if v.active == nil or v.active then
+        table.insert(cfg, v)
+      end
+
+      -- Load inactive
+      if v.inactive then
+        table.insert(cfg_in, v)
+      end
+    end
+    lvim.builtin.lualine.sections["lualine_" .. section] = cfg
+    lvim.builtin.lualine.inactive_sections["lualine_" .. section] = cfg_in
+  end
+end
+
+local function resize_condition(size)
+  return function()
+    return vim.fn.winwidth(0) > size
+  end
+end
+
+-- Setup components
+local components = require("core.lualine.components")
+components.diagnostics.cond = nil
+components.diff.cond = nil
+components.lsp.cond = resize_condition(120)
+components.spaces.cond = resize_condition(120)
+components.treesitter.cond = resize_condition(120)
+
+-- Section A
 lualine "a" {
-	"mode",
-	{
-		function()
-			return vim.fn.winnr()
-		end,
-		inactive = true,
-	},
+  { "mode", icon = "" },
+  { function() return vim.fn.winnr() end, icon = "", inactive = true },
 }
+
+-- Section B
 lualine "b" {
-  { "components.filename", inactive = true },
-  { "components.branch", inactive = true },
+  { "filename", color = {}, inactive = true },
+  { "b:gitsigns_head", icon = "", color = {}, cond = resize_condition(80), inactive = true },
 }
-lualine "c" {}
-components.treesitter.cond = require("core.lualine.conditions").hide_in_width
-components.lsp.cond = require("core.lualine.conditions").hide_in_width
-lualine "x" {
+
+-- Section C
+lualine "c" {
   components.diff,
+}
+
+-- Section X
+lualine "x" {
   components.diagnostics,
-  -- components.lsp
-}
-lualine "y" {
-	components.filetype,
   components.treesitter,
-	"fileformat",
-	components.encoding,
-	{ "components.location", active = false, inactive = true },
-	{ "progress", active = false, inactive = true },
+  components.lsp
 }
-lualine "z" { components.location, "progress" }
+
+-- Section Y
+lualine "y" {
+  { "filetype", color = {}, cond = resize_condition(80) },
+  { "fileformat", color = { gui = "bold" }, cond = resize_condition(120) },
+  { "o:encoding", fmt = string.upper, color = {}, cond = resize_condition(120) },
+  components.spaces,
+
+  -- Inactive sections
+  { "location", icon = "", color = {}, active = false, inactive = true },
+  { "progress", icon = "𥳐" , color = {}, active = false, inactive = true },
+}
+
+-- Section Z
+lualine "z" {
+  { "location", icon = "", color = {} },
+  { "progress", icon = "𥳐" , color = {}, cond = resize_condition(80) },
+}
+
+lvim.builtin.lualine.extensions = {
+  -- Quickfix
+  {
+    sections = {
+      lualine_a = {
+        { function() return vim.fn.winnr() end, icon = "", inactive = true },
+      },
+      lualine_b = {
+        function()
+          return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0 and
+            vim.fn.getloclist(0, { title = 0 }).title or
+            vim.fn.getqflist({ title = 0 }).title
+        end,
+      },
+      lualine_y = {
+        {
+          function()
+            return " " .. (vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0 and "Loc List" or "QF List")
+          end,
+          color = { gui = "bold" },
+        }
+      }
+    },
+    filetypes = { "qf" },
+    init = function() vim.g.qf_disable_statusline = true end
+  },
+}
+
+-- }}}
 
 -- vim:set fdm=marker:

@@ -64,4 +64,13 @@ lvim.builtin.dap.on_config_done = function(dap)
       end;
     },
   }
+
+  -- Setup signs
+  -- TODO FIX Delete when signs are mergerd into Lunarvim
+  vim.fn.sign_define("DapStopped", {
+    text = "",
+    texthl = "LspDiagnosticsDefaultHint",
+    linehl = "DiagnosticUnderlineInfo",
+    numhl = "LspDiagnosticsDefaultHint",
+  })
 end

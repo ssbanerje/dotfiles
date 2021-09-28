@@ -2,7 +2,6 @@
 lvim.log.level = "warn"
 lvim.leader = "space"
 lvim.format_on_save = false
-lvim.colorscheme = "onedarker"
 
 -- Confirm before quit
 vim.opt.confirm = true
@@ -15,6 +14,7 @@ vim.opt.undofile = true
 vim.opt.undolevels = 1000
 
 -- Themeing
+lvim.colorscheme = "onedarker"
 vim.opt.background = "dark"
 vim.opt.cmdheight = 1
 
@@ -42,6 +42,8 @@ vim.opt.inccommand = "nosplit"
 
 -- Dont conceal chars
 vim.opt.conceallevel = 0
+
+------------------------------------------------------------------------------------------------------------------------
 
 -- Load keymaps
 require("user.keymap")

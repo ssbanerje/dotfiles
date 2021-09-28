@@ -1,21 +1,21 @@
 lvim.plugins = {
   -- Motions and Text Objects {{{
-	{ "chaoren/vim-wordmotion" },
-	{ "tpope/vim-surround" },
+  { "chaoren/vim-wordmotion", event = "BufRead" },
+  { "tpope/vim-surround", event = "BufRead" },
   -- }}}
 
   -- LSP {{{
   -- Trouble {{{
-	{
-		"folke/trouble.nvim",
-		config = function()
-			require("trouble").setup({
-				auto_open = true,
-				auto_close = true,
-        mode = "lsp_document_diagnostics",
-			})
-		end,
-	},
+  {
+    "folke/trouble.nvim",
+    config = function()
+      require("trouble").setup({
+      auto_open = true,
+      auto_close = true,
+      mode = "lsp_document_diagnostics",
+    })
+    end,
+  },
   -- }}}
   -- lua-dev {{{
   {
@@ -75,18 +75,16 @@ lvim.plugins = {
       })
 
       -- Setup keymap
-      require("helpers").key.which_key "l" {
-        X = {
-          name = "Rust",
-          a = { "<cmd>RustEmitAsm<cr>", "Emit ASM" },
-          c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
-          d = { "<cmd>RustDebuggables<cr>", "Debuggables" },
-          h = { "<cmd>RustToggleInlayHints<cr>", "Toggle Hints" },
-          j = { "<cmd>RustJoinLines<cr>", "Join Lines" },
-          r = { "<cmd>RustRunnables<cr>", "Runnables" },
-          m = { "<cmd>RustExpandMacro<cr>", "Expand Macro" },
-          p = { "<cmd>RustParentModule<cr>", "Goto Parent Module" },
-        }
+      lvim.builtin.which_key.mappings["l"]["X"] = {
+        name = "Rust",
+        a = { "<cmd>RustEmitAsm<cr>", "Emit ASM" },
+        c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
+        d = { "<cmd>RustDebuggables<cr>", "Debuggables" },
+        h = { "<cmd>RustToggleInlayHints<cr>", "Toggle Hints" },
+        j = { "<cmd>RustJoinLines<cr>", "Join Lines" },
+        r = { "<cmd>RustRunnables<cr>", "Runnables" },
+        m = { "<cmd>RustExpandMacro<cr>", "Expand Macro" },
+        p = { "<cmd>RustParentModule<cr>", "Goto Parent Module" },
       }
     end,
     depends = "nvim-lspconfig",
@@ -166,12 +164,10 @@ lvim.plugins = {
       })
 
       -- Bind keys
-      require("helpers").key.which_key "l" {
-        X = {
-          name = "TeX",
-          b = { "<cmd>TexlabBuild<cr>", "Build document" },
-          f = { "<cmd>TexlabForward<cr>", "Forward search preview" },
-        }
+      lvim.builtin.which_key.mappings["l"]["X"] = {
+        name = "TeX",
+        b = { "<cmd>TexlabBuild<cr>", "Build document" },
+        f = { "<cmd>TexlabForward<cr>", "Forward search preview" },
       }
     end,
     ft = { "bib", "tex" },
@@ -186,8 +182,8 @@ lvim.plugins = {
   -- }}}
 
   -- Utils {{{
-  { "editorconfig/editorconfig-vim" },
-	{ "godlygeek/tabular", cmd = "Tabularize" },
+  { "editorconfig/editorconfig-vim", event="BufRead" },
+  { "godlygeek/tabular", cmd = "Tabularize" },
   { "simnalamburt/vim-mundo", cmd = "MundoToggle" },
   {
     "simrat39/symbols-outline.nvim",
@@ -196,13 +192,13 @@ lvim.plugins = {
     end,
     cmd="SymbolsOutline"
   },
-	{
-		"lambdalisue/suda.vim",
-		cmd = { "SudaWrite", "W" },
-		config = function()
-			vim.api.nvim_command("command! W SudaWrite")
+  {
+    "lambdalisue/suda.vim",
+    cmd = { "SudaWrite", "W" },
+    config = function()
+      vim.api.nvim_command("command! W SudaWrite")
     end,
-	},
+  },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     run = "make",
@@ -214,7 +210,7 @@ lvim.plugins = {
   --}}}
 
   -- UI {{{
-	{ "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
+  { "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
   {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
