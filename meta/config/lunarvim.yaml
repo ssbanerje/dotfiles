@@ -50,5 +50,5 @@
     ~/.config/lvim/lua: editors/lvim-config/lua
 
 - shell:
-    - ["~/.local/bin/lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'", "Install lvim-Packer Plugins"]
     - ["~/.local/bin/lvim --headless +'TSInstallSync all' +qall", "Install lvim-TreeSitter Plugins"]
+    - ["~/.local/bin/lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'", "Install lvim-Packer Plugins"]
