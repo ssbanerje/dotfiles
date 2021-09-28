@@ -100,7 +100,7 @@ nnoremap "<F3>" "<CMD>NvimTreeToggle<CR>"
 vnoremap "/" 'y/<C-R>"<CR>'
 
 -- Paste over selected
-vnoremap "p" '"_dp'
+vnoremap "p" '"_dkp'
 
 -- Remove defaults
 lvim.builtin.which_key.mappings["e"] = nil -- File tree
