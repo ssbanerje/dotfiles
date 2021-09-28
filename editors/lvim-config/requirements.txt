@@ -2,5 +2,4 @@ debugpy
 proselint
 pynvim
 vim-vint
-yamllint
 yapf
