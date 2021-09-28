@@ -9,40 +9,47 @@ DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
 # Parse arguement
+declare -a ARGS
+declare -a FLAGS
 while (( "$#" )); do
   case "$1" in
-    -*|--*)
-      FLAGS=$(echo -e "${FLAGS} $1" | sed -e 's/^[[:space:]]*//')
+    -*)
+      FLAGS+=("$1")
       ;;
     *)
-      ARGS=$(echo -e "${ARGS} $1" | sed -e 's/^[[:space:]]*//')
+      ARGS+=("$1")
       ;;
   esac
   shift
 done
-set -- $ARGS
+set -- "${ARGS[@]}"
 
 # Read configs from profile
+declare -a CONFIGS
 while IFS= read -r config; do
-    CONFIGS+=" ${config}"
+  if [[ -n "$config" ]]; then
+    CONFIGS+=("${config}")
+  fi
 done < "${META_DIR}/${PROFILESDIR}/$1"
 shift
 
 # Load configurations
-for config in ${CONFIGS} ${@}; do
+for config in "${CONFIGS[@]}" "${@}"; do
     echo -e "Adding configuration $config"
     CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
 done
 
+# Get Plugins
+declare -a PLUGINS
+PLUGINS=("--plugin-dir" "${PLUGINDIR}" \
+  "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform" \
+  "--plugin-dir" "${PLUGINDIR}/dotbot-template" \
+  "--plugin-dir" "${PLUGINDIR}/dotbot-pip" \
+  "--plugin-dir" "${PLUGINDIR}/dotbot-sudo")
+
 # Run dotbot
-PLUGINS=$(cat <<-END
-  --plugin-dir ${PLUGINDIR} --plugin-dir ${PLUGINDIR}/dotbot-ifplatform \
-  --plugin-dir ${PLUGINDIR}/dotbot-template --plugin-dir ${PLUGINDIR}/dotbot-pip \
-  --plugin-dir ${PLUGINDIR}/dotbot-sudo
-END
-)
-if [[ ! -z "${FLAGS}" ]]; then
-  "${DOTBOT}" "${FLAGS}" -d "${BASEDIR}" ${PLUGINS} -c <(echo -e "${CONFIGCONTENT}")
+if [[ "${#FLAGS[@]}" -gt 0 ]]; then
+  "${DOTBOT}" "${FLAGS[@]}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
 else
-  "${DOTBOT}" -d "${BASEDIR}" ${PLUGINS} -c <(echo -e "${CONFIGCONTENT}")
+  "${DOTBOT}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
 fi
