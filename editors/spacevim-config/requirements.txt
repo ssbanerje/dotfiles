@@ -1,8 +1,6 @@
-ipython
 isort
 neovim-remote
 proselint
-pygments
 pynvim
 sexpdata
 vim-vint

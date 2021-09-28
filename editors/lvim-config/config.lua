@@ -435,8 +435,11 @@ lvim.lang.vim.linters = helpers.check_execs({
   { exe = "vint" }
 })
 lvim.lang.tex.linters = helpers.check_execs({
-  { exe = "vale" },
+  { exe = "proselint" },
   { exe = "chktex" }
+})
+lvim.lang.yaml.linters = helpers.check_execs({
+  { exe = "yamllint" }
 })
 
 -- Formatters
