@@ -130,9 +130,16 @@ local function dashboard_section(key)
 end
 -- }}}
 
--- Check if local machine is running MacOS
-local function is_mac_os()
-  return vim.fn.system("uname -s"):gsub("%s+", "") == "Darwin"
+-- Check and set executables if they are in the path
+local function check_execs(exes)
+  local val = {}
+  for _, exe in pairs(exes) do
+    vim.fn.system("command -v " .. exe.exe)
+    if vim.v.shell_error == 0 then
+      table.insert(val, exe)
+    end
+  end
+  return val
 end
 
 return {
@@ -147,7 +154,7 @@ return {
 		lualine_color = lualine_color,
 	},
   dashboard = { custom_section = dashboard_section },
-  is_mac_os = is_mac_os,
+  check_execs = check_execs,
 }
 
 -- vim:set fdm=marker:

@@ -418,22 +418,37 @@ lvim.lang.yaml.lsp.setup.settings = {
 
 -- Lua LSP
 local lua_libs = {}
-if helpers.is_mac_os() then  -- Add path to Hammerspoon when on MacOS
+if vim.fn.has("macunix") then  -- Add path to Hammerspoon when on MacOS
   lua_libs["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/"] = true
   table.insert(lvim.lang.lua.lsp.setup.settings.Lua.diagnostics.globals, "hs")
 end
 lvim.lang.lua.lsp.setup.settings.Lua.workspace.library = lua_libs
 
 -- Linters
-lvim.lang.lua.linters = { { exe = "luacheck", args = { "-g" } } }
-lvim.lang.sh.linters = { { exe = "shellcheck" } }
-lvim.lang.vim.linters = { { exe = "vint" } }
-lvim.lang.tex.linters = { { exe = "vale" }, { exe = "chktex" } }
+lvim.lang.lua.linters = helpers.check_execs({
+  { exe = "luacheck", args = { "-g" } }
+})
+lvim.lang.sh.linters = helpers.check_execs({
+  { exe = "shellcheck" }
+})
+lvim.lang.vim.linters = helpers.check_execs({
+  { exe = "vint" }
+})
+lvim.lang.tex.linters = helpers.check_execs({
+  { exe = "vale" },
+  { exe = "chktex" }
+})
 
 -- Formatters
-lvim.lang.rust.formatters = { { exe = "rustfmt" } }
-lvim.lang.lua.formatters = { { exe = "stylua" } }
-lvim.lang.python.formatters = { { exe = "yapf" } }
+lvim.lang.rust.formatters = helpers.check_execs({
+  { exe = "rustfmt" }
+})
+lvim.lang.lua.formatters = helpers.check_execs({
+  { exe = "stylua" }
+})
+lvim.lang.python.formatters = helpers.check_execs({
+  { exe = "yapf" }
+})
 
 -- }}}
 
@@ -571,7 +586,7 @@ lvim.plugins = {
       -- Start LSP server
       local forward_search_exe
       local forward_search_args
-      if require("helpers").is_mac_os() then
+      if vim.fn.has("macunix") then
         forward_search_exe = "/Applications/Skim.app/Contents/SharedSupport/displayline"
         forward_search_args = { "%l", "%p", "%f" }
       else
