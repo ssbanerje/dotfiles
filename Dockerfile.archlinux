@@ -22,7 +22,7 @@ RUN pacman-key --init && pacman -Sy --noconfirm && \
 USER ${user}
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
-    ./install_profile archlinux-minimal && \
+    ./install_profile -vv archlinux-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo pacman -Scc --noconfirm && \
     sudo rm -rf /tmp/*

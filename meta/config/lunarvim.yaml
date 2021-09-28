@@ -12,6 +12,7 @@
         - nodejs
         - yarn
         - unzip
+        - rsync
 
 - ifarch:
     - pacman:
@@ -19,6 +20,7 @@
         - nodejs
         - yarn
         - unzip
+        - rsync
 
 - ifmacos:
     - brew:
@@ -26,6 +28,7 @@
         - node
         - yarn
         - unzip
+        - rsync
 
 - pip:
     file: editors/lvim-config/requirements.txt
