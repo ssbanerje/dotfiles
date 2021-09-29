@@ -24,6 +24,12 @@
         - the_silver_searcher
         - grc
 
+- pip:
+    file: shell/requirements.txt
+    user: true
+    stdout: false
+    stderr: true
+
 - link:
     ~/.config/base16-shell: shell/base16-shell
     ~/.config/antigen.zsh: shell/antigen.zsh

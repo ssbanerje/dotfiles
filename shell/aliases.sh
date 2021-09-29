@@ -25,15 +25,15 @@ alias ipython='ipython --TerminalInteractiveShell.editing_mode=vi'
 
 # Normalize `open` and clipboard {{{
 if [[ ! "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
-	if grep -q Microsoft /proc/version; then
-		alias open='explorer.exe';
+  if grep -q Microsoft /proc/version; then
+    alias open='explorer.exe';
     alias pbcopy=' clip.exe'
     alias pbpaste='powershell.exe -c Get-Clipboard'
-	else
-		alias open='xdg-open';
+  else
+    alias open='xdg-open';
     alias pbcopy='xsel --clipboard --input'
     alias pbpaste='xsel --clipboard --output'
-	fi
+  fi
 fi
 # }}}
 

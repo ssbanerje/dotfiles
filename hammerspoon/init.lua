@@ -118,11 +118,10 @@ end)
 state_machine:bind("base", { { "alt", "shift" }, "return" }, "Open Safari", function()
   if hs.application.find("Safari") then
     hs.applescript.applescript([[
-			tell application "Safari"
-				make new document
-        activate
-			end tell
-		]])
+    tell application "Safari"
+      make new document
+      activate
+    end tell]])
   else
     hs.application.open("Safari")
   end
