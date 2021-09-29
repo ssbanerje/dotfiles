@@ -2,15 +2,12 @@
 - ifubuntu:
     - shell:
         - ["curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -", "Add NodeJS PPA"]
-        - ["curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null", "Add Yarn GPG Key"]
-        - ["echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list", "Add Yarn PPA"]
         - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add Neovim PPA"]  # TODO FIX THIS
         - "sudo apt-get update"
 
     - apt:
         - neovim
         - nodejs
-        - yarn
         - unzip
         - rsync
 
@@ -18,7 +15,7 @@
     - pacman:
         - neovim
         - nodejs
-        - yarn
+        - npm
         - unzip
         - rsync
 
@@ -26,7 +23,6 @@
     - brew:
         - neovim
         - node
-        - yarn
         - unzip
         - rsync
 
@@ -37,6 +33,8 @@
     stderr: true
 
 - shell:
+    - ["mkdir -p ~/.npm_global", "Setup NPM Global"]
+    - ["npm config set prefix '~/.npm-global'", "Setup NPM Global"]
     - ["curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal", "Installing Rust"]
     - [". ~/.cargo/env && rustup component add rust-src", "Adding Rust Source"]
     - ["LVBRANCH=rolling . ~/.cargo/env && curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | bash -s -- -y", "Installing Lunarvim"]

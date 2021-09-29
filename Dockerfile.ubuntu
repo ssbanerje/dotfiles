@@ -28,8 +28,7 @@ RUN cd /home/${user}/.dotfiles && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos && \
-    find /home/${user}/.dotfiles -name "*__pycache__" | xargs rm -rf && \
-    yarn cache clean
+    find /home/${user}/.dotfiles -name "*__pycache__" | xargs rm -rf
 
 # Take command from user
 ENTRYPOINT ["/bin/bash", "-l", "-c"]

@@ -2,30 +2,25 @@
 - ifubuntu:
     - shell:
         - "curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -"
-        - "curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null"
-        - "echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' | sudo tee /etc/apt/sources.list.d/yarn.list"
         - "sudo apt update"
 
     - apt:
         - neovim
-        - vim-nox
         - global
         - exuberant-ctags
         - clangd
         - nodejs
-        - yarn
         - build-essential
         - shellcheck
 
 - ifarch:
     - pacman:
         - neovim
-        - vim
         - global
         - ctags
         - clang
         - nodejs
-        - yarn
+        - npm
         - base-devel
         - shellcheck
 
@@ -35,7 +30,6 @@
         - global
         - ctags
         - node
-        - yarn
         - shellcheck
 
 - pip:
@@ -44,7 +38,15 @@
     stdout: false
     stderr: true
 
-- yarn:
+- shell:
+    - ["mkdir -p ~/.npm_global", "Setup NPM Global"]
+    - ["npm config set prefix '~/.npm-global'", "Setup NPM Global"]
+    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal', 'Installing Rust']
+    - ['. ~/.cargo/env && rustup component add rls rust-analysis rust-src', 'Adding RLS']
+    - ['mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
+    - ["curl -sLf https://spacevim.org/install.sh | bash -s -- --no-fonts", "Installing SpaceVim"]
+
+- npm:
     stdout: false
     stderr: true
     packages:
@@ -55,12 +57,6 @@
       - wcwidth  # Spacevim layer lang#markdown
       - prettier  # Spacevim layer lang#markdown, neoformat (several filetypes)
       - diagnostic-languageserver  # With coc-diagnostic
-
-- shell:
-    - ['curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal', 'Installing Rust']
-    - ['. ~/.cargo/env && rustup component add rls rust-analysis rust-src', 'Adding RLS']
-    - ['mkdir -p ~/.local/share/nvim/shada && touch ~/.local/share/nvim/shada/main.shada', 'TODO FIX NVIM THROWS ERRORS ON STARTUP']
-    - ["curl -sLf https://spacevim.org/install.sh | bash -s -- --no-fonts", "Installing SpaceVim"]
 
 - link:
     ~/.editorconfig: editors/editorconfig
