@@ -17,5 +17,10 @@ repos:
       - id: end-of-file-fixer
       - id: check-merge-conflict
       - id: detect-private-key
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.10
+    hooks:
+      - id: forbid-tabs
+        exclude: "[Mm]akefile$"
 
 ...
