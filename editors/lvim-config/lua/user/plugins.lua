@@ -4,7 +4,7 @@ lvim.plugins = {
   { "tpope/vim-surround", event = "BufRead" },
   -- }}}
 
-  -- LSP {{{
+  -- LSP
   -- Trouble {{{
   {
     "folke/trouble.nvim",
@@ -173,7 +173,6 @@ lvim.plugins = {
     ft = { "bib", "tex" },
   },
   -- }}}
-  -- }}}
 
   -- Treesitter {{{
   { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", after = "nvim-treesitter" },
@@ -215,8 +214,8 @@ lvim.plugins = {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       require("indent_blankline").setup({
-        filetype_exclude = { "help", "terminal", "dashboard", "packer" },
-        buftype_exclude = { "terminal" },
+        filetype_exclude = { "help", "terminal", "dashboard", "packer", "lspinfo" },
+        buftype_exclude = { "terminal", "nofile" },
         show_current_context = true,
         show_trailing_blankline_indent = false,
       })

@@ -14,10 +14,17 @@ local function vnoremap(key)
   end
 end
 
--- Replicate the vim cnoremap data
+-- Replicate the vim cnoremap command
 local function cnoremap(key)
   return function(mapping)
     lvim.keys.command_mode[key] = mapping
+  end
+end
+
+-- Replicate the vim tnoremap command
+local function tnoremap(key)
+  return function(mapping)
+    lvim.keys.term_mode[key] = mapping
   end
 end
 
@@ -123,6 +130,10 @@ vnoremap "p" '"_c<C-R>"<esc>'
 cnoremap "<C-a>" "<home>"
 cnoremap "<C-e>" "<end>"
 
+-- Terminal remaps
+tnoremap "<esc>" [[<C-\><C-n>]]
+tnoremap "jk" [[<C-\><C-n>]]
+
 -- Remove defaults
 lvim.builtin.which_key.mappings["e"] = nil -- File tree
 lvim.builtin.which_key.mappings["c"] = nil -- Close buffer
@@ -157,7 +168,9 @@ which_key "b" {
   c = { "<cmd>ColorizerToggle<cr>",                       "Toggle colorizer" },
   n = { "<cmd>setlocal nonumber! norelativenumber!<cr>",  "Toggle line numbers" },
   p = { '<cmd>normal ggdG"+P<cr>',                        "Paste from clipboard" },
-  r = { "<cmd>setlocal readonly!<cr>",                    "Toogle read only" },
+  r = { "<cmd>normal gg=G<cr>",                           "Reindent Buffer" },
+  X = { "<cmd>normal gg=G<cr>",                           "Reindent Buffer" },
+  R = { "<cmd>setlocal readonly!<cr>",                    "Toogle read only" },
   y = { '<cmd>normal ggVG"+y``<cr>',                      "Copy buffer to clipboard" },
 }
 
