@@ -1,39 +1,86 @@
-function _G.git_rebase_mappings()
-  local remaps = {
-    p = "^ciwpick<esc>",
-    r = "^ciwreword<esc>",
-    e = "^ciwedit<esc>",
-    s = "^ciwsquash<esc>",
-    f = "^ciwfixup<esc>",
-    d = "^ciwdrop<esc>",
-  }
-  for k, v in pairs(remaps) do
-    vim.api.nvim_buf_set_keymap(0, "n", k, v, { noremap = true })
+-- Helpers {{{
+
+_G.user_autocmd_actions = {}
+
+local function augroup(name)
+  return function(entries)
+    if lvim.autocommands[name] == nil or #lvim.autocommands[name] == 0 then
+      lvim.autocommands[name] = entries
+    else
+      for _, v in pairs(entries) do
+        table.insert(lvim.autocommands[name], v)
+      end
+    end
   end
 end
 
+local function autocmd(evt, file, action)
+  local action_str
+  if type(action) == "function" then
+    local id = #_G.user_autocmd_actions + 1
+    _G.user_autocmd_actions[id] = action
+    action_str = "lua _G.user_autocmd_actions[" .. id .. "]()"
+  else
+    action_str = action
+  end
+  return { evt, file, action_str }
+end
+
+-- Get folder for lvim config files
 local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("config").path), ":p:h")
 
-lvim.autocommands.custom_groups = {
-  -- Reload config
-  { "BufWritePost", config_folder .. "/lua/user/plugins.lua", "PackerCompile" },
-  { "BufWritePost", config_folder .. "/lua/user/*", "lua require('utils').reload_lv_config()" },
+-- }}}
 
-  -- Style when leaving and entering buffers
-  { "BufEnter,FocusGained,InsertLeave,WinEnter", "*", 'if &nu && mode() != "i" | set rnu | endif' },
-  { "BufEnter,FocusGained,InsertLeave,WinEnter", "*", "set cursorline" },
-  { "BufLeave,FocusLost,InsertEnter,WinLeave", "*", "if &nu | set nornu | endif" },
-  { "BufLeave,FocusLost,InsertEnter,WinLeave", "*", "set nocursorline" },
+-- Reload config
+augroup "_general_settings" {
+  autocmd("BufWritePost", config_folder .. "/lua/user/*", require("utils").reload_lv_config),
+}
+
+-- Reload plugins
+augroup "_packer_compile" {
+  autocmd("BufWritePost", config_folder .. "/lua/user/plugins.lua", "PackerCompile"),
+}
+
+augroup "custom_groups" {
+  -- Style when entering buffers
+  autocmd("BufEnter,FocusGained,InsertLeave,WinEnter", "*", function()
+    if vim.opt.nu and vim.fn.mode() ~= "i" then
+      vim.opt.rnu = true
+    end
+    vim.opt.cursorline = true
+  end),
+
+  -- Style when leaving buffers
+  autocmd("BufLeave,FocusLost,InsertEnter,WinLeave", "*", function()
+    if vim.opt.nu then
+      vim.opt.rnu = false
+    end
+    vim.opt.cursorline = false
+  end),
 
   -- Resize windows
-  { "VimResized", "*", "tabdo wincmd =" },
+  autocmd("VimResized", "*", "tabdo wincmd ="),
 
   -- Reload file on change
-  { "FocusGained", "*", "checktime" },
+  autocmd("FocusGained", "*", "checktime"),
 
   -- Windows to close on q
-  { "Filetype", "help,man,qf", "nnoremap <buffer><silent> q <cmd>close<cr>" },
+  autocmd("Filetype", "help,man,qf", "nnoremap <buffer><silent> q <cmd>close<cr>"),
 
-  -- Git Rebase
-  { "FileType", "gitrebase", "lua git_rebase_mappings()" },
+  -- Git rebase mappings
+  autocmd("FileType", "gitrebase", function()
+    local remaps = {
+      p = "^ciwpick<esc>",
+      r = "^ciwreword<esc>",
+      e = "^ciwedit<esc>",
+      s = "^ciwsquash<esc>",
+      f = "^ciwfixup<esc>",
+      d = "^ciwdrop<esc>",
+    }
+    for k, v in pairs(remaps) do
+      vim.api.nvim_buf_set_keymap(0, "n", k, v, { noremap = true })
+    end
+  end),
 }
+
+-- vim:set fdm=marker:

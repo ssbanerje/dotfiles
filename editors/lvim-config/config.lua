@@ -43,6 +43,24 @@ vim.opt.inccommand = "nosplit"
 -- Dont conceal chars
 vim.opt.conceallevel = 0
 
+-- Format optional
+vim.opt.formatoptions = vim.opt.formatoptions
+  + "c" -- Auto wrap text in comments
+  + "j" -- Auto remove comments
+  + "n" -- Indent past formatlistpat
+  + "q" -- Allow formating comments with gq
+  + "r" -- Insert comment leader in insert mode
+  - "2" -- Use indent of first line of paragraph
+  - "a" -- No auto formatting
+  - "o" -- Do not insert comment leader when hitting o/O in norm
+  - "t" -- No auto wrap text
+
+-- Use "rg" for vimgrep
+if vim.fn.executable("rg") == 1 then
+  vim.o.grepprg = "rg --vimgrep --no-heading --smart-case --hidden"
+  vim.o.grepformat = "%f:%l:%c:%m"
+end
+
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Load keymaps

@@ -38,7 +38,7 @@ lvim.lang.lua.lsp.setup.settings.Lua.workspace.library = lua_libs
 local function check_execs(exes)
   local val = {}
   for _, exe in pairs(exes) do
-    if vim.fn.executable(exe.exe) then
+    if vim.fn.executable(exe.exe) == 1 then
       table.insert(val, exe)
     end
   end
