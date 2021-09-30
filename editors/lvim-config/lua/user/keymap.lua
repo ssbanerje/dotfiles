@@ -181,8 +181,8 @@ which_key "d" {
 }
 
 which_vkey "d" {
-  name = "+Debug",
-  e = { "<cmd>lua require('dapui').eval()<cr>",           "Evaluate expression" },
+  name = "Debug",
+  e = { ":lua require('dapui').eval()<cr>",           "Evaluate expression" },
 }
 
 -- Troulble
@@ -196,7 +196,7 @@ which_key "l" {
 
 -- Windows and Tabs
 which_key "w" {
-  name  = "+Windows",
+  name  = "Windows",
   ["="] = { "<cmd>wincmd =<cr>",                          "Balance" },
   f     = { "<cmd>setlocal scrollbind!",                  "Toggle follow mode" },
   s     = { "<cmd>split<cr>",                             "Split horizontal" },
@@ -215,29 +215,29 @@ which_key "w" {
 
 -- Align
 which_vkey "a" {
-  name        = "+Align",
-  ["<Space>"] = { [[<cmd>Tabularize /\s<cr>]],            "Align at space" },
-  ["#"]       = { [[<cmd>Tabularize /#<cr>]],             "Align at #" },
-  ["%"]       = { [[<cmd>Tabularize /%<cr>]],             "Align at %" },
-  ["&"]       = { [[<cmd>Tabularize /&<cr>]],             "Align at &" },
-  ["("]       = { [[<cmd>Tabularize /(<cr>]],             "Align at (" },
-  [")"]       = { [[<cmd>Tabularize /)<cr>]],             "Align at )" },
-  [","]       = { [[<cmd>Tabularize /,<cr>]],             "Align at ," },
-  ["."]       = { [[<cmd>Tabularize /\.<cr>]],            "Align at ." },
-  [":"]       = { [[<cmd>Tabularize /:<cr>]],             "Align at :" },
-  [";"]       = { [[<cmd>Tabularize /;<cr>]],             "Align at ;" },
-  ["="]       = { [[<cmd>Tabularize /=<cr>"]],            "Align at =" },
-  ["["]       = { [[<cmd>Tabularize /[<cr>]],             "Align at [" },
-  ["]"]       = { [[<cmd>Tabularize /]<cr>]],             "Align at ]" },
-  ["{"]       = { [[<cmd>Tabularize /{<cr>]],             "Align at {" },
-  ["|"]       = { [[<cmd>Tabularize /|<cr>]],             "Align at |" },
-  ["}"]       = { [[<cmd>Tabularize /}<cr>]],             "Align at }" },
-  ["¦"]       = { [[<cmd>Tabularize /¦<cr>]],             "Align at ¦" },
+  name        = "Align",
+  ["<Space>"] = { [[:Tabularize /\s<cr>]],            "Align at space" },
+  ["#"]       = { [[:Tabularize /#<cr>]],             "Align at #" },
+  ["%"]       = { [[:Tabularize /%<cr>]],             "Align at %" },
+  ["&"]       = { [[:Tabularize /&<cr>]],             "Align at &" },
+  ["("]       = { [[:Tabularize /(<cr>]],             "Align at (" },
+  [")"]       = { [[:Tabularize /)<cr>]],             "Align at )" },
+  [","]       = { [[:Tabularize /,<cr>]],             "Align at ," },
+  ["."]       = { [[:Tabularize /\.<cr>]],            "Align at ." },
+  [":"]       = { [[:Tabularize /:<cr>]],             "Align at :" },
+  [";"]       = { [[:Tabularize /;<cr>]],             "Align at ;" },
+  ["="]       = { [[:Tabularize /=<cr>"]],            "Align at =" },
+  ["["]       = { [[:Tabularize /[<cr>]],             "Align at [" },
+  ["]"]       = { [[:Tabularize /]<cr>]],             "Align at ]" },
+  ["{"]       = { [[:Tabularize /{<cr>]],             "Align at {" },
+  ["|"]       = { [[:Tabularize /|<cr>]],             "Align at |" },
+  ["}"]       = { [[:Tabularize /}<cr>]],             "Align at }" },
+  ["¦"]       = { [[:Tabularize /¦<cr>]],             "Align at ¦" },
 }
 
 -- Applications
 which_key "x" {
-  name = "+Execute Apps",
+  name = "Execute Apps",
   -- Entries from builtins
 }
 
