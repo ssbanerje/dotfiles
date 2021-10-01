@@ -6,7 +6,9 @@ lvim.builtin.lualine.options.component_separators = { left = "", right = "
 
 lvim.builtin.lualine.options.theme = require("lualine.themes.onedarker")
 
--- Set colorscheme for a lualine section
+--- Set colorscheme for a lualine section
+-- @param section Name of section
+-- @param conifg Configuration table
 local function lualine_color(section)
   return function(config)
     for mode, cfg in pairs(config) do
@@ -56,7 +58,9 @@ lualine_color "c" {
 
 -- Setup Sections {{{
 
--- Setup contents of lualine sections
+--- Setup contents of lualine sections
+-- @param section Name of the section
+-- @param config Table of components
 local function lualine(section)
   return function(config)
     local cfg_active = {}

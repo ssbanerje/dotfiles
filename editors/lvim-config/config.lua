@@ -61,6 +61,11 @@ if vim.fn.executable("rg") == 1 then
   vim.o.grepformat = "%f:%l:%c:%m"
 end
 
+-- https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
+if vim.env.TERM == "xterm-kitty" then
+  vim.cmd [[let &t_ut='']]
+end
+
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Load keymaps

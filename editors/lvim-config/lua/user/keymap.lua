@@ -1,31 +1,91 @@
 -- Helpers {{{
 
--- Replicate the vim nnoremap command
-local function nnoremap(key)
-  return function(mapping)
-    lvim.keys.normal_mode[key] = mapping
-  end
+-- Internal reprensentation of a remap action
+local action = {}
+
+--- Create a new remap action
+-- @param cmd Command to be exeucted by this remap
+function action:new(cmd)
+  local obj = {
+    cmd,
+    {
+      noremap = false,
+      silent = false,
+      expr = false,
+      nowait = false,
+    }
+  }
+
+  setmetatable(obj, self)
+  self.__index = self
+
+  return obj
 end
 
--- Replicate the vim vnoremap command
-local function vnoremap(key)
-  return function(mapping)
-    lvim.keys.visual_mode[key] = mapping
-  end
+--- Create a regular remap action
+-- @param cmd Command to be executed
+local function map(cmd)
+  return action:new(cmd)
 end
 
--- Replicate the vim cnoremap command
-local function cnoremap(key)
-  return function(mapping)
-    lvim.keys.command_mode[key] = mapping
-  end
+--- Create a <cmd> remap
+-- @param cmd Command to be executed
+local function map_cmd(cmd)
+  return action:new(("<cmd>%s<cr>"):format(cmd))
 end
 
--- Replicate the vim tnoremap command
-local function tnoremap(key)
-  return function(mapping)
-    lvim.keys.term_mode[key] = mapping
-  end
+--- Create a :...<cr> remap
+-- @param cmd Co
+local function map_cr(cmd)
+  return action:new((":%s<CR>"):format(cmd))
+end
+
+--- Set the silent flag
+function action:silent()
+  self[2].silent = true
+  return self
+end
+
+--- Set the noremap flag
+function action:noremap()
+  self[2].noremap = true
+  return self
+end
+
+--- Set the expr flag
+function action:expr()
+  self[2].expr = true
+  return self
+end
+
+--- Set the nowait flag
+function action:nowait()
+  self[2].nowait = true
+  return self
+end
+
+--- Register Normal mode remaps
+-- @param remaps Table containing remaps
+local function normal_remaps(remaps)
+  lvim.keys.normal_mode = vim.tbl_extend("force", lvim.keys.normal_mode, remaps)
+end
+
+--- Register Visual mode remaps
+-- @param remaps Table containing remaps
+local function visual_remaps(remaps)
+  lvim.keys.visual_mode = vim.tbl_extend("force", lvim.keys.visual_mode, remaps)
+end
+
+--- Register Term mode remaps
+-- @param remaps Table containing remaps
+local function term_remaps(remaps)
+  lvim.keys.term_mode = vim.tbl_extend("force", lvim.keys.term_mode, remaps)
+end
+
+--- Register Command mode remaps
+-- @param remaps Table containing remaps
+local function command_remaps(remaps)
+  lvim.keys.command_mode = vim.tbl_extend("force", lvim.keys.command_mode, remaps)
 end
 
 -- Internal function set or update which_key mappings
@@ -44,12 +104,16 @@ local function _which_key(key, ty)
   end
 end
 
--- Install or update which_key normal mode mappings
+--- Install or update which_key normal mode mappings
+-- @param key Key on which the mapping will be activated
+-- @param mapping Table containing the mappings for the key
 local function which_key(key)
   return _which_key(key, "mappings")
 end
 
--- Install or update which_key visual mode mappings
+--- Install or update which_key visual mode mappings
+-- @param key Key on which the mapping will be activated
+-- @param mapping Table containing the mappings for the key
 local function which_vkey(key)
   return _which_key(key, "vmappings")
 end
@@ -78,64 +142,66 @@ vim.cmd([[
   cnoreabbrev Qall qall
 ]])
 
--- Do not use Q for Ex mode
-nnoremap "Q" "<cmd>close<cr>"
+-- Remove defaults
+lvim.keys.normal_mode["<S-h>"] = nil
+lvim.keys.normal_mode["<S-l>"] = nil
 
--- Indent
-nnoremap "<" "<<_"
-nnoremap ">" ">>_"
+normal_remaps {
+  -- Do not use Q for Ex mode
+  Q         = map_cmd("close"):silent(),
+  -- Indent
+  ["<"]     = map("<<_"):noremap(),
+  [">"]     = map(">>_"):noremap(),
+  -- Create windows
+  ss        = map_cmd("split"):silent(),
+  sv        = map_cmd("vsplit"):silent(),
+  -- Make Y consistent with C and D
+  Y         = map("y$"):noremap(),
+  -- Moving split panes
+  ["<C-h>"] = map("<C-w>h"):noremap(),
+  ["<C-j>"] = map("<C-w>j"):noremap(),
+  ["<C-k>"] = map("<C-w>k"):noremap(),
+  ["<C-l>"] = map("<C-w>l"):noremap(),
+  -- Moving buffers
+  ["[b"]    = map_cmd("BufferPrevious"):silent(),
+  ["]b"]    = map_cmd("BufferPrevious"):silent(),
+  -- Easier scrolling
+  H         = map("zh"):noremap(),
+  J         = map("<C-e>"):noremap(),
+  K         = map("<C-y>"):noremap(),
+  L         = map("zl"):noremap(),
+  -- Select word
+  vv        = map("viw"):noremap(),
+  -- Clear search highlight
+  ["\\"]    = map_cr("nohl"):silent(),
+  -- Undotree
+  U         = map_cmd("MundoToggle"):silent(),
+  -- Tagbar
+  ["<F2>"]  = map_cmd("SymbolsOutline"):silent(),
+  -- File tree
+  ["<F3>"]  = map_cmd("NvimTreeToggle"):silent(),
+}
 
--- Create windows
-nnoremap "ss" "<cmd>split<cr>"
-nnoremap "sv" "<cmd>vsplit<cr>"
+visual_remaps {
+  -- Make Y consistent with C and D
+  Y         = map("<esc>y$gv"):noremap(),
+  -- Search highlighted
+  ["/"]     = map('y/<C-R>"<cr>'):noremap(),
+  -- Paste over selected
+  p         = map('"_c<C-R>"<esc>'):noremap(),
+}
 
--- Make consistent with C and D
-nnoremap "Y" "y$"
-vnoremap "Y" "<esc>y$gv"
+command_remaps {
+  -- Move cursor to begining or end of line
+  ["<C-a>"] = map("<home><Left>"):noremap(),
+  ["<C-e>"] = map("<end><Right>"):noremap(),
+}
 
--- Moving split panes
-nnoremap "<C-h>" "<C-w>h"
-nnoremap "<C-j>" "<C-w>j"
-nnoremap "<C-k>" "<C-w>k"
-nnoremap "<C-l>" "<C-w>l"
-
--- Easier scrolling
-nnoremap "H" "zh"
-nnoremap "J" "<C-e>"
-nnoremap "K" "<C-y>"
-nnoremap "L" "zl"
-
--- Select word
-nnoremap "vv" "viw"
-
--- Clear search highlight
-nnoremap "<esc>" ":nohl<cr><esc>"
-
--- Cycle Tabs
-nnoremap "gt" "<cmd>tabNext<cr>"
-
--- Undotree
-nnoremap "U" "<cmd>MundoToggle<cr>"
-
--- Tagbar
-nnoremap "<F2>" "<cmd>SymbolsOutline<cr>"
-
--- File tree
-nnoremap "<F3>" "<cmd>NvimTreeToggle<cr>"
-
--- Search highlighted
-vnoremap "/" 'y/<C-R>"<cr>'
-
--- Paste over selected
-vnoremap "p" '"_c<C-R>"<esc>'
-
--- Moving in command mode
-cnoremap "<C-a>" "<home>"
-cnoremap "<C-e>" "<end>"
-
--- Terminal remaps
-tnoremap "<esc>" [[<C-\><C-n>]]
-tnoremap "jk" [[<C-\><C-n>]]
+term_remaps {
+  -- Go to normal mode
+  ["<esc>"] = map([[<C-\><C-n>]]):silent(),
+  jk        = map([[<C-\><C-n>]]):silent(),
+}
 
 -- Remove defaults
 lvim.builtin.which_key.mappings["e"] = nil -- File tree
