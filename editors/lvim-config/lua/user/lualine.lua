@@ -6,22 +6,12 @@ lvim.builtin.lualine.options.component_separators = { left = "", right = "
 
 lvim.builtin.lualine.options.theme = require("lualine.themes.onedarker")
 
--- Setup colors for lualine sections
+-- Set colorscheme for a lualine section
 local function lualine_color(section)
-  return function(mode)
-    return function(color)
-      -- Set mode
-      if type(mode) == "string" then
-        if mode == "all" then
-          mode = { "normal", "command", "replace", "visual" }
-        else
-          mode = { mode }
-        end
-      end
-
-      -- Set color
-      for _, m in pairs(mode) do
-        lvim.builtin.lualine.options.theme[m][section] = color
+  return function(config)
+    for mode, cfg in pairs(config) do
+      for _, m in pairs(mode == "all" and { "normal", "command", "replace", "visual" } or { mode }) do
+        lvim.builtin.lualine.options.theme[m][section] = cfg
       end
     end
   end
@@ -43,15 +33,24 @@ local colors = {
 }
 
 -- Lualine colors
-lualine_color "a" "normal" { fg = colors.black, bg = colors.blue, gui = "bold" }
-lualine_color "a" "insert" { fg = colors.black, bg = colors.green, gui = "bold" }
-lualine_color "a" "visual" { fg = colors.black, bg = colors.orange, gui = "bold" }
-lualine_color "a" "replace" { fg = colors.black, bg = colors.magenta, gui = "bold" }
-lualine_color "a" "command" { fg = colors.black, bg = colors.red, gui = "bold" }
-lualine_color "b" "all" { bg = colors.gray }
-lualine_color "a" "inactive" { fg = colors.black, bg = colors.violet, gui = "bold" }
-lualine_color "b" "inactive" { fg = colors.violet, bg = colors.black }
-lualine_color "c" "inactive" { fg = colors.violet, bg = colors.black }
+
+lualine_color "a" {
+  normal = { fg = colors.black, bg = colors.blue, gui = "bold" },
+  insert = { fg = colors.black, bg = colors.green, gui = "bold" },
+  visual = { fg = colors.black, bg = colors.orange, gui = "bold" },
+  replace = { fg = colors.black, bg = colors.magenta, gui = "bold" },
+  command = { fg = colors.black, bg = colors.red, gui = "bold" },
+  inactive = { fg = colors.black, bg = colors.violet, gui = "bold" },
+}
+
+lualine_color "b" {
+  all = { bg = colors.gray },
+  inactive = { fg = colors.violet, bg = colors.black },
+}
+
+lualine_color "c" {
+  inactive = { fg = colors.violet, bg = colors.black }
+}
 
 -- }}}
 
@@ -60,21 +59,18 @@ lualine_color "c" "inactive" { fg = colors.violet, bg = colors.black }
 -- Setup contents of lualine sections
 local function lualine(section)
   return function(config)
-    local cfg = {}
-    local cfg_in = {}
+    local cfg_active = {}
+    local cfg_inactive = {}
     for _, v in pairs(config) do
-      -- Load active
       if v.active == nil or v.active then
-        table.insert(cfg, v)
+        table.insert(cfg_active, v)
       end
-
-      -- Load inactive
       if v.inactive then
-        table.insert(cfg_in, v)
+        table.insert(cfg_inactive, v)
       end
     end
-    lvim.builtin.lualine.sections["lualine_" .. section] = cfg
-    lvim.builtin.lualine.inactive_sections["lualine_" .. section] = cfg_in
+    lvim.builtin.lualine.sections["lualine_" .. section] = cfg_active
+    lvim.builtin.lualine.inactive_sections["lualine_" .. section] = cfg_inactive
   end
 end
 
