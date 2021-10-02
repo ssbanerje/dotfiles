@@ -97,8 +97,7 @@ fi
 
 # Load aliases and colors
 CHECK_AND_SOURCE_DEFERRED \
-  "$HOME/.config/aliases.sh" \
-  "$HOME/.config/base16-shell/scripts/base16-material-darker.sh" "deferarg(-1)"
+  "$HOME/.config/aliases.sh"
 
 unset CHECK_AND_SOURCE_DEFERRED
 

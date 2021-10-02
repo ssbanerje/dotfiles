@@ -1,9 +1,6 @@
 [submodule "git/gitignore"]
   path = git/gitignore
   url = git@github.com:github/gitignore.git
-[submodule "shell/base16-shell"]
-	path = shell/base16-shell
-	url = git@github.com:chriskempson/base16-shell.git
 [submodule "shell/tpm"]
 	path = tmux/tpm
 	url = git@github.com:tmux-plugins/tpm.git

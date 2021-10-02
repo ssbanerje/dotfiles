@@ -57,8 +57,7 @@ set -o vi
 
 # Theme
 CHECK_AND_SOURCE \
-  "$HOME/.config/bash.prompt.sh" \
-  "$HOME/.config/base16-shell/scripts/base16-material-darker.sh"
+  "$HOME/.config/bash.prompt.sh"
 
 unset CHECK_AND_SOURCE
 

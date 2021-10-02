@@ -14,8 +14,10 @@ vim.opt.undofile = true
 vim.opt.undolevels = 1000
 
 -- Themeing
-lvim.colorscheme = "onedarker"
-vim.opt.background = "dark"
+lvim.colorscheme = "tokyonight"
+vim.g.tokyonight_style = "night"
+vim.g.tokyonight_sidebars = { "qf", "Outline" }
+vim.g.tokyonight_colors = { border = "terminal_black" }
 vim.opt.cmdheight = 1
 
 -- Line numbers

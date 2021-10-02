@@ -31,7 +31,6 @@
     stderr: true
 
 - link:
-    ~/.config/base16-shell: shell/base16-shell
     ~/.config/antigen.zsh: shell/antigen.zsh
     ~/.config/antigenrc: shell/antigenrc
     ~/.zshrc: shell/zshrc
