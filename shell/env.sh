@@ -84,8 +84,8 @@ PREPEND_PATH \
   "$HOME/.cargo/bin" \
   "$HOME/.npm-global/bin"
 
-unset PREPEND_PATH
-unset APPEND_PATH
+unset -f PREPEND_PATH
+unset -f APPEND_PATH
 
 # }}}
 

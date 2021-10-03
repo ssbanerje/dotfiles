@@ -4,15 +4,15 @@
 antigen use oh-my-zsh
 
 # Mac specific plugins
-if [ "$(uname)"="Darwin" ]; then
+if [ "$(uname -s)" = "Darwin" ]; then
   antigen bundle osx
   antigen bundle brew
-  antigen bundle iterm2
-  antigen bundle gnu-utils
+  $([ "$TERM_PROGRAM" = "iTerm.app" ]) && antigen bundle iterm2
+  # antigen bundle gnu-utils
 fi
 
 # Linux specific plugins
-if [ "$(uname)"="Linux" ]; then
+if [ "$(uname -s)" = "Linux" ]; then
   if command -v apt-get &> /dev/null; then # This is ubuntu
     antigen bundle debian
     antigen bundle ubuntu
@@ -33,6 +33,7 @@ antigen bundle fancy-ctrl-z
 antigen bundle fzf
 antigen bundle git-escape-magic
 antigen bundle gitfast
+# antigen bundle grc
 antigen bundle mosh
 antigen bundle npm
 antigen bundle pip

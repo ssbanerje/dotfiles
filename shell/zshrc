@@ -82,13 +82,11 @@ zstyle ':completion:*:*:kill:*' menu yes select
 
 if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
   CHECK_AND_SOURCE_DEFERRED \
-    /etc/grc.zsh \
     /usr/share/doc/fzf/examples/completion.zsh \
     /usr/share/doc/fzf/examples/key-bindings.zsh
 elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   CHECK_AND_SOURCE_DEFERRED \
     $([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.zsh") \
-    "${BREW_PREFIX:=$(brew --prefix)}/etc/grc.zsh" \
     "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/completion.zsh" \
     "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/key-bindings.zsh"
 fi
@@ -99,6 +97,6 @@ fi
 CHECK_AND_SOURCE_DEFERRED \
   "$HOME/.config/aliases.sh"
 
-unset CHECK_AND_SOURCE_DEFERRED
+unset -f CHECK_AND_SOURCE_DEFERRED
 
 # vim:foldmethod=marker

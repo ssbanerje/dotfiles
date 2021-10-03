@@ -47,7 +47,7 @@ elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
     "$BREW_PREFIX/opt/fzf/shell/completion.bash" \
     "$BREW_PREFIX/opt/fzf/shell/key-bindings.bash" \
     "$BREW_PREFIX/etc/grc.sh" \
-    $([[ "$term_program" == "iterm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.bash")
+    "$([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.bash")"
 fi
 
 # }}}
@@ -57,7 +57,7 @@ set -o vi
 
 # Theme
 CHECK_AND_SOURCE \
-  "$HOME/.config/bash.prompt.sh"
+  "$HOME/.config/bash_prompt.sh"
 
 unset CHECK_AND_SOURCE
 
