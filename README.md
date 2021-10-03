@@ -40,7 +40,6 @@ cd dotfiles
   - `macos`: For MacOS
   - `ubuntu`: For Ubuntu desktop
   - `ubuntu-minimal`: For text-based Ubuntu distributions
-  - `archlinux`: For Archlinux desktop
   - `archlinux-minimal`: For text-based Archlinux distributions
 - Individual components (from `meta/config/`) can be installed using the `install.sh` script.
 - The `scripts/shim.sh` script can be accessed as the `shim` command.
