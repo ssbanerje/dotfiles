@@ -31,13 +31,12 @@
     stderr: true
 
 - link:
-    ~/.config/base16-shell: shell/base16-shell
     ~/.config/antigen.zsh: shell/antigen.zsh
     ~/.config/antigenrc: shell/antigenrc
     ~/.zshrc: shell/zshrc
     ~/.p10k.zsh: shell/p10k.zsh
     ~/.bashrc: shell/bashrc
-    ~/.config/bash.prompt.sh: shell/bash.prompt.sh
+    ~/.config/bash_prompt.sh: shell/bash_prompt.sh
     ~/.config/env.sh: shell/env.sh
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.hushlogin: shell/hushlogin

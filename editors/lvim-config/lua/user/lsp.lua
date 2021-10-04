@@ -1,73 +1,167 @@
--- No virtual text. Use trouble instead
-lvim.lsp.diagnostics.virtual_text = false
-
--- Overrides
-lvim.lsp.override = { "rust", "tex" }
-
--- Docker LSP
-lvim.lang.dockerfile.lsp.setup.filetypes = { "Dockerfile*", "dockerfile*" }
-lvim.lang.dockerfile.lsp.setup.root_dir = require("lspconfig").util.root_pattern("Dockerfile*")
-
--- YAML LSP
-lvim.lang.yaml.lsp.setup.settings = {
-  yaml = {
-    hover = true,
-    completion = true,
-    validate = true,
-    schemaStore = {
-      enable = true,
-      url = "https://www.schemastore.org/api/json/catalog.json",
-    },
-    schemas = {
-      ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
-      ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-      ["http://json.schemastore.org/gitlab-ci"] = "/*lab-ci.{yml,yaml}",
-    },
-  },
-}
-
--- Lua LSP
-local lua_libs = {}
-if vim.fn.has("macunix") then  -- Add path to Hammerspoon when on MacOS
-  lua_libs["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/"] = true
-  table.insert(lvim.lang.lua.lsp.setup.settings.Lua.diagnostics.globals, "hs")
-end
-lvim.lang.lua.lsp.setup.settings.Lua.workspace.library = lua_libs
+-- Helper Functions {{{
 
 -- Filter commands for linters and formatters
 local function check_execs(exes)
-  local val = {}
-  for _, exe in pairs(exes) do
-    if vim.fn.executable(exe.exe) == 1 then
-      table.insert(val, exe)
+  for k, exe in pairs(exes) do
+    if vim.fn.executable(exe.exe) ~= 1 then
+      exes[k] = nil
     end
   end
-  return val
+  return exes
 end
 
--- Linters
-lvim.lang.lua.linters = check_execs({
-  { exe = "luacheck", args = { "-g" } }
-})
-lvim.lang.sh.linters = check_execs({
-  { exe = "shellcheck" }
-})
-lvim.lang.vim.linters = check_execs({
-  { exe = "vint" }
-})
-lvim.lang.tex.linters = check_execs({
-  { exe = "proselint" },
-  { exe = "chktex" }
-})
+-- Setup Linters
+local function setup_linters(linters)
+  for lang, exes in pairs(linters) do
+    lvim.lang[lang].linters = check_execs(exes)
+  end
+end
 
--- Formatters
-lvim.lang.rust.formatters = check_execs({
-  { exe = "rustfmt" }
-})
-lvim.lang.lua.formatters = check_execs({
-  { exe = "stylua" }
-})
-lvim.lang.python.formatters = check_execs({
-  { exe = "yapf" }
-})
+-- Setup Formatters
+local function setup_formatters(formatters)
+  for lang, exes in pairs(formatters) do
+    lvim.lang[lang].formatters = check_execs(exes)
+  end
+end
 
+-- }}}
+
+-- LSP Settings {{{
+
+-- Use builting LSP installation
+lvim.lsp.automatic_servers_installation = true
+
+-- No virtual text. Use trouble instead
+lvim.lsp.diagnostics.virtual_text = false
+
+-- Overrides for LVIM
+lvim.lsp.override = { "dockerls", "rust_analyzer", "sumneko_lua", "texlab", "yamlls" }
+
+local custom_lsp_configs = {
+  -- DockerLS {{{
+  dockerls = {
+    root_dir = function(fname)
+      return require("lspconfig").util.root_pattern(".git")(fname) or require("lspconfig").util.path.dirname(fname)
+    end,
+    filetypes = { "Dockerfile*", "dockerfile*" }
+  },
+  -- }}}
+  -- Sumneko_Lua {{{
+  sumneko_lua = {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim", "lvim", "hs" },
+        },
+        workspace = {
+          library = {
+            [require("utils").join_paths(get_runtime_dir(), "lvim", "lua")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+            ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = (vim.fn.has("macunix") == 1)
+          },
+          maxPreload = 100000,
+          preloadFileSize = 10000,
+        },
+        telemetry = { enable = false },
+      },
+    },
+  },
+  -- }}}
+  -- YamlLS {{{
+  yamlls = {
+    settings = {
+      yaml = {
+        hover = true,
+        completion = true,
+        validate = true,
+        schemaStore = {
+          enable = true,
+          url = "https://www.schemastore.org/api/json/catalog.json",
+        },
+        schemas = {
+          ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
+          ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+          ["http://json.schemastore.org/gitlab-ci"] = "/*lab-ci.{yml,yaml}",
+        },
+      },
+    }
+  },
+  -- }}}
+}
+
+-- Configure overriden servers
+for _, server in pairs(lvim.lsp.override) do
+  local lsp_installer = require("nvim-lsp-installer.servers")
+  local available, requested = lsp_installer.get_server(server)
+
+  -- Install if not available
+  if available and not requested:is_installed() then
+    requested:install()
+  end
+
+  -- Configure
+  local default_config = {
+    on_attach = require("lsp").common_on_attach,
+    on_init = require("lsp").common_on_init,
+    capabilities = require("lsp").common_capabilities(),
+  }
+  if custom_lsp_configs[server] then
+    local new_config = vim.tbl_deep_extend("force", default_config, custom_lsp_configs[server])
+    requested:setup(new_config)
+  end
+end
+
+-- }}}
+
+-- Linters {{{
+
+setup_linters {
+  css = { { exe = "eslint_d" } },
+  javascript = { { exe = "eslint_d" } },
+  javascriptreact = { { exe = "eslint_d" } },
+  lua = { { exe = "luacheck", args = { "-g" } } },
+  markdown = {
+    { exe = "markdownlint" },
+    -- { exe = "proselint" },
+  },
+  sh = { { exe = "shellcheck" } },
+  tex = {
+    { exe = "chktex" },
+    -- { exe = "proselint" },
+  },
+  typescript = { { exe = "eslint_d" } },
+  typescriptreact = { { exe = "eslint_d" } },
+  vim = { { exe = "vint" } },
+}
+
+-- }}}
+
+-- Formatters {{{
+
+setup_formatters {
+  asm = { { exe = "asmfmt" } },
+  cmake = { { exe = "cmake_format" } },
+  css = { { exe = "prettierd" } },
+  dockerfile = { { exe = "hadolint" } },
+  go = { { exe = "goimports" } },
+  html = { { exe = "prettierd" } },
+  javascript = { { exe = "prettierd" } },
+  javascriptreact = { { exe = "prettierd" } },
+  json = { { exe = "prettierd" } },
+  lua = { { exe = "stylua" } },
+  markdown = { { exe = "prettierd" } },
+  python = {
+    { exe = "yapf" },
+    { exe = "isort", args = { "--profile", "black" } },
+  },
+  rust = { { exe = "rustfmt" } },
+  sh = { { exe = "shfmt", args = { "-i", "2", "-ci" } } },
+  typescript = { { exe = "prettierd" } },
+  typescriptreact = { { exe = "prettierd" } },
+  yaml = { { exe = "prettierd" } },
+}
+
+-- }}}
+
+-- vim:set fdm=marker:

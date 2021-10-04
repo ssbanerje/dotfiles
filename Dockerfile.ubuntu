@@ -34,4 +34,4 @@ RUN cd /home/${user}/.dotfiles && \
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
 CMD []
 
-# vi: ft=dockerfile
+# vi:ft=dockerfile:

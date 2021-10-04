@@ -1,12 +1,10 @@
-lvim.builtin.lualine.options.section_separators = { left = "", right = "" }
-
-lvim.builtin.lualine.options.component_separators = { left = "", right = "" }
-
 -- Setup Colors {{{
 
-lvim.builtin.lualine.options.theme = require("lualine.themes.onedarker")
+lvim.builtin.lualine.options.theme = require("lualine.themes.tokyonight")
 
--- Set colorscheme for a lualine section
+--- Set colorscheme for a lualine section
+-- @param section Name of section
+-- @param conifg Configuration table
 local function lualine_color(section)
   return function(config)
     for mode, cfg in pairs(config) do
@@ -18,33 +16,34 @@ local function lualine_color(section)
 end
 
 local colors = {
-  black = "#000000",
-  white = "#FFFFFF",
-  gray = "#3d3d3d",
-  blue = "#51AFEF",
-  cyan = "#008080",
+  fg       = "#C0CAF5",
+  black    = "#000000",
+  white    = "#FFFFFF",
+  gray     = "#292E42",
+  blue     = "#7AA2F7",
+  cyan     = "#008080",
   darkblue = "#081633",
-  green = "#98BE65",
-  magenta = "#C678DD",
-  orange = "#FF8800",
-  red = "#EC5F67",
-  violet = "#A9A1E1",
-  yellow = "#ECBE7B",
+  green    = "#9ECE6A",
+  magenta  = "#C678DD",
+  orange   = "#FF8800",
+  red      = "#EC5F67",
+  violet   = "#A9A1E1",
+  yellow   = "#ECBE7B",
 }
 
 -- Lualine colors
 
 lualine_color "a" {
-  normal = { fg = colors.black, bg = colors.blue, gui = "bold" },
-  insert = { fg = colors.black, bg = colors.green, gui = "bold" },
-  visual = { fg = colors.black, bg = colors.orange, gui = "bold" },
-  replace = { fg = colors.black, bg = colors.magenta, gui = "bold" },
-  command = { fg = colors.black, bg = colors.red, gui = "bold" },
-  inactive = { fg = colors.black, bg = colors.violet, gui = "bold" },
+  normal   = { fg = colors.black, bg = colors.blue,    gui = "bold" } ,
+  insert   = { fg = colors.black, bg = colors.green,   gui = "bold" } ,
+  visual   = { fg = colors.black, bg = colors.orange,  gui = "bold" } ,
+  replace  = { fg = colors.black, bg = colors.magenta, gui = "bold" } ,
+  command  = { fg = colors.black, bg = colors.red,     gui = "bold" } ,
+  inactive = { fg = colors.black, bg = colors.violet,  gui = "bold" } ,
 }
 
 lualine_color "b" {
-  all = { bg = colors.gray },
+  all      = { fg = colors.fg,     bg = colors.gray },
   inactive = { fg = colors.violet, bg = colors.black },
 }
 
@@ -56,7 +55,9 @@ lualine_color "c" {
 
 -- Setup Sections {{{
 
--- Setup contents of lualine sections
+--- Setup contents of lualine sections
+-- @param section Name of the section
+-- @param config Table of components
 local function lualine(section)
   return function(config)
     local cfg_active = {}
@@ -136,6 +137,12 @@ lvim.builtin.lualine.extensions = {
     sections = {
       lualine_a = {
         { function() return vim.fn.winnr() end, icon = "", inactive = true },
+        {
+          function()
+            return " " .. (vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0 and "Loc List" or "QF List")
+          end,
+          color = { gui = "bold" },
+        }
       },
       lualine_b = {
         function()
@@ -144,14 +151,6 @@ lvim.builtin.lualine.extensions = {
             vim.fn.getqflist({ title = 0 }).title
         end,
       },
-      lualine_y = {
-        {
-          function()
-            return " " .. (vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0 and "Loc List" or "QF List")
-          end,
-          color = { gui = "bold" },
-        }
-      }
     },
     filetypes = { "qf" },
     init = function() vim.g.qf_disable_statusline = true end
@@ -159,5 +158,9 @@ lvim.builtin.lualine.extensions = {
 }
 
 -- }}}
+
+lvim.builtin.lualine.options.section_separators = { left = "", right = "" }
+
+lvim.builtin.lualine.options.component_separators = { left = "", right = "" }
 
 -- vim:set fdm=marker:
