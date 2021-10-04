@@ -24,7 +24,7 @@ USER ${user}
 ENV DEBIAN_FRONTEND=noninteractive
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
-    ./install_profile -vv ubuntu-minimal && \
+    ./install_profile -vv -x ubuntu-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos && \

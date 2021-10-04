@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: 3.x
       - name: Install dotfiles
-        run: ./install_profile -vv ${{ matrix.profile }}
+        run: ./install_profile -vv -x ${{ matrix.profile }}
   # }}}
 
   build-container-ubuntu:  # {{{
