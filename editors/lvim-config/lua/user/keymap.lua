@@ -223,12 +223,12 @@ for i = 1, 9 do
   }
 end
 
--- Swtich to last buffer
+-- Switch to last buffer
 which_key "<Tab>" { "<cmd>try | b# | catch | endtry<cr>", "Previous buffer" }
 
 -- Copy and paste from system clipboard
-which_vkey "Y" { '"+y', "Copy to clipboard" }
-which_key "P" { '"+p', "Paste from clipboard" }
+which_vkey "Y" { '"+y',                                   "Copy to clipboard" }
+which_key "P" { '"+p',                                    "Paste from clipboard" }
 
 -- Buffer
 which_key "b" {
@@ -240,6 +240,7 @@ which_key "b" {
   n = { "<cmd>setlocal nonumber! norelativenumber!<cr>",  "Toggle line numbers" },
   p = { '<cmd>normal ggdG"+P<cr>',                        "Paste from clipboard" },
   r = { "<cmd>normal gg=G<cr>",                           "Reindent Buffer" },
+  s = { "<cmd>set spell!<cr>",                            "Togggle spell checking" },
   y = { '<cmd>normal ggVG"+y``<cr>',                      "Copy buffer to clipboard" },
 }
 
@@ -254,7 +255,7 @@ which_vkey "d" {
   e = { ":lua require('dapui').eval()<cr>",               "Evaluate expression" },
 }
 
--- Troulble
+-- Trouble
 which_key "l" {
   I = { "<cmd>Telescope lsp_implementations<cr>",         "LSP Implementations"},
   R = { "<cmd>Trouble lsp_references<cr>",                "Goto References" },
