@@ -1,6 +1,12 @@
 -- Setup Colors {{{
 
-lvim.builtin.lualine.options.theme = require("lualine.themes.tokyonight")
+local status_ok, theme = pcall(require, "lualine.themes.tokyonight")
+
+if not status_ok then
+  return
+end
+
+lvim.builtin.lualine.options.theme = theme
 
 --- Set colorscheme for a lualine section
 -- @param section Name of section
