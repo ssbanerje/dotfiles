@@ -5,7 +5,7 @@ lvim.plugins = {
   -- }}}
 
   -- LSP {{{
-  -- Trouble {{{
+  -- Trouble
   {
     "folke/trouble.nvim",
     config = function()
@@ -16,49 +16,23 @@ lvim.plugins = {
     })
     end,
   },
-  -- }}}
-  -- lua-dev {{{
-  {
-    "folke/lua-dev.nvim",
-    config = function()
-      local luadev = require("lua-dev").setup {
-        library = {
-          vimruntime = true,
-          types = true,
-          plugins = true,
-        },
-        lspconfig = lvim.lang.lua.lsp.setup,
-      }
-      lvim.lang.lua.lsp.setup = luadev
-    end,
-    ft = { "lua" },
-  },
-  -- }}}
   -- Rust-tools {{{
   {
     "simrat39/rust-tools.nvim",
     config = function()
+      -- Get server
+      local _, server = require("nvim-lsp-installer.servers").get_server("rust_analyzer")
+
       -- Setup rust-tools
       require("rust-tools").setup({
         tools = {
-          autoSetHints = true,
-          hover_with_actions = true,
-          runnables = { use_telescope = true },
-          debuggables = { use_telescope = true },
           inlay_hints = {
-            only_current_line = false,
-            show_parameter_hints = true,
-            parameter_hints_prefix = "<-",
-            other_hints_prefix = "=>",
-            max_len_align = false,
-            max_len_align_padding = 1,
-            right_align = false,
-            right_align_padding = 7,
-            highlight = "Comment",
+            parameter_hints_prefix = " ",
+            other_hints_prefix = " ",
           },
         },
         server = {
-          cmd = { vim.fn.stdpath("data") .. "/lspinstall/rust/rust-analyzer" },
+          cmd = server._default_options.cmd,
           on_attach = require("lsp").common_on_attach,
           on_init = require("lsp").common_on_init,
           capabilities = require("lsp").capabilities,
@@ -75,7 +49,7 @@ lvim.plugins = {
       })
 
       -- Setup keymap
-      lvim.builtin.which_key.mappings["l"]["X"] = {
+      lvim.builtin.which_key.mappings.l["X"] = {
         name = "Rust",
         a = { "<cmd>RustEmitAsm<cr>", "Emit ASM" },
         c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
@@ -87,8 +61,8 @@ lvim.plugins = {
         p = { "<cmd>RustParentModule<cr>", "Goto Parent Module" },
       }
     end,
-    depends = "nvim-lspconfig",
-    ft = { "rust", "rs" },
+    depends = { "nvim-lsp-installer" },
+    ft = { "rust" },
   },
   -- }}}
   -- Texmagic {{{
@@ -127,7 +101,7 @@ lvim.plugins = {
         }
       })
 
-      -- Start LSP server
+      -- Setup forward search for Mac and Linux
       local forward_search_exe
       local forward_search_args
       if vim.fn.has("macunix") then
@@ -137,9 +111,12 @@ lvim.plugins = {
         forward_search_exe = "okular"
         forward_search_args = { "--unique", "file:%p#src:%l%f" }
       end
-      require("lspconfig").texlab.setup({
-        cmd = { vim.fn.stdpath "data" .. "/lspinstall/latex/texlab" },
-        filetypes = { "tex", "bib" },
+
+      -- Start LSP server
+      local _, server = require("nvim-lsp-installer.servers").get_server("texlab")
+      print("I RAN")
+
+      server:setup({
         on_attach = require("lsp").common_on_attach,
         on_init = require("lsp").common_on_init,
         capabilities = require("lsp").capabilities,
@@ -164,12 +141,13 @@ lvim.plugins = {
       })
 
       -- Bind keys
-      lvim.builtin.which_key.mappings["l"]["X"] = {
+      lvim.builtin.which_key.mappings.l["X"] = {
         name = "TeX",
         b = { "<cmd>TexlabBuild<cr>", "Build document" },
         f = { "<cmd>TexlabForward<cr>", "Forward search preview" },
       }
     end,
+    requires = "nvim-lsp-installer",
     ft = { "bib", "tex" },
   },
   -- }}}
@@ -183,8 +161,8 @@ lvim.plugins = {
   -- }}}
 
   -- Treesitter {{{
-  { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", after = "nvim-treesitter" },
-  { "RRethy/nvim-treesitter-textsubjects", after = "nvim-treesitter" },
+  { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", opt = false },
+  { "RRethy/nvim-treesitter-textsubjects", opt = false },
   { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
   -- }}}
 
@@ -225,11 +203,18 @@ lvim.plugins = {
   },
   { "norcalli/nvim-colorizer.lua", cmd = "ColorizerToggle" },
   { "folke/tokyonight.nvim" },
+  {
+    "karb94/neoscroll.nvim",
+    config = function()
+      require("neoscroll").setup()
+    end,
+  },
   -- }}}
 
   -- Markdown {{{
   {
     "iamcco/markdown-preview.nvim",
+    -- run = "cd app && npm install",
     run = function()
       vim.fn['mkdp#util#install']()
     end,

@@ -46,6 +46,9 @@ augroup "_packer_compile" {
 }
 
 augroup "custom_groups" {
+  -- Command window
+  autocmd("CmdWinEnter", "*", "close"),
+
   -- Style when entering buffers
   autocmd("BufEnter,FocusGained,InsertLeave,WinEnter", "*", function()
     if vim.opt.nu and vim.fn.mode() ~= "i" then
