@@ -46,8 +46,8 @@ augroup "_packer_compile" {
 }
 
 augroup "custom_groups" {
-  -- Command window
-  autocmd("CmdWinEnter", "*", "close"),
+  -- Auto exit command window
+  -- autocmd("CmdWinEnter", "*", "close"),
 
   -- Style when entering buffers
   autocmd("BufEnter,FocusGained,InsertLeave,WinEnter", "*", function()
@@ -73,6 +73,10 @@ augroup "custom_groups" {
 
   -- Windows to close on q
   autocmd("Filetype", "help,man,qf,null-ls-info", "nnoremap <buffer><silent> q <cmd>close<cr>"),
+
+  -- Navigate vim help
+  autocmd("Filetype", "help", "nnoremap <buffer><silent> gd :h <C-R><C-W><cr>"),
+  autocmd("Filetype", "help", "vnoremap <buffer><silent> gd \"*y:h <C-R>*<cr>"),
 
   -- Git rebase
   autocmd("FileType", "gitrebase", function()
