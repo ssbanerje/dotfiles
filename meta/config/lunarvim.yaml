@@ -9,6 +9,7 @@
         - nodejs
         - unzip
         - rsync
+        - wget
         - shellcheck
         - ripgrep
         - fd-find
@@ -20,6 +21,7 @@
         - npm
         - unzip
         - rsync
+        - wget
         - shellcheck
         - ripgrep
         - fd
@@ -30,6 +32,7 @@
         - node
         - unzip
         - rsync
+        - wget
         - shellcheck
         - ripgrep
         - fd
