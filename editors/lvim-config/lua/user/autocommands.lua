@@ -72,7 +72,7 @@ augroup "custom_groups" {
   autocmd("FocusGained", "*", "checktime"),
 
   -- Windows to close on q
-  autocmd("Filetype", "help,man,qf", "nnoremap <buffer><silent> q <cmd>close<cr>"),
+  autocmd("Filetype", "help,man,qf,null-ls-info", "nnoremap <buffer><silent> q <cmd>close<cr>"),
 
   -- Git rebase
   autocmd("FileType", "gitrebase", function()

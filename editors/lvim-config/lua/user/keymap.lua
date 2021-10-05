@@ -146,6 +146,10 @@ vim.cmd([[
 lvim.keys.normal_mode["<S-h>"] = nil
 lvim.keys.normal_mode["<S-l>"] = nil
 
+-- -- Remove default LSP mappings
+lvim.lsp.buffer_mappings.normal_mode["K"] = nil
+lvim.lsp.buffer_mappings.normal_mode["gh"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Show LSP hover" }
+
 normal_remaps {
   -- Do not use Q for Ex mode
   Q         = map_cmd("close"):silent(),
