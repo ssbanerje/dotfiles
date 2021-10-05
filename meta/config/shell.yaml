@@ -4,14 +4,12 @@
         - zsh
         - fzf
         - silversearcher-ag
-        - grc
 
 - ifarch:
     - pacman:
         - zsh
         - fzf
         - the_silver_searcher
-        - grc
 
 - ifmacos:
     - tap:
@@ -22,7 +20,6 @@
         - fzf
         - coreutils
         - the_silver_searcher
-        - grc
 
 - pip:
     file: shell/requirements.txt

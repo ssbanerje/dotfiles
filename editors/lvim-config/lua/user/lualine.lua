@@ -14,7 +14,7 @@ lvim.builtin.lualine.options.theme = theme
 local function lualine_color(section)
   return function(config)
     for mode, cfg in pairs(config) do
-      for _, m in pairs(mode == "all" and { "normal", "command", "replace", "visual" } or { mode }) do
+      for _, m in pairs(mode == "all" and { "normal", "insert", "command", "replace", "visual" } or { mode }) do
         lvim.builtin.lualine.options.theme[m][section] = cfg
       end
     end
