@@ -257,10 +257,10 @@ which_vkey "d" {
 
 -- Trouble
 which_key "l" {
-  I = { "<cmd>Telescope lsp_implementations<cr>",         "LSP Implementations"},
+  I = { "<cmd>Telescope lsp_implementations<cr>",         "Implementations"},
   R = { "<cmd>Trouble lsp_references<cr>",                "Goto References" },
-  a = { "<cmd>Telescope lsp_code_actions<cr>",            "Code Action" },
-  q = { "<cmd>Trouble quickfix<cr>",                      "Quickfix" },
+  -- a = { "<cmd>Telescope lsp_code_actions<cr>",            "Code Action" },
+  Q = { "<cmd>Trouble quickfix<cr>",                      "Quickfix" },
   t = { "<cmd>TroubleToggle<cr>",                         "Trouble" },
 }
 

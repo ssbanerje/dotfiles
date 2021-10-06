@@ -33,7 +33,7 @@ antigen bundle fancy-ctrl-z
 antigen bundle fzf
 antigen bundle git-escape-magic
 antigen bundle gitfast
-# antigen bundle grc
+antigen bundle grc
 antigen bundle mosh
 antigen bundle npm
 antigen bundle pip
@@ -61,5 +61,7 @@ antigen theme romkatv/powerlevel10k
 
 # Tell Antigen that you're done
 antigen apply
+
+unset -f ls
 
 # vi: ft=zsh

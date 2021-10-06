@@ -63,8 +63,8 @@ vim.opt.formatoptions = vim.opt.formatoptions
 
 -- Use "rg" for vimgrep
 if vim.fn.executable("rg") == 1 then
-  vim.o.grepprg = "rg --vimgrep --no-heading --smart-case --hidden"
-  vim.o.grepformat = "%f:%l:%c:%m"
+  vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case --hidden"
+  vim.opt.grepformat = "%f:%l:%c:%m"
 end
 
 -- https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
