@@ -1,0 +1,27 @@
+# --- Vale Configuration ---
+- ifubuntu:
+    - shell:
+        - ["mkdir -p /tmp/vale && curl -LSs https://github.com/errata-ai/vale/releases/download/v2.11.0/vale_2.11.0_Linux_64-bit.tar.gz | tar xvzf - -C /tmp/vale", "Download vale"]
+        - ["mv /tmp/vale/vale ~/.local/bin/vale", "Install vale"]
+        - ["rm -rf /tmp/vale/", "Remove vale installer"]
+
+- ifarch:
+    - yay:
+        - vale
+
+- ifmacos:
+    - brew:
+        - vale
+
+- shell:
+    - ["rm -rf ~/.config/vale/", "Clean config"]
+
+- create:
+    - ~/.config/vale
+
+- shell:
+    - ["curl -LSs https://github.com/errata-ai/proselint/releases/latest/download/proselint.zip --output /tmp/proselint.zip", "Download proselint"]
+    - ["unzip /tmp/proselint.zip && mv ./proselint/ ~/.config/vale/ && rm -rf /tmp/proselint*", "Install proselint"]
+
+- link:
+    ~/.vale.ini: editors/vale.ini

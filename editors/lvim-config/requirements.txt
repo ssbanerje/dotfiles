@@ -1,5 +1,2 @@
 debugpy
-proselint
 pynvim
-vim-vint
-yapf

@@ -123,12 +123,12 @@ setup_linters {
   lua = { { exe = "luacheck", args = { "-g" } } },
   markdown = {
     { exe = "markdownlint" },
-    -- { exe = "proselint" },
+    { exe = "vale" },
   },
   sh = { { exe = "shellcheck" } },
   tex = {
     { exe = "chktex" },
-    -- { exe = "proselint" },
+    { exe = "vale" },
   },
   typescript = { { exe = "eslint_d" } },
   typescriptreact = { { exe = "eslint_d" } },
