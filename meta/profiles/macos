@@ -8,6 +8,7 @@ bin
 shell
 lunarvim
 ranger
+vale
 
 macos-ui
 terminal

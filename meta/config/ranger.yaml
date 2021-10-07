@@ -5,5 +5,26 @@
     stdout: false
     stderr: true
 
+
+- ifubuntu:
+    - apt:
+        - highlight
+
+- ifarch:
+    - pacman:
+        - highlight
+
+- ifmacos:
+    - brew:
+        - highlight
+
+- create:
+    - ~/.config/ranger
+
 - link:
-    ~/.config/ranger: ranger
+    ~/.config/ranger/rifle.conf: ranger/rifle.conf
+    ~/.config/ranger/rc.conf: ranger/rc.conf
+    ~/.config/ranger/commands.py: ranger/commands.py
+
+- shell:
+    - ["[ ! -d ~/.config/ranger/plugins/ranger_devicons ] && git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons", "Install Ranger Icons"]

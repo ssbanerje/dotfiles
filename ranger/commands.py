@@ -4,8 +4,7 @@
 """Custom Commands for Ranger."""
 
 import os
-from ranger.api.commands import *
-from ranger.core.loader import CommandLoader
+from ranger.api.commands import Command
 
 
 class fzf_select(Command):
@@ -28,7 +27,7 @@ class fzf_select(Command):
             command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
             -o -print 2> /dev/null | sed 1d | cut -b3- | fzf +m"
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
-        stdout, stderr = fzf.communicate()
+        stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
             if os.path.isdir(fzf_file):
@@ -49,11 +48,11 @@ class fzf_locate(Command):
     def execute(self):
         import subprocess
         if self.quantifier:
-            command = "locate home media | fzf -e -i"
+            command = 'locate home media | fzf -e -i'
         else:
-            command = "locate home media | fzf -e -i"
+            command = 'locate home media | fzf -e -i'
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
-        stdout, stderr = fzf.communicate()
+        stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
             if os.path.isdir(fzf_file):
@@ -82,7 +81,7 @@ class fzf_bring(Command):
             command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
             -o -print 2> /dev/null | sed 1d | cut -b3- | fzf +m"
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
-        stdout, stderr = fzf.communicate()
+        stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
             shutil.move(fzf_file, self.fm.thisdir.path)

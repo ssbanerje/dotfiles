@@ -1,4 +1,3 @@
-# vim: set ft=toml:
 root = true
 
 [*]
@@ -9,21 +8,19 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.py]
-indent_style = space
+[*.rs]
 indent_size = 4
 
+[*.py]
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+
 [CMakeLists.txt]
-indent_style = space
 indent_size = 4
 
 [Makefile]
 indent_style = tab
 
-[*.{html,xml,config,json,md,yml,yaml}]
-indent_style = space
-indent_size = 2
-
-[*.md]
-trim_trailing_whitespace = false
-
+# vim: set ft=toml:
