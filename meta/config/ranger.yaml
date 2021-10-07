@@ -8,10 +8,12 @@
 
 - ifubuntu:
     - apt:
+        - file
         - highlight
 
 - ifarch:
     - pacman:
+        - file
         - highlight
 
 - ifmacos:
