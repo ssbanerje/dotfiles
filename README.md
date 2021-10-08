@@ -36,13 +36,13 @@ cd dotfiles
 ### Details
 - Update configuration files for user.
   - `meta/config/git.yaml`
-- The installer script can load multiple profiles (located in `meta/profiles/`):
+- The installer script can load profiles located in `meta/profiles/`:
   - `macos`: For MacOS
   - `ubuntu`: For Ubuntu desktop
   - `ubuntu-minimal`: For text-based Ubuntu distributions
   - `archlinux-minimal`: For text-based Archlinux distributions
-- Individual components (from `meta/config/`) can be installed using the `install.sh` script.
-- The `scripts/shim.sh` script can be accessed as the `shim` command.
+- To install individual components (from `meta/config/`) use the `install.sh` script.
+- Once installed, the `scripts/shim.sh` script is accessible as the `shim` command.
 
 
 ## Setup Development Environment

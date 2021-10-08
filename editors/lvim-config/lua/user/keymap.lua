@@ -169,7 +169,7 @@ normal_remaps {
   ["<C-l>"] = map("<C-w>l"):noremap(),
   -- Moving buffers
   ["[b"]    = map_cmd("BufferPrevious"):silent(),
-  ["]b"]    = map_cmd("BufferPrevious"):silent(),
+  ["]b"]    = map_cmd("BufferNext"):silent(),
   -- Easier scrolling
   H         = map("zh"):noremap(),
   J         = map("<C-e>"):noremap(),
@@ -204,8 +204,8 @@ command_remaps {
 
 term_remaps {
   -- Go to normal mode
-  ["<esc>"] = map([[<C-\><C-n>]]):silent(),
-  jk        = map([[<C-\><C-n>]]):silent(),
+  ["<esc>"] = map([[<C-\><C-n>]]):silent():noremap(),
+  jk        = map([[<C-\><C-n>]]):silent():noremap(),
 }
 
 -- Remove defaults

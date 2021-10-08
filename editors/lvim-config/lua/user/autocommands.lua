@@ -81,12 +81,12 @@ augroup "custom_groups" {
   -- Git rebase
   autocmd("FileType", "gitrebase", function()
     local remaps = {
-      p = "^ciwpick<esc>",
-      r = "^ciwreword<esc>",
-      e = "^ciwedit<esc>",
-      s = "^ciwsquash<esc>",
-      f = "^ciwfixup<esc>",
-      d = "^ciwdrop<esc>",
+      D = "^ciwdrop<esc>",
+      E = "^ciwedit<esc>",
+      F = "^ciwfixup<esc>",
+      P = "^ciwpick<esc>",
+      R = "^ciwreword<esc>",
+      S = "^ciwsquash<esc>",
     }
     for k, v in pairs(remaps) do
       vim.api.nvim_buf_set_keymap(0, "n", k, v, { noremap = true })

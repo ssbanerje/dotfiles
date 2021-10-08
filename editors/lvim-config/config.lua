@@ -14,7 +14,6 @@ vim.opt.undofile = true
 vim.opt.undolevels = 1000
 
 -- Themeing
--- TODO: Is there a better way to check if tokyonight has been installed?
 local status_ok, _ = pcall(require, "lualine.themes.tokyonight")
 if status_ok then
   lvim.colorscheme = "tokyonight"

@@ -1,6 +1,5 @@
 lvim.plugins = {
   -- Motions and Text Objects {{{
-  { "chaoren/vim-wordmotion", event = "BufRead" },
   { "tpope/vim-surround", event = "BufRead" },
   -- }}}
 
