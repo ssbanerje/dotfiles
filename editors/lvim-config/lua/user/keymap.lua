@@ -230,7 +230,6 @@ end
 
 -- Switching buffers
 which_key "<Space>" { ":BufferPick<cr>", "Pick buffer" }
-which_key "<Tab>" { "<cmd>try | b# | catch | endtry<cr>", "Previous buffer" }
 
 -- Copy and paste from system clipboard
 which_vkey "Y" { '"+y',                                   "Copy to clipboard" }
