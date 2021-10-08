@@ -228,7 +228,8 @@ for i = 1, 9 do
   }
 end
 
--- Switch to last buffer
+-- Switching buffers
+which_key "<Space>" { ":BufferPick<cr>", "Pick buffer" }
 which_key "<Tab>" { "<cmd>try | b# | catch | endtry<cr>", "Previous buffer" }
 
 -- Copy and paste from system clipboard
@@ -264,7 +265,6 @@ which_vkey "d" {
 which_key "l" {
   I = { "<cmd>Telescope lsp_implementations<cr>",         "Implementations"},
   R = { "<cmd>Trouble lsp_references<cr>",                "Goto References" },
-  -- a = { "<cmd>Telescope lsp_code_actions<cr>",            "Code Action" },
   Q = { "<cmd>Trouble quickfix<cr>",                      "Quickfix" },
   t = { "<cmd>TroubleToggle<cr>",                         "Trouble" },
 }
