@@ -55,7 +55,7 @@ local custom_lsp_configs = {
         },
         workspace = {
           library = {
-            [require("utils").join_paths(get_runtime_dir(), "lvim", "lua")] = true,
+            [require("lvim.utils").join_paths(get_runtime_dir(), "lvim", "lua")] = true,
             [vim.fn.expand("$VIMRUNTIME/lua")] = true,
             [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
             ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = (vim.fn.has("macunix") == 1)
@@ -102,9 +102,9 @@ for _, server in pairs(lvim.lsp.override) do
 
   -- Configure
   local default_config = {
-    on_attach = require("lsp").common_on_attach,
-    on_init = require("lsp").common_on_init,
-    capabilities = require("lsp").common_capabilities(),
+    on_attach = require("lvim.lsp").common_on_attach,
+    on_init = require("lvim.lsp").common_on_init,
+    capabilities = require("lvim.lsp").common_capabilities(),
   }
   if custom_lsp_configs[server] then
     local new_config = vim.tbl_deep_extend("force", default_config, custom_lsp_configs[server])

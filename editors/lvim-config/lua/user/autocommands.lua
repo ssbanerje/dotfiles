@@ -15,10 +15,10 @@ local function augroup(name)
 end
 
 --- Define an autocommand
--- @param evt Events for which the auto command will be triggered
--- @param file Inputs to events for triggering the command
+-- @param trigger Events for which the auto command will be triggered
+-- @param pattern Inputs to events for triggering the command
 -- @param action String command or Lua function corresponding to the action
-local function autocmd(evt, file, action)
+local function autocmd(trigger, pattern, action)
   local action_str
   if type(action) == "function" then
     local id = #_G.user_autocmd_actions + 1
@@ -27,17 +27,17 @@ local function autocmd(evt, file, action)
   else
     action_str = action
   end
-  return { evt, file, action_str }
+  return { trigger, pattern, action_str }
 end
 
 -- Get folder for lvim config files
-local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("config").path), ":p:h")
+local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config").get_user_config_path()), ":p:h")
 
 -- }}}
 
 -- Reload config
 augroup "_general_settings" {
-  autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('utils').reload_lv_config()"),
+  autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('lvim.utils').reload_lv_config()"),
 }
 
 -- Reload plugins

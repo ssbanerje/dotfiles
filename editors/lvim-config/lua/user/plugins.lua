@@ -32,10 +32,10 @@ lvim.plugins = {
         },
         server = {
           cmd = server._default_options.cmd,
-          on_attach = require("lsp").common_on_attach,
-          on_init = require("lsp").common_on_init,
-          capabilities = require("lsp").capabilities,
-          flags = require("lsp").flags,
+          on_attach = require("lvim.lsp").common_on_attach,
+          on_init = require("lvim.lsp").common_on_init,
+          capabilities = require("lvim.lsp").capabilities,
+          flags = require("lvim.lsp").flags,
           settings = {
             ["rust-analyzer"] = {
               assist = { importGranularity = "crate" },
@@ -113,13 +113,12 @@ lvim.plugins = {
 
       -- Start LSP server
       local _, server = require("nvim-lsp-installer.servers").get_server("texlab")
-      print("I RAN")
 
       server:setup({
-        on_attach = require("lsp").common_on_attach,
-        on_init = require("lsp").common_on_init,
-        capabilities = require("lsp").capabilities,
-        flags = require("lsp").flags,
+        on_attach = require("lvim.lsp").common_on_attach,
+        on_init = require("lvim.lsp").common_on_init,
+        capabilities = require("lvim.lsp").capabilities,
+        flags = require("lvim.lsp").flags,
         settings = {
           texlab = {
             auxDirectory = "build",

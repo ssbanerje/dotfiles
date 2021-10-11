@@ -88,7 +88,7 @@ local function resize_condition(size)
 end
 
 -- Setup components
-local components = require("core.lualine.components")
+local components = require("lvim.core.lualine.components")
 components.diagnostics.cond = nil
 components.diff.cond = nil
 components.lsp.cond = resize_condition(120)
