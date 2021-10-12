@@ -15,7 +15,7 @@
         - kitty
 - ifanylinux:
     - shell:
-        - git clone https://github.com/ryanoasis/nerd-fonts /tmp/nerd-fonts
+        - git clone --depth 1 https://github.com/ryanoasis/nerd-fonts /tmp/nerd-fonts
         - /tmp/nerd-fonts/install.sh Hack
         - rm -rf /tmp/nerd-fonts
 

@@ -11,7 +11,7 @@
         - base-devel
 
     - shell:
-        - "git clone https://aur.archlinux.org/yay.git ~/yay"
+        - "git clone --depth 1 https://aur.archlinux.org/yay.git ~/yay"
         - "cd ~/yay && makepkg -si --noconfirm"
 
     - yayupdate:

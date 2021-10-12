@@ -29,4 +29,4 @@
     ~/.config/ranger/commands.py: ranger/commands.py
 
 - shell:
-    - ["[ ! -d ~/.config/ranger/plugins/ranger_devicons ] && git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons", "Install Ranger Icons"]
+    - ["[ ! -d ~/.config/ranger/plugins/ranger_devicons ] && git clone --depth 1 https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons", "Install Ranger Icons"]
