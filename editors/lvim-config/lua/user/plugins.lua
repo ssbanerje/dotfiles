@@ -48,7 +48,7 @@ lvim.plugins = {
       })
 
       -- Setup keymap
-      lvim.builtin.which_key.mappings.l["X"] = {
+      lvim.builtin.which_key.mappings.l.X = {
         name = "Rust",
         a = { "<cmd>RustEmitAsm<cr>", "Emit ASM" },
         c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
@@ -139,7 +139,7 @@ lvim.plugins = {
       })
 
       -- Bind keys
-      lvim.builtin.which_key.mappings.l["X"] = {
+      lvim.builtin.which_key.mappings.l.X = {
         name = "TeX",
         b = { "<cmd>TexlabBuild<cr>", "Build document" },
         f = { "<cmd>TexlabForward<cr>", "Forward search preview" },
