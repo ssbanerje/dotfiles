@@ -48,6 +48,9 @@ vim.opt.inccommand = "nosplit"
 -- Dont conceal chars
 vim.opt.conceallevel = 0
 
+-- Reload files that have been changed on disk
+vim.opt.autoread = true
+
 -- Format optional
 vim.opt.formatoptions = vim.opt.formatoptions
   + "c" -- Auto wrap text in comments
