@@ -35,20 +35,12 @@ local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config").g
 
 -- }}}
 
--- Reload config
 augroup "_general_settings" {
-  autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('lvim.utils').reload_lv_config()"),
+  -- Reload config
+  autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('lvim.config'):reload()"),
 }
 
--- Reload plugins
-augroup "_packer_compile" {
-  autocmd("BufWritePost", config_folder .. "/lua/user/plugins.lua", "PackerCompile"),
-}
-
-augroup "custom_groups" {
-  -- Auto exit command window
-  -- autocmd("CmdWinEnter", "*", "close"),
-
+augroup "custom_theme" {
   -- Style when entering buffers
   autocmd("BufEnter,FocusGained,InsertLeave,WinEnter", "*", function()
     if vim.opt.nu and vim.fn.mode() ~= "i" then
@@ -64,20 +56,15 @@ augroup "custom_groups" {
     end
     vim.opt.cursorline = false
   end),
+}
 
-  -- Resize windows
-  autocmd("VimResized", "*", "tabdo wincmd ="),
-
-  -- Reload file on change
-  autocmd("FocusGained", "*", "checktime"),
-
-  -- Windows to close on q
-  autocmd("Filetype", "help,man,qf,null-ls-info", "nnoremap <buffer><silent> q <cmd>close<cr>"),
-
+augroup "vim_help_navigation" {
   -- Navigate vim help
   autocmd("Filetype", "help", "nnoremap <buffer><silent> gd :h <C-R><C-W><cr>"),
   autocmd("Filetype", "help", "vnoremap <buffer><silent> gd \"*y:h <C-R>*<cr>"),
+}
 
+augroup "_git" {
   -- Git rebase
   autocmd("FileType", "gitrebase", function()
     local remaps = {

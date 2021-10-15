@@ -91,10 +91,24 @@ local custom_lsp_configs = {
 }
 
 -- Configure overriden servers
-local lsp_manager = require("lvim.lsp.manager")
 for _, server in pairs(lvim.lsp.override) do
+  local lsp_installer = require("nvim-lsp-installer.servers")
+  local available, requested = lsp_installer.get_server(server)
+
+  -- Install if not available
+  if available and not requested:is_installed() then
+    requested:install()
+  end
+
+  -- Configure
+  local default_config = {
+    on_attach = require("lvim.lsp").common_on_attach,
+    on_init = require("lvim.lsp").common_on_init,
+    capabilities = require("lvim.lsp").common_capabilities(),
+  }
   if custom_lsp_configs[server] then
-    lsp_manager.setup(server, custom_lsp_configs[server])
+    local new_config = vim.tbl_deep_extend("force", default_config, custom_lsp_configs[server])
+    requested:setup(new_config)
   end
 end
 
