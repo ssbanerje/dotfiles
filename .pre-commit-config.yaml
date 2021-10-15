@@ -1,6 +1,4 @@
-# File introduces automated checks triggered on git events
-# to enable run `pip install pre-commit && pre-commit install`
-
+# yaml-language-server: $schema=https://json.schemastore.org/pre-commit-config.json
 ---
 
 repos:
