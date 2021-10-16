@@ -175,14 +175,6 @@ lvim.plugins = {
       vim.api.nvim_command("command! W SudaWrite")
     end,
   },
-  {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    run = "make",
-    after = "telescope.nvim",
-    config = function()
-      require("telescope").load_extension("fzf")
-    end,
-  },
   --}}}
 
   -- UI {{{

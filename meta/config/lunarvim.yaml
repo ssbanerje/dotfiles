@@ -4,7 +4,7 @@
         - ["curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -", "Add NodeJS PPA"]
         - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add Neovim PPA"]
         - ["sudo add-apt-repository ppa:lazygit-team/release", "Add LazyGit PPA"]
-        - "sudo apt-get update"
+        - ["sudo apt-get update"]
     - apt:
         - neovim
         - nodejs
@@ -58,7 +58,8 @@
 - shell:
     - ["curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal", "Installing Rust"]
     - [". ~/.cargo/env && rustup component add rust-src", "Adding Rust Source"]
-    - ["LV_BRANCH=rolling curl -LSs https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | bash -s -- --no-install-dependencies", "Installing Lunarvim"]
+    - ["curl -LSs https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | LV_BRANCH=rolling bash -s -- --no-install-dependencies", "Installing Lunarvim"]
+    - ["~/.local/bin/lvim --headless +'TSInstallSync all' +qall", "Install lvim-TreeSitter Plugins"]
 
 - create:
   - ~/.config/lvim
@@ -69,5 +70,4 @@
     ~/.config/lvim/lua: editors/lvim-config/lua
 
 - shell:
-    - ["~/.local/bin/lvim --headless +'TSInstallSync all' +qall", "Install lvim-TreeSitter Plugins"]
     - ["~/.local/bin/lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'", "Install lvim-Packer Plugins"]

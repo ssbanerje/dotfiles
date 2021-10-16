@@ -14,10 +14,12 @@ vim.opt.undofile = true
 vim.opt.undolevels = 1000
 
 -- Themeing
-lvim.colorscheme = "tokyonight"
-vim.g.tokyonight_style = "night"
-vim.g.tokyonight_sidebars = { "qf", "Outline" }
-vim.g.tokyonight_colors = { border = "terminal_black" }
+local status_ok, _ = pcall(require, "lualine.themes.tokyonight")
+if status_ok then
+  lvim.colorscheme = "tokyonight"
+  vim.g.tokyonight_style = "night"
+  vim.g.tokyonight_sidebars = { "qf", "Outline" }
+end
 vim.opt.cmdheight = 1
 
 -- Line numbers

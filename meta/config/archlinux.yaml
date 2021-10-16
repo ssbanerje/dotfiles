@@ -9,6 +9,7 @@
         - python-pip
         - git
         - base-devel
+        - kitty-terminfo
 
     - shell:
         - "git clone --depth 1 https://aur.archlinux.org/yay.git ~/yay"

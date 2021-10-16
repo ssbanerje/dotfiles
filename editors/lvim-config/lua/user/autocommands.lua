@@ -31,7 +31,7 @@ local function autocmd(trigger, pattern, action)
 end
 
 -- Get folder for lvim config files
-local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config").get_user_config_path()), ":p:h")
+local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config"):get_user_config_path()), ":p:h")
 
 -- }}}
 
