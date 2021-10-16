@@ -35,6 +35,9 @@ local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config").g
 
 -- }}}
 
+-- Reset builtins
+lvim.autocommands._formatoptions = nil
+
 augroup "_general_settings" {
   -- Reload config
   autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('lvim.config'):reload()"),

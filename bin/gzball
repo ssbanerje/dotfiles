@@ -1,23 +1,21 @@
-#!/bin/sh
+#!/bin/bash
+
 # create tar.gz archives and remove original dirs
 # usage: gzball [-q] DIR [DIR] ...
 
-ECHO="echo"
+TAR="tar czf"
 
-# be totally quiet with -q argument
-if [ "$1" == "-q" ] ; then
-  TAR="tar czf"
+if [[ "$1" == "-q" ]] ; then
   shift
 else
-  TAR="tar cvzf"
+  TAR="${TAR}v"
 fi
 
-# bail on first error
 set -e
 
 for p in "$@" ; do
-  $ECHO "$p.tar.gz"             # what we're building
-  $TAR "$p.tar.gz" "$p"         # create tar.gz archive
-  touch -r "$p" "$p.tar.gz"     # update modified time to match original DIR
-  rm -rf "$p"                   # remove original dir
+  echo "$p.tar.gz"
+  $TAR "$p.tar.gz" "$p"
+  touch -r "$p" "$p.tar.gz"
+  rm -rf "$p"
 done
