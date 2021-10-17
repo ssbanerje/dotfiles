@@ -24,9 +24,19 @@
 
 - link:
     ~/.config/kitty/kitty.conf: kitty/kitty.conf
+    ~/.config/kitty/tokyonight.conf: kitty/tokyonight.conf
     ~/.config/kitty/macos-launch-services-cmdline:
       if: '[ `uname` = Darwin ]'
       path: kitty/macos-launch-services-cmdline
+- template:
+    - ~/.config/kitty/keymaps.conf:
+          source_file: kitty/keymaps.conf
+          params:
+            PREFIX: ctrl+a
+            __UNAME__:
+              MOD_KEY:
+                Darwin: cmd
+                Linux: ctrl+shift
 
 - ifmacos:
     - create:
