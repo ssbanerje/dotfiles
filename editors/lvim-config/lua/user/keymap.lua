@@ -118,6 +118,30 @@ local function which_vkey(key)
   return _which_key(key, "vmappings")
 end
 
+--- Maximize the current pane
+_G.maximize_toggle = coroutine.create(function()
+  local session
+  local hidden
+  local toggle_state = false
+  while true do
+    if not toggle_state then
+      hidden = vim.opt.hidden
+      session = vim.fn.tempname()
+      vim.opt.hidden = true
+      vim.cmd("mksession! "..session)
+      vim.cmd("only")
+      toggle_state = true
+    else
+      vim.cmd("source "..session)
+      vim.opt_local.hidden = hidden
+      session = nil
+      hidden = nil
+      toggle_state = false
+    end
+    coroutine.yield()
+  end
+end)
+
 -- }}}
 
 -- Fix Typos
@@ -162,11 +186,6 @@ normal_remaps {
   sv        = map_cmd("vsplit"):silent(),
   -- Make Y consistent with C and D
   Y         = map("y$"):noremap(),
-  -- Moving split panes
-  ["<C-h>"] = map("<C-w>h"):noremap(),
-  ["<C-j>"] = map("<C-w>j"):noremap(),
-  ["<C-k>"] = map("<C-w>k"):noremap(),
-  ["<C-l>"] = map("<C-w>l"):noremap(),
   -- Moving buffers
   ["[b"]    = map_cmd("BufferPrevious"):silent(),
   ["]b"]    = map_cmd("BufferNext"):silent(),
@@ -232,81 +251,87 @@ end
 which_key "<Space>" { ":BufferPick<cr>", "Pick buffer" }
 
 -- Copy and paste from system clipboard
-which_vkey "Y" { '"+y',                                   "Copy to clipboard" }
-which_key "P" { '"+p',                                    "Paste from clipboard" }
+which_vkey "Y" { '"+y', "Copy to clipboard" }
+which_key "P" { '"+p', "Paste from clipboard" }
 
 -- Buffer
 which_key "b" {
-  C = { "<cmd>setlocal cursorcolumn!<cr>",                "Toggle cursor column" },
-  R = { "<cmd>setlocal readonly!<cr>",                    "Toggle read only" },
-  W = { "<cmd>setlocal wrap!<cr>",                        "Toggle Wrap" },
-  X = { "<cmd>normal gg=G<cr>",                           "Reindent Buffer" },
-  c = { "<cmd>ColorizerToggle<cr>",                       "Toggle colorizer" },
-  n = { "<cmd>setlocal nonumber! norelativenumber!<cr>",  "Toggle line numbers" },
-  p = { '<cmd>normal ggdG"+P<cr>',                        "Paste from clipboard" },
-  r = { "<cmd>normal gg=G<cr>",                           "Reindent Buffer" },
-  s = { "<cmd>set spell!<cr>",                            "Togggle spell checking" },
-  y = { '<cmd>normal ggVG"+y``<cr>',                      "Copy buffer to clipboard" },
+  C = { "<cmd>setlocal cursorcolumn!<cr>", "Toggle cursor column" },
+  R = { "<cmd>setlocal readonly!<cr>", "Toggle read only" },
+  W = { "<cmd>setlocal wrap!<cr>", "Toggle Wrap" },
+  X = { "<cmd>normal gg=G<cr>", "Reindent Buffer" },
+  c = { "<cmd>ColorizerToggle<cr>", "Toggle colorizer" },
+  n = { "<cmd>setlocal nonumber! norelativenumber!<cr>", "Toggle line numbers" },
+  p = { '<cmd>normal ggdG"+P<cr>', "Paste from clipboard" },
+  r = { "<cmd>normal gg=G<cr>", "Reindent Buffer" },
+  s = { "<cmd>set spell!<cr>", "Togggle spell checking" },
+  y = { '<cmd>normal ggVG"+y``<cr>', "Copy buffer to clipboard" },
 }
 
 -- Debug
 which_key "d" {
-  f = { "<cmd>lua require('dapui').float_element()",      "Floating element" },
-  x = { "<cmd>lua require('dapui').toggle()<cr>",         "Run DAP-UI" },
+  f = { "<cmd>lua require('dapui').float_element()", "Floating element" },
+  x = { "<cmd>lua require('dapui').toggle()<cr>", "Run DAP-UI" },
 }
 
 which_vkey "d" {
   name = "Debug",
-  e = { ":lua require('dapui').eval()<cr>",               "Evaluate expression" },
+  e = { ":lua require('dapui').eval()<cr>", "Evaluate expression" },
 }
 
 -- Trouble
 which_key "l" {
-  I = { "<cmd>Telescope lsp_implementations<cr>",         "Implementations"},
-  R = { "<cmd>Trouble lsp_references<cr>",                "Goto References" },
-  Q = { "<cmd>Trouble quickfix<cr>",                      "Quickfix" },
-  t = { "<cmd>TroubleToggle<cr>",                         "Trouble" },
+  I = { "<cmd>Telescope lsp_implementations<cr>", "Implementations"},
+  R = { "<cmd>Trouble lsp_references<cr>", "Goto References" },
+  Q = { "<cmd>Trouble quickfix<cr>", "Quickfix" },
+  t = { "<cmd>TroubleToggle<cr>", "Trouble" },
 }
 
 -- Windows and Tabs
 which_key "w" {
   name  = "Windows",
-  ["="] = { "<cmd>wincmd =<cr>",                          "Balance" },
-  H     = { "<cmd>wincmd H<cr>",                          "Move far left" },
-  J     = { "<cmd>wincmd J<cr>",                          "Move far down" },
-  K     = { "<cmd>wincmd K<cr>",                          "Move far up" },
-  L     = { "<cmd>wincmd L<cr>",                          "Move far right" },
-  f     = { "<cmd>setlocal scrollbind!",                  "Toggle follow mode" },
-  h     = { "<cmd>wincmd h<cr>",                          "Move left" },
-  j     = { "<cmd>wincmd j<cr>",                          "Move down" },
-  k     = { "<cmd>wincmd k<cr>",                          "Move up" },
-  l     = { "<cmd>wincmd l<cr>",                          "Move right" },
-  s     = { "<cmd>split<cr>",                             "Split horizontal" },
-  t     = { "<cmd>tabnew<cr>",                            "Create new tab" },
-  v     = { "<cmd>vsplit<cr>",                            "Split vertical" },
-  w     = { "<cmd>ChooseWin<cr>",                         "Chose window" },
+  ["="] = { "<cmd>wincmd =<cr>", "Balance" },
+  H     = { "<cmd>wincmd H<cr>", "Move far left" },
+  J     = { "<cmd>wincmd J<cr>", "Move far down" },
+  K     = { "<cmd>wincmd K<cr>", "Move far up" },
+  L     = { "<cmd>wincmd L<cr>", "Move far right" },
+  f     = { "<cmd>setlocal scrollbind!", "Toggle follow mode" },
+  h     = { "<cmd>wincmd h<cr>", "Move left" },
+  j     = { "<cmd>wincmd j<cr>", "Move down" },
+  k     = { "<cmd>wincmd k<cr>", "Move up" },
+  l     = { "<cmd>wincmd l<cr>", "Move right" },
+  m     = {
+    function()
+      coroutine.resume(maximize_toggle)
+    end,
+    "Maximize window",
+  },
+  s     = { "<cmd>split<cr>", "Split horizontal" },
+  t     = { "<cmd>tabnew<cr>","Create new tab" },
+  v     = { "<cmd>vsplit<cr>","Split vertical" },
+  w     = { "<cmd>ChooseWin<cr>", "Chose window" },
 }
 
 -- Align
 which_vkey "a" {
   name        = "Align",
-  ["<space>"] = { [[:Tabularize /\s<cr>]],                "Align at space" },
-  ["#"]       = { [[:Tabularize /#<cr>]],                 "Align at #" },
-  ["%"]       = { [[:Tabularize /%<cr>]],                 "Align at %" },
-  ["&"]       = { [[:Tabularize /&<cr>]],                 "Align at &" },
-  ["("]       = { [[:Tabularize /(<cr>]],                 "Align at (" },
-  [")"]       = { [[:Tabularize /)<cr>]],                 "Align at )" },
-  [","]       = { [[:Tabularize /,<cr>]],                 "Align at ," },
-  ["."]       = { [[:Tabularize /\.<cr>]],                "Align at ." },
-  [":"]       = { [[:Tabularize /:<cr>]],                 "Align at :" },
-  [";"]       = { [[:Tabularize /;<cr>]],                 "Align at ;" },
-  ["="]       = { [[:Tabularize /=<cr>"]],                "Align at =" },
-  ["["]       = { [[:Tabularize /[<cr>]],                 "Align at [" },
-  ["]"]       = { [[:Tabularize /]<cr>]],                 "Align at ]" },
-  ["{"]       = { [[:Tabularize /{<cr>]],                 "Align at {" },
-  ["|"]       = { [[:Tabularize /|<cr>]],                 "Align at |" },
-  ["}"]       = { [[:Tabularize /}<cr>]],                 "Align at }" },
-  ["¦"]       = { [[:Tabularize /¦<cr>]],                 "Align at ¦" },
+  ["<space>"] = { [[:Tabularize /\s<cr>]], "Align at space" },
+  ["#"]       = { [[:Tabularize /#<cr>]], "Align at #" },
+  ["%"]       = { [[:Tabularize /%<cr>]], "Align at %" },
+  ["&"]       = { [[:Tabularize /&<cr>]], "Align at &" },
+  ["("]       = { [[:Tabularize /(<cr>]], "Align at (" },
+  [")"]       = { [[:Tabularize /)<cr>]], "Align at )" },
+  [","]       = { [[:Tabularize /,<cr>]], "Align at ," },
+  ["."]       = { [[:Tabularize /\.<cr>]], "Align at ." },
+  [":"]       = { [[:Tabularize /:<cr>]], "Align at :" },
+  [";"]       = { [[:Tabularize /;<cr>]], "Align at ;" },
+  ["="]       = { [[:Tabularize /=<cr>"]], "Align at =" },
+  ["["]       = { [[:Tabularize /[<cr>]], "Align at [" },
+  ["]"]       = { [[:Tabularize /]<cr>]], "Align at ]" },
+  ["{"]       = { [[:Tabularize /{<cr>]], "Align at {" },
+  ["|"]       = { [[:Tabularize /|<cr>]], "Align at |" },
+  ["}"]       = { [[:Tabularize /}<cr>]], "Align at }" },
+  ["¦"]       = { [[:Tabularize /¦<cr>]], "Align at ¦" },
 }
 
 -- Applications
