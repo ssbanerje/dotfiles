@@ -9,10 +9,10 @@ lvim.plugins = {
     "folke/trouble.nvim",
     config = function()
       require("trouble").setup({
-      auto_open = true,
-      auto_close = true,
-      mode = "lsp_document_diagnostics",
-    })
+        auto_open = true,
+        auto_close = true,
+        mode = "lsp_document_diagnostics",
+      })
     end,
   },
   -- Rust-tools {{{
@@ -81,9 +81,9 @@ lvim.plugins = {
               "-outdir=build",
               "-interaction=nonstopmode",
               "-synctex=1",
-              "%f"
+              "%f",
             },
-            isContinuous = false
+            isContinuous = false,
           },
           xelatex = {
             executable = "latexmk",
@@ -93,11 +93,11 @@ lvim.plugins = {
               "-outdir=build",
               "-interaction=nonstopmode",
               "-synctex=1",
-              "%f"
+              "%f",
             },
-            isContinuous = false
+            isContinuous = false,
           },
-        }
+        },
       })
 
       -- Setup forward search for Mac and Linux
@@ -154,7 +154,7 @@ lvim.plugins = {
     config = function()
       require("symbols-outline").setup({ auto_preview = false })
     end,
-    cmd="SymbolsOutline"
+    cmd = "SymbolsOutline",
   },
   -- }}}
 
@@ -165,7 +165,7 @@ lvim.plugins = {
   -- }}}
 
   -- Utils {{{
-  { "editorconfig/editorconfig-vim", event="BufRead" },
+  { "editorconfig/editorconfig-vim", event = "BufRead" },
   { "godlygeek/tabular", cmd = "Tabularize" },
   { "simnalamburt/vim-mundo", cmd = "MundoToggle" },
   {
@@ -206,7 +206,7 @@ lvim.plugins = {
     "iamcco/markdown-preview.nvim",
     -- run = "cd app && npm install",
     run = function()
-      vim.fn['mkdp#util#install']()
+      vim.fn["mkdp#util#install"]()
     end,
     config = function()
       vim.g.mkdp_page_title = "${name}"

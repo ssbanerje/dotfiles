@@ -9,10 +9,11 @@ lvim.builtin.dap.on_config_done = function(dap)
     name = "lldb",
     env = { LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES" },
   }
+
   dap.adapters.python = {
-    type = 'executable';
-    command = 'python';
-    args = { '-m', 'debugpy.adapter' };
+    type = "executable",
+    command = "python",
+    args = { "-m", "debugpy.adapter" },
   }
 
   -- Setup configurations
@@ -34,34 +35,37 @@ lvim.builtin.dap.on_config_done = function(dap)
           table.insert(variables, string.format("%s=%s", k, v))
         end
         return variables
-      end
+      end,
     },
     {
       name = "Attach to process",
-      type = 'lldb',
-      request = 'attach',
-      pid = require('dap.utils').pick_process,
+      type = "lldb",
+      request = "attach",
+      pid = require("dap.utils").pick_process,
       args = {},
     },
   }
+
   dap.configurations.c = dap.configurations.cpp
+
   dap.configurations.rust = dap.configurations.cpp
+
   dap.configurations.python = {
     {
       name = "Launch file",
-      type = 'python',
-      request = 'launch',
-      program = "${file}";
+      type = "python",
+      request = "launch",
+      program = "${file}",
       pythonPath = function()
         local cwd = vim.fn.getcwd()
-        if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
-          return cwd .. '/venv/bin/python'
-        elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
-          return cwd .. '/.venv/bin/python'
+        if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+          return cwd .. "/venv/bin/python"
+        elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+          return cwd .. "/.venv/bin/python"
         else
-          return 'python'
+          return "python"
         end
-      end;
+      end,
     },
   }
 end

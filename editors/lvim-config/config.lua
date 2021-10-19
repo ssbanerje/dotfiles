@@ -80,7 +80,7 @@ end
 require("user.keymap")
 
 -- Load Autocommands
-require("user.autocommands")
+require("user.autocmds")
 
 -- Configure LVIM Builtins
 require("user.dashboard")

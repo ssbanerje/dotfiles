@@ -43,7 +43,7 @@ local custom_lsp_configs = {
     root_dir = function(fname)
       return require("lspconfig").util.root_pattern(".git")(fname) or require("lspconfig").util.path.dirname(fname)
     end,
-    filetypes = { "Dockerfile*", "dockerfile*" }
+    filetypes = { "Dockerfile*", "dockerfile*" },
   },
   -- }}}
   -- Sumneko_Lua {{{
@@ -58,7 +58,7 @@ local custom_lsp_configs = {
             [require("lvim.utils").join_paths(get_runtime_dir(), "lvim", "lua")] = true,
             [vim.fn.expand("$VIMRUNTIME/lua")] = true,
             [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-            ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = (vim.fn.has("macunix") == 1)
+            ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = (vim.fn.has("macunix") == 1),
           },
           maxPreload = 100000,
           preloadFileSize = 10000,
@@ -85,7 +85,7 @@ local custom_lsp_configs = {
           ["http://json.schemastore.org/gitlab-ci"] = "/*lab-ci.{yml,yaml}",
         },
       },
-    }
+    },
   },
   -- }}}
 }
@@ -116,7 +116,7 @@ end
 
 -- Linters {{{
 
-setup_linters {
+setup_linters({
   css = { { exe = "eslint_d" } },
   javascript = { { exe = "eslint_d" } },
   javascriptreact = { { exe = "eslint_d" } },
@@ -133,13 +133,13 @@ setup_linters {
   typescript = { { exe = "eslint_d" } },
   typescriptreact = { { exe = "eslint_d" } },
   vim = { { exe = "vint" } },
-}
+})
 
 -- }}}
 
 -- Formatters {{{
 
-setup_formatters {
+setup_formatters({
   asm = { { exe = "asmfmt" } },
   cmake = { { exe = "cmake_format" } },
   css = { { exe = "prettierd" } },
@@ -160,7 +160,7 @@ setup_formatters {
   typescript = { { exe = "prettierd" } },
   typescriptreact = { { exe = "prettierd" } },
   yaml = { { exe = "prettierd" } },
-}
+})
 
 -- }}}
 
