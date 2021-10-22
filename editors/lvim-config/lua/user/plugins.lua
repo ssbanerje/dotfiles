@@ -149,18 +149,50 @@ lvim.plugins = {
     ft = { "bib", "tex" },
   },
   -- }}}
+  -- Symbols Outline {{{
   {
     "simrat39/symbols-outline.nvim",
     config = function()
-      require("symbols-outline").setup({ auto_preview = false })
+      require("symbols-outline").setup({
+        auto_preview = false,
+        symbols = {
+          Array = { icon = " ", hl = "TSConstant" },
+          Boolean = { icon = "⊨ ", hl = "TSBoolean" },
+          Class = { icon = " ", hl = "TSType" },
+          Constant = { icon = " ", hl = "TSConstant" },
+          Constructor = { icon = " ", hl = "TSConstructor" },
+          Enum = { icon = " ", hl = "TSType" },
+          EnumMember = { icon = " ", hl = "TSField" },
+          Event = { icon = "", hl = "TSType" },
+          Field = { icon = " ", hl = "TSField" },
+          File = { icon = " ", hl = "TSURI" },
+          Function = { icon = "", hl = "TSFunction" },
+          Interface = { icon = "蘒", hl = "TSType" },
+          Key = { icon = " ", hl = "TSType" },
+          Method = { icon = "", hl = "TSMethod" },
+          Module = { icon = " ", hl = "TSNamespace" },
+          Namespace = { icon = " ", hl = "TSNamespace" },
+          Null = { icon = "NULL", hl = "TSType" },
+          Number = { icon = " ", hl = "TSNumber" },
+          Object = { icon = "綠", hl = "TSType" },
+          Operator = { icon = " ", hl = "TSOperator" },
+          Package = { icon = " ", hl = "TSNamespace" },
+          Property = { icon = " ", hl = "TSMethod" },
+          String = { icon = " ", hl = "TSString" },
+          Struct = { icon = " ", hl = "TSType" },
+          TypeParameter = { icon = "<>", hl = "TSParameter" },
+          Variable = { icon = "[]", hl = "TSConstant" },
+        },
+      })
     end,
     cmd = "SymbolsOutline",
   },
   -- }}}
+  -- }}}
 
   -- Treesitter {{{
-  { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat", opt = false },
-  { "RRethy/nvim-treesitter-textsubjects", opt = false },
+  { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat" },
+  { "RRethy/nvim-treesitter-textsubjects" },
   { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
   -- }}}
 

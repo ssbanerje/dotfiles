@@ -71,7 +71,7 @@ end
 
 -- https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
 if vim.env.TERM == "xterm-kitty" then
-  vim.cmd [[let &t_ut='']]
+  vim.cmd([[let &t_ut='']])
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -79,15 +79,16 @@ end
 -- Load keymaps
 require("user.keymap")
 
--- Load Autocommands
+-- Load autocmds
 require("user.autocmds")
 
--- Configure LVIM Builtins
-require("user.dashboard")
-require("user.treesitter")
-require("user.terminal")
-require("user.lualine")
+-- Configure LVIM builtin plugins
+require("user.cmp")
 require("user.dap")
+require("user.dashboard")
+require("user.lualine")
+require("user.terminal")
+require("user.treesitter")
 
 -- Configure LSP
 require("user.lsp")
