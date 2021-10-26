@@ -38,6 +38,9 @@ vim.opt.diffopt = "vertical"
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- Wrap around search
+vim.opt.wrapscan = true
+
 -- Open new windows at the bottom and right
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -58,6 +61,8 @@ vim.opt.formatoptions = vim.opt.formatoptions
   + "n" -- Indent past formatlistpat
   + "q" -- Allow formating comments with gq
   + "r" -- Insert comment leader in insert mode
+  + "l" -- Line breaks
+  + "v"
   - "2" -- Use indent of first line of paragraph
   - "a" -- No auto formatting
   - "o" -- Do not insert comment leader when hitting o/O in norm
@@ -71,7 +76,7 @@ end
 
 -- https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
 if vim.env.TERM == "xterm-kitty" then
-  vim.cmd [[let &t_ut='']]
+  vim.cmd([[let &t_ut='']])
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -83,11 +88,11 @@ require("user.keymap")
 require("user.autocommands")
 
 -- Configure LVIM Builtins
-require("user.dashboard")
-require("user.treesitter")
-require("user.terminal")
-require("user.lualine")
 require("user.dap")
+require("user.dashboard")
+require("user.lualine")
+require("user.terminal")
+require("user.treesitter")
 
 -- Configure LSP
 require("user.lsp")

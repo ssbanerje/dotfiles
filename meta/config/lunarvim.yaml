@@ -68,6 +68,7 @@
     ~/.editorconfig: editors/editorconfig
     ~/.config/lvim/config.lua: editors/lvim-config/config.lua
     ~/.config/lvim/lua: editors/lvim-config/lua
+    ~/.config/lvim/ftplugin: editors/lvim-config/ftplugin
 
 - shell:
     - ["~/.local/bin/lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'", "Install lvim-Packer Plugins"]

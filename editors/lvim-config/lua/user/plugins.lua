@@ -9,10 +9,10 @@ lvim.plugins = {
     "folke/trouble.nvim",
     config = function()
       require("trouble").setup({
-      auto_open = true,
-      auto_close = true,
-      mode = "lsp_document_diagnostics",
-    })
+        auto_open = true,
+        auto_close = true,
+        mode = "lsp_document_diagnostics",
+      })
     end,
   },
   -- Rust-tools {{{
@@ -20,15 +20,21 @@ lvim.plugins = {
     "simrat39/rust-tools.nvim",
     config = function()
       -- Get server
-      local _, server = require("nvim-lsp-installer.servers").get_server("rust_analyzer")
+      local available, server = require("nvim-lsp-installer.servers").get_server("rust_analyzer")
+      if available and not server:is_installed() then
+        server:install()
+      end
 
       -- Setup rust-tools
       require("rust-tools").setup({
         tools = {
+          autoSetHints = true,
           inlay_hints = {
             parameter_hints_prefix = " ",
             other_hints_prefix = " ",
           },
+          runnables = {use_telescope = true},
+          hover_actions = {auto_focus = true},
         },
         server = {
           cmd = server._default_options.cmd,
@@ -39,8 +45,11 @@ lvim.plugins = {
           settings = {
             ["rust-analyzer"] = {
               assist = { importGranularity = "crate" },
+              callInfo = { full = true },
               cargo = { allFeatures = true },
               checkOnSave = { allTargets = true, command = "clippy" },
+              inlayHints = { enable = true, typeHints = true, parameterHints = true},
+              lens = { enable = true },
               procMacro = { enable = true },
             },
           },
@@ -81,9 +90,9 @@ lvim.plugins = {
               "-outdir=build",
               "-interaction=nonstopmode",
               "-synctex=1",
-              "%f"
+              "%f",
             },
-            isContinuous = false
+            isContinuous = false,
           },
           xelatex = {
             executable = "latexmk",
@@ -93,11 +102,11 @@ lvim.plugins = {
               "-outdir=build",
               "-interaction=nonstopmode",
               "-synctex=1",
-              "%f"
+              "%f",
             },
-            isContinuous = false
+            isContinuous = false,
           },
-        }
+        },
       })
 
       -- Setup forward search for Mac and Linux
@@ -112,13 +121,7 @@ lvim.plugins = {
       end
 
       -- Start LSP server
-      local _, server = require("nvim-lsp-installer.servers").get_server("texlab")
-
-      server:setup({
-        on_attach = require("lvim.lsp").common_on_attach,
-        on_init = require("lvim.lsp").common_on_init,
-        capabilities = require("lvim.lsp").capabilities,
-        flags = require("lvim.lsp").flags,
+      require("lvim.lsp.manager").setup("texlab", {
         settings = {
           texlab = {
             auxDirectory = "build",
@@ -154,7 +157,7 @@ lvim.plugins = {
     config = function()
       require("symbols-outline").setup({ auto_preview = false })
     end,
-    cmd="SymbolsOutline"
+    cmd = "SymbolsOutline",
   },
   -- }}}
 
@@ -165,7 +168,7 @@ lvim.plugins = {
   -- }}}
 
   -- Utils {{{
-  { "editorconfig/editorconfig-vim", event="BufRead" },
+  { "editorconfig/editorconfig-vim", event = "BufRead" },
   { "godlygeek/tabular", cmd = "Tabularize" },
   { "simnalamburt/vim-mundo", cmd = "MundoToggle" },
   {
@@ -206,7 +209,7 @@ lvim.plugins = {
     "iamcco/markdown-preview.nvim",
     -- run = "cd app && npm install",
     run = function()
-      vim.fn['mkdp#util#install']()
+      vim.fn["mkdp#util#install"]()
     end,
     config = function()
       vim.g.mkdp_page_title = "${name}"
