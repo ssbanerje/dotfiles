@@ -84,10 +84,11 @@ end
 -- Load keymaps
 require("user.keymap")
 
--- Load Autocommands
-require("user.autocommands")
+-- Load autocmds
+require("user.autocmds")
 
--- Configure LVIM Builtins
+-- Configure LVIM builtin plugins
+require("user.cmp")
 require("user.dap")
 require("user.dashboard")
 require("user.lualine")

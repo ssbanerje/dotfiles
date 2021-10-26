@@ -6,15 +6,15 @@ local function custom_section(key)
   return function(desc)
     return function(cmd)
       -- Calculate padding
-      local bin_len = #(lvim.builtin.dashboard.custom_section.a.description[1])
+      local bin_len = #lvim.builtin.dashboard.custom_section.a.description[1]
       local padding = bin_len - #desc
 
       -- Change descriptions
       if padding > 0 then
         desc = desc .. string.rep(" ", padding)
       elseif padding < 0 then
-        padding = padding * -1;
-        for _,v in pairs(lvim.dashboard.custom_section) do
+        padding = padding * -1
+        for _, v in pairs(lvim.dashboard.custom_section) do
           v.description = v.description .. string.rep(" ", padding)
         end
       end
@@ -29,4 +29,4 @@ local function custom_section(key)
 end
 
 custom_section "00" "  <empty buffer>" "ene!"
-custom_section "d1" "  Marks" "Telescope marks"
+custom_section "d1" "  Marks"          "Telescope marks"

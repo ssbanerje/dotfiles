@@ -13,7 +13,7 @@ function action:new(cmd)
       silent = false,
       expr = false,
       nowait = false,
-    }
+    },
   }
 
   setmetatable(obj, self)
@@ -128,11 +128,11 @@ _G.maximize_toggle = coroutine.create(function()
       hidden = vim.opt.hidden
       session = vim.fn.tempname()
       vim.opt.hidden = true
-      vim.cmd("mksession! "..session)
+      vim.cmd("mksession! " .. session)
       vim.cmd("only")
       toggle_state = true
     else
-      vim.cmd("source "..session)
+      vim.cmd("source " .. session)
       vim.opt_local.hidden = hidden
       session = nil
       hidden = nil
@@ -177,42 +177,42 @@ lvim.lsp.buffer_mappings.normal_mode["gh"] = { "<cmd>lua vim.lsp.buf.hover()<CR>
 
 normal_remaps {
   -- Do not use Q for Ex mode
-  Q         = map_cmd("close"):silent(),
+  Q = map_cmd("close"):silent(),
   -- Indent
-  ["<"]     = map("<<_"):noremap(),
-  [">"]     = map(">>_"):noremap(),
+  ["<"] = map("<<_"):noremap(),
+  [">"] = map(">>_"):noremap(),
   -- Create windows
-  ss        = map_cmd("split"):silent(),
-  sv        = map_cmd("vsplit"):silent(),
+  ss = map_cmd("split"):silent(),
+  sv = map_cmd("vsplit"):silent(),
   -- Make Y consistent with C and D
-  Y         = map("y$"):noremap(),
+  Y = map("y$"):noremap(),
   -- Moving buffers
-  ["[b"]    = map_cmd("BufferPrevious"):silent(),
-  ["]b"]    = map_cmd("BufferNext"):silent(),
+  ["[b"] = map_cmd("BufferPrevious"):silent(),
+  ["]b"] = map_cmd("BufferNext"):silent(),
   -- Easier scrolling
-  H         = map("zh"):noremap(),
-  J         = map("<C-e>"):noremap(),
-  K         = map("<C-y>"):noremap(),
-  L         = map("zl"):noremap(),
+  H = map("zh"):noremap(),
+  J = map("<C-e>"):noremap(),
+  K = map("<C-y>"):noremap(),
+  L = map("zl"):noremap(),
   -- Select word
-  vv        = map("viw"):noremap(),
+  vv = map("viw"):noremap(),
   -- Clear search highlight
-  ["\\"]    = map_cr("nohl"):silent(),
+  ["\\"] = map_cr("nohl"):silent(),
   -- Undotree
-  U         = map_cmd("MundoToggle"):silent(),
+  U = map_cmd("MundoToggle"):silent(),
   -- Tagbar
-  ["<F2>"]  = map_cmd("SymbolsOutline"):silent(),
+  ["<F2>"] = map_cmd("SymbolsOutline"):silent(),
   -- File tree
-  ["<F3>"]  = map_cmd("NvimTreeToggle"):silent(),
+  ["<F3>"] = map_cmd("NvimTreeToggle"):silent(),
 }
 
 visual_remaps {
   -- Make Y consistent with C and D
-  Y         = map("<esc>y$gv"):noremap(),
+  Y = map("<esc>y$gv"):noremap(),
   -- Search highlighted
-  ["/"]     = map('y/<C-R>"<cr>'):noremap(),
+  ["/"] = map('y/<C-R>"<cr>'):noremap(),
   -- Paste over selected
-  p         = map('"_c<C-R>"<esc>'):noremap(),
+  p = map('"_c<C-R>"<esc>'):noremap(),
 }
 
 command_remaps {
@@ -224,7 +224,7 @@ command_remaps {
 term_remaps {
   -- Go to normal mode
   ["<esc>"] = map([[<C-\><C-n>]]):silent():noremap(),
-  jk        = map([[<C-\><C-n>]]):silent():noremap(),
+  jk = map([[<C-\><C-n>]]):silent():noremap(),
 }
 
 -- Remove defaults
@@ -243,7 +243,7 @@ for i = 1, 9 do
         vim.api.nvim_command(":" .. i .. "wincmd w")
       end
     end,
-  "Goto window " .. i,
+    "Goto window " .. i,
   }
 end
 
@@ -281,7 +281,7 @@ which_vkey "d" {
 
 -- Trouble
 which_key "l" {
-  I = { "<cmd>Telescope lsp_implementations<cr>", "Implementations"},
+  I = { "<cmd>Telescope lsp_implementations<cr>", "Implementations" },
   R = { "<cmd>Trouble lsp_references<cr>", "Goto References" },
   Q = { "<cmd>Trouble quickfix<cr>", "Quickfix" },
   t = { "<cmd>TroubleToggle<cr>", "Trouble" },
@@ -289,49 +289,49 @@ which_key "l" {
 
 -- Windows and Tabs
 which_key "w" {
-  name  = "Windows",
+  name = "Windows",
   ["="] = { "<cmd>wincmd =<cr>", "Balance" },
-  H     = { "<cmd>wincmd H<cr>", "Move far left" },
-  J     = { "<cmd>wincmd J<cr>", "Move far down" },
-  K     = { "<cmd>wincmd K<cr>", "Move far up" },
-  L     = { "<cmd>wincmd L<cr>", "Move far right" },
-  f     = { "<cmd>setlocal scrollbind!", "Toggle follow mode" },
-  h     = { "<cmd>wincmd h<cr>", "Move left" },
-  j     = { "<cmd>wincmd j<cr>", "Move down" },
-  k     = { "<cmd>wincmd k<cr>", "Move up" },
-  l     = { "<cmd>wincmd l<cr>", "Move right" },
-  m     = {
+  H = { "<cmd>wincmd H<cr>", "Move far left" },
+  J = { "<cmd>wincmd J<cr>", "Move far down" },
+  K = { "<cmd>wincmd K<cr>", "Move far up" },
+  L = { "<cmd>wincmd L<cr>", "Move far right" },
+  f = { "<cmd>setlocal scrollbind!", "Toggle follow mode" },
+  h = { "<cmd>wincmd h<cr>", "Move left" },
+  j = { "<cmd>wincmd j<cr>", "Move down" },
+  k = { "<cmd>wincmd k<cr>", "Move up" },
+  l = { "<cmd>wincmd l<cr>", "Move right" },
+  m = {
     function()
       coroutine.resume(maximize_toggle)
     end,
     "Maximize window",
   },
-  s     = { "<cmd>split<cr>", "Split horizontal" },
-  t     = { "<cmd>tabnew<cr>","Create new tab" },
-  v     = { "<cmd>vsplit<cr>","Split vertical" },
-  w     = { "<cmd>ChooseWin<cr>", "Chose window" },
+  s = { "<cmd>split<cr>", "Split horizontal" },
+  t = { "<cmd>tabnew<cr>", "Create new tab" },
+  v = { "<cmd>vsplit<cr>", "Split vertical" },
+  w = { "<cmd>ChooseWin<cr>", "Chose window" },
 }
 
 -- Align
 which_vkey "a" {
-  name        = "Align",
+  name = "Align",
   ["<space>"] = { [[:Tabularize /\s<cr>]], "Align at space" },
-  ["#"]       = { [[:Tabularize /#<cr>]], "Align at #" },
-  ["%"]       = { [[:Tabularize /%<cr>]], "Align at %" },
-  ["&"]       = { [[:Tabularize /&<cr>]], "Align at &" },
-  ["("]       = { [[:Tabularize /(<cr>]], "Align at (" },
-  [")"]       = { [[:Tabularize /)<cr>]], "Align at )" },
-  [","]       = { [[:Tabularize /,<cr>]], "Align at ," },
-  ["."]       = { [[:Tabularize /\.<cr>]], "Align at ." },
-  [":"]       = { [[:Tabularize /:<cr>]], "Align at :" },
-  [";"]       = { [[:Tabularize /;<cr>]], "Align at ;" },
-  ["="]       = { [[:Tabularize /=<cr>"]], "Align at =" },
-  ["["]       = { [[:Tabularize /[<cr>]], "Align at [" },
-  ["]"]       = { [[:Tabularize /]<cr>]], "Align at ]" },
-  ["{"]       = { [[:Tabularize /{<cr>]], "Align at {" },
-  ["|"]       = { [[:Tabularize /|<cr>]], "Align at |" },
-  ["}"]       = { [[:Tabularize /}<cr>]], "Align at }" },
-  ["¦"]       = { [[:Tabularize /¦<cr>]], "Align at ¦" },
+  ["#"] = { [[:Tabularize /#<cr>]], "Align at #" },
+  ["%"] = { [[:Tabularize /%<cr>]], "Align at %" },
+  ["&"] = { [[:Tabularize /&<cr>]], "Align at &" },
+  ["("] = { [[:Tabularize /(<cr>]], "Align at (" },
+  [")"] = { [[:Tabularize /)<cr>]], "Align at )" },
+  [","] = { [[:Tabularize /,<cr>]], "Align at ," },
+  ["."] = { [[:Tabularize /\.<cr>]], "Align at ." },
+  [":"] = { [[:Tabularize /:<cr>]], "Align at :" },
+  [";"] = { [[:Tabularize /;<cr>]], "Align at ;" },
+  ["="] = { [[:Tabularize /=<cr>"]], "Align at =" },
+  ["["] = { [[:Tabularize /[<cr>]], "Align at [" },
+  ["]"] = { [[:Tabularize /]<cr>]], "Align at ]" },
+  ["{"] = { [[:Tabularize /{<cr>]], "Align at {" },
+  ["|"] = { [[:Tabularize /|<cr>]], "Align at |" },
+  ["}"] = { [[:Tabularize /}<cr>]], "Align at }" },
+  ["¦"] = { [[:Tabularize /¦<cr>]], "Align at ¦" },
 }
 
 -- Applications

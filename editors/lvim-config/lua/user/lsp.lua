@@ -43,7 +43,7 @@ vim.list_extend(lvim.lsp.override, {
 
 -- Linters {{{
 
-setup_linters {
+setup_linters({
   css = { { exe = "eslint_d" } },
   javascript = { { exe = "eslint_d" } },
   javascriptreact = { { exe = "eslint_d" } },
@@ -60,13 +60,13 @@ setup_linters {
   typescript = { { exe = "eslint_d" } },
   typescriptreact = { { exe = "eslint_d" } },
   vim = { { exe = "vint" } },
-}
+})
 
 -- }}}
 
 -- Formatters {{{
 
-setup_formatters {
+setup_formatters({
   asm = { { exe = "asmfmt" } },
   cmake = { { exe = "cmake_format" } },
   css = { { exe = "prettierd" } },
@@ -87,7 +87,7 @@ setup_formatters {
   typescript = { { exe = "prettierd" } },
   typescriptreact = { { exe = "prettierd" } },
   yaml = { { exe = "prettierd" } },
-}
+})
 
 -- }}}
 

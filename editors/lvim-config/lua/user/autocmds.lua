@@ -64,7 +64,7 @@ augroup "custom_theme" {
 augroup "vim_help_navigation" {
   -- Navigate vim help
   autocmd("Filetype", "help", "nnoremap <buffer><silent> gd :h <C-R><C-W><cr>"),
-  autocmd("Filetype", "help", "vnoremap <buffer><silent> gd \"*y:h <C-R>*<cr>"),
+  autocmd("Filetype", "help", 'vnoremap <buffer><silent> gd "*y:h <C-R>*<cr>'),
 }
 
 augroup "_git" {
