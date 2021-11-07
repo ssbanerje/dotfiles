@@ -4,12 +4,14 @@
         - zsh
         - fzf
         - silversearcher-ag
+        - libnotify-bin
 
 - ifarch:
     - pacman:
         - zsh
         - fzf
         - the_silver_searcher
+        - libnotify
 
 - ifmacos:
     - tap:
@@ -20,6 +22,7 @@
         - fzf
         - coreutils
         - the_silver_searcher
+        - libnotify
 
 - pip:
     file: shell/requirements.txt
