@@ -28,5 +28,4 @@ local function custom_section(key)
   end
 end
 
-custom_section "00" "  <empty buffer>" "ene!"
-custom_section "d1" "  Marks"          "Telescope marks"
+custom_section "d1" "  Marks" "Telescope marks"
