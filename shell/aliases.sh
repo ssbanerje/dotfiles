@@ -20,6 +20,9 @@ alias pipup="pip freeze --local | cut -d = -f 1  | xargs pip install -U"
 alias pip3up="pip3 freeze --local | cut -d = -f 1  | xargs pip3 install -U"
 alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 
+# Setup alerts for long running commands
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history 1|sed '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
 # Normalize `open` and clipboard {{{
 if [[ ! "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   if grep -q Microsoft /proc/version; then
