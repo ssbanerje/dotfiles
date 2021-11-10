@@ -20,4 +20,4 @@ indent_size = 4
 [Makefile]
 indent_style = tab
 
-# vim: set ft=toml:
+# vim: set ft=dosini:
