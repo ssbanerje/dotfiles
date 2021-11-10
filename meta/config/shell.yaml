@@ -22,7 +22,6 @@
         - fzf
         - coreutils
         - the_silver_searcher
-        - libnotify
 
 - pip:
     file: shell/requirements.txt
