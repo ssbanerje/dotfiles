@@ -13,10 +13,21 @@ vim.list_extend(lvim.lsp.override, {
   "yamlls",
 })
 
+-- Helper Functions {{{
+local function filter(exes)
+  for k, v in pairs(exes) do
+    if vim.fn.executable(v.exe) ~= 1 then
+      exes[k] = nil
+    end
+  end
+  return exes
+end
+-- }}}
+
 -- Linters {{{
 
 local linters = require("lvim.lsp.null-ls.linters")
-linters.setup({
+linters.setup(filter {
   {
     exe = "luacheck",
     args = { "-g" },
@@ -38,7 +49,7 @@ linters.setup({
 -- Formatters {{{
 
 local formatters = require("lvim.lsp.null-ls.formatters")
-formatters.setup({
+formatters.setup(filter {
   { exe = "stylua" },
   {
     exe = "prettier",
