@@ -91,6 +91,8 @@ elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
     "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/key-bindings.zsh"
 fi
 
+export FZF_DEFAULT_OPTS='--border'
+
 # }}}
 
 # Load aliases and colors
