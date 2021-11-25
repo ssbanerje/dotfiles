@@ -39,14 +39,12 @@ if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
   CHECK_AND_SOURCE \
     "$(shopt -oq posix || echo '/usr/share/bash-completion/bash_completion')" \
     /usr/share/doc/fzf/examples/completion.bash \
-    /usr/share/doc/fzf/examples/key-bindings.bash \
-    /etc/grc.sh
+    /usr/share/doc/fzf/examples/key-bindings.bash
 elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   CHECK_AND_SOURCE \
     "${BREW_PREFIX:=$(brew --prefix)}/etc/profile.d/bash_completion.sh" \
     "$BREW_PREFIX/opt/fzf/shell/completion.bash" \
     "$BREW_PREFIX/opt/fzf/shell/key-bindings.bash" \
-    "$BREW_PREFIX/etc/grc.sh" \
     "$([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.bash")"
 fi
 
