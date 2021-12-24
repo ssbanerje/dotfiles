@@ -5,7 +5,7 @@ antigen use oh-my-zsh
 
 # Mac specific plugins
 if [ "$(uname -s)" = "Darwin" ]; then
-  antigen bundle osx
+  antigen bundle macos
   antigen bundle brew
   $([ "$TERM_PROGRAM" = "iTerm.app" ]) && antigen bundle iterm2
   # antigen bundle gnu-utils
