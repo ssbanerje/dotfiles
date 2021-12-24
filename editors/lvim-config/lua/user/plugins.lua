@@ -11,7 +11,7 @@ lvim.plugins = {
       require("trouble").setup({
         auto_open = true,
         auto_close = true,
-        mode = "lsp_document_diagnostics",
+        mode = "document_diagnostics",
       })
     end,
   },
