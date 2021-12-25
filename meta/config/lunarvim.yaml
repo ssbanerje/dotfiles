@@ -59,6 +59,7 @@
     - ["curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal", "Installing Rust"]
     - [". ~/.cargo/env && rustup component add rust-src", "Adding Rust Source"]
     - ["curl -LSs https://raw.githubusercontent.com/lunarvim/lunarvim/rolling/utils/installer/install.sh | LV_BRANCH=rolling bash -s -- --no-install-dependencies", "Installing Lunarvim"]
+    - ["~/.local/bin/lvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'", "Install lvim-Packer Plugins"]
     - ["~/.local/bin/lvim --headless +'TSInstallSync all' +qall", "Install lvim-TreeSitter Plugins"]
 
 - create:

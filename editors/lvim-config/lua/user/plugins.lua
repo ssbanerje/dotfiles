@@ -15,6 +15,13 @@ lvim.plugins = {
       })
     end,
   },
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "BufRead",
+    config = function()
+      require("lsp_signature").setup()
+    end
+  },
   -- Rust-tools {{{
   {
     "simrat39/rust-tools.nvim",
@@ -226,7 +233,21 @@ lvim.plugins = {
     end,
     event = "BufRead",
   },
-  { "norcalli/nvim-colorizer.lua", cmd = "ColorizerToggle" },
+  {
+    "norcalli/nvim-colorizer.lua",
+    config = function()
+      require("colorizer").setup({ "*" }, {
+        RGB = true, -- #RGB hex codes
+        RRGGBB = true, -- #RRGGBB hex codes
+        RRGGBBAA = true, -- #RRGGBBAA hex codes
+        rgb_fn = true, -- CSS rgb() and rgba() functions
+        hsl_fn = true, -- CSS hsl() and hsla() functions
+        css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+        css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+      })
+    end,
+    cmd = "ColorizerToggle"
+  },
   { "folke/tokyonight.nvim" },
   {
     "karb94/neoscroll.nvim",
@@ -239,11 +260,9 @@ lvim.plugins = {
   -- Markdown {{{
   {
     "iamcco/markdown-preview.nvim",
-    -- run = "cd app && npm install",
-    run = function()
-      vim.fn["mkdp#util#install"]()
-    end,
+    run = "cd app && npm install",
     config = function()
+      vim.g.mkdp_auto_start = 1
       vim.g.mkdp_page_title = "${name}"
     end,
     ft = "markdown",

@@ -4,6 +4,9 @@ lvim.lsp.automatic_servers_installation = true
 -- No virtual text. Use trouble instead
 lvim.lsp.diagnostics.virtual_text = false
 
+-- Enable code lens refresh
+lvim.lsp.code_lens_refresh = true
+
 -- Overrides for LVIM
 vim.list_extend(lvim.lsp.override, {
   "dockerls",
