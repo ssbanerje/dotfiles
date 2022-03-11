@@ -22,7 +22,6 @@ if [ "$(uname -s)" = "Linux" ]; then
 fi
 
 # Load bundles from the default repo (oh-my-zsh)
-antigen bundle cargo
 antigen bundle colored-man-pages
 antigen bundle colorize
 antigen bundle command-not-found
@@ -38,7 +37,6 @@ antigen bundle npm
 antigen bundle pip
 antigen bundle python
 antigen bundle rust
-antigen bundle rustup
 # antigen bundle sbt
 # antigen bundle scala
 antigen bundle ssh-agent
