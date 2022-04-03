@@ -90,7 +90,6 @@ require("user.autocmds")
 -- Configure LVIM builtin plugins
 require("user.cmp")
 require("user.dap")
-require("user.dashboard")
 require("user.lualine")
 require("user.terminal")
 require("user.treesitter")
