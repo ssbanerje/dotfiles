@@ -6,10 +6,11 @@ _G.user_autocmd_actions = {}
 -- @param name Name of the autogroup
 local function augroup(name)
   return function(entries)
-    if lvim.autocommands[name] == nil or #lvim.autocommands[name] == 0 then
-      lvim.autocommands[name] = entries
-    else
-      vim.list_extend(lvim.autocommands[name], entries)
+    name = "lvim_user_" .. name
+    vim.api.nvim_create_augroup(name, {})
+    for _, entry in ipairs(entries) do
+      entry.options.group = name
+      vim.api.nvim_create_autocmd(entry.trigger, entry.options)
     end
   end
 end
@@ -19,15 +20,18 @@ end
 -- @param pattern Inputs to events for triggering the command
 -- @param action String command or Lua function corresponding to the action
 local function autocmd(trigger, pattern, action)
-  local action_str
+  local aucmd = {}
+  aucmd.trigger = trigger
+  aucmd.options = {}
+  aucmd.options.pattern = pattern
   if type(action) == "function" then
     local id = #_G.user_autocmd_actions + 1
     _G.user_autocmd_actions[id] = action
-    action_str = "lua _G.user_autocmd_actions[" .. id .. "]()"
+    aucmd.options.command = "lua _G.user_autocmd_actions[" .. id .. "]()"
   else
-    action_str = action
+    aucmd.options.command = action
   end
-  return { trigger, pattern, action_str }
+  return aucmd
 end
 
 -- Get folder for lvim config files
@@ -36,9 +40,8 @@ local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config"):g
 -- }}}
 
 -- Reset builtins
-lvim.autocommands._formatoptions = nil
 
-augroup "_general_settings" {
+augroup "general_settings" {
   -- Reload config
   autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('lvim.config'):reload()"),
 }
@@ -67,7 +70,7 @@ augroup "vim_help_navigation" {
   autocmd("Filetype", "help", 'vnoremap <buffer><silent> gd "*y:h <C-R>*<cr>'),
 }
 
-augroup "_git" {
+augroup "git" {
   -- Git rebase
   autocmd("FileType", "gitrebase", function()
     local remaps = {

@@ -82,12 +82,6 @@ local function term_remaps(remaps)
   lvim.keys.term_mode = vim.tbl_extend("force", lvim.keys.term_mode, remaps)
 end
 
---- Register Command mode remaps
--- @param remaps Table containing remaps
-local function command_remaps(remaps)
-  lvim.keys.command_mode = vim.tbl_extend("force", lvim.keys.command_mode, remaps)
-end
-
 -- Internal function set or update which_key mappings
 local function _which_key(key, ty)
   if type(key) ~= "string" then
@@ -186,16 +180,13 @@ normal_remaps {
   sv = map_cmd("vsplit"):silent(),
   -- Make Y consistent with C and D
   Y = map("y$"):noremap(),
-  -- Moving buffers
-  ["[b"] = map_cmd("BufferPrevious"):silent(),
-  ["]b"] = map_cmd("BufferNext"):silent(),
   -- Easier scrolling
   H = map("zh"):noremap(),
   J = map("<C-e>"):noremap(),
   K = map("<C-y>"):noremap(),
   L = map("zl"):noremap(),
-  -- Select word
-  vv = map("viw"):noremap(),
+  -- Select line
+  vv = map("^v$"):noremap(),
   -- Clear search highlight
   ["\\"] = map_cr("nohl"):silent(),
   -- Undotree
@@ -213,12 +204,6 @@ visual_remaps {
   ["/"] = map('y/<C-R>"<cr>'):noremap(),
   -- Paste over selected
   p = map('"_c<C-R>"<esc>'):noremap(),
-}
-
-command_remaps {
-  -- Move cursor to begining or end of line
-  ["<C-a>"] = map("<home><Left>"):noremap(),
-  ["<C-e>"] = map("<end><Right>"):noremap(),
 }
 
 term_remaps {
@@ -247,9 +232,6 @@ for i = 1, 9 do
   }
 end
 
--- Switching buffers
-which_key "<Space>" { ":BufferPick<cr>", "Pick buffer" }
-
 -- Copy and paste from system clipboard
 which_vkey "Y" { '"+y', "Copy to clipboard" }
 which_key "P" { '"+p', "Paste from clipboard" }
@@ -262,28 +244,18 @@ which_key "b" {
   X = { "<cmd>normal gg=G<cr>", "Reindent Buffer" },
   c = { "<cmd>ColorizerToggle<cr>", "Toggle colorizer" },
   n = { "<cmd>setlocal nonumber! norelativenumber!<cr>", "Toggle line numbers" },
-  p = { '<cmd>normal ggdG"+P<cr>', "Paste from clipboard" },
+  p = { '<cmd>normal ggdG"+P<cr>', "Truncate file and paste from clipboard" },
   r = { "<cmd>normal gg=G<cr>", "Reindent Buffer" },
   s = { "<cmd>set spell!<cr>", "Togggle spell checking" },
   y = { '<cmd>normal ggVG"+y``<cr>', "Copy buffer to clipboard" },
 }
 
--- Debug
-which_key "d" {
-  f = { "<cmd>lua require('dapui').float_element()", "Floating element" },
-  x = { "<cmd>lua require('dapui').toggle()<cr>", "Run DAP-UI" },
-}
-
-which_vkey "d" {
-  name = "Debug",
-  e = { ":lua require('dapui').eval()<cr>", "Evaluate expression" },
-}
-
--- Trouble
+-- LSP commands
 which_key "l" {
   I = { "<cmd>Telescope lsp_implementations<cr>", "Implementations" },
-  R = { "<cmd>Trouble lsp_references<cr>", "Goto References" },
   Q = { "<cmd>Trouble quickfix<cr>", "Quickfix" },
+  R = { "<cmd>Trouble lsp_references<cr>", "Goto References" },
+  T = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Goto Type Definition" },
   t = { "<cmd>TroubleToggle<cr>", "Trouble" },
 }
 
@@ -295,17 +267,12 @@ which_key "w" {
   J = { "<cmd>wincmd J<cr>", "Move far down" },
   K = { "<cmd>wincmd K<cr>", "Move far up" },
   L = { "<cmd>wincmd L<cr>", "Move far right" },
-  f = { "<cmd>setlocal scrollbind!", "Toggle follow mode" },
+  f = { "<cmd>setlocal scrollbind!<cr>", "Toggle follow mode" },
   h = { "<cmd>wincmd h<cr>", "Move left" },
   j = { "<cmd>wincmd j<cr>", "Move down" },
   k = { "<cmd>wincmd k<cr>", "Move up" },
   l = { "<cmd>wincmd l<cr>", "Move right" },
-  m = {
-    function()
-      coroutine.resume(maximize_toggle)
-    end,
-    "Maximize window",
-  },
+  m = { function() coroutine.resume(maximize_toggle) end, "Maximize window" },
   s = { "<cmd>split<cr>", "Split horizontal" },
   t = { "<cmd>tabnew<cr>", "Create new tab" },
   v = { "<cmd>vsplit<cr>", "Split vertical" },
@@ -332,12 +299,6 @@ which_vkey "a" {
   ["|"] = { [[:Tabularize /|<cr>]], "Align at |" },
   ["}"] = { [[:Tabularize /}<cr>]], "Align at }" },
   ["¦"] = { [[:Tabularize /¦<cr>]], "Align at ¦" },
-}
-
--- Applications
-which_key "x" {
-  name = "Execute Apps",
-  -- Entries from builtins
 }
 
 -- vim:set fdm=marker:

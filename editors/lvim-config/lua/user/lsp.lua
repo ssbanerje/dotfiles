@@ -1,20 +1,19 @@
 -- Use builting LSP installation
-lvim.lsp.automatic_servers_installation = true
+lvim.lsp.installer.automatic_servers_installation = true
 
 -- No virtual text. Use trouble instead
 lvim.lsp.diagnostics.virtual_text = false
+lvim.lsp.diagnostics.float.focusable = false
+lvim.lsp.float.focusable = true
+lvim.lsp.diagnostics.float.source = "if_many"
 
 -- Enable code lens refresh
 lvim.lsp.code_lens_refresh = true
 
 -- Overrides for LVIM
-vim.list_extend(lvim.lsp.override, {
-  "dockerls",
-  "rust_analyzer",
-  "sumneko_lua",
-  "texlab",
-  "yamlls",
-})
+vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "texlab" })
+
+-- Null-LS Settings {{{
 
 -- Helper Functions {{{
 local function filter(exes)
@@ -27,32 +26,31 @@ local function filter(exes)
 end
 -- }}}
 
--- Linters {{{
-
-local linters = require("lvim.lsp.null-ls.linters")
-linters.setup(filter {
+require("lvim.lsp.null-ls.linters").setup(filter {
   {
     exe = "luacheck",
     args = { "-g" },
   },
   {
     exe = "vale",
-    filetypes = { "markdown", "tex" },
+    filetypes = {
+      "markdown",
+      "tex"
+    },
   },
   {
     exe = "shellcheck",
-    filetypes = { "sh", "bash", "zsh" },
+    filetypes = {
+      "sh",
+      "bash",
+      "zsh"
+    },
   },
   { exe = "chktex" },
   { exe = "vint" },
 })
 
--- }}}
-
--- Formatters {{{
-
-local formatters = require("lvim.lsp.null-ls.formatters")
-formatters.setup(filter {
+require("lvim.lsp.null-ls.formatters").setup(filter {
   { exe = "stylua" },
   {
     exe = "prettier",
