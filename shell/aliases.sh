@@ -17,9 +17,9 @@ function export_alias() {
 }
 
 # Ask before overwriting
-export_alias rm 'rm -i'
-export_alias mv 'mv -i'
-export_alias cp 'cp -i'
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
 
 # ls variants
 # This comes from OMZ in ZSH. This is for bash.
