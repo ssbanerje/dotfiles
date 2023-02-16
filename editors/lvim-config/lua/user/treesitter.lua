@@ -1,13 +1,14 @@
-lvim.builtin.treesitter.ensure_installed = "maintained"
+lvim.builtin.treesitter.context_commentstring.enable = true
 
 lvim.builtin.treesitter.matchup.enable = true
 
-lvim.builtin.treesitter.highlight.disable = {}
+lvim.builtin.treesitter.playground.enable = true
 
 lvim.builtin.treesitter.textobjects = {
   lookahead = true,
   select = {
     enable = true,
+    lookahead = true,
     keymaps = {
       ["af"] = "@function.outer",
       ["if"] = "@function.inner",
@@ -39,5 +40,3 @@ lvim.builtin.treesitter.textsubjects = {
     [";"] = "textsubjects-container-outer",
   },
 }
-
-lvim.builtin.treesitter.playground.enable = true

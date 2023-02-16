@@ -68,7 +68,7 @@ vim.opt.formatoptions = vim.opt.formatoptions
   - "o" -- Do not insert comment leader when hitting o/O in norm
   - "t" -- No auto wrap text
 
--- Use "rg" for vimgrep
+--Use "rg" for vimgrep
 if vim.fn.executable("rg") == 1 then
   vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case --hidden"
   vim.opt.grepformat = "%f:%l:%c:%m"
@@ -90,12 +90,11 @@ require("user.autocmds")
 -- Configure LVIM builtin plugins
 require("user.cmp")
 require("user.dap")
-require("user.dashboard")
 require("user.lualine")
 require("user.terminal")
 require("user.treesitter")
 
--- Configure LSP
+-- -- Configure LSP
 require("user.lsp")
 
 -- Load plugins

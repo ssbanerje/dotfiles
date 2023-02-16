@@ -4,7 +4,6 @@ lvim.plugins = {
   -- }}}
 
   -- LSP {{{
-  -- Trouble
   {
     "folke/trouble.nvim",
     config = function()
@@ -26,15 +25,11 @@ lvim.plugins = {
   {
     "simrat39/rust-tools.nvim",
     config = function()
-      -- Get server
-      local available, server = require("nvim-lsp-installer.servers").get_server("rust_analyzer")
-      if available and not server:is_installed() then
-        server:install()
-      end
-
       -- Setup rust-tools
       require("rust-tools").setup({
         tools = {
+          executor = require("rust-tools/executors").termopen,
+          reload_workspace_from_cargo_toml = true,
           autoSetHints = true,
           inlay_hints = {
             parameter_hints_prefix = " ",
@@ -44,22 +39,10 @@ lvim.plugins = {
           hover_actions = {auto_focus = true},
         },
         server = {
-          cmd = server._default_options.cmd,
           on_attach = require("lvim.lsp").common_on_attach,
           on_init = require("lvim.lsp").common_on_init,
           capabilities = require("lvim.lsp").capabilities,
           flags = require("lvim.lsp").flags,
-          settings = {
-            ["rust-analyzer"] = {
-              assist = { importGranularity = "crate" },
-              callInfo = { full = true },
-              cargo = { allFeatures = true },
-              checkOnSave = { allTargets = true, command = "clippy" },
-              inlayHints = { enable = true, typeHints = true, parameterHints = true},
-              lens = { enable = true },
-              procMacro = { enable = true },
-            },
-          },
         },
       })
 
@@ -69,7 +52,6 @@ lvim.plugins = {
         a = { "<cmd>RustEmitAsm<cr>", "Emit ASM" },
         c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
         d = { "<cmd>RustDebuggables<cr>", "Debuggables" },
-        h = { "<cmd>RustToggleInlayHints<cr>", "Toggle Hints" },
         j = { "<cmd>RustJoinLines<cr>", "Join Lines" },
         r = { "<cmd>RustRunnables<cr>", "Runnables" },
         m = { "<cmd>RustExpandMacro<cr>", "Expand Macro" },
@@ -201,7 +183,7 @@ lvim.plugins = {
   -- }}}
 
   -- Treesitter {{{
-  { "nvim-treesitter/nvim-treesitter-textobjects", branch = "0.5-compat" },
+  { "nvim-treesitter/nvim-treesitter-textobjects" },
   { "RRethy/nvim-treesitter-textsubjects" },
   { "nvim-treesitter/playground", after = "nvim-treesitter", cmd = "TSPlaygroundToggle" },
   -- }}}
@@ -254,19 +236,6 @@ lvim.plugins = {
     config = function()
       require("neoscroll").setup()
     end,
-  },
-  -- }}}
-
-  -- Markdown {{{
-  {
-    "iamcco/markdown-preview.nvim",
-    run = "cd app && npm install",
-    config = function()
-      vim.g.mkdp_auto_start = 1
-      vim.g.mkdp_page_title = "${name}"
-    end,
-    ft = "markdown",
-    cmd = "MarkdownPreview",
   },
   -- }}}
 

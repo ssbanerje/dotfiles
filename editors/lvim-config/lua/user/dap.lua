@@ -68,4 +68,28 @@ lvim.builtin.dap.on_config_done = function(dap)
       end,
     },
   }
+
+  dap.configurations.lua = {
+    {
+      type = "nlua",
+      request = "attach",
+      name = "Neovim attach",
+      host = function()
+        local value = vim.fn.input "Host [127.0.0.1]: "
+        if value ~= "" then
+          return value
+        end
+        return "127.0.0.1"
+      end,
+      port = function()
+        local val = tonumber(vim.fn.input "Port: ")
+        assert(val, "Please provide a port number")
+        return val
+      end,
+    },
+  }
+
+  -- lvim.builtin.which_key.mappings.d.f = { "<cmd>lua require('dapui').float_element()", "Floating element" }
+  -- lvim.builtin.which_key.mappings.d.x = { "<cmd>lua require('dapui').toggle()<cr>", "Run DAP-UI" }
+  -- lvim.builtin.which_key.vmappings.d.e = { ":lua require('dapui').eval()<cr>", "Evaluate expression" }
 end
