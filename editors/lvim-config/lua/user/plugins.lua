@@ -204,18 +204,6 @@ lvim.plugins = {
   -- UI {{{
   { "t9md/vim-choosewin", cmd = "ChooseWin", fn = "choosewin#start" },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    config = function()
-      require("indent_blankline").setup({
-        filetype_exclude = { "help", "terminal", "dashboard", "packer", "lspinfo", "qf" },
-        buftype_exclude = { "terminal", "nofile" },
-        show_current_context = true,
-        show_trailing_blankline_indent = false,
-      })
-    end,
-    event = "BufRead",
-  },
-  {
     "norcalli/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({ "*" }, {
@@ -230,7 +218,6 @@ lvim.plugins = {
     end,
     cmd = "ColorizerToggle"
   },
-  { "folke/tokyonight.nvim" },
   {
     "karb94/neoscroll.nvim",
     config = function()
@@ -239,17 +226,6 @@ lvim.plugins = {
   },
   -- }}}
 
-  -- DAP {{{
-  {
-    "rcarriga/nvim-dap-ui",
-    config = function()
-      require("dapui").setup()
-    end,
-    ft = { "python", "rust", "cpp", "c" },
-    requires = { "mfussenegger/nvim-dap" },
-    disable = not lvim.builtin.dap.active,
-  },
-  -- }}}
 }
 
 -- vim:set fdm=marker:
