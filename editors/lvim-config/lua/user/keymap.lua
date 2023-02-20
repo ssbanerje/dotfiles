@@ -253,8 +253,9 @@ which_key "b" {
 -- LSP commands
 which_key "l" {
   I = { "<cmd>Telescope lsp_implementations<cr>", "Implementations" },
-  Q = { "<cmd>Trouble quickfix<cr>", "Quickfix" },
-  R = { "<cmd>Trouble lsp_references<cr>", "Goto References" },
+  W = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics" },
+  D = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics" },
+  R = { "<cmd>TroubleToggle lsp_references<cr>", "Goto References" },
   T = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Goto Type Definition" },
   t = { "<cmd>TroubleToggle<cr>", "Trouble" },
 }

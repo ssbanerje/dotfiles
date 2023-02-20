@@ -12,16 +12,17 @@ vim.opt.writebackup = true
 vim.opt.swapfile = true
 vim.opt.undofile = true
 vim.opt.undolevels = 1000
+vim.opt.undodir = vim.fn.stdpath "cache" .. "/undo"
 
 -- Themeing
 vim.opt.cmdheight = 1
 local status_ok, _ = pcall(require, "lualine.themes.tokyonight")
 if status_ok then
-  lvim.colorscheme = "tokyonight"
+  lvim.colorscheme = "tokyonight-night"
 end
-vim.g.tokyonight_style = "night"
-vim.g.tokyonight_sidebars = { "qf", "Outline" }
-vim.g.tokyonight_colors = { border = "fg_gutter" }
+vim.tbl_extend("force", lvim.builtin.theme.tokyonight.options, { on_colors = function(c) c.border = c.fg_gutter end })
+vim.opt.title = true
+vim.opt.titlestring = "%<%F%=%l/%L - nvim"
 
 -- Line numbers
 vim.opt.number = true
@@ -94,7 +95,7 @@ require("user.lualine")
 require("user.terminal")
 require("user.treesitter")
 
--- -- Configure LSP
+-- Configure LSP
 require("user.lsp")
 
 -- Load plugins

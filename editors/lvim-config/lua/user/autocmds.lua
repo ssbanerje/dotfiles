@@ -7,9 +7,9 @@ _G.user_autocmd_actions = {}
 local function augroup(name)
   return function(entries)
     name = "lvim_user_" .. name
-    vim.api.nvim_create_augroup(name, {})
+    local grp = vim.api.nvim_create_augroup(name, { clear = true })
     for _, entry in ipairs(entries) do
-      entry.options.group = name
+      entry.options.group = grp
       vim.api.nvim_create_autocmd(entry.trigger, entry.options)
     end
   end
@@ -25,9 +25,7 @@ local function autocmd(trigger, pattern, action)
   aucmd.options = {}
   aucmd.options.pattern = pattern
   if type(action) == "function" then
-    local id = #_G.user_autocmd_actions + 1
-    _G.user_autocmd_actions[id] = action
-    aucmd.options.command = "lua _G.user_autocmd_actions[" .. id .. "]()"
+    aucmd.options.callback = action
   else
     aucmd.options.command = action
   end
@@ -43,12 +41,12 @@ local config_folder = vim.fn.fnamemodify(vim.fn.resolve(require("lvim.config"):g
 
 augroup "general_settings" {
   -- Reload config
-  autocmd("BufWritePost", config_folder .. "/lua/user/*", "lua require('lvim.config'):reload()"),
+  autocmd({ "BufWritePost" }, config_folder .. "/lua/user/*", function() require('lvim.config'):reload() end),
 }
 
 augroup "custom_theme" {
   -- Style when entering buffers
-  autocmd("BufEnter,FocusGained,InsertLeave,WinEnter", "*", function()
+  autocmd({ "BufEnter" , "FocusGained", "InsertLeave", "WinEnter" }, "*", function()
     if vim.opt.nu and vim.fn.mode() ~= "i" then
       vim.opt.rnu = true
     end
@@ -56,7 +54,7 @@ augroup "custom_theme" {
   end),
 
   -- Style when leaving buffers
-  autocmd("BufLeave,FocusLost,InsertEnter,WinLeave", "*", function()
+  autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, "*", function()
     if vim.opt.nu then
       vim.opt.rnu = false
     end
@@ -66,13 +64,13 @@ augroup "custom_theme" {
 
 augroup "vim_help_navigation" {
   -- Navigate vim help
-  autocmd("Filetype", "help", "nnoremap <buffer><silent> gd :h <C-R><C-W><cr>"),
-  autocmd("Filetype", "help", 'vnoremap <buffer><silent> gd "*y:h <C-R>*<cr>'),
+  autocmd({ "Filetype" }, "help", "nnoremap <buffer><silent> gd :h <C-R><C-W><cr>"),
+  autocmd({ "Filetype" }, "help", 'vnoremap <buffer><silent> gd "*y:h <C-R>*<cr>'),
 }
 
 augroup "git" {
   -- Git rebase
-  autocmd("FileType", "gitrebase", function()
+  autocmd({ "FileType" }, "gitrebase", function()
     local remaps = {
       D = "^ciwdrop<esc>",
       E = "^ciwedit<esc>",
@@ -88,7 +86,7 @@ augroup "git" {
   end),
 
   -- Git undofiles
-  autocmd("BufWritePre", "COMMIT_EDITMSG,MERGE_MSG", "setlocal noundofile"),
+  autocmd({ "BufWritePre" }, "COMMIT_EDITMSG,MERGE_MSG", "setlocal noundofile"),
 }
 
 -- vim:set fdm=marker:

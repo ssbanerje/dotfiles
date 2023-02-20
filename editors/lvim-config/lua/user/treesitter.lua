@@ -40,3 +40,5 @@ lvim.builtin.treesitter.textsubjects = {
     [";"] = "textsubjects-container-outer",
   },
 }
+
+lvim.builtin.treesitter.rainbow.enable = true
