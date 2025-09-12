@@ -3,7 +3,6 @@
     - shell:
         - ["curl -fsSL https://deb.nodesource.com/setup_16.x | sudo bash -", "Add NodeJS PPA"]
         - ["sudo add-apt-repository ppa:neovim-ppa/unstable", "Add Neovim PPA"]
-        - ["sudo add-apt-repository ppa:lazygit-team/release", "Add LazyGit PPA"]
         - ["sudo apt-get update"]
     - apt:
         - neovim

@@ -1,11 +1,11 @@
-FROM ubuntu:latest
+FROM ubuntu:rolling
 
 LABEL org.opencontainers.image.authors="Subho Sankar Banerjee <ssbanerje@gmail.com>"
 LABEL org.opencontainers.image.title="Dotfiles"
 LABEL org.opencontainers.image.source="https://github.com/ssbanerje/dotfiles"
 
 ARG user=dotuser
-ARG uid=1000
+ARG uid=1001
 
 # Setup prereq packages
 USER root
