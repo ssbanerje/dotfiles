@@ -42,9 +42,47 @@ fi
 # Disable P10K prompt
 export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 
-# Load antigen + plugins
-source "$HOME/.config/antigen.zsh"
-antigen init "$HOME/.config/antigenrc"
+# Load Antidote + plugins (Static compilation)
+function _bootstrap_plugins() {
+  local zsh_plugins="$HOME/.zsh_plugins.zsh"
+  local -a plugin_files
+  plugin_files+=("$HOME/.config/zsh_plugins.txt")
+
+  local uname_s
+  uname_s=$(uname -s)
+  if [[ "$uname_s" == "Darwin" ]]; then
+    plugin_files+=("$HOME/.config/zsh_plugins_macos.txt")
+  elif [[ "$uname_s" == "Linux" ]]; then
+    if command -v apt-get &> /dev/null; then
+      plugin_files+=("$HOME/.config/zsh_plugins_ubuntu.txt")
+    elif command -v pacman &> /dev/null; then
+      plugin_files+=("$HOME/.config/zsh_plugins_arch.txt")
+    fi
+  fi
+
+  local regenerate=false
+  if [[ ! -f "$zsh_plugins" ]]; then
+    regenerate=true
+  else
+    for f in $plugin_files; do
+      if [[ "$f" -nt "$zsh_plugins" ]]; then
+        regenerate=true
+        break
+      fi
+    done
+  fi
+
+  if $regenerate; then
+    echo "Regenerating Zsh plugins cache..."
+    source "$HOME/.config/antidote/antidote.zsh"
+    zstyle ':antidote:*' zcompile 'yes'
+    cat $plugin_files | antidote bundle >|"$zsh_plugins"
+  fi
+
+  source "$zsh_plugins"
+}
+_bootstrap_plugins
+unset -f _bootstrap_plugins
 
 # Make fancy-ctrl-z work with zvm
 zvm_define_widget fancy-ctrl-z fancy-ctrl-z

@@ -20,3 +20,6 @@
 [submodule "installer/dotbot-pip"]
 	path = installer/plugins/dotbot-pip
 	url = https://github.com/sobolevn/dotbot-pip.git
+[submodule "shell/antidote"]
+	path = shell/antidote
+	url = https://github.com/mattmc3/antidote.git

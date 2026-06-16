@@ -1,0 +1,2 @@
+ohmyzsh/ohmyzsh path:plugins/debian
+ohmyzsh/ohmyzsh path:plugins/ubuntu
