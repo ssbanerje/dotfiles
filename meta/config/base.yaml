@@ -1,4 +1,9 @@
 # --- Base Configuration ---
+- plugins:
+    - installer/plugins
+    - installer/plugins/dotbot-ifplatform
+    - installer/plugins/dotbot-template
+
 - defaults:
     link:
       force: true

@@ -9,14 +9,46 @@ declare -a ARGS=()
 declare -a FLAGS=()
 while (( "$#" )); do
   case "$1" in
+    --)
+      shift
+      while (( "$#" )); do
+        ARGS+=("$1")
+        shift
+      done
+      break
+      ;;
+    -d|--base-directory|-p|--plugin|--plugin-dir)
+      if (( "$#" < 2 )); then
+        echo "Error: option '$1' requires an argument" >&2
+        exit 1
+      fi
+      FLAGS+=("$1" "$2")
+      shift 2
+      ;;
+    --only|--except)
+      flag="$1"
+      FLAGS+=("${flag}")
+      shift
+      count=0
+      while (( "$#" )) && [[ "$1" != -* ]]; do
+        FLAGS+=("$1")
+        count=$(( count + 1 ))
+        shift
+      done
+      if (( count == 0 )); then
+        echo "Error: option '${flag}' requires at least one directive" >&2
+        exit 1
+      fi
+      ;;
     -*)
       FLAGS+=("$1")
+      shift
       ;;
     *)
       ARGS+=("$1")
+      shift
       ;;
   esac
-  shift
 done
 
 if [[ "${#ARGS[@]}" -eq 0 ]]; then
@@ -39,4 +71,4 @@ while IFS= read -r config || [[ -n "${config}" ]]; do
   fi
 done < "${PROFILE_FILE}"
 
-exec "${BASEDIR}/install" ${FLAGS[@]+"${FLAGS[@]}"} "${CONFIGS[@]}" "$@"
+exec "${BASEDIR}/install" ${FLAGS[@]+"${FLAGS[@]}"} -- "${CONFIGS[@]}" "$@"

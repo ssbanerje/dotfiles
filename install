@@ -9,31 +9,67 @@ CONFIGDIR="${BASEDIR}/meta/config"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
-if [[ ! -x "${DOTBOT}" || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" ]]; then
+if [[ ! -x "${DOTBOT}" || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" || ! -e "${PLUGINDIR}/dotbot-template/lib/jinja/.git" ]]; then
   git -C "${BASEDIR}" submodule update --init --recursive
 fi
 
 declare -a REQUESTED_CONFIGS=("base")
 declare -a FLAGS=()
+declare -a ONLY_DIRECTIVES=()
+declare -a SKIP_DIRECTIVES=()
+HAS_ONLY=0
+HAS_SKIP=0
+
 while (( "$#" )); do
   case "$1" in
+    --)
+      shift
+      while (( "$#" )); do
+        REQUESTED_CONFIGS+=("$1")
+        shift
+      done
+      break
+      ;;
+    -d|--base-directory|-p|--plugin|--plugin-dir)
+      if (( "$#" < 2 )); then
+        echo "Error: option '$1' requires an argument" >&2
+        exit 1
+      fi
+      FLAGS+=("$1" "$2")
+      shift 2
+      ;;
+    --only)
+      HAS_ONLY=1
+      shift
+      while (( "$#" )) && [[ "$1" != -* ]]; do
+        ONLY_DIRECTIVES+=("$1")
+        shift
+      done
+      ;;
+    --except)
+      HAS_SKIP=1
+      shift
+      while (( "$#" )) && [[ "$1" != -* ]]; do
+        SKIP_DIRECTIVES+=("$1")
+        shift
+      done
+      ;;
     -*)
       FLAGS+=("$1")
+      shift
       ;;
     *)
       REQUESTED_CONFIGS+=("$1")
+      shift
       ;;
   esac
-  shift
 done
 
-TMPCONFIG="$(mktemp "${TMPDIR:-/tmp}/dotbot.XXXXXX.yaml")"
-trap 'rm -f "${TMPCONFIG}"' EXIT
-
 declare -a SEEN_CONFIGS=()
+declare -a CONFIG_FILES=()
 for config in "${REQUESTED_CONFIGS[@]}"; do
   already_seen=0
-  for seen in "${SEEN_CONFIGS[@]+"${SEEN_CONFIGS[@]}"}"; do
+  for seen in ${SEEN_CONFIGS[@]+"${SEEN_CONFIGS[@]}"}; do
     if [[ "${seen}" == "${config}" ]]; then
       already_seen=1
       break
@@ -50,14 +86,29 @@ for config in "${REQUESTED_CONFIGS[@]}"; do
     exit 1
   fi
   echo "Adding configuration ${config}"
-  cat "${config_path}" >> "${TMPCONFIG}"
-  printf '\n' >> "${TMPCONFIG}"
+  CONFIG_FILES+=("${config_path}")
 done
 
-declare -a PLUGINS=(
-  "--plugin-dir" "${PLUGINDIR}"
-  "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform"
-  "--plugin-dir" "${PLUGINDIR}/dotbot-template"
-)
+if (( HAS_ONLY )); then
+  if [[ "${#ONLY_DIRECTIVES[@]}" -eq 0 ]]; then
+    echo "Error: option '--only' requires at least one directive" >&2
+    exit 1
+  fi
+  ONLY_DIRECTIVES+=("plugins")
+  while IFS= read -r directive; do
+    if [[ -n "${directive}" ]]; then
+      ONLY_DIRECTIVES+=("${directive}")
+    fi
+  done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*(if(not)?[a-z0-9_]+):.*/\1/p' "${CONFIG_FILES[@]}" | sort -u)
+  FLAGS+=("--only" "${ONLY_DIRECTIVES[@]}")
+fi
 
-"${DOTBOT}" ${FLAGS[@]+"${FLAGS[@]}"} -d "${BASEDIR}" "${PLUGINS[@]}" -c "${TMPCONFIG}"
+if (( HAS_SKIP )); then
+  if [[ "${#SKIP_DIRECTIVES[@]}" -eq 0 ]]; then
+    echo "Error: option '--except' requires at least one directive" >&2
+    exit 1
+  fi
+  FLAGS+=("--except" "${SKIP_DIRECTIVES[@]}")
+fi
+
+exec "${DOTBOT}" ${FLAGS[@]+"${FLAGS[@]}"} -d "${BASEDIR}" -c "${CONFIG_FILES[@]}"

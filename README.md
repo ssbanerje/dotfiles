@@ -45,14 +45,22 @@ cd dotfiles
 ```
 
 ### Details
-- Update configuration files for user.
-  - `meta/config/git.yaml`
+- Update configuration files for user:
+  - `meta/config/git.yaml` (supports inline `params` or machine-local overrides via `params_file`)
 - The installer script can load profiles located in `meta/profiles/`:
-  - `macos`: For MacOS
+  - `macos`: For macOS
   - `ubuntu`: For Ubuntu desktop
   - `ubuntu-minimal`: For text-based Ubuntu distributions
-  - `archlinux-minimal`: For text-based Archlinux distributions
-- To install individual components (from `meta/config/`) use the `./install` script.
+  - `archlinux-minimal`: For text-based Arch Linux distributions
+- Preview changes safely without modifying the system using `--dry-run` (`-n`):
+  ```bash
+  ./install_profile --dry-run macos
+  ```
+- Re-sync only symlinks and templates (skipping package managers and shell hooks):
+  ```bash
+  ./install_profile macos --only link template
+  ```
+- To install individual components (from `meta/config/`) use `./install` (e.g. `./install git tmux`).
 - Once installed, the `scripts/shim.sh` script is accessible as the `shim` command.
 
 
