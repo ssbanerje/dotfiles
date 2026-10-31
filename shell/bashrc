@@ -1,53 +1,46 @@
 #!/usr/bin/env bash
 
 # Bash Options {{{
-#Control history saves
 HISTCONTROL=ignoreboth:ignoredups:ignorespace
 shopt -s histappend
-
-# Make bash check its window size after a process completes
 shopt -s checkwinsize
 # }}}
 
-# Helper function {{{
-
-function CHECK_AND_SOURCE() {
-  while [[ "$#" -ne 0 ]]; do
-    if [[ -r "$1" ]]; then
-      source "$1"
-    fi
-    shift
+function _check_and_source() {
+  local f
+  for f in "$@"; do
+    [[ -n "$f" && -r "$f" ]] && source "$f"
   done
 }
 
-# }}}
-
-# Environment variables
-CHECK_AND_SOURCE \
+# Environment variables & aliases
+_check_and_source \
   "$HOME/.config/env.sh" \
   "$HOME/.config/aliases.sh"
 
 # Skip the remaining file for non-interactive shells
 if [[ "$-" != *i* ]]; then
-  unset CHECK_AND_SOURCE
+  unset -f _check_and_source
   return
 fi
 
 # Bash Completion + Keybindings {{{
 
-if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
-  CHECK_AND_SOURCE \
-    "$(shopt -oq posix || echo '/usr/share/bash-completion/bash_completion')" \
+if [[ "$UNAME" == "Linux" ]]; then
+  shopt -oq posix || _check_and_source /usr/share/bash-completion/bash_completion
+  _check_and_source \
     /usr/share/doc/fzf/examples/completion.bash \
     /usr/share/doc/fzf/examples/key-bindings.bash \
     /usr/share/fzf/completion.bash \
     /usr/share/fzf/key-bindings.bash
-elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
-  CHECK_AND_SOURCE \
-    "${BREW_PREFIX:=$(brew --prefix)}/etc/profile.d/bash_completion.sh" \
+elif [[ "$UNAME" == "Darwin" && -n "${BREW_PREFIX:-}" ]]; then
+  _check_and_source \
+    "$BREW_PREFIX/etc/profile.d/bash_completion.sh" \
     "$BREW_PREFIX/opt/fzf/shell/completion.bash" \
-    "$BREW_PREFIX/opt/fzf/shell/key-bindings.bash" \
-    "$([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.bash")"
+    "$BREW_PREFIX/opt/fzf/shell/key-bindings.bash"
+  if [[ "${TERM_PROGRAM:-}" == "iTerm.app" ]]; then
+    _check_and_source "$HOME/.config/iterm2_shell_integration.bash"
+  fi
 fi
 
 # }}}
@@ -56,9 +49,8 @@ fi
 set -o vi
 
 # Theme
-CHECK_AND_SOURCE \
-  "$HOME/.config/bash_prompt.sh"
+_check_and_source "$HOME/.config/bash_prompt.sh"
 
-unset CHECK_AND_SOURCE
+unset -f _check_and_source
 
 # vim:foldmethod=marker

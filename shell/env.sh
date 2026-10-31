@@ -2,81 +2,81 @@
 
 # Setup environment variables {{{
 
-# Set locale
-if [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
+UNAME="${UNAME:-$(uname -s)}"
+
+# Set locale on macOS
+if [[ "$UNAME" == "Darwin" ]]; then
   export LANG='en_US.UTF-8'
   export LANGUAGE='en_US:en'
-  export LC_CTYPE='UTF-8'
-  export LC_NUMERIC='en_US.UTF-8'
-  export LC_TIME='en_US.UTF-8'
-  export LC_COLLATE='en_US.UTF-8'
-  export LC_MONETARY='en_US.UTF-8'
-  export LC_MESSAGES='en_US.UTF-8'
-  export LC_PAPER='en_US.UTF-8'
-  export LC_NAME='en_US.UTF-8'
-  export LC_ADDRESS='en_US.UTF-8'
-  export LC_TELEPHONE='en_US.UTF-8'
   export LC_ALL='en_US.UTF-8'
-  export LC_MEASUREMENT='en_US.UTF-8'
-  export LC_IDENTIFICATION='en_US.UTF-8'
+
+  if [[ -z "${BREW_PREFIX:-}" ]]; then
+    if [[ -d /opt/homebrew ]]; then
+      export BREW_PREFIX="/opt/homebrew"
+    elif [[ -d /usr/local/Homebrew || -x /usr/local/bin/brew ]]; then
+      export BREW_PREFIX="/usr/local"
+    fi
+  fi
 fi
 
 # Setup less
 [[ -x /usr/bin/lesspipe ]] && eval "$(/usr/bin/lesspipe)"
-if type less &> /dev/null; then
+if command -v less >/dev/null 2>&1; then
   export PAGER="less"
   export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 fi
 
-# Setup GPG
-export GPG_TTY="$TTY"
-
-# Vim all the way
+# Default editor
 export VISUAL="nvim"
 export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
 
+# fzf defaults
+export FZF_DEFAULT_OPTS="--border"
+
 # }}}
 
 # Setup PATH {{{
 
-# Helper Functions {{{
 function PREPEND_PATH() {
-  while [[ "$#" -ne 0 ]]; do
-    if [[ "$PATH" != *:$1:* ]]; then
-      export PATH="$1:$PATH"
-    fi
-    shift
+  local dir
+  for dir in "$@"; do
+    [[ -n "$dir" && -d "$dir" ]] || continue
+    case ":$PATH:" in
+      *":$dir:"*) ;;
+      *) export PATH="$dir${PATH:+:$PATH}" ;;
+    esac
   done
 }
 
 function APPEND_PATH() {
-  while [[ "$#" -ne 0 ]]; do
-    if [[ "$PATH" != *:$1:* ]]; then
-      export PATH="$PATH:$1"
-    fi
-    shift
+  local dir
+  for dir in "$@"; do
+    [[ -n "$dir" && -d "$dir" ]] || continue
+    case ":$PATH:" in
+      *":$dir:"*) ;;
+      *) export PATH="${PATH:+$PATH:}$dir" ;;
+    esac
   done
 }
-# }}}
 
 if [[ -x /usr/libexec/path_helper ]]; then
   eval "$(/usr/libexec/path_helper -s)"
 fi
 
-if [[ "${UNAME:=$(uname -s)}" == 'Linux' ]]; then
+if [[ "$UNAME" == "Linux" ]]; then
   APPEND_PATH \
     /sbin \
     /usr/sbin \
     /usr/local/sbin \
-    "$([[ -d /usr/local/cuda ]] && echo /usr/local/cuda/bin)"
-elif [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
+    /usr/local/cuda/bin
+elif [[ "$UNAME" == "Darwin" && -n "${BREW_PREFIX:-}" ]]; then
   PREPEND_PATH \
-    /usr/local/bin \
-    /usr/local/sbin \
-    /usr/local/opt/llvm/bin \
-    /usr/local/opt/python/libexec/bin
+    "$BREW_PREFIX/bin" \
+    "$BREW_PREFIX/sbin" \
+    "$BREW_PREFIX/opt/llvm/bin" \
+    "$BREW_PREFIX/opt/python/libexec/bin"
 fi
 
 PREPEND_PATH \
@@ -84,8 +84,7 @@ PREPEND_PATH \
   "$HOME/.cargo/bin" \
   "$HOME/.npm-global/bin"
 
-unset -f PREPEND_PATH
-unset -f APPEND_PATH
+unset -f PREPEND_PATH APPEND_PATH
 
 # }}}
 

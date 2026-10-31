@@ -8,7 +8,7 @@ setopt AUTOCD
 setopt ALWAYS_TO_END COMPLETE_IN_WORD
 setopt AUTOPUSHD PUSHDMINUS PUSHDSILENT PUSHDTOHOME PUSHDIGNOREDUPS
 setopt CORRECT
-setopt COMPLETE_ALIASES COMPLETE_IN_WORD
+setopt COMPLETE_ALIASES
 setopt EXTENDED_GLOB
 setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
 setopt LOCAL_OPTIONS LOCAL_TRAPS
@@ -17,45 +17,50 @@ setopt LOCAL_OPTIONS LOCAL_TRAPS
 
 # Setup environment {{{
 
-# Environement config
 source "$HOME/.config/env.sh"
-
-# Prompt config
 source "$HOME/.p10k.zsh"
 
-# Setup Homebrew FPATH
-if [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
-  if (( ! ${fpath[(I)/usr/local/share/zsh/site-functions]} )); then
-    fpath+=("${BREW_PREFIX:=$(brew --prefix)}/share/zsh/site-functions")
+# Setup Homebrew FPATH without spawning `brew --prefix`
+if [[ "$UNAME" == "Darwin" && -n "$BREW_PREFIX" ]]; then
+  typeset site_fn="$BREW_PREFIX/share/zsh/site-functions"
+  if [[ -d "$site_fn" ]] && (( ! ${fpath[(Ie)$site_fn]} )); then
+    fpath=("$site_fn" $fpath)
   fi
+  unset site_fn
 fi
 
 # }}}
 
 # Skip the remaining file for non-interactive shells
-if [[ "$-" != *i* ]]; then
-  return
-fi
+[[ "$-" == *i* ]] || return
 
 # Load Plugins {{{
 
-# Disable P10K prompt
 export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 
-# Load Antidote + plugins (Static compilation)
+# Initialize zsh-vi-mode immediately so subsequent plugin/user keymaps persist
+export ZVM_INIT_MODE=sourcing
+
+# OMZ plugin configuration (must precede bundle load)
+zstyle ':omz:plugins:gpg-agent' ssh-support no
+zstyle ':omz:plugins:ssh-agent' quiet yes
+zstyle ':omz:plugins:ssh-agent' lazy yes
+zstyle ':omz:plugins:ssh-agent' agent-forwarding yes
+if [[ "$UNAME" == "Darwin" ]]; then
+  zstyle ':omz:plugins:ssh-agent' ssh-add-args --apple-load-keychain
+  zstyle ':omz:plugins:iterm2' shell-integration yes
+fi
+
 function _bootstrap_plugins() {
   local zsh_plugins="$HOME/.zsh_plugins.zsh"
-  local -a plugin_files
-  plugin_files+=("$HOME/.config/zsh_plugins.txt")
+  local -a plugin_files=("$HOME/.config/zsh_plugins.txt")
 
-  local uname_s
-  uname_s=$(uname -s)
-  if [[ "$uname_s" == "Darwin" ]]; then
+  if [[ "$UNAME" == "Darwin" ]]; then
     plugin_files+=("$HOME/.config/zsh_plugins_macos.txt")
-  elif [[ "$uname_s" == "Linux" ]]; then
-    if command -v apt-get &> /dev/null; then
+  elif [[ "$UNAME" == "Linux" ]]; then
+    if (( $+commands[apt-get] )); then
       plugin_files+=("$HOME/.config/zsh_plugins_ubuntu.txt")
-    elif command -v pacman &> /dev/null; then
+    elif (( $+commands[pacman] )); then
       plugin_files+=("$HOME/.config/zsh_plugins_arch.txt")
     fi
   fi
@@ -64,7 +69,8 @@ function _bootstrap_plugins() {
   if [[ ! -f "$zsh_plugins" ]]; then
     regenerate=true
   else
-    for f in $plugin_files; do
+    local f
+    for f in "${plugin_files[@]}"; do
       if [[ "$f" -nt "$zsh_plugins" ]]; then
         regenerate=true
         break
@@ -73,10 +79,10 @@ function _bootstrap_plugins() {
   fi
 
   if $regenerate; then
-    echo "Regenerating Zsh plugins cache..."
     source "$HOME/.config/antidote/antidote.zsh"
     zstyle ':antidote:*' zcompile 'yes'
-    cat $plugin_files | antidote bundle >|"$zsh_plugins"
+    antidote bundle < <(cat "${plugin_files[@]}") >|"$zsh_plugins"
+    zcompile "$zsh_plugins" 2>/dev/null || true
   fi
 
   source "$zsh_plugins"
@@ -84,61 +90,25 @@ function _bootstrap_plugins() {
 _bootstrap_plugins
 unset -f _bootstrap_plugins
 
-# Make fancy-ctrl-z work with zvm
+# Make fancy-ctrl-z work in zsh-vi-mode insert mode
 zvm_define_widget fancy-ctrl-z fancy-ctrl-z
 zvm_bindkey viins '^Z' fancy-ctrl-z
 
 # }}}
 
-# Deferred Loading Helper {{{
-
-function CHECK_AND_SOURCE_DEFERRED() {
-  while [[ "$#" -ne 0 ]]; do
-    if [[ -r "$1" ]]; then
-      if [[ "$2" == deferarg* ]]; then
-        zsh-defer "$(echo $2 | sed 's/^deferarg(\(.*\))$/\1/')" source "$1"
-        shift
-      else
-        zsh-defer source "$1"
-      fi
-    fi
-    shift
-  done
-}
-
-# }}}
-
-# Completion and Keybindings {{{
+# Completion styling {{{
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:*:*:processes' command "ps -u $(whoami) -o pid,user,comm -w -w"
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
 zstyle ':completion:*:ssh:*' tag-order hosts users
 zstyle ':completion:*:ssh:*' group-order hosts-domain hosts-host users hosts-ipaddr
 zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
-if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
-  CHECK_AND_SOURCE_DEFERRED \
-    /usr/share/doc/fzf/examples/completion.zsh \
-    /usr/share/doc/fzf/examples/key-bindings.zsh \
-    /usr/share/fzf/completion.zsh \
-    /usr/share/fzf/key-bindings.zsh
-elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
-  CHECK_AND_SOURCE_DEFERRED \
-    $([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.zsh") \
-    "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/completion.zsh" \
-    "${BREW_PREFIX:=$(brew --prefix)}/opt/fzf/shell/key-bindings.zsh"
-fi
-
-export FZF_DEFAULT_OPTS='--border'
-
 # }}}
 
-# Load aliases and colors
-CHECK_AND_SOURCE_DEFERRED \
-  "$HOME/.config/aliases.sh"
-
-unset -f CHECK_AND_SOURCE_DEFERRED
+# Load aliases deferred
+[[ -r "$HOME/.config/aliases.sh" ]] && zsh-defer source "$HOME/.config/aliases.sh"
 
 # vim:foldmethod=marker
