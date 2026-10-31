@@ -117,3 +117,32 @@ def test_dot_cli_doctor_and_bench(host: Host) -> None:
     assert bench.rc == 0, f'dot bench failed:\n{bench.stdout}\n{bench.stderr}'
     for target in ('zsh -i -c exit', 'bash -i -c exit', 'nvim --headless +qa'):
         assert f'[ok]   {target}' in bench.stdout
+
+
+ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m|[\x01\x02]')
+
+
+def test_starship_prompt_shortening_and_git_icons(host: Host) -> None:
+    snippet = (
+        'source "$HOME/.config/env.sh" && '
+        'tmp="$(mktemp -d "$HOME/starshiptmp.XXXXXX")" && '
+        'trap \'rm -rf "$tmp"\' EXIT && '
+        'mkdir -p "$tmp/longdirone/longdirtwo/Workshop" && '
+        'cd "$tmp/longdirone/longdirtwo/Workshop" && '
+        'p1="$(STARSHIP_SHELL=sh starship prompt)" && '
+        'git init -q -b main && '
+        'p2="$(STARSHIP_SHELL=sh starship prompt)" && '
+        'mkdir dotfiles && cd dotfiles && '
+        'p3="$(STARSHIP_SHELL=sh starship prompt)" && '
+        'rp="$(STARSHIP_SHELL=sh starship prompt --right)" && '
+        'printf "%s\\n---\\n%s\\n---\\n%s\\n---\\n%s\\n" "$p1" "$p2" "$p3" "$rp"'
+    )
+    res = host.run('bash -c %s', snippet)
+    assert res.rc == 0, res.stderr
+    cleaned = ANSI_ESCAPE_RE.sub('', res.stdout)
+    p1, p2, p3, rp = [part.strip() for part in cleaned.split('\n---\n')]
+
+    assert ' ~/s/l/l/Workshop »' in p1
+    assert ' ~/s/l/l/Workshop on   main »' in p2
+    assert ' ~/s/l/l/W/dotfiles on   main »' in p3
+    assert rp.startswith('on ') and '@' in rp
