@@ -27,14 +27,18 @@ COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd "/home/${user}/.dotfiles" && \
     ./install_profile -vv -x archlinux-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    sudo usermod -s /usr/bin/zsh "${user}" && \
     sudo pacman -Scc --noconfirm && \
     sudo rm -rf /tmp/* && \
     rm -rf "/home/${user}/.cache/pip" "/home/${user}/.cache/yay" "/home/${user}/.npm/_cacache" && \
     find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
-# Take command from user
-ENTRYPOINT ["/bin/bash", "-l", "-c"]
-CMD []
+ENV SHELL=/usr/bin/zsh \
+    EDITOR=nvim \
+    VISUAL=nvim \
+    PATH=/home/${user}/.local/bin:/home/${user}/.cargo/bin:/home/${user}/.npm-global/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+CMD ["zsh"]
 
 FROM base AS mac
 ARG user=dotuser

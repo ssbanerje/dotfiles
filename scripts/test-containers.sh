@@ -22,10 +22,20 @@ EOF
 smoke_test_image() {
   local image="$1"
   echo "==> Smoke-testing ${image}"
-  docker run --rm -e TERM=xterm-256color "$image" '
+  echo "--- Checking default zero-arg container startup (CMD [\"zsh\"])"
+  docker run --rm "$image"
+  echo "--- Checking direct multi-argument command execution and PATH"
+  docker run --rm "$image" nvim --version >/dev/null
+  docker run --rm -e TERM=xterm-256color "$image" bash -lc '
     set -euo pipefail
-    echo "--- Checking passwordless sudo"
+    echo "--- Checking passwordless sudo and login shell"
     sudo -n true
+    test "${SHELL}" = "/usr/bin/zsh"
+    echo "--- Checking Git template and bin/ symlinks"
+    test -s "$HOME/.gitconfig"
+    command -v shim
+    command -v ftpane
+    test ! -e "$HOME/.local/bin/lock-screen"
     echo "--- Checking interactive zsh startup, zoxide, and Antidote cache"
     test -s "$HOME/.zsh_plugins.zsh"
     test -d "$HOME/.cache/antidote"
@@ -89,7 +99,7 @@ build_and_test() {
     --build-arg user=dotuser \
     --build-arg "${uid_arg}" \
     -t "${tag}" \
-    "${extra_tag_args[@]}" \
+    ${extra_tag_args[@]+"${extra_tag_args[@]}"} \
     "${REPO_ROOT}"
 
   smoke_test_image "${tag}"
@@ -112,7 +122,7 @@ fi
 TARGET="${1:-all}"
 TARGET_UID="${2:-$(id -u)}"
 
-if [[ ! -e "${REPO_ROOT}/installer/dotbot/bin/dotbot" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-ifplatform/lib/distro/.git" ]]; then
+if [[ ! -x "${REPO_ROOT}/installer/dotbot/bin/dotbot" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-ifplatform/lib/distro/.git" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-template/lib/jinja/.git" ]]; then
   git -C "${REPO_ROOT}" submodule update --init --recursive
 fi
 
