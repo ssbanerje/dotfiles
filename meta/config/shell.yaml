@@ -4,7 +4,7 @@
         - zsh
         - fzf
         - zoxide
-        - silversearcher-ag
+        - tealdeer
         - libnotify-bin
         - ipython3
     - shell:
@@ -18,8 +18,8 @@
         - zsh
         - fzf
         - zoxide
+        - tealdeer
         - starship
-        - the_silver_searcher
         - libnotify
         - ipython
 
@@ -29,10 +29,16 @@
         - bash-completion
         - fzf
         - zoxide
+        - tealdeer
         - starship
         - coreutils
-        - the_silver_searcher
         - ipython
+
+- shell:
+    - [
+        'if command -v tldr >/dev/null 2>&1; then tldr --list 2>/dev/null | grep -q . || tldr --update; fi',
+        "Populate tealdeer tldr cache",
+      ]
 
 - link:
     ~/.config/antidote: shell/antidote

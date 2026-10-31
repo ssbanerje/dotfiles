@@ -1,6 +1,5 @@
 # --- Dotfile Binaries Config ---
 - link:
-    ~/.local/bin/diffconflicts: bin/diffconflicts
     ~/.local/bin/doi2bib: bin/doi2bib
     ~/.local/bin/ftwind: bin/ftwind
     ~/.local/bin/ftpane: bin/ftpane
@@ -12,4 +11,3 @@
 - ifmacos:
     - link:
         ~/.local/bin/lock-screen: bin/lock-screen
-        ~/.local/bin/lyrics: bin/lyrics

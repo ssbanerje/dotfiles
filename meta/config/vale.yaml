@@ -1,9 +1,10 @@
 # --- Vale Configuration ---
 - ifubuntu:
     - shell:
-        - ["mkdir -p /tmp/vale && curl -LSs https://github.com/errata-ai/vale/releases/download/v2.11.0/vale_2.11.0_Linux_64-bit.tar.gz | tar xvzf - -C /tmp/vale", "Download vale"]
-        - ["mv /tmp/vale/vale ~/.local/bin/vale", "Install vale"]
-        - ["rm -rf /tmp/vale/", "Remove vale installer"]
+        - [
+            'if ! command -v vale >/dev/null 2>&1; then tag="$(curl -fsSLI -o /dev/null -w "%{url_effective}" https://github.com/vale-cli/vale/releases/latest | sed "s#.*/tag/##")"; ver="${tag#v}"; case "$(uname -m)" in aarch64|arm64) arch="arm64" ;; *) arch="64-bit" ;; esac; mkdir -p ~/.local/bin && curl -fsSL "https://github.com/vale-cli/vale/releases/download/${tag}/vale_${ver}_Linux_${arch}.tar.gz" | tar -xz -C ~/.local/bin vale; fi',
+            "Install Vale v3",
+          ]
 
 - ifarch:
     - pacman:
@@ -13,19 +14,11 @@
     - brew:
         - vale
 
-- shell:
-    - ["rm -rf ~/.config/vale/", "Clean config"]
-
 - create:
     - ~/.config/vale
 
-- shell:
-    - ["curl -LSs https://github.com/errata-ai/proselint/releases/latest/download/proselint.zip --output /tmp/proselint.zip", "Download proselint"]
-    - ["unzip /tmp/proselint.zip && mv ./proselint/ ~/.config/vale/ && rm -rf /tmp/proselint*", "Install proselint"]
-    - ["curl -LSs https://github.com/errata-ai/alex/releases/latest/download/alex.zip --output /tmp/alex.zip", "Download alex"]
-    - ["unzip /tmp/alex.zip && mv ./alex/ ~/.config/vale/ && rm -rf /tmp/alex*", "Install alex"]
-    - ["curl -LSs https://github.com/errata-ai/write-good/releases/latest/download/write-good.zip --output /tmp/write-good.zip", "Download write-good"]
-    - ["unzip /tmp/write-good.zip && mv ./write-good/ ~/.config/vale/ && rm -rf /tmp/write-good*", "Install write-good"]
-
 - link:
     ~/.vale.ini: editors/vale.ini
+
+- shell:
+    - ['PATH="$HOME/.local/bin:$PATH" vale --config="$HOME/.vale.ini" sync', "Sync Vale style packages"]

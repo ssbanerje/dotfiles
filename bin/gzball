@@ -1,21 +1,28 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# create tar.gz archives and remove original dirs
-# usage: gzball [-q] DIR [DIR] ...
+# Create tar.gz archives and remove original paths once verified
+# Usage: gzball [-q] PATH [PATH ...]
 
-TAR="tar czf"
+set -euo pipefail
 
-if [[ "$1" == "-q" ]] ; then
+tar_flags=(-czf)
+if [[ "${1:-}" == "-q" ]]; then
   shift
 else
-  TAR="${TAR}v"
+  tar_flags=(-czvf)
 fi
 
-set -e
+if [[ "$#" -eq 0 ]]; then
+  echo "Usage: gzball [-q] PATH [PATH ...]" >&2
+  exit 1
+fi
 
-for p in "$@" ; do
-  echo "$p.tar.gz"
-  $TAR "$p.tar.gz" "$p"
-  touch -r "$p" "$p.tar.gz"
-  rm -rf "$p"
+for target in "$@"; do
+  clean="${target%/}"
+  archive="${clean}.tar.gz"
+  echo "${archive}"
+  tar "${tar_flags[@]}" "${archive}" -- "${clean}"
+  tar -tzf "${archive}" >/dev/null
+  touch -r "${clean}" "${archive}"
+  rm -rf -- "${clean}"
 done
