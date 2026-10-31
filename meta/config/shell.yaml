@@ -7,12 +7,18 @@
         - silversearcher-ag
         - libnotify-bin
         - ipython3
+    - shell:
+        - [
+            'if ! command -v starship >/dev/null 2>&1; then mkdir -p ~/.local/bin && curl -fsSL "https://github.com/starship/starship/releases/latest/download/starship-$(uname -m)-unknown-linux-musl.tar.gz" | tar -xz -C ~/.local/bin starship; fi',
+            "Install Starship prompt",
+          ]
 
 - ifarch:
     - pacman:
         - zsh
         - fzf
         - zoxide
+        - starship
         - the_silver_searcher
         - libnotify
         - ipython
@@ -23,6 +29,7 @@
         - bash-completion
         - fzf
         - zoxide
+        - starship
         - coreutils
         - the_silver_searcher
         - ipython
@@ -33,10 +40,9 @@
     ~/.config/zsh_plugins_macos.txt: shell/plugins_macos.txt
     ~/.config/zsh_plugins_ubuntu.txt: shell/plugins_ubuntu.txt
     ~/.config/zsh_plugins_arch.txt: shell/plugins_arch.txt
+    ~/.config/starship.toml: shell/starship.toml
     ~/.zshrc: shell/zshrc
-    ~/.p10k.zsh: shell/p10k.zsh
     ~/.bashrc: shell/bashrc
-    ~/.config/bash_prompt.sh: shell/bash_prompt.sh
     ~/.config/env.sh: shell/env.sh
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.hushlogin: shell/hushlogin

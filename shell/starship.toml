@@ -1,0 +1,114 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+add_newline = true
+
+format = """
+$os\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$character"""
+
+right_format = """
+$status\
+$cmd_duration\
+$jobs\
+${env_var.YAZI_LEVEL}\
+${env_var.VIMRUNTIME}\
+$username\
+$hostname"""
+
+[os]
+disabled = false
+format = "[$symbol]($style) "
+style = "bold bright-white"
+
+[os.symbols]
+Arch = ""
+Debian = ""
+Linux = ""
+Macos = ""
+Ubuntu = ""
+
+[directory]
+style = "green"
+repo_root_style = "bold blue"
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 4
+truncate_to_repo = true
+read_only = " 󰌾"
+
+[git_branch]
+symbol = " "
+style = "yellow"
+format = "on [$symbol$branch(:$remote_branch)]($style) "
+
+[git_commit]
+tag_disabled = false
+tag_symbol = "#"
+style = "yellow"
+
+[git_state]
+style = "bold red"
+
+[git_status]
+style = "yellow"
+format = "([$ahead_behind$stashed$conflicted$staged$modified$renamed$deleted$untracked]($style) )"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇣${behind_count}⇡${ahead_count}"
+stashed = "*${count}"
+conflicted = "[~${count}](red)"
+staged = "[+${count}](yellow)"
+modified = "[!${count}](yellow)"
+renamed = "[»${count}](yellow)"
+deleted = "[✘${count}](red)"
+untracked = "[?${count}](cyan)"
+
+[character]
+success_symbol = "[»](bold cyan)"
+error_symbol = "[»](bold red)"
+vimcmd_symbol = "[](bold green)"
+vimcmd_visual_symbol = "[](bold yellow)"
+vimcmd_replace_symbol = "[▶](bold yellow)"
+vimcmd_replace_one_symbol = "[▶](bold yellow)"
+
+[status]
+disabled = false
+symbol = "✘ "
+style = "bold red"
+format = "[$symbol$common_meaning$signal_name$maybe_int]($style) "
+
+[cmd_duration]
+min_time = 5_000
+show_milliseconds = false
+style = "yellow"
+format = "took [$duration]($style) "
+
+[jobs]
+symbol = "✦"
+style = "blue"
+format = "[$symbol$number]($style) "
+
+[env_var.YAZI_LEVEL]
+symbol = "󰇥"
+style = "bold yellow"
+format = "[$symbol ]($style)"
+
+[env_var.VIMRUNTIME]
+symbol = ""
+style = "bold green"
+format = "[$symbol ]($style)"
+
+[username]
+style_user = "purple"
+style_root = "bold red"
+format = "on [$user]($style)"
+show_always = false
+
+[hostname]
+ssh_only = true
+style = "blue"
+format = "[@$hostname]($style)"

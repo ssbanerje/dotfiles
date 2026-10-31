@@ -18,7 +18,6 @@ setopt LOCAL_OPTIONS LOCAL_TRAPS
 # Setup environment {{{
 
 source "$HOME/.config/env.sh"
-source "$HOME/.p10k.zsh"
 
 # Setup Homebrew FPATH without spawning `brew --prefix`
 if [[ "$UNAME" == "Darwin" && -n "$BREW_PREFIX" ]]; then
@@ -35,8 +34,6 @@ fi
 [[ "$-" == *i* ]] || return
 
 # Load Plugins {{{
-
-export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 
 # Initialize zsh-vi-mode immediately so subsequent plugin/user keymaps persist
 export ZVM_INIT_MODE=sourcing
@@ -107,6 +104,9 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:*:kill:*' menu yes select
 
 # }}}
+
+# Prompt
+(( $+commands[starship] )) && eval "$(starship init zsh)"
 
 # Load aliases deferred
 [[ -r "$HOME/.config/aliases.sh" ]] && zsh-defer source "$HOME/.config/aliases.sh"

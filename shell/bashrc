@@ -49,7 +49,7 @@ fi
 set -o vi
 
 # Theme
-_check_and_source "$HOME/.config/bash_prompt.sh"
+command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"
 
 unset -f _check_and_source
 
