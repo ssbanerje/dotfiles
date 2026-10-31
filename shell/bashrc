@@ -2,8 +2,18 @@
 
 # Bash Options {{{
 HISTCONTROL=ignoreboth:ignoredups:ignorespace
+HISTSIZE=50000
+HISTFILESIZE=50000
+HISTTIMEFORMAT='%F %T '
 shopt -s histappend
 shopt -s checkwinsize
+shopt -s cdspell
+shopt -s no_empty_cmd_completion
+if (( BASH_VERSINFO[0] >= 4 )); then
+  shopt -s autocd
+  shopt -s dirspell
+  shopt -s globstar
+fi
 # }}}
 
 function _check_and_source() {
@@ -50,6 +60,9 @@ set -o vi
 
 # Theme
 command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"
+
+# Machine-local overrides (untracked)
+_check_and_source "$HOME/.bashrc.local"
 
 unset -f _check_and_source
 

@@ -1,0 +1,49 @@
+# Readline configuration (~/.inputrc) for Bash, Python, GDB, SQLite, etc.
+
+# Case-insensitive and hyphen/underscore-equivalent Tab completion
+set completion-ignore-case on
+set completion-map-case on
+
+# List ambiguous matches on the first Tab press without ringing the bell
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+# Append '/' to symlinked directories and show file-type / color indicators
+set mark-symlinked-directories on
+set visible-stats on
+set colored-stats on
+set colored-completion-prefix on
+
+# Keep hidden dotfiles out of bare Tab completion unless leading '.' is typed
+set match-hidden-files off
+
+# Show all completions immediately instead of using an internal pager
+set page-completions off
+set completion-query-items 200
+
+# Avoid duplicating trailing text when completing mid-word
+set skip-completed-text on
+
+# Clean 8-bit UTF-8 input/output handling
+set input-meta on
+set output-meta on
+set convert-meta off
+
+# Prefix-aware Up/Down history search across default and vi keymaps
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\eOA": history-search-backward
+"\eOB": history-search-forward
+
+$if mode=vi
+set keymap vi-command
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\eOA": history-search-backward
+"\eOB": history-search-forward
+set keymap vi-insert
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\eOA": history-search-backward
+"\eOB": history-search-forward
+$endif

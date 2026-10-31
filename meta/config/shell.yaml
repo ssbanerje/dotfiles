@@ -52,6 +52,7 @@
     ~/.config/starship.toml: shell/starship.toml
     ~/.zshrc: shell/zshrc
     ~/.bashrc: shell/bashrc
+    ~/.inputrc: shell/inputrc
     ~/.config/env.sh: shell/env.sh
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.hushlogin: shell/hushlogin
