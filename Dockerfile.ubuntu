@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:latest AS base
 
 LABEL org.opencontainers.image.authors="Subho Sankar Banerjee <ssbanerje@gmail.com>"
 LABEL org.opencontainers.image.title="Dotfiles"
@@ -12,14 +12,14 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'APT::Install-Recommends "false";' >> /etc/apt/apt.conf.d/99norecos && \
     echo 'APT::AutoRemove::RecommendsImportant "false";' >> /etc/apt/apt.conf.d/99norecos && \
-    echo 'APT::AutoRemove::SuggestsImportant "false";'  >> /etc/apt/apt.conf.d/99norecos && \
+    echo 'APT::AutoRemove::SuggestsImportant "false";' >> /etc/apt/apt.conf.d/99norecos && \
     apt-get update && \
     apt-get install -y sudo git ca-certificates python3 openssh-client && \
     (userdel -r ubuntu || true) && \
     (groupdel ubuntu || true) && \
-    adduser --disabled-password --gecos "" --uid ${uid} ${user} && \
-    echo "${user} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${user} && \
-    chmod 0440 /etc/sudoers.d/${user} && \
+    adduser --disabled-password --gecos "" --uid "${uid}" "${user}" && \
+    echo "${user} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${user}" && \
+    chmod 0440 "/etc/sudoers.d/${user}" && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Setup dotfiles
@@ -28,16 +28,26 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME=/home/${user}
 ENV SHELL=/bin/bash
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
-RUN cd /home/${user}/.dotfiles && \
+RUN cd "/home/${user}/.dotfiles" && \
     ./install_profile -vv -x ubuntu-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos && \
-    rm -rf /home/${user}/.cache/pip /home/${user}/.npm/_cacache && \
-    find /home/${user}/.dotfiles -name "*__pycache__" -exec rm -rf {} +
+    rm -rf "/home/${user}/.cache/pip" "/home/${user}/.npm/_cacache" && \
+    find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
 # Take command from user
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
 CMD []
+
+FROM base AS mac
+ARG user=dotuser
+ARG mac_uid=501
+USER root
+RUN usermod -u "${mac_uid}" "${user}" && \
+    chown -hR "${user}" "/home/${user}"
+USER ${user}
+
+FROM base AS linux
 
 # vi:ft=dockerfile:

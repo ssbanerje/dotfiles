@@ -1,4 +1,4 @@
-FROM archlinux:latest
+FROM archlinux:latest AS base
 
 LABEL org.opencontainers.image.authors="Subho Sankar Banerjee <ssbanerje@gmail.com>"
 LABEL org.opencontainers.image.title="Dotfiles"
@@ -11,11 +11,11 @@ ARG uid=1000
 USER root
 RUN pacman-key --init && pacman-key --populate archlinux && \
     pacman -Syu --noconfirm sudo git python openssh && \
-    useradd -m -d /home/${user} -s /bin/bash --uid ${uid} ${user} && \
+    useradd -m -d "/home/${user}" -s /bin/bash --uid "${uid}" "${user}" && \
     groupadd docker && \
-    usermod -aG docker ${user} && \
-    echo "${user} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${user} && \
-    chmod 0440 /etc/sudoers.d/${user} && \
+    usermod -aG docker "${user}" && \
+    echo "${user} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${user}" && \
+    chmod 0440 "/etc/sudoers.d/${user}" && \
     pacman -Scc --noconfirm && \
     rm -rf /tmp/*
 
@@ -24,16 +24,26 @@ USER ${user}
 ENV HOME=/home/${user}
 ENV SHELL=/bin/bash
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
-RUN cd /home/${user}/.dotfiles && \
+RUN cd "/home/${user}/.dotfiles" && \
     ./install_profile -vv -x archlinux-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo pacman -Scc --noconfirm && \
     sudo rm -rf /tmp/* && \
-    rm -rf /home/${user}/.cache/pip /home/${user}/.cache/yay /home/${user}/.npm/_cacache && \
-    find /home/${user}/.dotfiles -name "*__pycache__" -exec rm -rf {} +
+    rm -rf "/home/${user}/.cache/pip" "/home/${user}/.cache/yay" "/home/${user}/.npm/_cacache" && \
+    find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
 # Take command from user
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
 CMD []
+
+FROM base AS mac
+ARG user=dotuser
+ARG mac_uid=501
+USER root
+RUN usermod -u "${mac_uid}" "${user}" && \
+    chown -hR "${user}" "/home/${user}"
+USER ${user}
+
+FROM base AS linux
 
 # vim:ft=dockerfile:

@@ -60,6 +60,6 @@ cd dotfiles
 
 Install pre-commit hooks:
 ```bash
-pip install pre-commit
+uv tool install pre-commit  # or: pipx install pre-commit
 pre-commit install
 ```

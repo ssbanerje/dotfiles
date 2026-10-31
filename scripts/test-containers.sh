@@ -26,10 +26,10 @@ smoke_test_image() {
     set -euo pipefail
     echo "--- Checking passwordless sudo"
     sudo -n true
-    echo "--- Checking interactive zsh startup"
+    echo "--- Checking interactive zsh startup, zoxide, and Antidote cache"
     test -s "$HOME/.zsh_plugins.zsh"
     test -d "$HOME/.cache/antidote"
-    if ! zsh_err="$(zsh -i -c "type zsh-defer >/dev/null && type zvm_define_widget >/dev/null" 2>&1 >/dev/null)"; then
+    if ! zsh_err="$(zsh -i -c "type zsh-defer >/dev/null && type zvm_define_widget >/dev/null && type z >/dev/null" 2>&1 >/dev/null)"; then
       echo "${zsh_err}" >&2
       exit 1
     fi
@@ -37,6 +37,12 @@ smoke_test_image() {
       echo "${zsh_err}" >&2
       exit 1
     fi
+    echo "--- Checking Starship prompt and tealdeer"
+    starship --version
+    tldr --version
+    echo "--- Checking tmux and preinstalled TPM plugins"
+    tmux -V
+    test -d "$HOME/.tmux/plugins/tmux-power"
     echo "--- Checking Neovim binary and headless startup"
     command -v nvim
     nvim --version
@@ -44,9 +50,9 @@ smoke_test_image() {
     echo "--- Checking tree-sitter CLI"
     command -v tree-sitter
     tree-sitter --version
-    echo "--- Checking ranger"
-    command -v ranger
-    ranger --version
+    echo "--- Checking yazi"
+    command -v yazi
+    yazi --version
     echo "--- Checking IPython"
     if command -v ipython3 >/dev/null 2>&1; then
       ipython3 --version
@@ -61,8 +67,12 @@ build_and_test() {
   local distro="$1"
   local target_uid="$2"
   local platform_post=""
-  if [[ "$(uname -s)" == "Darwin" ]]; then
+  local build_target="linux"
+  local uid_arg="uid=${target_uid}"
+  if [[ "$(uname -s)" == "Darwin" || "${target_uid}" == "501" ]]; then
     platform_post="-mac"
+    build_target="mac"
+    uid_arg="mac_uid=${target_uid}"
   fi
 
   local tag="ghcr.io/ssbanerje/dotfiles:${distro}${platform_post}"
@@ -72,11 +82,12 @@ build_and_test() {
     extra_tag_args=(-t "ghcr.io/ssbanerje/dotfiles:latest")
   fi
 
-  echo "==> Building ${tag} (uid=${target_uid}) from Dockerfile.${distro}"
+  echo "==> Building ${tag} (target=${build_target}, ${uid_arg}) from Dockerfile.${distro}"
   docker build \
     -f "${dockerfile}" \
+    --target "${build_target}" \
     --build-arg user=dotuser \
-    --build-arg "uid=${target_uid}" \
+    --build-arg "${uid_arg}" \
     -t "${tag}" \
     "${extra_tag_args[@]}" \
     "${REPO_ROOT}"
