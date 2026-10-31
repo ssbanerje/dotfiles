@@ -24,11 +24,11 @@ alias cp='cp -i'
 # ls variants
 # This comes from OMZ in ZSH. This is for bash.
 if [[ -n "$BASH" ]]; then
-  [[ "${UNAME: $(uname -s)}" == "Darwin" ]] && export_alias ls "ls -G"
-  [[ "${UNAME: $(uname -s)}" == "Linux" ]] && export_alias ls "ls --color=auto"
+  [[ "${UNAME:=$(uname -s)}" == "Darwin" ]] && export_alias ls "command ls -G"
+  [[ "${UNAME:=$(uname -s)}" == "Linux" ]] && export_alias ls "command ls --color=auto"
   export_alias ll "ls -alF"
   export_alias la "ls -A"
-  export_alias grep "grep --color=auto"
+  export_alias grep "command grep --color=auto"
 fi
 
 # Python
@@ -38,7 +38,7 @@ export_alias ipython "ipython --TerminalInteractiveShell.editing_mode=vi"
 
 # Normalize `open` and clipboard {{{
 if [[ ! "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
-  if grep -q Microsoft /proc/version; then
+  if grep -qi microsoft /proc/version 2>/dev/null; then
     export_alias open "explorer.exe";
     export_alias pbcopy " clip.exe"
     export_alias pbpaste "powershell.exe -c Get-Clipboard"

@@ -83,7 +83,9 @@ zstyle ':completion:*:*:kill:*' menu yes select
 if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
   CHECK_AND_SOURCE_DEFERRED \
     /usr/share/doc/fzf/examples/completion.zsh \
-    /usr/share/doc/fzf/examples/key-bindings.zsh
+    /usr/share/doc/fzf/examples/key-bindings.zsh \
+    /usr/share/fzf/completion.zsh \
+    /usr/share/fzf/key-bindings.zsh
 elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   CHECK_AND_SOURCE_DEFERRED \
     $([[ "$TERM_PROGRAM" == "iTerm.app" ]] && echo "$HOME/.config/iterm2_shell_integration.zsh") \

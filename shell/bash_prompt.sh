@@ -14,23 +14,23 @@ function set_colors() {
   esac
 
   if [ "$color_prompt" = yes ]; then
-    declare RED="\[\033[0;31m\]"
-    declare PINK="\[\033[1;31m\]"
-    declare YELLOW="\[\033[1;33m\]"
-    declare GREEN="\[\033[0;32m\]"
-    declare LT_GREEN="\[\033[1;32m\]"
-    declare BLUE="\[\033[0;34m\]"
-    declare PURPLE="\[\033[1;35m\]"
-    declare COLOR_NONE="\[\033[0m\]"
+    RED="\[\033[0;31m\]"
+    PINK="\[\033[1;31m\]"
+    YELLOW="\[\033[1;33m\]"
+    GREEN="\[\033[0;32m\]"
+    LT_GREEN="\[\033[1;32m\]"
+    BLUE="\[\033[0;34m\]"
+    PURPLE="\[\033[1;35m\]"
+    COLOR_NONE="\[\033[0m\]"
   else
-    declare RED=""
-    declare PINK=""
-    declare YELLOW=""
-    declare GREEN=""
-    declare LT_GREEN=""
-    declare BLUE=""
-    declare PURPLE=""
-    declare COLOR_NONE=""
+    RED=""
+    PINK=""
+    YELLOW=""
+    GREEN=""
+    LT_GREEN=""
+    BLUE=""
+    PURPLE=""
+    COLOR_NONE=""
   fi
 }
 

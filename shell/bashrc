@@ -39,7 +39,9 @@ if [[ "${UNAME:=$(uname -s)}" == "Linux" ]]; then
   CHECK_AND_SOURCE \
     "$(shopt -oq posix || echo '/usr/share/bash-completion/bash_completion')" \
     /usr/share/doc/fzf/examples/completion.bash \
-    /usr/share/doc/fzf/examples/key-bindings.bash
+    /usr/share/doc/fzf/examples/key-bindings.bash \
+    /usr/share/fzf/completion.bash \
+    /usr/share/fzf/key-bindings.bash
 elif [[ "${UNAME:=$(uname -s)}" == "Darwin" ]]; then
   CHECK_AND_SOURCE \
     "${BREW_PREFIX:=$(brew --prefix)}/etc/profile.d/bash_completion.sh" \
