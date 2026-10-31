@@ -2,11 +2,17 @@
 
 set -e
 
+export SHELL="${SHELL:-/bin/bash}"
+
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIGDIR="${BASEDIR}/meta/config"
 PROFILESDIR="${BASEDIR}/meta/profiles"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
+
+if [[ ! -x "${DOTBOT}" || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" ]]; then
+  git -C "${BASEDIR}" submodule update --init --recursive
+fi
 
 # Parse arguement
 declare -a ARGS
@@ -30,7 +36,7 @@ while IFS= read -r config; do
   if [[ -n "$config" ]]; then
     CONFIGS+=("${config}")
   fi
-done < "${META_DIR}/${PROFILESDIR}/$1"
+done < "${PROFILESDIR}/$1"
 shift
 
 # Load configurations
