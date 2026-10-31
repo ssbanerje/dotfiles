@@ -49,9 +49,7 @@ done
 declare -a PLUGINS
 PLUGINS=("--plugin-dir" "${PLUGINDIR}" \
   "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-template" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-pip" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-sudo")
+  "--plugin-dir" "${PLUGINDIR}/dotbot-template")
 
 # Run dotbot
 if [[ "${#FLAGS[@]}" -gt 0 ]]; then
