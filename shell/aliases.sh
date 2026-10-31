@@ -20,6 +20,17 @@ fi
 # Python
 alias ipython='ipython --TerminalInteractiveShell.editing_mode=vi'
 
+# Yazi wrapper that changes cwd on exit
+function y() {
+  local tmp cwd
+  tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  command yazi "$@" --cwd-file="$tmp"
+  if IFS= read -r -d '' cwd < "$tmp" && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
+    builtin cd -- "$cwd" || return
+  fi
+  rm -f -- "$tmp"
+}
+
 # Normalize `open` and clipboard on non-macOS {{{
 if [[ "$UNAME" != "Darwin" ]]; then
   if [[ -n "${ZSH_VERSION:-}" ]]; then
