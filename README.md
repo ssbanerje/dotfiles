@@ -41,26 +41,32 @@ Run this:
 ```bash
 git clone --recurse-submodules https://github.com/ssbanerje/dotfiles.git
 cd dotfiles
-./install_profile <profile>
+./install                     # Auto-detects host OS profile (macos / ubuntu-minimal / archlinux-minimal)
+./install -P <profile>        # Or explicitly select a profile
 ```
 
 ### Details
 - Update configuration files for user:
   - `meta/config/git.yaml` (supports inline `params` or machine-local overrides via `params_file`)
-- The installer script can load profiles located in `meta/profiles/`:
+- Discover all profiles (`meta/profiles/`) and standalone modules (`meta/config/`):
+  ```bash
+  ./install --list
+  ```
+- Available profiles in `meta/profiles/`:
   - `macos`: For macOS
   - `ubuntu`: For Ubuntu desktop
   - `ubuntu-minimal`: For text-based Ubuntu distributions
   - `archlinux-minimal`: For text-based Arch Linux distributions
 - Preview changes safely without modifying the system using `--dry-run` (`-n`):
   ```bash
-  ./install_profile --dry-run macos
+  ./install --dry-run
+  ./install --dry-run -P macos
   ```
 - Re-sync only symlinks and templates (skipping package managers and shell hooks):
   ```bash
-  ./install_profile macos --only link template
+  ./install -P macos --only link template
   ```
-- To install individual components (from `meta/config/`) use `./install` (e.g. `./install git tmux`).
+- To install individual components (from `meta/config/`), pass module names directly (e.g. `./install git tmux`).
 - Once installed, the `scripts/shim.sh` script is accessible as the `shim` command.
 
 

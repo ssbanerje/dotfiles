@@ -34,7 +34,7 @@ jobs:
         with:
           submodules: recursive
       - name: Install dotfiles
-        run: ./install_profile -vv -x ${{ matrix.profile }}
+        run: ./install -vv -x -P ${{ matrix.profile }}
   # }}}
 
   build-containers:  # {{{

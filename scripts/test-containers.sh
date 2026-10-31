@@ -149,7 +149,12 @@ else
   TARGET_GID="${DEFAULT_GID}"
 fi
 
-if [[ ! -x "${REPO_ROOT}/installer/dotbot/bin/dotbot" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-ifplatform/lib/distro/.git" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-template/lib/jinja/.git" ]]; then
+if [[ -e "${REPO_ROOT}/.git" ]] && { [[ ! -x "${REPO_ROOT}/installer/dotbot/bin/dotbot" ]] \
+   || [[ ! -e "${REPO_ROOT}/installer/plugins/dotbot-ifplatform/lib/distro/.git" ]] \
+   || [[ ! -e "${REPO_ROOT}/installer/plugins/dotbot-template/lib/jinja/.git" ]] \
+   || [[ ! -e "${REPO_ROOT}/git/gitignore/.git" ]] \
+   || [[ ! -e "${REPO_ROOT}/tmux/tpm/.git" ]] \
+   || [[ ! -e "${REPO_ROOT}/shell/antidote/.git" ]]; }; then
   git -C "${REPO_ROOT}" submodule update --init --recursive
 fi
 

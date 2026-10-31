@@ -6,14 +6,98 @@ export SHELL="${SHELL:-/bin/bash}"
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIGDIR="${BASEDIR}/meta/config"
+PROFILESDIR="${BASEDIR}/meta/profiles"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
-if [[ ! -x "${DOTBOT}" || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" || ! -e "${PLUGINDIR}/dotbot-template/lib/jinja/.git" ]]; then
-  git -C "${BASEDIR}" submodule update --init --recursive
-fi
+usage() {
+  cat <<'EOF'
+Usage:
+  ./install [options] [dotbot-flags...] [module...]
 
-declare -a REQUESTED_CONFIGS=("base")
+Options:
+  -P, --profile <name>   Load module list from meta/profiles/<name> (repeatable)
+  -l, --list             List available profiles and individual modules
+  -h, --help             Show this help message
+
+Dotbot flags (passed through):
+  -n, --dry-run          Preview actions without modifying the system
+  -v, -vv                Increase verbosity
+  -q, --quiet            Suppress informational output
+  -x, --exit-on-failure  Stop immediately on first failed directive
+  --only <dir...>        Run only matching directives (auto-keeps plugins & if*)
+  --except <dir...>      Skip matching directives
+
+Examples:
+  ./install                                # Auto-detect host OS default profile
+  ./install -P macos                       # Run full macOS profile
+  ./install -n -P ubuntu                   # Dry-run Ubuntu desktop profile
+  ./install -P macos --only link template  # Re-sync symlinks & templates only
+  ./install --only link template -P macos  # Same (flag order independent)
+  ./install git tmux                       # Install specific standalone modules
+  ./install -l                             # List all profiles and modules
+EOF
+}
+
+list_targets() {
+  local f name
+  echo "Profiles (meta/profiles/):"
+  for f in "${PROFILESDIR}"/*; do
+    [[ -f "${f}" ]] || continue
+    echo "  $(basename "${f}")"
+  done
+  echo ""
+  echo "Modules (meta/config/):"
+  for f in "${CONFIGDIR}"/*.yaml; do
+    [[ -f "${f}" ]] || continue
+    name="$(basename "${f}" .yaml)"
+    echo "  ${name}"
+  done
+}
+
+detect_default_profile() {
+  case "$(uname -s)" in
+    Darwin)
+      echo "macos"
+      return 0
+      ;;
+    Linux)
+      if [[ -r /etc/os-release ]]; then
+        local os_tokens
+        os_tokens="$(
+          . /etc/os-release
+          printf '%s %s\n' "${ID:-}" "${ID_LIKE:-}"
+        )"
+        case " ${os_tokens} " in
+          *" ubuntu "*|*" debian "*)
+            echo "ubuntu-minimal"
+            return 0
+            ;;
+          *" arch "*)
+            echo "archlinux-minimal"
+            return 0
+            ;;
+        esac
+      fi
+      ;;
+  esac
+  return 1
+}
+
+ensure_submodules() {
+  [[ -e "${BASEDIR}/.git" ]] || return 0
+  if [[ ! -x "${DOTBOT}" \
+     || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" \
+     || ! -e "${PLUGINDIR}/dotbot-template/lib/jinja/.git" \
+     || ! -e "${BASEDIR}/git/gitignore/.git" \
+     || ! -e "${BASEDIR}/tmux/tpm/.git" \
+     || ! -e "${BASEDIR}/shell/antidote/.git" ]]; then
+    git -C "${BASEDIR}" submodule update --init --recursive
+  fi
+}
+
+declare -a PROFILES=()
+declare -a EXTRA_CONFIGS=()
 declare -a FLAGS=()
 declare -a ONLY_DIRECTIVES=()
 declare -a SKIP_DIRECTIVES=()
@@ -22,10 +106,35 @@ HAS_SKIP=0
 
 while (( "$#" )); do
   case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -l|--list)
+      list_targets
+      exit 0
+      ;;
+    -P|--profile)
+      if (( "$#" < 2 )) || [[ -z "$2" ]]; then
+        echo "Error: option '$1' requires a profile name" >&2
+        exit 1
+      fi
+      PROFILES+=("$2")
+      shift 2
+      ;;
+    --profile=*)
+      profile_arg="${1#*=}"
+      if [[ -z "${profile_arg}" ]]; then
+        echo "Error: option '--profile' requires a profile name" >&2
+        exit 1
+      fi
+      PROFILES+=("${profile_arg}")
+      shift
+      ;;
     --)
       shift
       while (( "$#" )); do
-        REQUESTED_CONFIGS+=("$1")
+        EXTRA_CONFIGS+=("$1")
         shift
       done
       break
@@ -59,10 +168,45 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      REQUESTED_CONFIGS+=("$1")
+      EXTRA_CONFIGS+=("$1")
       shift
       ;;
   esac
+done
+
+ensure_submodules
+
+if [[ "${#PROFILES[@]}" -eq 0 && "${#EXTRA_CONFIGS[@]}" -eq 0 ]]; then
+  if default_profile="$(detect_default_profile)"; then
+    echo "Auto-detected profile: ${default_profile}"
+    PROFILES+=("${default_profile}")
+  else
+    echo "Error: could not auto-detect profile for this host; specify '-P <profile>' or '<module...>'" >&2
+    echo "Run './install --list' to see available profiles and modules." >&2
+    exit 1
+  fi
+fi
+
+declare -a REQUESTED_CONFIGS=("base")
+for profile in ${PROFILES[@]+"${PROFILES[@]}"}; do
+  profile_file="${PROFILESDIR}/${profile}"
+  if [[ ! -f "${profile_file}" ]]; then
+    echo "Error: profile '${profile}' not found at ${profile_file}" >&2
+    exit 1
+  fi
+  echo "Loading profile ${profile}"
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    line="${line%%#*}"
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+    if [[ -n "${line}" ]]; then
+      REQUESTED_CONFIGS+=("${line}")
+    fi
+  done < "${profile_file}"
+done
+
+for extra in ${EXTRA_CONFIGS[@]+"${EXTRA_CONFIGS[@]}"}; do
+  REQUESTED_CONFIGS+=("${extra}")
 done
 
 declare -a SEEN_CONFIGS=()
