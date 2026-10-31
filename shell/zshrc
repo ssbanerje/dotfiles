@@ -2,15 +2,17 @@
 
 # ZSH Options {{{
 
-HISTSIZE=10000
-SAVEHIST=10000
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
 setopt AUTOCD
 setopt ALWAYS_TO_END COMPLETE_IN_WORD
 setopt AUTOPUSHD PUSHDMINUS PUSHDSILENT PUSHDTOHOME PUSHDIGNOREDUPS
 setopt CORRECT
 setopt COMPLETE_ALIASES
 setopt EXTENDED_GLOB
-setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS HIST_VERIFY SHARE_HISTORY
+setopt INTERACTIVE_COMMENTS
 setopt LOCAL_OPTIONS LOCAL_TRAPS
 
 # }}}
@@ -39,10 +41,12 @@ fi
 export ZVM_INIT_MODE=sourcing
 
 # OMZ plugin configuration (must precede bundle load)
+zstyle ':omz:update' mode disabled
 zstyle ':omz:plugins:gpg-agent' ssh-support no
 zstyle ':omz:plugins:ssh-agent' quiet yes
 zstyle ':omz:plugins:ssh-agent' lazy yes
 zstyle ':omz:plugins:ssh-agent' agent-forwarding yes
+zstyle ':omz:plugins:yarn' global-path no
 if [[ "$UNAME" == "Darwin" ]]; then
   zstyle ':omz:plugins:ssh-agent' ssh-add-args --apple-load-keychain
   zstyle ':omz:plugins:iterm2' shell-integration yes
@@ -95,7 +99,14 @@ zvm_bindkey viins '^Z' fancy-ctrl-z
 
 # Completion styling {{{
 
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+typeset _zsh_compcache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+[[ -d "$_zsh_compcache" ]] || mkdir -p "$_zsh_compcache"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$_zsh_compcache"
+unset _zsh_compcache
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
 zstyle ':completion:*:ssh:*' tag-order hosts users
@@ -108,7 +119,10 @@ zstyle ':completion:*:*:kill:*' menu yes select
 # Prompt
 (( $+commands[starship] )) && eval "$(starship init zsh)"
 
-# Load aliases deferred
-[[ -r "$HOME/.config/aliases.sh" ]] && zsh-defer source "$HOME/.config/aliases.sh"
+# Load aliases immediately so they work in `zsh -i -c` and cleanly override plugin aliases
+[[ -r "$HOME/.config/aliases.sh" ]] && source "$HOME/.config/aliases.sh"
+
+# Machine-local overrides (untracked)
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
 # vim:foldmethod=marker

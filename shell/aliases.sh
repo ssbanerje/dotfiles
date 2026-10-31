@@ -20,7 +20,8 @@ fi
 # Python
 alias ipython='ipython --TerminalInteractiveShell.editing_mode=vi'
 
-# Yazi wrapper that changes cwd on exit
+# Yazi wrapper that changes cwd on exit (unalias OMZ yarn plugin's `y=yarn` first)
+unalias y 2>/dev/null || true
 function y() {
   local tmp cwd
   tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
