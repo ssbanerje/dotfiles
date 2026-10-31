@@ -25,12 +25,20 @@ git clone https://github.com/ssbanerje/dotfiles.git
 
 
 ## Local Container Builds & Testing
-Build and smoke-test the Ubuntu and Arch Linux containers locally (runs the same smoke checks as CI):
+Build and test the Ubuntu and Arch Linux containers locally (runs the full parameterized `pytest` + `pytest-testinfra` verification suite used in CI):
 ```bash
 ./scripts/test-containers.sh            # Build and test both Ubuntu and Arch Linux
 ./scripts/test-containers.sh ubuntu     # Build and test Ubuntu only
 ./scripts/test-containers.sh archlinux  # Build and test Arch Linux only
 ./scripts/shim.sh --local               # Launch zsh in the locally built container
+```
+
+You can also run the test tiers directly via `uv`:
+```bash
+uv run --frozen --only-group dev pytest tests/unit
+uv run --frozen --only-group dev pytest tests/environment --profile macos
+uv run --frozen --only-group dev pytest tests/environment tests/container \
+  --docker-image ghcr.io/ssbanerje/dotfiles:ubuntu
 ```
 
 
@@ -67,13 +75,32 @@ cd dotfiles
   ./install -P macos --only link template
   ```
 - To install individual components (from `meta/config/`), pass module names directly (e.g. `./install git tmux`).
-- Once installed, the `scripts/shim.sh` script is accessible as the `shim` command.
+- Once installed, `shim` launches containerized workflows and `dot` manages your local installation:
+  ```bash
+  dot status    # Check repo & submodule status
+  dot sync      # Fast symlink + template refresh
+  dot update    # Pull repo/submodules and upgrade shell/uv/Neovim tools
+  dot clean     # Purge regenerable caches
+  dot doctor    # Check symlinks, submodules, tools, and local hooks
+  dot bench     # Benchmark Zsh, Bash, and headless Neovim startup time
+  dot edit      # Open the dotfiles repo in $EDITOR
+  ```
+
+
+## Machine-Local Overrides (Untracked)
+Keep work/corporate hosts, tokens, proxy settings, and machine-specific tweaks out of Git using optional local override files:
+- `~/.gitconfig.local` — included last by `~/.gitconfig` (overrides `[user]`, signing keys, proxies, URL rewrites)
+- `~/.ssh/config.local` and `~/.ssh/config.d/*.conf` — included first by `~/.ssh/config` (first-match-wins over `Host *`)
+- `~/.config/env.local.sh` — sourced by `~/.config/env.sh` (can call `PREPEND_PATH` / `APPEND_PATH`)
+- `~/.zshrc.local` and `~/.bashrc.local` — sourced at the end of `~/.zshrc` and `~/.bashrc`
+- `~/.tmux.conf.local` — sourced by `~/.tmux.conf` immediately before TPM initialization
 
 
 ## Setup Development Environment
 
-Install pre-commit hooks:
+Install pre-commit hooks and run static + unit checks:
 ```bash
 uv tool install pre-commit
 pre-commit install
+uv run --frozen --only-group dev pytest tests/unit
 ```
