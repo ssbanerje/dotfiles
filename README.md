@@ -19,8 +19,19 @@ git clone https://github.com/ssbanerje/dotfiles.git
 - Script uses docker to run the container.
 - By default, the shim will use an Ubuntu container.
 - For an Archlinux container use `scripts/shim.sh -archlinux <command>`
+- To use a locally built image without pulling from GHCR, pass `-local` (e.g. `scripts/shim.sh -local <command>`)
 - Shim passes `ssh-agent` keys to container.
 - Shim mounts host's current working directory to `/cwd`.
+
+
+## Local Container Builds & Testing
+Build and smoke-test the Ubuntu and Arch Linux containers locally (runs the same smoke checks as CI):
+```bash
+./scripts/test-containers.sh            # Build and test both Ubuntu and Arch Linux
+./scripts/test-containers.sh ubuntu     # Build and test Ubuntu only
+./scripts/test-containers.sh archlinux  # Build and test Arch Linux only
+./scripts/shim.sh -local zsh            # Launch the locally built container
+```
 
 
 ## Local Installation

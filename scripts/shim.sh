@@ -2,15 +2,27 @@
 
 # Get the correct image
 declare PLATFORM_POST
+declare DISTRO="ubuntu"
+declare NO_PULL="${SHIM_NO_PULL:-}"
 if [[ $(uname -s) == "Darwin" ]]; then
   PLATFORM_POST="-mac"
 fi
-if [[ "$1" == "-archlinux" ]]; then
-  IMAGE="ghcr.io/ssbanerje/dotfiles:archlinux${PLATFORM_POST}"
-  shift
-else
-  IMAGE="ghcr.io/ssbanerje/dotfiles:ubuntu${PLATFORM_POST}"
-fi
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -archlinux)
+      DISTRO="archlinux"
+      shift
+      ;;
+    -local)
+      NO_PULL=1
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+IMAGE="ghcr.io/ssbanerje/dotfiles:${DISTRO}${PLATFORM_POST}"
 
 # Get the ssh-agent
 if [[ -z "$SSH_AUTH_SOCK" ]]; then
@@ -25,7 +37,9 @@ GPG_EXTRA_SOCK="$(gpgconf --list-dirs agent-extra-socket)"
 gpgconf --launch gpg-agent
 
 # Run docker
-docker pull "$IMAGE"
+if [[ -z "$NO_PULL" ]]; then
+  docker pull "$IMAGE"
+fi
 docker run -it --rm \
   -u "$(id -u):$(id -g)" \
   --network host \
