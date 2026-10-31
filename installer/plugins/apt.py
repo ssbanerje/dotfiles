@@ -29,11 +29,11 @@ class Apt(dotbot.Plugin):
 
     def _run_update(self):
         self._log.info('Updating list of packages')
-        return self._run_command('apt update', True, False) == 0
+        return self._run_command('apt-get update', True, False) == 0
 
     def _install(self, p):
         self._log.info('Installing %s' % p)
-        res = self._run_command('apt install --yes ' + p,
+        res = self._run_command('apt-get install --yes ' + p,
                                 self._sup_stdout, self._sup_stderr)
         if res != 0:
             self._log.warning('Could not install %s' % p)

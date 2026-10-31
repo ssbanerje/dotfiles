@@ -80,9 +80,9 @@ class Brew(dotbot.Plugin):
         # Install remaining packages
         if len(packages) == 0:
             return True
-        self._log.info('Homebrew install: ' ' '.join(packages))
+        self._log.info('Homebrew install: ' + ' '.join(packages))
         if self._run_command(cmd_pre + ' '.join(packages), self._sup_stdout, self._sup_stderr) != 0:
-            self._log.error('Failed to install %s' % p)
+            self._log.error('Failed to install %s' % ' '.join(packages))
             return False
         return True
 
@@ -92,15 +92,15 @@ class Brew(dotbot.Plugin):
             res = self._run_command('brew bundle --file=%s' % f,
                                     self._sup_stdout, self._sup_stderr)
             if res != 0:
-                self._log.warning('Failed to install file %f' % f)
+                self._log.warning('Failed to install file %s' % f)
                 return False
         return True
 
     def _install_tap(self, data):
         for t in data:
             self._log.info('Tapping %s' % t)
-            res = self._run_command('brew tap %s' % t,
-                                    self._sup_stdout, self._sup_stderr)
+            cmd = 'brew tap %s && if brew trust --help >/dev/null 2>&1; then brew trust %s; fi' % (t, t)
+            res = self._run_command(cmd, self._sup_stdout, self._sup_stderr)
             if res != 0:
                 self._log.warning('Failed to tap %s' % t)
                 return False

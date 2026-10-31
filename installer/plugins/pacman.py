@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 import subprocess
 
 import dotbot
 
 
 class Pacman(dotbot.Plugin):
+    _bootstrapYayDirective = 'bootstrapyay'
     _pacmanUpdateDirective = 'pacmanupdate'
     _yayUpdateDirective = 'yayupdate'
     _pacmanDirective = 'pacman'
@@ -19,20 +21,40 @@ class Pacman(dotbot.Plugin):
         self._sup_stderr = False
 
     def can_handle(self, directive):
-        return directive in [self._pacmanDirective, self._pacmanUpdateDirective,
-                             self._yayUpdateDirective, self._yayDirective]
+        return directive in [self._bootstrapYayDirective, self._pacmanDirective,
+                             self._pacmanUpdateDirective, self._yayUpdateDirective,
+                             self._yayDirective]
 
     def handle(self, directive, data):
-        if directive == self._pacmanUpdateDirective:
+        if directive == self._bootstrapYayDirective:
+            return self._bootstrap_yay()
+        elif directive == self._pacmanUpdateDirective:
             return self._run_update('pacman')
         elif directive == self._pacmanDirective:
             return self._install_packages(data, 'pacman')
         elif directive == self._yayUpdateDirective:
-            return self._run_update('yay')
+            return self._bootstrap_yay() and self._run_update('yay')
         elif directive == self._yayDirective:
-            return self._install_packages(data, 'yay')
+            return self._bootstrap_yay() and self._install_packages(data, 'yay')
         else:
             raise ValueError('Cannot handle this directive %s' % directive)
+
+    def _bootstrap_yay(self):
+        if shutil.which('yay') is not None:
+            self._log.info('yay is already installed')
+            return True
+        self._log.info('Bootstrapping yay-bin from AUR')
+        cmd = (
+            'rm -rf /tmp/yay-bin && '
+            'git clone --depth 1 https://aur.archlinux.org/yay-bin.git /tmp/yay-bin && '
+            '(cd /tmp/yay-bin && makepkg -si --noconfirm) && '
+            'rm -rf /tmp/yay-bin'
+        )
+        res = self._run_command(cmd, self._sup_stdout, self._sup_stderr)
+        if res != 0:
+            self._log.error('Could not bootstrap yay-bin')
+            return False
+        return True
 
     def _run_update(self, cmd='pacman'):
         self._log.info('Updating '+cmd)
