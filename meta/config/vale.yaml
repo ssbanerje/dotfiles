@@ -1,10 +1,12 @@
 # --- Vale Configuration ---
 - ifubuntu:
-    - shell:
-        - [
-            'if ! command -v vale >/dev/null 2>&1; then tag="$(curl -fsSLI -o /dev/null -w "%{url_effective}" https://github.com/vale-cli/vale/releases/latest | sed "s#.*/tag/##")"; ver="${tag#v}"; case "$(uname -m)" in aarch64|arm64) arch="arm64" ;; *) arch="64-bit" ;; esac; curl -fsSL "https://github.com/vale-cli/vale/releases/download/${tag}/vale_${ver}_Linux_${arch}.tar.gz" | tar -xz -C ~/.local/bin vale; fi',
-            "Install Vale v3",
-          ]
+    - ghrelease:
+        vale-cli/vale:
+          asset: vale_{version}_Linux_{arch}.tar.gz
+          arch_map:
+            x86_64: 64-bit
+            arm64: arm64
+          bins: [vale]
 
 - ifarch:
     - pacman:

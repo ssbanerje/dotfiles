@@ -19,6 +19,6 @@
 
 - shell:
     - [
-        'rm -f ~/.global_gitignore; for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do cat "git/gitignore/Global/${f}.gitignore" >> ~/.global_gitignore; done',
+        'tmp="$(mktemp)"; for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do cat "git/gitignore/Global/${f}.gitignore" >> "$tmp"; done; if ! cmp -s "$tmp" ~/.global_gitignore; then mv "$tmp" ~/.global_gitignore; else rm -f "$tmp"; fi',
         "Assemble global gitignore",
       ]

@@ -8,22 +8,21 @@
 - ifubuntu:
     - apt:
         - curl
-        - unzip
         - libnotify-bin
         - kitty
 - ifarch:
     - pacman:
         - curl
-        - unzip
         - libnotify
         - kitty
 - ifanylinux:
-    - create:
-        - ~/.local/share/fonts/Hack
-    - shell:
-        - ["curl -fLSs https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip -o /tmp/Hack.zip", "Download Hack Nerd Font"]
-        - ["unzip -oq /tmp/Hack.zip -d ~/.local/share/fonts/Hack && rm -f /tmp/Hack.zip", "Install Hack Nerd Font"]
-        - ["if command -v fc-cache >/dev/null 2>&1; then fc-cache -f ~/.local/share/fonts; fi", "Refresh font cache"]
+    - ghrelease:
+        ryanoasis/nerd-fonts:
+          asset: Hack.tar.xz
+          extract_to: ~/.local/share/fonts/Hack
+          creates: ~/.local/share/fonts/Hack/HackNerdFont-Regular.ttf
+          post_install:
+            - if command -v fc-cache >/dev/null 2>&1; then fc-cache -f ~/.local/share/fonts; fi
 
 - link:
     ~/.config/kitty/kitty.conf: kitty/kitty.conf
@@ -45,5 +44,5 @@
     - create:
         - ~/Library/Preferences
     - shell:
-        - ["command cp -f iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist", "Install iTerm2 preferences"]
-        - ["curl -fsSL https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash", "Download iTerm2 Bash shell integration"]
+        - ["cmp -s iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist || command cp -f iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist", "Install iTerm2 preferences"]
+        - ["[ -s ~/.config/iterm2_shell_integration.bash ] || curl -fsSL https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash", "Download iTerm2 Bash shell integration"]

@@ -7,11 +7,10 @@
         - p7zip-full
         - poppler-utils
         - unzip
-    - shell:
-        - [
-            'if ! command -v yazi >/dev/null 2>&1; then curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-$(uname -m)-unknown-linux-musl.zip" -o /tmp/yazi.zip && unzip -oqj /tmp/yazi.zip "*/yazi" "*/ya" -d ~/.local/bin && chmod +x ~/.local/bin/yazi ~/.local/bin/ya && rm -f /tmp/yazi.zip; fi',
-            "Install Yazi",
-          ]
+    - ghrelease:
+        sxyazi/yazi:
+          asset: yazi-{uname_m}-unknown-linux-musl.zip
+          bins: [yazi, ya]
 
 - ifarch:
     - pacman:
