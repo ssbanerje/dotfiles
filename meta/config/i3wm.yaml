@@ -19,8 +19,8 @@
         - networkmanager
         - blueman
         - pulseaudio
-    - yay:
         - polybar
+    - yay:
         - i3lock-fancy
 
 - create:

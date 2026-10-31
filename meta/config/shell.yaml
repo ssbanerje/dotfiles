@@ -18,8 +18,6 @@
         - python-pygments
 
 - ifmacos:
-    - tap:
-        - homebrew/command-not-found
     - brew:
         - zsh
         - bash-completion

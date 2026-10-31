@@ -21,6 +21,6 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Restart apps
-killall cfprefsd
-killall Finder
-killall SystemUIServer
+killall cfprefsd || true
+killall Finder || true
+killall SystemUIServer || true

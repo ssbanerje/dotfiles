@@ -1,7 +1,5 @@
 # --- Terminal Emulator Configuration ---
 - ifmacos:
-    - tap:
-        - homebrew/cask-fonts
     - cask:
         - kitty
         - iterm2
@@ -9,15 +7,21 @@
 
 - ifubuntu:
     - apt:
+        - curl
+        - unzip
         - kitty
 - ifarch:
     - pacman:
+        - curl
+        - unzip
         - kitty
 - ifanylinux:
+    - create:
+        - ~/.local/share/fonts/Hack
     - shell:
-        - git clone --depth 1 https://github.com/ryanoasis/nerd-fonts /tmp/nerd-fonts
-        - /tmp/nerd-fonts/install.sh Hack
-        - rm -rf /tmp/nerd-fonts
+        - ["curl -fLSs https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip -o /tmp/Hack.zip", "Download Hack Nerd Font"]
+        - ["unzip -oq /tmp/Hack.zip -d ~/.local/share/fonts/Hack && rm -f /tmp/Hack.zip", "Install Hack Nerd Font"]
+        - ["if command -v fc-cache >/dev/null 2>&1; then fc-cache -f ~/.local/share/fonts; fi", "Refresh font cache"]
 
 - create:
     - ~/.config/kitty

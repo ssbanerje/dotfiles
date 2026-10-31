@@ -6,7 +6,7 @@
         - ["rm -rf /tmp/vale/", "Remove vale installer"]
 
 - ifarch:
-    - yay:
+    - pacman:
         - vale
 
 - ifmacos:

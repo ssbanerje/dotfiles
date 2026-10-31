@@ -1,13 +1,12 @@
 # --- MacOS UI Elements Configuration ---
 - tap:
-  - koekeishiya/formulae
+  - asmvik/formulae
 
 - brew:
   - python
   - yabai
 
 - cask:
-  - dozer
   - hammerspoon
 
 - link:
@@ -15,5 +14,5 @@
     ~/.hammerspoon: hammerspoon
 
 - shell:
-    - "brew services start yabai"
+    - "yabai --start-service || true"
     - "./scripts/macos.sh"
