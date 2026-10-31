@@ -1,0 +1,30 @@
+#:schema https://json.schemastore.org/pyproject.json
+[project]
+name = "dotfiles"
+version = "0.1.0"
+description = "Cross-platform dotfiles configuration and verification suite"
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "pytest-testinfra>=10.1",
+  "pyyaml>=6.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers"]
+markers = [
+  "unit: hermetic unit and static dry-run tests",
+  "environment: post-install OS/container environment contract tests",
+  "container: Docker container lifecycle, entrypoint, and image hygiene tests",
+]
+
+[tool.ruff.format]
+quote-style = "single"
