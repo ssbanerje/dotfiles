@@ -109,7 +109,9 @@ fi
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline"
 
 # Machine-local environment overrides (untracked; can call PREPEND_PATH / APPEND_PATH)
-[[ -r "$HOME/.config/env.local.sh" ]] && source "$HOME/.config/env.local.sh"
+if [[ -r "$HOME/.config/env.local.sh" ]]; then
+  source "$HOME/.config/env.local.sh"
+fi
 
 unset -f PREPEND_PATH APPEND_PATH
 

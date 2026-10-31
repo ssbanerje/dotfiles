@@ -19,7 +19,9 @@ fi
 function _check_and_source() {
   local f
   for f in "$@"; do
-    [[ -n "$f" && -r "$f" ]] && source "$f"
+    if [[ -n "$f" && -r "$f" ]]; then
+      source "$f"
+    fi
   done
 }
 
@@ -59,7 +61,9 @@ fi
 set -o vi
 
 # Theme
-command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init bash)"
+fi
 
 # Machine-local overrides (untracked)
 _check_and_source "$HOME/.bashrc.local"

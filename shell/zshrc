@@ -117,12 +117,18 @@ zstyle ':completion:*:*:kill:*' menu yes select
 # }}}
 
 # Prompt
-(( $+commands[starship] )) && eval "$(starship init zsh)"
+if (( $+commands[starship] )); then
+  eval "$(starship init zsh)"
+fi
 
 # Load aliases immediately so they work in `zsh -i -c` and cleanly override plugin aliases
-[[ -r "$HOME/.config/aliases.sh" ]] && source "$HOME/.config/aliases.sh"
+if [[ -r "$HOME/.config/aliases.sh" ]]; then
+  source "$HOME/.config/aliases.sh"
+fi
 
 # Machine-local overrides (untracked)
-[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+if [[ -r "$HOME/.zshrc.local" ]]; then
+  source "$HOME/.zshrc.local"
+fi
 
 # vim:foldmethod=marker

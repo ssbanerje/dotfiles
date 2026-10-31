@@ -25,7 +25,7 @@ def test_zsh_interactive_starts_without_stderr_errors(
 ) -> None:
     assert host.file(f'{target_home}/.zsh_plugins.zsh').is_file
     assert host.file(f'{target_home}/.zsh_plugins.zsh').size > 0
-    res = run_zsh_i(host, 'true')
+    res = run_zsh_i(host, 'exit')
     assert res.rc == 0, f'zsh failed: {res.stderr}'
     assert not SHELL_ERROR_RE.search(res.stderr), (
         f'Unexpected zsh stderr:\n{res.stderr}'
@@ -33,7 +33,7 @@ def test_zsh_interactive_starts_without_stderr_errors(
 
 
 def test_bash_interactive_starts_without_stderr_errors(host: Host) -> None:
-    res = run_bash_i(host, 'true')
+    res = run_bash_i(host, 'exit')
     assert res.rc == 0, f'bash failed: {res.stderr}'
     assert not SHELL_ERROR_RE.search(res.stderr), (
         f'Unexpected bash stderr:\n{res.stderr}'
