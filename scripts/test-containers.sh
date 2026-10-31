@@ -76,28 +76,18 @@ smoke_test_image() {
 build_and_test() {
   local distro="$1"
   local target_uid="$2"
-  local platform_post=""
-  local build_target="linux"
-  local uid_arg="uid=${target_uid}"
-  if [[ "$(uname -s)" == "Darwin" || "${target_uid}" == "501" ]]; then
-    platform_post="-mac"
-    build_target="mac"
-    uid_arg="mac_uid=${target_uid}"
-  fi
-
-  local tag="ghcr.io/ssbanerje/dotfiles:${distro}${platform_post}"
+  local tag="ghcr.io/ssbanerje/dotfiles:${distro}"
   local dockerfile="${REPO_ROOT}/Dockerfile.${distro}"
   local extra_tag_args=()
-  if [[ "${distro}" == "ubuntu" && -z "${platform_post}" ]]; then
+  if [[ "${distro}" == "ubuntu" ]]; then
     extra_tag_args=(-t "ghcr.io/ssbanerje/dotfiles:latest")
   fi
 
-  echo "==> Building ${tag} (target=${build_target}, ${uid_arg}) from Dockerfile.${distro}"
+  echo "==> Building ${tag} (uid=${target_uid}) from Dockerfile.${distro}"
   docker build \
     -f "${dockerfile}" \
-    --target "${build_target}" \
     --build-arg user=dotuser \
-    --build-arg "${uid_arg}" \
+    --build-arg "uid=${target_uid}" \
     -t "${tag}" \
     ${extra_tag_args[@]+"${extra_tag_args[@]}"} \
     "${REPO_ROOT}"
@@ -119,8 +109,12 @@ if [[ "${1:-}" == "--smoke-only" ]]; then
   exit 0
 fi
 
+DEFAULT_UID=1000
+if [[ "$(uname -s)" == "Linux" ]]; then
+  DEFAULT_UID="$(id -u)"
+fi
 TARGET="${1:-all}"
-TARGET_UID="${2:-$(id -u)}"
+TARGET_UID="${2:-${DEFAULT_UID}}"
 
 if [[ ! -x "${REPO_ROOT}/installer/dotbot/bin/dotbot" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-ifplatform/lib/distro/.git" || ! -e "${REPO_ROOT}/installer/plugins/dotbot-template/lib/jinja/.git" ]]; then
   git -C "${REPO_ROOT}" submodule update --init --recursive

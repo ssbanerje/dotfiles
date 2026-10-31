@@ -15,10 +15,6 @@ EOF
 }
 
 UNAME="$(uname -s)"
-PLATFORM_POST=""
-if [[ "${UNAME}" == "Darwin" ]]; then
-  PLATFORM_POST="-mac"
-fi
 
 DISTRO="ubuntu"
 PULL_POLICY="${SHIM_PULL_POLICY:-missing}"
@@ -63,7 +59,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-IMAGE="ghcr.io/ssbanerje/dotfiles:${DISTRO}${PLATFORM_POST}"
+IMAGE="ghcr.io/ssbanerje/dotfiles:${DISTRO}"
 
 STARTED_SSH_AGENT=""
 cleanup() {

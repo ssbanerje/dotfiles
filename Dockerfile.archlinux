@@ -1,4 +1,4 @@
-FROM archlinux:latest AS base
+FROM archlinux:latest
 
 LABEL org.opencontainers.image.authors="Subho Sankar Banerjee <ssbanerje@gmail.com>"
 LABEL org.opencontainers.image.title="Dotfiles"
@@ -38,15 +38,5 @@ ENV SHELL=/usr/bin/zsh \
     PATH=/home/${user}/.local/bin:/home/${user}/.cargo/bin:/home/${user}/.npm-global/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 CMD ["zsh"]
-
-FROM base AS mac
-ARG user=dotuser
-ARG mac_uid=501
-USER root
-RUN usermod -u "${mac_uid}" "${user}" && \
-    chown -hR "${user}" "/home/${user}"
-USER ${user}
-
-FROM base AS linux
 
 # vim:ft=dockerfile:
