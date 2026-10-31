@@ -32,10 +32,10 @@ fi
 export GPG_TTY="$TTY"
 
 # Vim all the way
-export VISUAL="lvim"
-export EDITOR="lvim"
-export USE_EDITOR="lvim"
-export SVN_EDITOR="lvim"
+export VISUAL="nvim"
+export EDITOR="nvim"
+export USE_EDITOR="nvim"
+export SVN_EDITOR="nvim"
 
 # }}}
 

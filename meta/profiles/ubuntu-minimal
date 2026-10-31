@@ -6,6 +6,5 @@ tmux
 git
 bin
 shell
-lunarvim
 nvim
 ranger
