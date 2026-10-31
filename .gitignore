@@ -28,6 +28,7 @@ Thumbs.db
 .bundle
 *.sublime-project
 *.sublime-workspace
+editors/nvim/lazy-lock.json
 TODO
 
 # Environments
