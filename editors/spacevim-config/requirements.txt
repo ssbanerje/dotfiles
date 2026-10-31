@@ -1,9 +1,0 @@
-isort
-neovim-remote
-proselint
-pynvim
-sexpdata
-vim-vint
-websocket-client
-yamllint
-yapf
