@@ -5,11 +5,14 @@
         - fzf
         - zoxide
         - tealdeer
-        - ipython3
     - shell:
         - [
-            'if ! command -v starship >/dev/null 2>&1; then curl -fsSL "https://github.com/starship/starship/releases/latest/download/starship-$(uname -m)-unknown-linux-musl.tar.gz" | tar -xz -C ~/.local/bin starship; fi',
+            'if [ ! -x ~/.local/bin/starship ] && ! command -v starship >/dev/null 2>&1; then mkdir -p ~/.local/bin && curl -fsSL "https://github.com/starship/starship/releases/latest/download/starship-$(uname -m)-unknown-linux-musl.tar.gz" | tar -xz -C ~/.local/bin starship; fi',
             "Install Starship prompt",
+          ]
+        - [
+            'if [ ! -x ~/.local/bin/uv ] && ! command -v uv >/dev/null 2>&1; then mkdir -p ~/.local/bin && curl -fsSL "https://github.com/astral-sh/uv/releases/latest/download/uv-$(uname -m)-unknown-linux-musl.tar.gz" | tar -xz --strip-components=1 -C ~/.local/bin; fi',
+            "Install uv Python manager",
           ]
 
 - ifarch:
@@ -19,7 +22,7 @@
         - zoxide
         - tealdeer
         - starship
-        - ipython
+        - uv
 
 - ifmacos:
     - brew:
@@ -30,9 +33,13 @@
         - tealdeer
         - starship
         - coreutils
-        - ipython
+        - uv
 
 - shell:
+    - [
+        'export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"; command -v ipython >/dev/null 2>&1 || UV_TOOL_BIN_DIR="$HOME/.local/bin" uv tool install --no-cache ipython',
+        "Install IPython via uv",
+      ]
     - [
         'if command -v tldr >/dev/null 2>&1; then tldr --list 2>/dev/null | grep -q . || tldr --update; fi',
         "Populate tealdeer tldr cache",

@@ -20,6 +20,7 @@ ohmyzsh/ohmyzsh path:plugins/safe-paste
 ohmyzsh/ohmyzsh path:plugins/ssh-agent
 ohmyzsh/ohmyzsh path:plugins/sudo
 ohmyzsh/ohmyzsh path:plugins/tmux
+ohmyzsh/ohmyzsh path:plugins/uv kind:defer
 ohmyzsh/ohmyzsh path:plugins/zoxide
 
 jeffreytse/zsh-vi-mode

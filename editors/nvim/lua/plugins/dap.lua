@@ -38,7 +38,12 @@ return {
     -- Python (debugpy)
     local adapter_python = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
     if vim.fn.executable(adapter_python) ~= 1 then
-      adapter_python = vim.fn.executable("python3") == 1 and vim.fn.exepath("python3") or "python"
+      local uv_debugpy = vim.fn.expand("~/.local/share/uv/tools/debugpy/bin/python")
+      if vim.fn.executable(uv_debugpy) == 1 then
+        adapter_python = uv_debugpy
+      else
+        adapter_python = vim.fn.executable("python3") == 1 and vim.fn.exepath("python3") or "python"
+      end
     end
     dap.adapters.python = {
       type = "executable",
