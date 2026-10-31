@@ -22,6 +22,7 @@ EOF
 smoke_test_image() {
   local image="$1"
   echo "==> Smoke-testing ${image}"
+  docker image ls "$image"
   echo "--- Checking default zero-arg container startup (CMD [\"zsh\"])"
   docker run --rm "$image"
   echo "--- Checking direct multi-argument command execution and PATH"
@@ -31,6 +32,12 @@ smoke_test_image() {
     echo "--- Checking passwordless sudo and login shell"
     sudo -n true
     test "${SHELL}" = "/usr/bin/zsh"
+    echo "--- Checking cleaned package and build caches"
+    test ! -d "$HOME/.cache/uv"
+    test ! -d "$HOME/.cache/nvim"
+    if [[ -d /var/cache/pacman/pkg ]]; then
+      test -z "$(ls -A /var/cache/pacman/pkg)"
+    fi
     echo "--- Checking Git template and bin/ symlinks"
     test -s "$HOME/.gitconfig"
     command -v shim
@@ -70,12 +77,6 @@ smoke_test_image() {
     uvx --version
     command -v ipython
     ipython --version
-    echo "--- Checking cleaned package and build caches"
-    test ! -d "$HOME/.cache/uv"
-    test ! -d "$HOME/.cache/nvim"
-    if [[ -d /var/cache/pacman/pkg ]]; then
-      test -z "$(ls -A /var/cache/pacman/pkg)"
-    fi
   '
   echo "--- Checking dynamic runtime high-UID/GID remap (HOST_UID=907197 HOST_GID=89939)"
   docker run --rm -u 0:0 -e HOST_UID=907197 -e HOST_GID=89939 -e TERM=xterm-256color "$image" bash -lc '
