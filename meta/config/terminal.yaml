@@ -9,11 +9,13 @@
     - apt:
         - curl
         - unzip
+        - libnotify-bin
         - kitty
 - ifarch:
     - pacman:
         - curl
         - unzip
+        - libnotify
         - kitty
 - ifanylinux:
     - create:

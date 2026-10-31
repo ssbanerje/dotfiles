@@ -59,6 +59,7 @@ class Pacman(dotbot.Plugin):
         cmd = (
             'rm -rf /tmp/yay-bin && '
             'git clone --depth 1 https://aur.archlinux.org/yay-bin.git /tmp/yay-bin && '
+            'echo "options+=(!debug)" >> /tmp/yay-bin/PKGBUILD && '
             '(cd /tmp/yay-bin && makepkg -si --needed --noconfirm) && '
             'rm -rf /tmp/yay-bin'
         )

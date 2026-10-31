@@ -5,7 +5,6 @@
         - fzf
         - zoxide
         - tealdeer
-        - libnotify-bin
         - ipython3
     - shell:
         - [
@@ -20,7 +19,6 @@
         - zoxide
         - tealdeer
         - starship
-        - libnotify
         - ipython
 
 - ifmacos:
