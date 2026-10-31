@@ -1,7 +1,6 @@
 # --- AstroNvim Configuration ---
 - ifubuntu:
     - create:
-        - ~/.local/bin
         - ~/.npm-global
     - apt:
         - curl
@@ -17,10 +16,7 @@
         - ["LG_CAND=$(apt-cache policy lazygit 2>/dev/null | awk '/Candidate:/ {print $2}'); if [ -n \"$LG_CAND\" ] && [ \"$LG_CAND\" != \"(none)\" ]; then sudo DEBIAN_FRONTEND=noninteractive apt-get install -y lazygit; else case \"$(uname -m)\" in aarch64|arm64) LG_ARCH=arm64 ;; *) LG_ARCH=x86_64 ;; esac; LG_VER=$(curl -fsSL -o /dev/null -w '%{url_effective}' https://github.com/jesseduffield/lazygit/releases/latest | sed 's#.*/tag/v##'); curl -fLSs \"https://github.com/jesseduffield/lazygit/releases/download/v${LG_VER}/lazygit_${LG_VER}_linux_${LG_ARCH}.tar.gz\" | tar xzf - -C ~/.local/bin lazygit; fi", "Install lazygit"]
         - ["npm config set prefix ~/.npm-global", "Configure user-local npm prefix"]
     - npm:
-        stdout: false
-        stderr: true
-        packages:
-          - tree-sitter-cli
+        - tree-sitter-cli
 
 - ifarch:
     - pacman:

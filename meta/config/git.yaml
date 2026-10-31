@@ -1,25 +1,24 @@
 # --- Git Configuration ---
 - template:
-    - ~/.gitconfig:
-        source_file: git/gitconfig
-        params:
-          NAME: Subho Banerjee
-          EMAIL: ssbanerje@gmail.com
-          GITHUB_USERNAME: ssbanerje
-          SMTP_SERVER: smtp.gmail.com
-          SMTP_PORT: 587
-          SMTP_ENCRYPTION: tls
-          __UNAME__:
-            CREDENTIAL_HELPER:
-              Darwin: osxkeychain
-              Linux: cache --timeout 36000
+    ~/.gitconfig:
+      source_file: git/gitconfig
+      params:
+        NAME: Subho Banerjee
+        EMAIL: ssbanerje@gmail.com
+        GITHUB_USERNAME: ssbanerje
+        SMTP_SERVER: smtp.gmail.com
+        SMTP_PORT: 587
+        SMTP_ENCRYPTION: tls
+        __UNAME__:
+          CREDENTIAL_HELPER:
+            Darwin: osxkeychain
+            Linux: cache --timeout 36000
 
 - link:
     ~/.gitattributes: git/gitattributes
 
 - shell:
-    - >
-      rm -f ~/.global_gitignore;
-      for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do
-        cat git/gitignore/Global/$f.gitignore >> ~/.global_gitignore
-      done
+    - [
+        'rm -f ~/.global_gitignore; for f in Archives Backup Diff Dropbox Linux Vim Xcode macOS; do cat "git/gitignore/Global/${f}.gitignore" >> ~/.global_gitignore; done',
+        "Assemble global gitignore",
+      ]

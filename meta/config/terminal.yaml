@@ -23,28 +23,25 @@
         - ["unzip -oq /tmp/Hack.zip -d ~/.local/share/fonts/Hack && rm -f /tmp/Hack.zip", "Install Hack Nerd Font"]
         - ["if command -v fc-cache >/dev/null 2>&1; then fc-cache -f ~/.local/share/fonts; fi", "Refresh font cache"]
 
-- create:
-    - ~/.config/kitty
-
 - link:
     ~/.config/kitty/kitty.conf: kitty/kitty.conf
     ~/.config/kitty/tokyonight.conf: kitty/tokyonight.conf
-    ~/.config/kitty/macos-launch-services-cmdline:
-      if: '[ `uname` = Darwin ]'
-      path: kitty/macos-launch-services-cmdline
+
 - template:
-    - ~/.config/kitty/keymaps.conf:
-          source_file: kitty/keymaps.conf
-          params:
-            PREFIX: ctrl+a
-            __UNAME__:
-              MOD_KEY:
-                Darwin: cmd
-                Linux: ctrl+shift
+    ~/.config/kitty/keymaps.conf:
+      source_file: kitty/keymaps.conf
+      params:
+        PREFIX: ctrl+a
+        __UNAME__:
+          MOD_KEY:
+            Darwin: cmd
+            Linux: ctrl+shift
 
 - ifmacos:
+    - link:
+        ~/.config/kitty/macos-launch-services-cmdline: kitty/macos-launch-services-cmdline
     - create:
         - ~/Library/Preferences
     - shell:
-        - "command cp -f iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist"
-        - "curl -fsSL https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash"
+        - ["command cp -f iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist", "Install iTerm2 preferences"]
+        - ["curl -fsSL https://iterm2.com/shell_integration/bash -o ~/.config/iterm2_shell_integration.bash", "Download iTerm2 Bash shell integration"]

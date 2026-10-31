@@ -26,11 +26,6 @@
     - yay:
         - i3lock-fancy
 
-- create:
-    - ~/.config/i3
-    - ~/.config/i3status
-    - ~/.config/rofi
-
 - link:
     ~/.config/i3/config: i3wm/i3.conf
     ~/.config/i3status/config: i3wm/i3status.conf

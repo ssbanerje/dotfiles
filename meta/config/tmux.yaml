@@ -11,9 +11,6 @@
     - brew:
         - tmux
 
-- create:
-    - ~/.tmux/plugins
-
 - link:
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/tpm
@@ -22,4 +19,3 @@
     - command: ~/.tmux/plugins/tpm/bin/install_plugins
       description: Installing tmux plugins via TPM
       stdout: true
-      stderr: true

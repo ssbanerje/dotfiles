@@ -6,8 +6,11 @@
 
 - defaults:
     link:
+      create: true
       force: true
       relink: true
+    shell:
+      stderr: true
 
 - clean:
     ~/:

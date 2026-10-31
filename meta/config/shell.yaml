@@ -9,7 +9,7 @@
         - ipython3
     - shell:
         - [
-            'if ! command -v starship >/dev/null 2>&1; then mkdir -p ~/.local/bin && curl -fsSL "https://github.com/starship/starship/releases/latest/download/starship-$(uname -m)-unknown-linux-musl.tar.gz" | tar -xz -C ~/.local/bin starship; fi',
+            'if ! command -v starship >/dev/null 2>&1; then curl -fsSL "https://github.com/starship/starship/releases/latest/download/starship-$(uname -m)-unknown-linux-musl.tar.gz" | tar -xz -C ~/.local/bin starship; fi',
             "Install Starship prompt",
           ]
 

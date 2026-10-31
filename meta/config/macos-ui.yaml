@@ -13,5 +13,5 @@
     ~/.hammerspoon: hammerspoon
 
 - shell:
-    - "yabai --start-service || true"
-    - "./scripts/macos.sh"
+    - ["yabai --start-service || true", "Start yabai background service"]
+    - ["./scripts/macos.sh", "Apply macOS system preferences"]
