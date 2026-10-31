@@ -1,74 +1,138 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+_G.TeXMagicBuildConfig = _G.TeXMagicBuildConfig or {}
 
--- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
--- Configuration documentation can be found with `:h astrolsp`
--- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
---       as this provides autocomplete and documentation while editing
+local forward_search_exe
+local forward_search_args
+if vim.fn.has("macunix") == 1 then
+  forward_search_exe = "/Applications/Skim.app/Contents/SharedSupport/displayline"
+  forward_search_args = { "%l", "%p", "%f" }
+else
+  forward_search_exe = "okular"
+  forward_search_args = { "--unique", "file:%p#src:%l%f" }
+end
+
+local lua_ls_settings = {
+  format = { enable = false },
+  telemetry = { enable = false },
+}
+if vim.fn.has("macunix") == 1 then
+  local hs_lib = "/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"
+  if vim.fn.isdirectory(hs_lib) == 1 then
+    lua_ls_settings.diagnostics = { globals = { "hs" } }
+    lua_ls_settings.workspace = { library = { hs_lib } }
+  end
+end
+
+local servers = {}
+for _, entry in ipairs({
+  { server = "clangd", bin = "clangd" },
+  { server = "texlab", bin = "texlab" },
+}) do
+  if vim.fn.executable(entry.bin) == 1 then
+    table.insert(servers, entry.server)
+  end
+end
 
 ---@type LazySpec
 return {
   "AstroNvim/astrolsp",
   ---@type AstroLSPOpts
   opts = {
-    -- Configuration table of features provided by AstroLSP
     features = {
-      codelens = true, -- enable/disable codelens refresh on start
-      inlay_hints = false, -- enable/disable inlay hints on start
-      semantic_tokens = true, -- enable/disable semantic token highlighting
+      codelens = true,
+      inlay_hints = false,
+      semantic_tokens = true,
     },
-    -- customize lsp formatting options
     formatting = {
-      -- control auto formatting on save
       format_on_save = {
-        enabled = true, -- enable or disable format on save globally
-        allow_filetypes = { -- enable format on save for specified filetypes only
-          -- "go",
-        },
-        ignore_filetypes = { -- disable format on save for specified filetypes
-          -- "python",
-        },
+        enabled = false,
       },
-      disabled = { -- disable formatting capabilities for the listed language servers
-        -- disable lua_ls formatting capability if you want to use StyLua to format your lua code
-        -- "lua_ls",
+      disabled = {
+        "lua_ls",
       },
-      timeout_ms = 1000, -- default format timeout
-      -- filter = function(client) -- fully override the default formatting function
-      --   return true
-      -- end
+      timeout_ms = 1000,
     },
-    -- enable servers that you already have installed without mason
-    servers = {
-      -- "pyright"
-    },
-    -- customize language server configuration passed to `vim.lsp.config`
-    -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
+    servers = servers,
+    ---@diagnostic disable: missing-fields
     config = {
-      -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
+      clangd = {
+        cmd = {
+          "clangd",
+          "-j=4",
+          "--all-scopes-completion",
+          "--background-index",
+          "--clang-tidy",
+          "--header-insertion=iwyu",
+          "--pch-storage=memory",
+        },
+      },
+      lua_ls = {
+        settings = {
+          Lua = lua_ls_settings,
+        },
+      },
+      yamlls = {
+        settings = {
+          yaml = {
+            schemas = {
+              kubernetes = { "*.k8s.yml", "*.k8s.yaml" },
+            },
+          },
+        },
+      },
+      rust_analyzer = {
+        settings = {
+          ["rust-analyzer"] = {
+            cargo = {
+              autoreload = true,
+            },
+            checkOnSave = true,
+            check = {
+              command = "clippy",
+            },
+            lens = {
+              enable = true,
+            },
+            inlayHints = {
+              enable = true,
+              showParameterNames = true,
+              parameterHintsPrefix = "<- ",
+              otherHintsPrefix = "=> ",
+            },
+          },
+        },
+      },
+      texlab = {
+        on_new_config = function(new_config)
+          if type(_G.TeXMagicBuildConfig) == "table" and next(_G.TeXMagicBuildConfig) ~= nil then
+            new_config.settings.texlab.build = _G.TeXMagicBuildConfig
+          end
+        end,
+        settings = {
+          texlab = {
+            auxDirectory = "build",
+            bibtexFormatter = "texlab",
+            build = _G.TeXMagicBuildConfig,
+            chktex = {
+              onOpenAndSave = true,
+              onEdit = true,
+            },
+            formatterLineLength = 120,
+            forwardSearch = {
+              executable = forward_search_exe,
+              args = forward_search_args,
+            },
+          },
+        },
+      },
     },
-    -- customize how language servers are attached
     handlers = {
-      -- a function with the key `*` modifies the default handler, functions takes the server name as the parameter
-      -- ["*"] = function(server) vim.lsp.enable(server) end
-
-      -- the key is the server that is being setup with `vim.lsp.config`
-      -- rust_analyzer = false, -- setting a handler to false will disable the set up of that language server
+      -- default handlers
     },
-    -- Configure buffer local auto commands to add when attaching a language server
     autocmds = {
-      -- first key is the `augroup` to add the auto commands to (:h augroup)
       lsp_codelens_refresh = {
-        -- Optional condition to create/delete auto command group
-        -- can either be a string of a client capability or a function of `fun(client, bufnr): boolean`
-        -- condition will be resolved for each client on each execution and if it ever fails for all clients,
-        -- the auto commands will be deleted for that buffer
         cond = "textDocument/codeLens",
-        -- cond = function(client, bufnr) return client.name == "lua_ls" end,
-        -- list of auto commands to set
         {
-          -- events to trigger
           event = { "InsertLeave", "BufEnter" },
-          -- the rest of the autocmd options (:h nvim_create_autocmd)
           desc = "Refresh codelens (buffer)",
           callback = function(args)
             if require("astrolsp").config.features.codelens then vim.lsp.codelens.enable(true, { bufnr = args.buf }) end
@@ -76,10 +140,8 @@ return {
         },
       },
     },
-    -- mappings to be set up on attaching of a language server
     mappings = {
       n = {
-        -- a `cond` key can provided as the string of a server capability to be required to attach, or a function with `client` and `bufnr` parameters from the `on_attach` that returns a boolean
         gD = {
           function() vim.lsp.buf.declaration() end,
           desc = "Declaration of current symbol",
@@ -92,13 +154,27 @@ return {
             return client:supports_method "textDocument/semanticTokens/full" and vim.lsp.semantic_tokens ~= nil
           end,
         },
+        ["<Leader>lX"] = {
+          desc = "TeX",
+          cond = function(client) return client.name == "texlab" end,
+        },
+        ["<Leader>lXb"] = {
+          function() vim.cmd(vim.fn.exists(":LspTexlabBuild") == 2 and "LspTexlabBuild" or "TexlabBuild") end,
+          desc = "Build document",
+          cond = function(client) return client.name == "texlab" end,
+        },
+        ["<Leader>lXf"] = {
+          function() vim.cmd(vim.fn.exists(":LspTexlabForward") == 2 and "LspTexlabForward" or "TexlabForward") end,
+          desc = "Forward search preview",
+          cond = function(client) return client.name == "texlab" end,
+        },
       },
     },
-    -- A custom `on_attach` function to be run after the default `on_attach` function
-    -- takes two parameters `client` and `bufnr`  (`:h lsp-attach`)
-    on_attach = function(client, bufnr)
-      -- this would disable semanticTokensProvider for all clients
-      -- client.server_capabilities.semanticTokensProvider = nil
+    on_attach = function(client, _bufnr)
+      if client.name == "texlab" and type(_G.TeXMagicBuildConfig) == "table" and next(_G.TeXMagicBuildConfig) ~= nil then
+        client.config.settings.texlab.build = _G.TeXMagicBuildConfig
+        client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+      end
     end,
   },
 }
