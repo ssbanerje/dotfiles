@@ -1,17 +1,44 @@
 # Automatically normalize line endings for all text-based files
 * text=auto
 
-*.png diff=nodiff
-*.jpg diff=nodiff
-*.gif diff=nodiff
-*.ttf diff=nodiff
-*.woff diff=nodiff
-*.eot diff=nodiff
-*.svg diff=nodiff
-*.swf diff=nodiff
-*.fla diff=nodiff
-*.m4v diff=nodiff
-*.flv diff=nodiff
-*.ogv diff=nodiff
-*.webm diff=nodiff
-*.mp4 diff=nodiff
+# Semantic hunk headers for source & document files
+*.bash diff=bash
+*.bib  diff=bibtex
+*.c    diff=cpp
+*.cc   diff=cpp
+*.cpp  diff=cpp
+*.go   diff=golang
+*.h    diff=cpp
+*.hpp  diff=cpp
+*.md   diff=markdown
+*.py   diff=python
+*.rs   diff=rust
+*.sh   diff=bash
+*.tex  diff=tex
+*.zsh  diff=bash
+
+# Binary formats (omit text diffs and CRLF mangling; note *.svg stays diffable XML)
+*.eot   binary
+*.fla   binary
+*.flv   binary
+*.gif   binary
+*.gz    binary
+*.ico   binary
+*.jpeg  binary
+*.jpg   binary
+*.m4v   binary
+*.mov   binary
+*.mp4   binary
+*.ogv   binary
+*.otf   binary
+*.pdf   binary
+*.png   binary
+*.swf   binary
+*.ttf   binary
+*.webm  binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.xz    binary
+*.zip   binary
+*.zst   binary
