@@ -119,30 +119,96 @@ def test_dot_cli_doctor_and_bench(host: Host) -> None:
         assert f'[ok]   {target}' in bench.stdout
 
 
-ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m|[\x01\x02]')
+PROMPT_ESCAPE_RE = re.compile(r'%\{|\x1b\[[0-9;]*m|%\}|\\\[|\\\]|[\x01\x02]')
 
 
 def test_starship_prompt_shortening_and_git_icons(host: Host) -> None:
+    delim = '__STARSHIP_DELIM__'
     snippet = (
+        'set -euo pipefail && '
         'source "$HOME/.config/env.sh" && '
+        'export STARSHIP_CONFIG="$HOME/.config/starship.toml" && '
         'tmp="$(mktemp -d "$HOME/starshiptmp.XXXXXX")" && '
         'trap \'rm -rf "$tmp"\' EXIT && '
-        'mkdir -p "$tmp/longdirone/longdirtwo/Workshop" && '
-        'cd "$tmp/longdirone/longdirtwo/Workshop" && '
-        'p1="$(STARSHIP_SHELL=sh starship prompt)" && '
+        'mkdir -p "$tmp/dirone/dirtwo/dirthree/Workshop" && '
+        'cd "$tmp/dirone/dirtwo/dirthree/Workshop" && '
+        'p_zsh="$(STARSHIP_SHELL=zsh starship prompt)" && '
+        'p_bash="$(STARSHIP_SHELL=bash starship prompt)" && '
         'git init -q -b main && '
-        'p2="$(STARSHIP_SHELL=sh starship prompt)" && '
-        'mkdir dotfiles && cd dotfiles && '
-        'p3="$(STARSHIP_SHELL=sh starship prompt)" && '
-        'rp="$(STARSHIP_SHELL=sh starship prompt --right)" && '
-        'printf "%s\\n---\\n%s\\n---\\n%s\\n---\\n%s\\n" "$p1" "$p2" "$p3" "$rp"'
+        'git config user.email "ci@example.com" && '
+        'git config user.name "CI" && '
+        'p_root="$(STARSHIP_SHELL=zsh starship prompt)" && '
+        'mkdir -p dotfiles/shell && '
+        'cd dotfiles/shell && '
+        'p_sub="$(STARSHIP_SHELL=zsh starship prompt)" && '
+        'cd "$tmp/dirone/dirtwo/dirthree/Workshop" && '
+        'echo a > tracked.txt && '
+        'git add tracked.txt && '
+        'git commit -q -m "init" && '
+        'git tag v1.0 && '
+        'echo b > staged.txt && '
+        'git add staged.txt && '
+        'echo c >> tracked.txt && '
+        'echo d > untracked.txt && '
+        'p_dirty="$(STARSHIP_SHELL=zsh starship prompt)" && '
+        'short_sha="$(git rev-parse --short=8 HEAD)" && '
+        'git checkout -q --detach HEAD && '
+        'git reset -q --hard && '
+        'rm -f untracked.txt && '
+        'p_detached="$(STARSHIP_SHELL=zsh starship prompt)" && '
+        'p_vicmd="$(STARSHIP_SHELL=zsh starship prompt --keymap=vicmd)" && '
+        'rp_err="$(STARSHIP_SHELL=zsh starship prompt --right --status=1)" && '
+        'rp_sig="$(STARSHIP_SHELL=zsh starship prompt --right --status=130)" && '
+        'rp_pipe="$(YAZI_LEVEL=1 VIMRUNTIME=/tmp STARSHIP_SHELL=zsh '
+        'starship prompt --right --status=1 --pipestatus="0 1" '
+        '--jobs=1 --cmd-duration=6000)" && '
+        f'printf "%s\\n{delim}\\n" '
+        '"$p_zsh" "$p_bash" "$p_root" "$p_sub" "$p_dirty" '
+        '"$short_sha" "$p_detached" "$p_vicmd" "$rp_err" "$rp_sig" "$rp_pipe"'
     )
     res = host.run('bash -c %s', snippet)
-    assert res.rc == 0, res.stderr
-    cleaned = ANSI_ESCAPE_RE.sub('', res.stdout)
-    p1, p2, p3, rp = [part.strip() for part in cleaned.split('\n---\n')]
+    assert res.rc == 0, f'{res.stdout}\n{res.stderr}'
+    cleaned = PROMPT_ESCAPE_RE.sub('', res.stdout)
+    parts = [part.strip('\n') for part in cleaned.split(f'\n{delim}\n')[:-1]]
+    (
+        p_zsh,
+        p_bash,
+        p_root,
+        p_sub,
+        p_dirty,
+        short_sha,
+        p_detached,
+        p_vicmd,
+        rp_err,
+        rp_sig,
+        rp_pipe,
+    ) = parts
 
-    assert ' ~/s/l/l/Workshop »' in p1
-    assert ' ~/s/l/l/Workshop on   main »' in p2
-    assert ' ~/s/l/l/W/dotfiles on   main »' in p3
-    assert rp.startswith('on ') and '@' in rp
+    # [shell]: hidden cleanly in zsh (no double space), visible in bash
+    assert '[zsh]' not in p_zsh
+    assert '  ' not in p_zsh
+    assert ' ~/s/d/dirtwo/dirthree/Workshop » ' in p_zsh
+    assert '[bash]  ~/s/d/dirtwo/dirthree/Workshop » ' in p_bash
+
+    # [directory] + [git_branch]: repo root stays anchored inside subdirs
+    assert ' ~/s/d/d/d/Workshop on   main » ' in p_root
+    assert ' ~/s/d/d/d/Workshop/dotfiles/shell on   main » ' in p_sub
+
+    # [git_status]: space-separated counters; tag hidden on attached branch
+    assert 'on   main +1 !1 ?1 » ' in p_dirty
+    assert '#v1.0' not in p_dirty
+
+    # [git_commit]: detached HEAD shows @<8-sha> #<tag> without  HEAD or ()
+    assert f' ~/s/d/d/d/Workshop on  @{short_sha} #v1.0 » ' in p_detached
+    assert 'HEAD' not in p_detached
+    assert '(' not in p_detached
+
+    # [character]: vi normal mode shows Neovim glyph
+    assert p_vicmd.endswith('  ')
+
+    # Right prompt: numeric error, signal name, pipestatus, jobs, context, badges
+    assert rp_err.startswith('✘ 1 on ') and '@' in rp_err
+    assert not rp_err.endswith(' ')
+    assert rp_sig.startswith('✘ 130 INT on ')
+    assert rp_pipe.startswith('[0|1] => ✘ 1 took 6s  1 on ')
+    assert rp_pipe.endswith(' 󰇥 ')
