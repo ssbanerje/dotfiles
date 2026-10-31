@@ -31,10 +31,11 @@ COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd "/home/${user}/.dotfiles" && \
     ./install_profile -vv -x ubuntu-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    git gc --prune=now --quiet && \
     sudo usermod -s /usr/bin/zsh "${user}" && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos && \
-    rm -rf "/home/${user}/.cache/pip" "/home/${user}/.npm/_cacache" && \
+    rm -rf "/home/${user}/.cache/uv" "/home/${user}/.cache/pip" "/home/${user}/.cache/nvim" "/home/${user}/.local/state/nvim" "/home/${user}/.npm" && \
     find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
 ENV SHELL=/usr/bin/zsh \

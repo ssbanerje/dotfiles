@@ -16,8 +16,7 @@ RUN pacman-key --init && pacman-key --populate archlinux && \
     usermod -aG docker "${user}" && \
     echo "${user} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${user}" && \
     chmod 0440 "/etc/sudoers.d/${user}" && \
-    pacman -Scc --noconfirm && \
-    rm -rf /tmp/*
+    rm -rf /var/cache/pacman/pkg/* /var/lib/pacman/sync/* /tmp/*
 
 # Setup dotfiles
 USER ${user}
@@ -27,10 +26,10 @@ COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd "/home/${user}/.dotfiles" && \
     ./install_profile -vv -x archlinux-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    git gc --prune=now --quiet && \
     sudo usermod -s /usr/bin/zsh "${user}" && \
-    sudo pacman -Scc --noconfirm && \
-    sudo rm -rf /tmp/* && \
-    rm -rf "/home/${user}/.cache/pip" "/home/${user}/.cache/yay" "/home/${user}/.npm/_cacache" && \
+    sudo rm -rf /var/cache/pacman/pkg/* /var/lib/pacman/sync/* /tmp/* && \
+    rm -rf "/home/${user}/.cache/uv" "/home/${user}/.cache/pip" "/home/${user}/.cache/yay" "/home/${user}/.cache/nvim" "/home/${user}/.local/state/nvim" "/home/${user}/.npm" && \
     find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
 ENV SHELL=/usr/bin/zsh \
