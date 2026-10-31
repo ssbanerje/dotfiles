@@ -1,4 +1,4 @@
--- Customize Mason
+-- Customize Mason tool list
 
 ---@type LazySpec
 return {
@@ -6,33 +6,27 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = function(_, opts)
       opts.run_on_start = false
+      -- Note: community packs already register lua-language-server, stylua,
+      -- ruff, codelldb, yaml-language-server, docker-language-server, hadolint.
       opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, {
         -- Language servers
         "bash-language-server",
         "clangd",
         "cmake-language-server",
-        "dockerfile-language-server",
         "json-lsp",
-        "lua-language-server",
         "pyright",
         "texlab",
         "vim-language-server",
-        "yaml-language-server",
 
         -- Debuggers
-        "codelldb",
         "debugpy",
 
         -- Formatters
-        "isort",
         "prettier",
         "shfmt",
-        "stylua",
-        "yapf",
 
         -- Linters
         "shellcheck",
-        "vint",
         "yamllint",
       })
     end,

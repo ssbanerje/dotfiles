@@ -4,26 +4,15 @@ return {
   ---@type AstroCoreOpts
   opts = {
     treesitter = {
-      highlight = true,
-      indent = true,
-      auto_install = true,
+      -- Core AstroNvim + imported community packs already install c, lua,
+      -- markdown, markdown_inline, python, vim, vimdoc, dockerfile, rust,
+      -- toml, and yaml.
       ensure_installed = {
         "bash",
-        "c",
         "cpp",
-        "dockerfile",
         "html",
         "json",
         "latex",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "python",
-        "rust",
-        "toml",
-        "vim",
-        "vimdoc",
-        "yaml",
       },
       textobjects = {
         move = false,

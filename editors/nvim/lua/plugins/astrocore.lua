@@ -32,34 +32,22 @@ local function wipe_registers()
   vim.notify("Registers wiped", vim.log.levels.INFO)
 end
 
+local function pick_window()
+  local win = require("window-picker").pick_window()
+  if win then vim.api.nvim_set_current_win(win) end
+end
+
+local function undo_history() require("snacks").picker.undo() end
+
 local opt = {
-  relativenumber = true,
-  number = true,
-  spell = false,
-  signcolumn = "yes",
-  wrap = false,
-  confirm = true,
-  backup = false,
   writebackup = true,
-  swapfile = true,
-  undofile = true,
   undolevels = 1000,
-  undodir = vim.fn.stdpath "cache" .. "/undo",
   cmdheight = 1,
-  title = true,
   titlestring = "%<%F%=%l/%L - nvim",
-  tw = 120,
+  textwidth = 120,
   colorcolumn = "+1",
   scrolloff = 5,
-  diffopt = "vertical",
-  ignorecase = true,
-  smartcase = true,
-  wrapscan = true,
-  splitright = true,
-  splitbelow = true,
-  inccommand = "nosplit",
-  conceallevel = 0,
-  autoread = true,
+  diffopt = vim.list_extend(vim.opt.diffopt:get(), { "vertical" }),
 }
 
 if vim.fn.executable("rg") == 1 then
@@ -69,37 +57,27 @@ end
 
 local mappings = {
   n = {
-    -- Default buffer nav
-    ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
-    ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
-    ["<Leader>bd"] = {
-      function()
-        require("astroui.status.heirline").buffer_picker(
-          function(bufnr) require("astrocore.buffer").close(bufnr) end
-        )
-      end,
-      desc = "Close buffer from tabline",
-    },
-
     -- Consistent forward/backward search navigation regardless of / or ?
     n = { "'Nn'[v:searchforward]", expr = true, desc = "Next search match" },
     N = { "'nN'[v:searchforward]", expr = true, desc = "Previous search match" },
 
     -- Custom mappings
     Q = { "<cmd>close<cr>", desc = "Close window", silent = true },
+    ["-"] = { pick_window, desc = "Pick window" },
     ["<"] = { "<<_", desc = "Indent left" },
     [">"] = { ">>_", desc = "Indent right" },
     ss = { "<cmd>split<cr>", desc = "Horizontal split", silent = true },
     sv = { "<cmd>vsplit<cr>", desc = "Vertical split", silent = true },
-    Y = { "y$", desc = "Yank to end of line" },
     vv = { "^v$", desc = "Select line" },
 
-    -- Mundo
-    U = { "<cmd>MundoToggle<cr>", desc = "Mundo Toggle", silent = true },
+    -- Undo picker & privileged save
+    U = { undo_history, desc = "Undo history" },
+    ["<Leader>W"] = { "<cmd>SudaWrite<cr>", desc = "Write with sudo" },
 
-    -- F-keys (Outline & File Tree)
+    -- F-keys (Outline, File Tree, Undo History)
     ["<F2>"] = { "<cmd>AerialToggle<cr>", desc = "Outline Toggle", silent = true },
     ["<F3>"] = { "<cmd>Neotree toggle<cr>", desc = "Neotree Toggle", silent = true },
+    ["<F5>"] = { undo_history, desc = "Undo history" },
 
     -- Clipboard (Normal)
     P = { '"+p', desc = "Paste from clipboard" },
@@ -112,20 +90,16 @@ local mappings = {
     ["<Leader>uo"] = { "<cmd>setlocal cursorcolumn!<cr>", desc = "Toggle cursor column" },
     ["<Leader>uR"] = { "<cmd>setlocal readonly!<cr>", desc = "Toggle read only" },
 
-    -- Buffer mappings (<Leader>b)
-    ["<Leader>b"] = { desc = "Buffers" },
-    ["<Leader>bX"] = { "<cmd>normal gg=G<cr>", desc = "Reindent Buffer" },
+    -- Buffer extras (<Leader>b)
     ["<Leader>bp"] = { '<cmd>normal ggdG"+P<cr>', desc = "Truncate file and paste from clipboard" },
-    ["<Leader>br"] = { "<cmd>normal gg=G<cr>", desc = "Reindent Buffer" },
+    ["<Leader>br"] = { "<cmd>normal gg=G<cr>", desc = "Reindent buffer" },
     ["<Leader>by"] = { '<cmd>normal ggVG"+y``<cr>', desc = "Copy buffer to clipboard" },
 
-    -- LSP (<Leader>l)
-    ["<Leader>l"] = { desc = "LSP" },
+    -- LSP / Trouble (<Leader>l)
     ["<Leader>lI"] = { function() require("snacks").picker.lsp_implementations() end, desc = "Implementations" },
     ["<Leader>lW"] = { "<cmd>Trouble diagnostics toggle<cr>", desc = "Workspace Diagnostics" },
     ["<Leader>lD"] = { "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Document Diagnostics" },
     ["<Leader>lR"] = { "<cmd>Trouble lsp toggle focus=false<cr>", desc = "Goto References" },
-    ["<Leader>lT"] = { function() vim.lsp.buf.type_definition() end, desc = "Type Definition" },
     ["<Leader>lt"] = { "<cmd>Trouble<cr>", desc = "Trouble" },
 
     -- Windows (<Leader>w)
@@ -144,7 +118,7 @@ local mappings = {
     ["<Leader>ws"] = { "<cmd>split<cr>", desc = "Split horizontal" },
     ["<Leader>wt"] = { "<cmd>tabnew<cr>", desc = "Create new tab" },
     ["<Leader>wv"] = { "<cmd>vsplit<cr>", desc = "Split vertical" },
-    ["<Leader>ww"] = { "<cmd>ChooseWin<cr>", desc = "Choose window" },
+    ["<Leader>ww"] = { pick_window, desc = "Pick window" },
   },
   x = {
     n = { "'Nn'[v:searchforward]", expr = true, desc = "Next search match" },
@@ -155,44 +129,22 @@ local mappings = {
     N = { "'nN'[v:searchforward]", expr = true, desc = "Previous search match" },
   },
   v = {
-    -- Visual maps
     Y = { '"+y', desc = "Copy to clipboard" },
     ["/"] = { 'y/<C-R>"<cr>', desc = "Search highlighted" },
     p = { '"_c<C-R>"<esc>', desc = "Paste over selected" },
-
-    -- Align (Visual Leader a)
-    ["<Leader>a"] = { desc = "Align" },
-    ["<Leader>a<space>"] = { [[:Tabularize /\s<cr>]], desc = "Align at space" },
-    ["<Leader>a#"] = { [[:Tabularize /#<cr>]], desc = "Align at #" },
-    ["<Leader>a%"] = { [[:Tabularize /%<cr>]], desc = "Align at %" },
-    ["<Leader>a&"] = { [[:Tabularize /&<cr>]], desc = "Align at &" },
-    ["<Leader>a("] = { [[:Tabularize /(<cr>]], desc = "Align at (" },
-    ["<Leader>a)"] = { [[:Tabularize /)<cr>]], desc = "Align at )" },
-    ["<Leader>a,"] = { [[:Tabularize /,<cr>]], desc = "Align at ," },
-    ["<Leader>a."] = { [[:Tabularize /\.<cr>]], desc = "Align at ." },
-    ["<Leader>a:"] = { [[:Tabularize /:<cr>]], desc = "Align at :" },
-    ["<Leader>a;"] = { [[:Tabularize /;<cr>]], desc = "Align at ;" },
-    ["<Leader>a="] = { [[:Tabularize /=<cr>]], desc = "Align at =" },
-    ["<Leader>a["] = { [[:Tabularize /[<cr>]], desc = "Align at [" },
-    ["<Leader>a]"] = { [[:Tabularize /]<cr>]], desc = "Align at ]" },
-    ["<Leader>a{"] = { [[:Tabularize /{<cr>]], desc = "Align at {" },
-    ["<Leader>a|"] = { [[:Tabularize /|<cr>]], desc = "Align at |" },
-    ["<Leader>a}"] = { [[:Tabularize /}<cr>]], desc = "Align at }" },
-    ["<Leader>a¦"] = { [[:Tabularize /¦<cr>]], desc = "Align at ¦" },
   },
   t = {
-    -- Terminal maps
     ["<esc>"] = { [[<C-\><C-n>]], desc = "Normal mode" },
     jk = { [[<C-\><C-n>]], desc = "Normal mode" },
   },
 }
 
--- Add window numbers to mappings
+-- Direct numeric window jumps (1..9)
 for i = 1, 9 do
   mappings.n[tostring(i)] = {
     function()
       if #vim.api.nvim_list_wins() >= i then
-        vim.api.nvim_command(":" .. i .. "wincmd w")
+        vim.cmd(i .. "wincmd w")
       end
     end,
     desc = "Goto window " .. i,
@@ -206,11 +158,6 @@ return {
   opts = {
     features = {
       large_buf = { size = 1024 * 256, lines = 10000 },
-      autopairs = true,
-      cmp = true,
-      diagnostics = true,
-      highlighturl = true,
-      notifications = true,
     },
     diagnostics = {
       virtual_text = false,
@@ -220,6 +167,7 @@ return {
     options = {
       opt = opt,
       g = {
+        autoformat = false,
         tex_conceal = "",
       },
     },

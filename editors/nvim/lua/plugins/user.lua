@@ -1,68 +1,53 @@
 ---@type LazySpec
 return {
-  -- Disable better-escape to avoid conflicts with custom jk mappings
+  -- Disable better-escape to avoid conflicts with terminal jk mapping
   { "max397574/better-escape.nvim", enabled = false },
 
-  -- Texmagic
+  -- VimTeX compilation & PDF viewer settings (replaces archived texmagic.nvim)
   {
-    "jakewvincent/texmagic.nvim",
-    config = function()
-      _G.TeXMagicBuildConfig = _G.TeXMagicBuildConfig or {}
-      vim.g.texflavor = "latex"
-      require("texmagic").setup({
-        engines = {
-          pdflatex = {
-            executable = "latexmk",
-            args = {
-              "-pdf",
-              "-pdflatex",
-              "-outdir=build",
-              "-interaction=nonstopmode",
-              "-synctex=1",
-              "%f",
-            },
-            isContinuous = false,
-          },
-          xelatex = {
-            executable = "latexmk",
-            args = {
-              "-pdf",
-              "-xelatex",
-              "-outdir=build",
-              "-interaction=nonstopmode",
-              "-synctex=1",
-              "%f",
-            },
-            isContinuous = false,
-          },
-        },
-      })
+    "lervag/vimtex",
+    init = function()
+      if vim.fn.has("macunix") == 1 then
+        vim.g.vimtex_view_method = "skim"
+      else
+        vim.g.vimtex_view_method = "general"
+        vim.g.vimtex_view_general_viewer = "okular"
+        vim.g.vimtex_view_general_options = "--unique file:@pdf\\#src:@line@tex"
+      end
+      vim.g.vimtex_compiler_latexmk = { out_dir = "build" }
     end,
-    ft = { "bib", "tex" },
   },
 
-  -- Mundo
-  { "simnalamburt/vim-mundo", cmd = "MundoToggle" },
-
-  -- Suda
+  -- Privileged reads/writes
   {
     "lambdalisue/suda.vim",
-    cmd = { "SudaWrite", "W" },
+    cmd = { "SudaRead", "SudaWrite", "W" },
     config = function()
       vim.api.nvim_create_user_command("W", "SudaWrite", {})
     end,
   },
 
-  -- Choosewin
-  { "t9md/vim-choosewin", cmd = "ChooseWin" },
+  -- Interactive text alignment via `ga` / `gA` (replaces godlygeek/tabular)
+  {
+    "nvim-mini/mini.align",
+    event = "User AstroFile",
+    opts = {},
+  },
 
-  -- Tabular
-  { "godlygeek/tabular", cmd = "Tabularize" },
+  -- Subword camelCase / snake_case motions (replaces chaoren/vim-wordmotion
+  -- directly without astrocommunity's heavy luarocks.nvim build step)
+  {
+    "chrisgrieser/nvim-spider",
+    keys = {
+      { "w", function() require("spider").motion("w") end, mode = { "n", "o", "x" }, desc = "Next subword" },
+      { "e", function() require("spider").motion("e") end, mode = { "n", "o", "x" }, desc = "Next end of subword" },
+      { "b", function() require("spider").motion("b") end, mode = { "n", "o", "x" }, desc = "Previous subword" },
+      { "ge", function() require("spider").motion("ge") end, mode = { "n", "o", "x" }, desc = "Previous end of subword" },
+    },
+    opts = {},
+  },
 
-  -- CamelCase / snake_case word motions
-  { "chaoren/vim-wordmotion", event = "User AstroFile" },
-
-  -- Tokyonight Theme
+  -- Tokyo Night theme
   {
     "folke/tokyonight.nvim",
     lazy = false,
