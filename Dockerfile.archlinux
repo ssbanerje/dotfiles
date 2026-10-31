@@ -9,23 +9,28 @@ ARG uid=1000
 
 # Setup prereq packages
 USER root
-RUN pacman-key --init && pacman -Sy --noconfirm && \
-    pacman -S --noconfirm sudo python openssh && \
-    useradd -r -md /home/${user} -s /bin/bash --uid ${uid} ${user} && \
+RUN pacman-key --init && pacman-key --populate archlinux && \
+    pacman -Syu --noconfirm sudo git python openssh && \
+    useradd -m -d /home/${user} -s /bin/bash --uid ${uid} ${user} && \
     groupadd docker && \
     usermod -aG docker ${user} && \
-    echo "%${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "${user} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${user} && \
+    chmod 0440 /etc/sudoers.d/${user} && \
     pacman -Scc --noconfirm && \
     rm -rf /tmp/*
 
 # Setup dotfiles
 USER ${user}
+ENV HOME=/home/${user}
+ENV SHELL=/bin/bash
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
 RUN cd /home/${user}/.dotfiles && \
     ./install_profile -vv -x archlinux-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
     sudo pacman -Scc --noconfirm && \
-    sudo rm -rf /tmp/*
+    sudo rm -rf /tmp/* && \
+    rm -rf /home/${user}/.cache/pip /home/${user}/.cache/yay /home/${user}/.npm/_cacache && \
+    find /home/${user}/.dotfiles -name "*__pycache__" -exec rm -rf {} +
 
 # Take command from user
 ENTRYPOINT ["/bin/bash", "-l", "-c"]

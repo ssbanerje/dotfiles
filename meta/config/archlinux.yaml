@@ -11,8 +11,6 @@
         - base-devel
         - kitty-terminfo
 
-    - shell:
-        - "git clone --depth 1 https://aur.archlinux.org/yay.git ~/yay"
-        - "cd ~/yay && makepkg -si --noconfirm"
+    - bootstrapyay:
 
     - yayupdate:
