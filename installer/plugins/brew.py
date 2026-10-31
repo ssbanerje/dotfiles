@@ -276,5 +276,22 @@ class Brew(dotbot.Plugin):
             ):
                 self._log.warning(f'Failed to tap {tap}')
                 return False
+            trust_probe = subprocess.run(
+                [brew, 'trust', '--help'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                cwd=self._context.base_directory(),
+                env=self._brew_env(),
+                check=False,
+            )
+            if (
+                trust_probe.returncode == 0
+                and self._run_command(
+                    [brew, 'trust', tap], self._sup_stdout, self._sup_stderr
+                )
+                != 0
+            ):
+                self._log.warning(f'Failed to trust tap {tap}')
+                return False
             taps.add(key)
         return True
