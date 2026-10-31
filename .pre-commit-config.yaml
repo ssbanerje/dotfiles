@@ -3,7 +3,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v6.0.0
     hooks:
       - id: check-json
       - id: check-yaml
@@ -16,9 +16,9 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.10
+    rev: v1.5.6
     hooks:
       - id: forbid-tabs
-        exclude: "[Mm]akefile$"
+        exclude: "([Mm]akefile|\\.gitmodules|shell/gdbinit)$"
 
 ...

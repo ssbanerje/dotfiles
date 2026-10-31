@@ -15,4 +15,3 @@
 *.ogv diff=nodiff
 *.webm diff=nodiff
 *.mp4 diff=nodiff
-

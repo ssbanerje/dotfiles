@@ -35,7 +35,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.env
 .env.test
 .env.production
 
