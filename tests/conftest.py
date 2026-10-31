@@ -215,3 +215,11 @@ def run_zsh_i(host: Host, snippet: str):
 
 def run_bash_i(host: Host, snippet: str):
     return host.run('TERM=xterm-256color bash -i -c %s', snippet)
+
+
+def write_remote_file(
+    host: Host, path: str, content: str, mode: str | None = None
+) -> None:
+    host.run_expect([0], 'printf %%s %s > %s', content, path)
+    if mode is not None:
+        host.run_expect([0], 'chmod %s %s', mode, path)

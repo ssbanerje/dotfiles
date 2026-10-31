@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.conftest import run_bash_i, run_zsh_i
+from tests.conftest import run_bash_i, run_zsh_i, write_remote_file
 
 if TYPE_CHECKING:
     from testinfra.host import Host
@@ -50,7 +50,6 @@ def test_bash_interactive_starts_without_stderr_errors(host: Host) -> None:
         'lsa',
         'md',
         'rd',
-        'd',
         'grep',
         't',
         'ccat',
@@ -72,6 +71,7 @@ def test_zsh_core_aliases_present(host: Host, alias_name: str) -> None:
         'zsh-defer',
         'zvm_define_widget',
         'z',
+        'd',
         'y',
         'mkd',
         'path',
@@ -145,23 +145,20 @@ def test_local_shell_override_hooks(host: Host, target_home: str) -> None:
     zsh_local = f'{target_home}/.zshrc.local'
     bash_local = f'{target_home}/.bashrc.local'
     try:
-        host.run_expect(
-            [0],
-            'printf %s\\\\n %s > %s',
-            'export CI_ENV_LOCAL_PROBE="from_env_local"; PREPEND_PATH "/tmp"',
+        write_remote_file(
+            host,
             env_local,
+            'export CI_ENV_LOCAL_PROBE="from_env_local"; PREPEND_PATH "/tmp"\n',
         )
-        host.run_expect(
-            [0],
-            'printf %s\\\\n %s > %s',
-            'export CI_ZSH_LOCAL_PROBE="ok_zsh"',
+        write_remote_file(
+            host,
             zsh_local,
+            'export CI_ZSH_LOCAL_PROBE="ok_zsh"\n',
         )
-        host.run_expect(
-            [0],
-            'printf %s\\\\n %s > %s',
-            'export CI_BASH_LOCAL_PROBE="ok_bash"',
+        write_remote_file(
+            host,
             bash_local,
+            'export CI_BASH_LOCAL_PROBE="ok_bash"\n',
         )
 
         z_res = run_zsh_i(

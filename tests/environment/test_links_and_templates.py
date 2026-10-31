@@ -41,7 +41,9 @@ CORE_SYMLINKS = (
     '.local/bin/ftpane',
     '.local/bin/ftwind',
     '.local/bin/ftsession',
-    '.local/bin/docker_cleanup',
+    '.local/bin/doi2bib',
+    '.local/bin/gzball',
+    '.local/bin/random',
 )
 
 

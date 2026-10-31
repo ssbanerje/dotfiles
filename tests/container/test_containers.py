@@ -54,19 +54,46 @@ def test_embedded_dotfiles_repo_is_clean(host: Host, target_home: str) -> None:
     'cache_rel',
     ('.cache/uv', '.cache/nvim', '.cache/yay'),
 )
-def test_user_build_caches_purged(host: Host, target_home: str, cache_rel: str) -> None:
-    assert not host.file(f'{target_home}/{cache_rel}').exists
+def test_user_build_caches_purged(profile_spec: ProfileSpec, cache_rel: str) -> None:
+    assert profile_spec.docker_image is not None
+    res = subprocess.run(
+        [
+            'docker',
+            'run',
+            '--rm',
+            profile_spec.docker_image,
+            'bash',
+            '-c',
+            f'test ! -e "$HOME/{cache_rel}"',
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert res.returncode == 0, f'Expected $HOME/{cache_rel} to be purged in image'
 
 
 @pytest.mark.parametrize(
     'sys_dir',
     ('/var/cache/pacman/pkg', '/var/lib/apt/lists'),
 )
-def test_system_package_caches_purged(host: Host, sys_dir: str) -> None:
-    d = host.file(sys_dir)
-    if d.is_directory:
-        listing = host.check_output('ls -A %s', sys_dir).strip()
-        assert listing == '', f'Expected {sys_dir} to be empty, found: {listing}'
+def test_system_package_caches_purged(profile_spec: ProfileSpec, sys_dir: str) -> None:
+    assert profile_spec.docker_image is not None
+    res = subprocess.run(
+        [
+            'docker',
+            'run',
+            '--rm',
+            profile_spec.docker_image,
+            'bash',
+            '-c',
+            f'test ! -d "{sys_dir}" || test -z "$(ls -A "{sys_dir}")"',
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert res.returncode == 0, f'Expected {sys_dir} to be empty in image'
 
 
 def test_container_image_size_within_budget(profile_spec: ProfileSpec) -> None:

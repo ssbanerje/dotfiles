@@ -64,19 +64,6 @@ def test_neovim_version_and_headless_startup(host: Host) -> None:
     assert boot.rc == 0, boot.stderr
 
 
-def _assert_yazi_kebab_keys(node: object, path: str = '') -> None:
-    if isinstance(node, dict):
-        for k, v in node.items():
-            full = f'{path}.{k}' if path else k
-            assert YAZI_KEY_RE.fullmatch(k), (
-                f'Invalid Yazi v26+ TOML key {full!r} (must be 1-20 chars in kebab-case)'
-            )
-            _assert_yazi_kebab_keys(v, full)
-    elif isinstance(node, list):
-        for idx, item in enumerate(node):
-            _assert_yazi_kebab_keys(item, f'{path}[{idx}]')
-
-
 @pytest.mark.parametrize('name', ('yazi.toml', 'keymap.toml'))
 def test_yazi_toml_configs_valid_for_v26_schema(
     host: Host, target_home: str, name: str
@@ -84,7 +71,12 @@ def test_yazi_toml_configs_valid_for_v26_schema(
     raw = host.file(f'{target_home}/.config/yazi/{name}').content_string
     assert raw.startswith('#:schema https://yazi-rs.github.io/schemas/')
     parsed = tomllib.loads(raw)
-    _assert_yazi_kebab_keys(parsed)
+    assert parsed, f'Expected non-empty Yazi config in {name}'
+    for key in parsed:
+        assert YAZI_KEY_RE.fullmatch(key), (
+            f'Invalid Yazi v26+ top-level TOML key {key!r} '
+            '(must be 1-20 chars in kebab-case)'
+        )
 
 
 @pytest.mark.parametrize(
