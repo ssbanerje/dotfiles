@@ -30,13 +30,13 @@ RUN cd "/home/${user}/.dotfiles" && \
     sudo install -m 0755 "/home/${user}/.dotfiles/scripts/docker-entrypoint.sh" /usr/local/bin/docker-entrypoint.sh && \
     sudo usermod -s /usr/bin/zsh "${user}" && \
     sudo rm -rf /var/cache/pacman/pkg/* /var/lib/pacman/sync/* /tmp/* /var/log/lastlog /var/log/faillog && \
-    rm -rf "/home/${user}/.cache/uv" "/home/${user}/.cache/pip" "/home/${user}/.cache/yay" "/home/${user}/.cache/nvim" "/home/${user}/.local/state/nvim" "/home/${user}/.npm" && \
+    rm -rf "/home/${user}/.cache/uv" "/home/${user}/.cache/yay" "/home/${user}/.cache/nvim" "/home/${user}/.local/state/nvim" && \
     find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
 ENV SHELL=/usr/bin/zsh \
     EDITOR=nvim \
     VISUAL=nvim \
-    PATH=/home/${user}/.local/bin:/home/${user}/.cargo/bin:/home/${user}/.npm-global/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    PATH=/home/${user}/.local/bin:/home/${user}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["zsh"]

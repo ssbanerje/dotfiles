@@ -81,8 +81,7 @@ fi
 
 PREPEND_PATH \
   "$HOME/.local/bin" \
-  "$HOME/.cargo/bin" \
-  "$HOME/.npm-global/bin"
+  "$HOME/.cargo/bin"
 
 unset -f PREPEND_PATH APPEND_PATH
 
