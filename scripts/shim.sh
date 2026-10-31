@@ -60,6 +60,24 @@ while [[ $# -gt 0 ]]; do
 done
 
 IMAGE="ghcr.io/ssbanerje/dotfiles:${DISTRO}"
+if [[ "${PULL_POLICY}" == "never" ]]; then
+  best_img=""
+  best_ts=""
+  for candidate in "dotfiles:${DISTRO}" "${IMAGE}"; do
+    if ts="$(docker image inspect --format '{{.Created}}' "${candidate}" 2>/dev/null)"; then
+      if [[ -z "${best_img}" || "${ts}" > "${best_ts}" ]]; then
+        best_img="${candidate}"
+        best_ts="${ts}"
+      fi
+    fi
+  done
+  if [[ -z "${best_img}" ]]; then
+    echo "Error: local image not found (checked 'dotfiles:${DISTRO}' and '${IMAGE}')." >&2
+    echo "Build it first with: ./scripts/test-containers.sh ${DISTRO}" >&2
+    exit 1
+  fi
+  IMAGE="${best_img}"
+fi
 
 STARTED_SSH_AGENT=""
 cleanup() {
@@ -87,16 +105,17 @@ fi
 if [[ "${UNAME}" == "Linux" ]]; then
   HOST_UID="$(id -u)"
   HOST_GID="$(id -g)"
-  if [[ "${HOST_UID}" != "1000" ]]; then
-    DOCKER_ARGS+=(-u "${HOST_UID}:${HOST_GID}")
+  if [[ "${HOST_UID}" != "0" ]]; then
+    DOCKER_ARGS+=(
+      -u 0:0
+      -e "HOST_UID=${HOST_UID}"
+      -e "HOST_GID=${HOST_GID}"
+    )
   fi
 fi
 
 if [[ -S /var/run/docker.sock ]]; then
   DOCKER_ARGS+=(-v /var/run/docker.sock:/var/run/docker.sock)
-  if [[ "${UNAME}" == "Linux" ]] && sock_gid="$(stat -c '%g' /var/run/docker.sock 2>/dev/null)"; then
-    DOCKER_ARGS+=(--group-add "${sock_gid}")
-  fi
 fi
 
 # Forward SSH agent
@@ -129,7 +148,7 @@ if [[ "${UNAME}" == "Linux" ]] && command -v gpgconf >/dev/null 2>&1; then
   if [[ -n "${GPG_EXTRA_SOCK}" ]]; then
     gpgconf --launch gpg-agent >/dev/null 2>&1 || true
     if [[ -S "${GPG_EXTRA_SOCK}" ]]; then
-      DOCKER_ARGS+=(-v "${GPG_EXTRA_SOCK}:/home/dotuser/.gnupg/S.gpg-agent")
+      DOCKER_ARGS+=(-v "${GPG_EXTRA_SOCK}:/run/gpg-agent.extra.sock")
     fi
   fi
 fi

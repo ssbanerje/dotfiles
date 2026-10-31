@@ -20,7 +20,7 @@ git clone https://github.com/ssbanerje/dotfiles.git
 - By default, `shim.sh` runs the Ubuntu image with `--pull=missing` (instant startup once cached locally).
 - For an Arch Linux container use `--archlinux` / `-archlinux` (e.g. `scripts/shim.sh --archlinux`).
 - To force pulling the latest image from GHCR pass `--pull` / `-pull`.
-- To forbid pulling and strictly require a locally built image pass `--local` / `-local`.
+- To forbid pulling and use a locally built image (`dotfiles:<distro>` or `ghcr.io/ssbanerje/dotfiles:<distro>`) pass `--local` / `-l`.
 - Forwards `ssh-agent` keys (including Docker Desktop / OrbStack on macOS) and mounts the host's current working directory to `/cwd`.
 
 
