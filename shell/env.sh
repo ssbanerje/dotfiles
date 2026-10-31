@@ -4,11 +4,12 @@
 
 UNAME="${UNAME:-$(uname -s)}"
 
-# Set locale on macOS
+# Set locale & macOS platform defaults
 if [[ "$UNAME" == "Darwin" ]]; then
   export LANG='en_US.UTF-8'
   export LANGUAGE='en_US:en'
   export LC_ALL='en_US.UTF-8'
+  export BASH_SILENCE_DEPRECATION_WARNING="1"
 
   if [[ -z "${BREW_PREFIX:-}" ]]; then
     if [[ -d /opt/homebrew ]]; then
@@ -17,6 +18,21 @@ if [[ "$UNAME" == "Darwin" ]]; then
       export BREW_PREFIX="/usr/local"
     fi
   fi
+fi
+
+# Standard XDG base directories
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# Encoding, GPG TTY, and CLI telemetry opt-outs
+export PYTHONIOENCODING="UTF-8"
+export DO_NOT_TRACK="1"
+export HOMEBREW_NO_ANALYTICS="1"
+if [[ -t 0 ]]; then
+  export GPG_TTY
+  GPG_TTY="$(tty)"
 fi
 
 # Setup less
@@ -31,9 +47,6 @@ export VISUAL="nvim"
 export EDITOR="nvim"
 export USE_EDITOR="nvim"
 export SVN_EDITOR="nvim"
-
-# fzf defaults
-export FZF_DEFAULT_OPTS="--border"
 
 # }}}
 
@@ -82,6 +95,21 @@ fi
 PREPEND_PATH \
   "$HOME/.local/bin" \
   "$HOME/.cargo/bin"
+
+# fzf defaults (after PATH setup so Homebrew / ~/.local/bin fd is visible)
+if command -v fd >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+elif command -v fdfind >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fdfind --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fdfind --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+fi
+export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline"
+
+# Machine-local environment overrides (untracked; can call PREPEND_PATH / APPEND_PATH)
+[[ -r "$HOME/.config/env.local.sh" ]] && source "$HOME/.config/env.local.sh"
 
 unset -f PREPEND_PATH APPEND_PATH
 
