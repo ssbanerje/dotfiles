@@ -1,1 +1,2 @@
-openssl rand -hex $1
+#!/bin/sh
+openssl rand -hex "$1"
