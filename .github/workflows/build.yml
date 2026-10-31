@@ -4,153 +4,106 @@ name: Check Installer Scripts
 
 on:
   push:
-    branches: [master, modernization]
+    branches: [master]
   pull_request:
-    branches: [master, modernization]
+    branches: [master]
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   test-profiles:  # {{{
-    name: Test Profiles
+    name: Test Profile (${{ matrix.profile }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
+      fail-fast: false
       matrix:
         include:
           - {profile: macos, os: macos-latest}
           - {profile: ubuntu, os: ubuntu-latest}
           - {profile: ubuntu-minimal, os: ubuntu-latest}
-    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
-      - name: Set up Python 3
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
       - name: Install dotfiles
         run: ./install_profile -vv -x ${{ matrix.profile }}
   # }}}
 
-  build-container-ubuntu:  # {{{
-    name: Build Ubuntu Containers
-    needs: [test-profiles]
+  build-containers:  # {{{
+    name: Build Containers (${{ matrix.distro }})
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu, archlinux]
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v6
+      - name: Checkout repository code
+        uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build Ubuntu Container
-        uses: docker/build-push-action@v6
+        uses: docker/setup-buildx-action@v4
+      - name: Build ${{ matrix.distro }} Linux container
+        uses: docker/build-push-action@v7
         with:
           context: .
-          file: Dockerfile.ubuntu
+          file: Dockerfile.${{ matrix.distro }}
           target: linux
           platforms: linux/amd64
           build-args: |
             user=dotuser
             uid=1000
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:ubuntu
-          cache-from: type=gha,scope=ubuntu
-          cache-to: type=gha,mode=max,scope=ubuntu
+            ghcr.io/${{ github.repository }}:${{ matrix.distro }}
+            ${{ matrix.distro == 'ubuntu' && format('ghcr.io/{0}:latest', github.repository) || '' }}
+          cache-from: type=gha,scope=${{ matrix.distro }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.distro }}
           load: true
           push: false
-      - name: Smoke test Ubuntu Container
-        run: ./scripts/test-containers.sh --smoke-only ghcr.io/${{ github.repository }}:ubuntu
-      - name: Build Mac Ubuntu Container
-        uses: docker/build-push-action@v6
+      - name: Smoke test ${{ matrix.distro }} Linux container
+        run: ./scripts/test-containers.sh --smoke-only "ghcr.io/${{ github.repository }}:${{ matrix.distro }}"
+      - name: Build ${{ matrix.distro }} macOS-UID container
+        uses: docker/build-push-action@v7
         with:
           context: .
-          file: Dockerfile.ubuntu
+          file: Dockerfile.${{ matrix.distro }}
           target: mac
           platforms: linux/amd64
           build-args: |
             user=dotuser
             mac_uid=501
-          tags: |
-            ghcr.io/${{ github.repository }}:ubuntu-mac
-          cache-from: type=gha,scope=ubuntu
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.distro }}-mac
           load: true
           push: false
-      - name: Smoke test Mac Ubuntu Container
-        run: ./scripts/test-containers.sh --smoke-only ghcr.io/${{ github.repository }}:ubuntu-mac
+      - name: Smoke test ${{ matrix.distro }} macOS-UID container
+        run: ./scripts/test-containers.sh --smoke-only "ghcr.io/${{ github.repository }}:${{ matrix.distro }}-mac"
       - name: Login to GitHub Container Registry
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-      - name: Push Ubuntu Containers to GHCR
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push ${{ matrix.distro }} containers to GHCR
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
-          docker push ghcr.io/${{ github.repository }}:latest
-          docker push ghcr.io/${{ github.repository }}:ubuntu
-          docker push ghcr.io/${{ github.repository }}:ubuntu-mac
-  # }}}
-
-  build-container-arch:  # {{{
-    name: Build Archlinux Containers
-    needs: [test-profiles]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build Archlinux Container
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile.archlinux
-          target: linux
-          platforms: linux/amd64
-          build-args: |
-            user=dotuser
-            uid=1000
-          tags: ghcr.io/${{ github.repository }}:archlinux
-          cache-from: type=gha,scope=archlinux
-          cache-to: type=gha,mode=max,scope=archlinux
-          load: true
-          push: false
-      - name: Smoke test Archlinux Container
-        run: ./scripts/test-containers.sh --smoke-only ghcr.io/${{ github.repository }}:archlinux
-      - name: Build Mac Archlinux Container
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile.archlinux
-          target: mac
-          platforms: linux/amd64
-          build-args: |
-            user=dotuser
-            mac_uid=501
-          tags: |
-            ghcr.io/${{ github.repository }}:archlinux-mac
-          cache-from: type=gha,scope=archlinux
-          load: true
-          push: false
-      - name: Smoke test Mac Archlinux Container
-        run: ./scripts/test-containers.sh --smoke-only ghcr.io/${{ github.repository }}:archlinux-mac
-      - name: Login to GitHub Container Registry
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-      - name: Push Archlinux Containers to GHCR
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        run: |
-          docker push ghcr.io/${{ github.repository }}:archlinux
-          docker push ghcr.io/${{ github.repository }}:archlinux-mac
+          docker push "ghcr.io/${{ github.repository }}:${{ matrix.distro }}"
+          docker push "ghcr.io/${{ github.repository }}:${{ matrix.distro }}-mac"
+          if [[ "${{ matrix.distro }}" == "ubuntu" ]]; then
+            docker push "ghcr.io/${{ github.repository }}:latest"
+          fi
   # }}}
 
 ...
