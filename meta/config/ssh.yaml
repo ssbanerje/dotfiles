@@ -2,6 +2,8 @@
 - create:
     ~/.ssh:
       mode: 0700
+    ~/.ssh/sockets:
+      mode: 0700
 
 - link:
     ~/.ssh/config: ssh/config

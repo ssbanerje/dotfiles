@@ -1,11 +1,7 @@
 [core]
   whitespace = fix,space-before-tab,tab-in-indent,trailing-space
-  legacyheaders = false
   quotepath = false
   excludesfile = {{HOME_DIR}}/.global_gitignore
-
-[repack]
-  usedeltabaseoffset = true
 
 [apply]
   whitespace = fix
@@ -13,7 +9,6 @@
 [user]
   name = {{NAME}}
   email = {{EMAIL}}
-  signingkey = {{SIGNING_KEY}}
 
 [sendmail]
   smtpserver = {{SMTP_SERVER}}
@@ -32,21 +27,23 @@
   helper = {{CREDENTIAL_HELPER}}
 
 [diff]
+  algorithm = histogram
+  colorMoved = default
   renames = copy
-  tool = vimdiff
+  tool = nvimdiff
   wordRegex = [^[:space:]]
   mnemonicprefix = true
 
 [merge]
-  summary = true
-  tool = diffconflicts
+  conflictStyle = zdiff3
+  log = true
+  tool = nvimdiff
 
 [mergetool]
   keepBackup = false
 
-[mergetool "diffconflicts"]
-  cmd = "diffconflicts nvim $BASE $LOCAL $REMOTE $MERGED"
-  trustExitCode = true
+[rerere]
+  enabled = true
 
 [color]
   diff = auto
@@ -56,8 +53,8 @@
   interactive = auto
 
 [branch]
-  autosetupmerge = always
-  autosetuprebase = always
+  autoSetupMerge = true
+  autoSetupRebase = always
 
 [alias]
   root  = rev-parse --show-toplevel
@@ -87,9 +84,7 @@
   uu    = !git fetch -v upstream && git remote update upstream --prune
 
 [push]
-  default = matching
-
-[commit]
-  gpgsign = true
+  default = simple
+  autoSetupRemote = true
 
 # vi: ft=gitconfig
