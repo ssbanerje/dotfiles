@@ -8,11 +8,13 @@ import dotbot
 
 
 class Apt(dotbot.Plugin):
+    supports_dry_run = True
+
     _updateDirective = 'aptupdate'
     _aptDirective = 'apt'
 
     def __init__(self, context):
-        super(Apt, self).__init__(context)
+        super().__init__(context)
         self._sup_stdout = context.options().verbose <= 0
         self._sup_stderr = False
 
@@ -24,36 +26,47 @@ class Apt(dotbot.Plugin):
             return self._run_update()
         if directive == self._aptDirective:
             return self._install_packages(data)
-        raise ValueError('Cannot handle this directive %s' % directive)
+        msg = f'Cannot handle this directive {directive}'
+        raise ValueError(msg)
 
     def _run_update(self):
-        self._log.info('Updating list of packages')
+        if self._context.dry_run():
+            self._log.action('Would update apt package lists')
+            return True
+        self._log.action('Updating apt package lists')
         return self._run_command('apt-get update', True, False) == 0
 
     @staticmethod
     def _is_installed(pkg):
-        res = subprocess.run(
-            ['dpkg-query', '-W', '-f=${db:Status-Status}', pkg],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            text=True,
-        )
+        try:
+            res = subprocess.run(
+                ['dpkg-query', '-W', '-f=${db:Status-Status}', pkg],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                text=True,
+                check=False,
+            )
+        except FileNotFoundError:
+            return False
         return res.returncode == 0 and res.stdout.strip() == 'installed'
 
     def _install(self, packages):
         missing = [pkg for pkg in packages if not self._is_installed(pkg)]
         if not missing:
-            self._log.info('All apt packages already installed: %s' % ' '.join(packages))
+            self._log.info(f"All apt packages already installed: {' '.join(packages)}")
             return True
         pkgs = ' '.join(missing)
-        self._log.info('Installing %s' % pkgs)
+        if self._context.dry_run():
+            self._log.action(f'Would install apt packages: {pkgs}')
+            return True
+        self._log.action(f'Installing apt packages: {pkgs}')
         res = self._run_command(
             'apt-get install --yes ' + pkgs,
             self._sup_stdout,
             self._sup_stderr,
         )
         if res != 0:
-            self._log.warning('Could not install %s' % pkgs)
+            self._log.warning(f'Could not install {pkgs}')
             return False
         return True
 
@@ -71,6 +84,9 @@ class Apt(dotbot.Plugin):
                 post_commands.extend(opts.get('shell_after', []))
 
         for cmd in pre_commands:
+            if self._context.dry_run():
+                self._log.action(f'Would run command: {cmd}')
+                continue
             self._log.debug('Running pre-installation command: ' + cmd)
             if self._run_command(cmd, self._sup_stdout, self._sup_stderr) != 0:
                 self._log.error('Could not run command: ' + cmd)
@@ -81,6 +97,9 @@ class Apt(dotbot.Plugin):
             return False
 
         for cmd in post_commands:
+            if self._context.dry_run():
+                self._log.action(f'Would run command: {cmd}')
+                continue
             self._log.debug('Running post-installation command: ' + cmd)
             if self._run_command(cmd, self._sup_stdout, self._sup_stderr) != 0:
                 self._log.error('Could not run command: ' + cmd)
