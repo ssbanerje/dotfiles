@@ -1,11 +1,8 @@
 # --- AstroNvim Configuration ---
 - ifubuntu:
-    - create:
-        - ~/.npm-global
     - apt:
         - curl
         - nodejs
-        - npm
         - unzip
         - ripgrep
         - fd-find
@@ -14,9 +11,10 @@
     - shell:
         - ["NVIM_CAND=$(apt-cache policy neovim 2>/dev/null | awk '/Candidate:/ {print $2}'); if [ -n \"$NVIM_CAND\" ] && [ \"$NVIM_CAND\" != \"(none)\" ] && dpkg --compare-versions \"$NVIM_CAND\" ge \"0.11\"; then sudo DEBIAN_FRONTEND=noninteractive apt-get install -y neovim; else case \"$(uname -m)\" in aarch64|arm64) NVIM_ARCH=arm64 ;; *) NVIM_ARCH=x86_64 ;; esac; rm -rf ~/.local/nvim-linux64; curl -fLSs \"https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz\" | tar xzf - -C ~/.local && mv ~/.local/nvim-linux-\"${NVIM_ARCH}\" ~/.local/nvim-linux64 && ln -sf ~/.local/nvim-linux64/bin/nvim ~/.local/bin/nvim; fi", "Install Neovim >= 0.11"]
         - ["LG_CAND=$(apt-cache policy lazygit 2>/dev/null | awk '/Candidate:/ {print $2}'); if [ -n \"$LG_CAND\" ] && [ \"$LG_CAND\" != \"(none)\" ]; then sudo DEBIAN_FRONTEND=noninteractive apt-get install -y lazygit; else case \"$(uname -m)\" in aarch64|arm64) LG_ARCH=arm64 ;; *) LG_ARCH=x86_64 ;; esac; LG_VER=$(curl -fsSL -o /dev/null -w '%{url_effective}' https://github.com/jesseduffield/lazygit/releases/latest | sed 's#.*/tag/v##'); curl -fLSs \"https://github.com/jesseduffield/lazygit/releases/download/v${LG_VER}/lazygit_${LG_VER}_linux_${LG_ARCH}.tar.gz\" | tar xzf - -C ~/.local/bin lazygit; fi", "Install lazygit"]
-        - ["npm config set prefix ~/.npm-global", "Configure user-local npm prefix"]
-    - npm:
-        - tree-sitter-cli
+        - [
+            'if [ ! -x ~/.local/bin/tree-sitter ] && ! command -v tree-sitter >/dev/null 2>&1; then case "$(uname -m)" in aarch64|arm64) TS_ARCH=arm64 ;; *) TS_ARCH=x64 ;; esac; mkdir -p ~/.local/bin && curl -fLSs "https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-${TS_ARCH}.gz" -o /tmp/tree-sitter.gz && gunzip -f /tmp/tree-sitter.gz && install -m 0755 /tmp/tree-sitter ~/.local/bin/tree-sitter && rm -f /tmp/tree-sitter; fi',
+            "Install tree-sitter CLI",
+          ]
 
 - ifarch:
     - pacman:
