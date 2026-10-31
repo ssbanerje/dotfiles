@@ -27,7 +27,7 @@ jobs:
         with:
           submodules: recursive
       - name: Set up uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.3
         with:
           enable-cache: true
       - name: Run pre-commit static checks
@@ -78,7 +78,7 @@ jobs:
         with:
           submodules: recursive
       - name: Set up uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.3
         with:
           enable-cache: true
       - name: Set up Docker Buildx
