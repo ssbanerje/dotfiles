@@ -26,28 +26,50 @@ format = "[$symbol]($style) "
 style = "bold bright-white"
 
 [os.symbols]
+Alpine = ""
+Amazon = ""
 Arch = ""
+CentOS = ""
 Debian = ""
+Fedora = ""
+FreeBSD = ""
+Gentoo = ""
 Linux = ""
 Macos = ""
+Manjaro = ""
+Mint = ""
+NixOS = ""
+OpenSUSE = ""
+Pop = ""
+Raspbian = ""
+Redhat = ""
+RedHatEnterprise = ""
+RockyLinux = ""
+SUSE = ""
 Ubuntu = ""
+Windows = ""
 
 [directory]
 style = "green"
+before_repo_root_style = "109"
 repo_root_style = "bold blue"
-format = "[$path]($style)[$read_only]($read_only_style) "
-truncation_length = 4
+format = "[ ]($style)[$path]($style)[$read_only]($read_only_style) "
+repo_root_format = "[ ]($style)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 1
 truncate_to_repo = true
+fish_style_pwd_dir_length = 1
 read_only = " 󰌾"
 
 [git_branch]
 symbol = " "
 style = "yellow"
-format = "on [$symbol$branch(:$remote_branch)]($style) "
+truncation_length = 32
+format = "on [ ](white)[$symbol$branch(:$remote_branch)]($style) "
 
 [git_commit]
+commit_hash_length = 8
 tag_disabled = false
-tag_symbol = "#"
+tag_symbol = " #"
 style = "yellow"
 
 [git_state]
@@ -103,12 +125,12 @@ style = "bold green"
 format = "[$symbol ]($style)"
 
 [username]
-style_user = "purple"
+style_user = "183"
 style_root = "bold red"
 format = "on [$user]($style)"
-show_always = false
+show_always = true
 
 [hostname]
-ssh_only = true
-style = "blue"
+ssh_only = false
+style = "183"
 format = "[@$hostname]($style)"
