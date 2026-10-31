@@ -12,16 +12,16 @@ Use the packaged container to install dotfiles and all dependencies.
 Run this:
 ```bash
 git clone https://github.com/ssbanerje/dotfiles.git
-./dotfiles/scripts/shim.sh <command>
+./dotfiles/scripts/shim.sh [command [args...]]
 ```
 
 ### Details
-- Script uses docker to run the container.
-- By default, the shim will use an Ubuntu container.
-- For an Archlinux container use `scripts/shim.sh -archlinux <command>`
-- To use a locally built image without pulling from GHCR, pass `-local` (e.g. `scripts/shim.sh -local <command>`)
-- Shim passes `ssh-agent` keys to container.
-- Shim mounts host's current working directory to `/cwd`.
+- Launches `zsh` by default when no command is specified.
+- By default, `shim.sh` runs the Ubuntu image with `--pull=missing` (instant startup once cached locally).
+- For an Arch Linux container use `--archlinux` / `-archlinux` (e.g. `scripts/shim.sh --archlinux`).
+- To force pulling the latest image from GHCR pass `--pull` / `-pull`.
+- To forbid pulling and strictly require a locally built image pass `--local` / `-local`.
+- Forwards `ssh-agent` keys (including Docker Desktop / OrbStack on macOS) and mounts the host's current working directory to `/cwd`.
 
 
 ## Local Container Builds & Testing
@@ -30,7 +30,7 @@ Build and smoke-test the Ubuntu and Arch Linux containers locally (runs the same
 ./scripts/test-containers.sh            # Build and test both Ubuntu and Arch Linux
 ./scripts/test-containers.sh ubuntu     # Build and test Ubuntu only
 ./scripts/test-containers.sh archlinux  # Build and test Arch Linux only
-./scripts/shim.sh -local zsh            # Launch the locally built container
+./scripts/shim.sh --local               # Launch zsh in the locally built container
 ```
 
 
