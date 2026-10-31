@@ -1,22 +1,12 @@
 #!/usr/bin/env bash
 
-set -e
-
-export SHELL="${SHELL:-/bin/bash}"
+set -euo pipefail
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIGDIR="${BASEDIR}/meta/config"
 PROFILESDIR="${BASEDIR}/meta/profiles"
-DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
-PLUGINDIR="${BASEDIR}/installer/plugins"
 
-if [[ ! -x "${DOTBOT}" || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" ]]; then
-  git -C "${BASEDIR}" submodule update --init --recursive
-fi
-
-# Parse arguement
-declare -a ARGS
-declare -a FLAGS
+declare -a ARGS=()
+declare -a FLAGS=()
 while (( "$#" )); do
   case "$1" in
     -*)
@@ -28,32 +18,25 @@ while (( "$#" )); do
   esac
   shift
 done
-set -- "${ARGS[@]}"
 
-# Read configs from profile
-declare -a CONFIGS
-while IFS= read -r config; do
-  if [[ -n "$config" ]]; then
-    CONFIGS+=("${config}")
-  fi
-done < "${PROFILESDIR}/$1"
+if [[ "${#ARGS[@]}" -eq 0 ]]; then
+  echo "Usage: $0 [dotbot-flags...] <profile> [extra-configs...]" >&2
+  exit 1
+fi
+
+set -- "${ARGS[@]}"
+PROFILE_FILE="${PROFILESDIR}/$1"
+if [[ ! -f "${PROFILE_FILE}" ]]; then
+  echo "Error: profile '$1' not found at ${PROFILE_FILE}" >&2
+  exit 1
+fi
 shift
 
-# Load configurations
-for config in "${CONFIGS[@]}" "${@}"; do
-    echo -e "Adding configuration $config"
-    CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
-done
+declare -a CONFIGS=()
+while IFS= read -r config || [[ -n "${config}" ]]; do
+  if [[ -n "${config}" && "${config}" != \#* ]]; then
+    CONFIGS+=("${config}")
+  fi
+done < "${PROFILE_FILE}"
 
-# Get Plugins
-declare -a PLUGINS
-PLUGINS=("--plugin-dir" "${PLUGINDIR}" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-template")
-
-# Run dotbot
-if [[ "${#FLAGS[@]}" -gt 0 ]]; then
-  "${DOTBOT}" "${FLAGS[@]}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
-else
-  "${DOTBOT}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
-fi
+exec "${BASEDIR}/install" ${FLAGS[@]+"${FLAGS[@]}"} "${CONFIGS[@]}" "$@"

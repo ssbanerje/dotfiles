@@ -6,11 +6,8 @@
         - sudo
         - curl
         - python
-        - python-pip
         - git
         - base-devel
         - kitty-terminfo
 
     - bootstrapyay:
-
-    - yayupdate:

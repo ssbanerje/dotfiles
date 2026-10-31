@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 export SHELL="${SHELL:-/bin/bash}"
 
@@ -13,36 +13,51 @@ if [[ ! -x "${DOTBOT}" || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" 
   git -C "${BASEDIR}" submodule update --init --recursive
 fi
 
-# Parse arguments
-declare -a CONFIGS
-declare -a FLAGS
+declare -a REQUESTED_CONFIGS=("base")
+declare -a FLAGS=()
 while (( "$#" )); do
   case "$1" in
     -*)
       FLAGS+=("$1")
       ;;
     *)
-      CONFIGS+=("$1")
+      REQUESTED_CONFIGS+=("$1")
       ;;
   esac
   shift
 done
 
-# Load configuration
-for config in base "${CONFIGS[@]}"; do
-    echo -e "Adding configuration $config"
-    CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
+TMPCONFIG="$(mktemp "${TMPDIR:-/tmp}/dotbot.XXXXXX.yaml")"
+trap 'rm -f "${TMPCONFIG}"' EXIT
+
+declare -a SEEN_CONFIGS=()
+for config in "${REQUESTED_CONFIGS[@]}"; do
+  already_seen=0
+  for seen in "${SEEN_CONFIGS[@]+"${SEEN_CONFIGS[@]}"}"; do
+    if [[ "${seen}" == "${config}" ]]; then
+      already_seen=1
+      break
+    fi
+  done
+  if (( already_seen )); then
+    continue
+  fi
+  SEEN_CONFIGS+=("${config}")
+
+  config_path="${CONFIGDIR}/${config}.yaml"
+  if [[ ! -f "${config_path}" ]]; then
+    echo "Error: configuration '${config}' not found at ${config_path}" >&2
+    exit 1
+  fi
+  echo "Adding configuration ${config}"
+  cat "${config_path}" >> "${TMPCONFIG}"
+  printf '\n' >> "${TMPCONFIG}"
 done
 
-# Get Plugins
-declare -a PLUGINS
-PLUGINS=("--plugin-dir" "${PLUGINDIR}" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-template")
+declare -a PLUGINS=(
+  "--plugin-dir" "${PLUGINDIR}"
+  "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform"
+  "--plugin-dir" "${PLUGINDIR}/dotbot-template"
+)
 
-# Run dotbot
-if [[ "${#FLAGS[@]}" -gt 0 ]]; then
-  "${DOTBOT}" "${FLAGS[@]}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
-else
-  "${DOTBOT}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
-fi
+"${DOTBOT}" ${FLAGS[@]+"${FLAGS[@]}"} -d "${BASEDIR}" "${PLUGINS[@]}" -c "${TMPCONFIG}"

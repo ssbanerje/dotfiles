@@ -1,13 +1,12 @@
 # --- MacOS UI Elements Configuration ---
 - tap:
-  - asmvik/formulae
+    - asmvik/formulae
 
 - brew:
-  - python
-  - yabai
+    - yabai
 
 - cask:
-  - hammerspoon
+    - hammerspoon
 
 - link:
     ~/.yabairc: yabai/yabairc
