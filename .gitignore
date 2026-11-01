@@ -1,8 +1,11 @@
-# Build products
+# Build & test caches
 build/
 __pycache__/
 *.py[cod]
 *$py.class
+.coverage
+.pytest_cache/
+.ruff_cache/
 pip-log.txt
 pip-delete-this-directory.txt
 .pybuilder/
@@ -25,6 +28,7 @@ Thumbs.db
 .bundle
 *.sublime-project
 *.sublime-workspace
+editors/nvim/lazy-lock.json
 TODO
 
 # Environments
@@ -35,7 +39,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.env
 .env.test
 .env.production
 

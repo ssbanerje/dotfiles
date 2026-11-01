@@ -1,0 +1,234 @@
+#!/usr/bin/env bash
+# dot - dotfiles management, health-check, and startup benchmark CLI
+set -euo pipefail
+
+resolve_dotfiles_dir() {
+  local src="${BASH_SOURCE[0]}" dir target
+  while [[ -L "$src" ]]; do
+    dir="$(cd -P "$(dirname "$src")" && pwd)"
+    target="$(readlink "$src")"
+    if [[ "$target" == /* ]]; then
+      src="$target"
+    else
+      src="$dir/$target"
+    fi
+  done
+  dir="$(cd -P "$(dirname "$src")/.." && pwd)"
+  printf '%s\n' "$dir"
+}
+
+DOTFILES_DIR="${DOTFILES_DIR:-$(resolve_dotfiles_dir)}"
+
+usage() {
+  cat <<'EOF'
+Usage: dot <command> [args...]
+
+Commands:
+  dir              Print resolved dotfiles repository path
+  edit             Open dotfiles repository in $VISUAL / $EDITOR
+  status           Show git & submodule status for the dotfiles repository
+  sync [args...]   Re-render templates and refresh symlinks (--only link template)
+  apply [args...]  Run ./install [args...] from anywhere
+  update           Pull latest repo/submodules and upgrade shell/uv/Neovim tools
+  clean            Purge safe regenerable caches (uv, Zsh zwc, package caches)
+  doctor           Check core symlinks, submodules, local overrides, and CLI tools
+  bench [runs]     Benchmark shell & headless Neovim startup latency (default: 5)
+  help             Show this help text
+EOF
+}
+
+cmd_status() {
+  echo "==> Repository: ${DOTFILES_DIR}"
+  git -C "${DOTFILES_DIR}" status --short --branch
+  echo "==> Submodules:"
+  git -C "${DOTFILES_DIR}" submodule status
+}
+
+cmd_update() {
+  echo "==> Pulling latest dotfiles (fast-forward only)"
+  git -C "${DOTFILES_DIR}" pull --ff-only
+  echo "==> Syncing submodules"
+  git -C "${DOTFILES_DIR}" submodule sync --recursive
+  git -C "${DOTFILES_DIR}" submodule update --init --recursive
+  echo "==> Refreshing links and templates"
+  "${DOTFILES_DIR}/install" --only link template
+  if command -v zsh >/dev/null 2>&1 && [[ -r "${HOME}/.config/antidote/antidote.zsh" ]]; then
+    echo "==> Updating Antidote Zsh bundles"
+    rm -f "${HOME}/.zsh_plugins.zsh" "${HOME}/.zsh_plugins.zsh.zwc"
+    zsh -c 'source "$HOME/.config/antidote/antidote.zsh" && antidote update'
+    zsh -i -c exit
+  fi
+  if command -v uv >/dev/null 2>&1; then
+    echo "==> Upgrading uv tools"
+    uv tool upgrade --all || true
+  fi
+  if command -v nvim >/dev/null 2>&1; then
+    echo "==> Syncing Neovim plugins"
+    nvim --headless "+Lazy! sync" +qa || true
+  fi
+}
+
+cmd_clean() {
+  echo "==> Cleaning regenerable caches"
+  rm -f "${HOME}/.zsh_plugins.zsh.zwc"
+  rm -rf "${HOME}/.cache/zsh/zcompcache"
+  if command -v uv >/dev/null 2>&1; then
+    uv cache clean || true
+  fi
+  if command -v brew >/dev/null 2>&1; then
+    brew cleanup || true
+  elif command -v yay >/dev/null 2>&1; then
+    yay -Sc --noconfirm || true
+  fi
+}
+
+cmd_doctor() {
+  local failures=0 path sub tool
+
+  echo "==> Dotfiles root: ${DOTFILES_DIR}"
+
+  echo "==> Core files & symlinks:"
+  for path in \
+    "${HOME}/.zshrc" \
+    "${HOME}/.bashrc" \
+    "${HOME}/.inputrc" \
+    "${HOME}/.config/env.sh" \
+    "${HOME}/.config/aliases.sh" \
+    "${HOME}/.gitconfig" \
+    "${HOME}/.gitattributes" \
+    "${HOME}/.tmux.conf" \
+    "${HOME}/.ssh/config"; do
+    if [[ -e "$path" ]]; then
+      printf '  [ok]   %s\n' "$path"
+    else
+      printf '  [FAIL] %s (missing)\n' "$path"
+      failures=$((failures + 1))
+    fi
+  done
+
+  echo "==> Submodules:"
+  for sub in \
+    installer/dotbot/bin/dotbot \
+    installer/plugins/dotbot-ifplatform/lib/distro/.git \
+    installer/plugins/dotbot-template/lib/jinja/.git \
+    git/gitignore/.git \
+    tmux/tpm/.git \
+    shell/antidote/.git; do
+    if [[ -e "${DOTFILES_DIR}/${sub}" ]]; then
+      printf '  [ok]   %s\n' "$sub"
+    else
+      printf '  [FAIL] %s (uninitialized)\n' "$sub"
+      failures=$((failures + 1))
+    fi
+  done
+
+  echo "==> CLI tools:"
+  for tool in git zsh bash tmux nvim rg fd fdfind fzf starship zoxide uv yazi lazygit tree-sitter tldr vale; do
+    if command -v "$tool" >/dev/null 2>&1; then
+      printf '  [ok]   %-12s -> %s\n' "$tool" "$(command -v "$tool")"
+    else
+      printf '  [skip] %-12s (not installed)\n' "$tool"
+    fi
+  done
+
+  echo "==> Local override hooks:"
+  for path in \
+    "${HOME}/.gitconfig.local" \
+    "${HOME}/.ssh/config.local" \
+    "${HOME}/.config/env.local.sh" \
+    "${HOME}/.zshrc.local" \
+    "${HOME}/.bashrc.local" \
+    "${HOME}/.tmux.conf.local"; do
+    if [[ -e "$path" ]]; then
+      printf '  [present] %s\n' "$path"
+    else
+      printf '  [absent]  %s\n' "$path"
+    fi
+  done
+
+  if (( failures > 0 )); then
+    printf '==> Doctor found %d issue(s)\n' "$failures" >&2
+    return 1
+  fi
+  echo "==> Doctor checks passed"
+}
+
+cmd_bench() {
+  local runs="${1:-5}"
+  if ! [[ "$runs" =~ ^[1-9][0-9]*$ ]]; then
+    echo "dot bench: runs must be a positive integer (got: ${runs})" >&2
+    return 1
+  fi
+  python3 - "$runs" <<'PY'
+import shutil
+import subprocess
+import sys
+import time
+
+runs = int(sys.argv[1])
+targets = [
+    ('zsh -i -c exit', ['zsh', '-i', '-c', 'exit']),
+    ('bash -i -c exit', ['bash', '-i', '-c', 'exit']),
+    ('nvim --headless +qa', ['nvim', '--headless', '+qa']),
+]
+
+print(f'==> Startup benchmark ({runs} run(s) per target)')
+for label, argv in targets:
+    if shutil.which(argv[0]) is None:
+        print(f'  [skip] {label:<22} ({argv[0]} not installed)')
+        continue
+    samples = []
+    for _ in range(runs):
+        t0 = time.perf_counter()
+        subprocess.run(argv, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        samples.append((time.perf_counter() - t0) * 1000.0)
+    avg = sum(samples) / len(samples)
+    print(
+        f'  [ok]   {label:<22} '
+        f'min={min(samples):6.1f} ms  avg={avg:6.1f} ms  max={max(samples):6.1f} ms'
+    )
+PY
+}
+
+cmd="${1:-help}"
+if [[ $# -gt 0 ]]; then
+  shift
+fi
+
+case "$cmd" in
+  dir)
+    printf '%s\n' "${DOTFILES_DIR}"
+    ;;
+  edit)
+    exec "${VISUAL:-${EDITOR:-nvim}}" "${DOTFILES_DIR}" "$@"
+    ;;
+  status)
+    cmd_status
+    ;;
+  sync)
+    exec "${DOTFILES_DIR}/install" --only link template "$@"
+    ;;
+  apply)
+    exec "${DOTFILES_DIR}/install" "$@"
+    ;;
+  update)
+    cmd_update
+    ;;
+  clean)
+    cmd_clean
+    ;;
+  doctor)
+    cmd_doctor
+    ;;
+  bench)
+    cmd_bench "$@"
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    echo "dot: unknown command: ${cmd}" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

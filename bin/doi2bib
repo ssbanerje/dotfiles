@@ -8,4 +8,4 @@ fi
 DOI="$1"
 
 # Check crossref.org for the bib citation.
-curl -s "http://api.crossref.org/works/${DOI}/transform/application/x-bibtex" -w "\\n"
+curl -fsSL "https://api.crossref.org/works/${DOI}/transform/application/x-bibtex" -w "\n"

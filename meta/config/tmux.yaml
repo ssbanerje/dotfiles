@@ -10,14 +10,12 @@
 - ifmacos:
     - brew:
         - tmux
-        - reattach-to-user-namespace
-
-- create:
-  - ~/.tmux/plugins
 
 - link:
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/tpm
-    ~/.tmux-macos.conf:
-      if: '[[ $(uname -s) = Darwin ]]'
-      path: tmux/tmux-macos.conf
+
+- shell:
+    - command: ~/.tmux/plugins/tpm/bin/install_plugins
+      description: Installing tmux plugins via TPM
+      stdout: true

@@ -7,120 +7,168 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
-  test-profiles:  # {{{
-    name: Test Profiles
-    strategy:
-      matrix:
-        include:
-          - {profile: macos, os: macOS-latest}
-          - {profile: ubuntu, os: ubuntu-latest}
-          - {profile: ubuntu-minimal, os: ubuntu-latest}
-    runs-on: ${{ matrix.os }}
+  lint-and-unit:  # {{{
+    name: Lint & Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: recursive
-      - name: Set up Python 3
-        uses: actions/setup-python@v2
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.3.3
         with:
-          python-version: 3.x
+          enable-cache: true
+      - name: Run pre-commit static checks
+        run: uvx pre-commit run --all-files
+      - name: Verify uv lockfile is up to date
+        run: uv lock --check
+      - name: Run unit & installer dry-run tests
+        run: uv run --frozen --only-group dev pytest tests/unit
+  # }}}
+
+  test-profiles:  # {{{
+    name: Test Profile (${{ matrix.profile }})
+    needs: lint-and-unit
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {profile: macos, os: macos-latest}
+          - {profile: ubuntu, os: ubuntu-latest}
+          - {profile: ubuntu-minimal, os: ubuntu-latest}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
       - name: Install dotfiles
-        run: ./install_profile -vv -x ${{ matrix.profile }}
+        run: ./install -vv -x -P ${{ matrix.profile }}
+      - name: Verify installed environment via pytest + testinfra
+        run: |
+          export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
+          uv run --frozen --only-group dev pytest tests/environment --profile "${{ matrix.profile }}"
   # }}}
 
-  build-container-ubuntu:  # {{{
-    name: Build Ubuntu Containers
-    needs: [test-profiles]
+  build-containers:  # {{{
+    name: Build & Test Container (${{ matrix.distro }})
+    needs: lint-and-unit
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu, archlinux]
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
+      - name: Checkout repository code
+        uses: actions/checkout@v7
         with:
           submodules: recursive
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.3.3
         with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-      - name: Build Ubuntu Container
-        uses: docker/build-push-action@v2
+          enable-cache: true
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Build ${{ matrix.distro }} container
+        uses: docker/build-push-action@v7
         with:
           context: .
-          file: Dockerfile.ubuntu
+          file: Dockerfile.${{ matrix.distro }}
           platforms: linux/amd64
           build-args: |
             user=dotuser
             uid=1000
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:ubuntu
-          push: true
-      - name: Build Mac Ubuntu Container
-        uses: docker/build-push-action@v2
+            ghcr.io/${{ github.repository }}:${{ matrix.distro }}
+            ${{ matrix.distro == 'ubuntu' && format('ghcr.io/{0}:latest', github.repository) || '' }}
+          cache-from: type=gha,scope=${{ matrix.distro }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.distro }}
+          load: true
+          push: false
+      - name: Verify ${{ matrix.distro }} container via pytest + testinfra
+        run: ./scripts/test-containers.sh --smoke-only "ghcr.io/${{ github.repository }}:${{ matrix.distro }}"
+      - name: Export verified ${{ matrix.distro }} container archive
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        run: |
+          tags=("ghcr.io/${{ github.repository }}:${{ matrix.distro }}")
+          if [[ "${{ matrix.distro }}" == "ubuntu" ]]; then
+            tags+=("ghcr.io/${{ github.repository }}:latest")
+          fi
+          docker save "${tags[@]}" | zstd -T0 -o "/tmp/dotfiles-${{ matrix.distro }}.tar.zst"
+      - name: Upload verified ${{ matrix.distro }} container archive
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        uses: actions/upload-artifact@v7
         with:
-          context: .
-          file: Dockerfile.ubuntu
-          platforms: linux/amd64
-          build-args: |
-            user=dotuser
-            uid=501
-          tags: |
-            ghcr.io/${{ github.repository }}:ubuntu-mac
-          push: true
+          name: container-image-${{ matrix.distro }}
+          path: /tmp/dotfiles-${{ matrix.distro }}.tar.zst
+          retention-days: 1
   # }}}
 
-  build-container-arch:  # {{{
-    name: Build Archlinux Containers
-    needs: [test-profiles]
+  ci-gate:  # {{{
+    name: CI Gate
+    if: always()
+    needs: [lint-and-unit, test-profiles, build-containers]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
+    timeout-minutes: 5
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
+      - name: Enforce all verification stages passed
+        env:
+          LINT_RESULT: ${{ needs.lint-and-unit.result }}
+          PROFILES_RESULT: ${{ needs.test-profiles.result }}
+          CONTAINERS_RESULT: ${{ needs.build-containers.result }}
+        run: |
+          echo "lint-and-unit=${LINT_RESULT}"
+          echo "test-profiles=${PROFILES_RESULT}"
+          echo "build-containers=${CONTAINERS_RESULT}"
+          [[ "${LINT_RESULT}" == "success" && "${PROFILES_RESULT}" == "success" && "${CONTAINERS_RESULT}" == "success" ]]
+  # }}}
+
+  publish-containers:  # {{{
+    name: Publish Container (${{ matrix.distro }})
+    needs: ci-gate
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu, archlinux]
+    steps:
+      - name: Download verified ${{ matrix.distro }} container archive
+        uses: actions/download-artifact@v8
         with:
-          submodules: recursive
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+          name: container-image-${{ matrix.distro }}
+          path: /tmp
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-      - name: Build Archlinux Container
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.archlinux
-          platforms: linux/amd64
-          build-args: |
-            user=dotuser
-            uid=1000
-          tags: ghcr.io/${{ github.repository }}:archlinux
-          push: true
-      - name: Build Mac Archlinux Container
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.archlinux
-          platforms: linux/amd64
-          build-args: |
-            user=dotuser
-            uid=501
-          tags: |
-            ghcr.io/${{ github.repository }}:archlinux-mac
-          push: true
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Load & push ${{ matrix.distro }} container to GHCR
+        run: |
+          zstd -dc "/tmp/dotfiles-${{ matrix.distro }}.tar.zst" | docker load
+          docker push "ghcr.io/${{ github.repository }}:${{ matrix.distro }}"
+          if [[ "${{ matrix.distro }}" == "ubuntu" ]]; then
+            docker push "ghcr.io/${{ github.repository }}:latest"
+          fi
   # }}}
 
 ...

@@ -2,6 +2,16 @@
 - create:
     ~/.ssh:
       mode: 0700
+    ~/.ssh/sockets:
+      mode: 0700
+    ~/.ssh/config.d:
+      mode: 0700
+
+- shell:
+    - [
+        "chmod 0700 ~/.ssh ~/.ssh/sockets ~/.ssh/config.d",
+        "Enforce strict 0700 permissions on SSH directories",
+      ]
 
 - link:
     ~/.ssh/config: ssh/config

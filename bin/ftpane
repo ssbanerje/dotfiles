@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
-# ftpane - switch pane (@george-b)
-# Call from inside tmux
+# ftpane - switch pane via fzf popup
+set -euo pipefail
 
-local panes current_window current_pane target target_window target_pane
+current_pane="$(tmux display-message -p '#I.#P')"
+panes="$(
+  tmux list-panes -s -F $'#I.#P\t#{window_name}\t#{pane_current_command}\t#{pane_current_path}' \
+    | awk -F'\t' -v cur="$current_pane" '$1 != cur { printf "%-6s  %-16s  %-14s  %s\n", $1, $2, $3, $4 }'
+)"
 
-panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
-current_pane=$(tmux display-message -p '#I:#P')
-current_window=$(tmux display-message -p '#I')
-target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
-target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
-target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
+[[ -z "$panes" ]] && exit 0
 
-if [[ $current_window -eq $target_window ]]; then
-  tmux select-pane -t ${target_window}.${target_pane}
-else
-  tmux select-pane -t ${target_window}.${target_pane} &&
-  tmux select-window -t $target_window
-fi
+target="$(printf '%s\n' "$panes" | fzf --reverse --no-multi --prompt='pane> ')" || exit 0
+target_id="${target%% *}"
+
+tmux select-window -t "${target_id%.*}"
+tmux select-pane -t "$target_id"

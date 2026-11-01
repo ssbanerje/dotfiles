@@ -1,16 +1,22 @@
 local module = {}
-module.__index = module
 
--- Graphics object for drawing borders
-module.border = nil
+local wf = hs.window.filter.defaultCurrentSpace
+local active = false
 
--- Colors used for stroking windows
-module.stroke_color_src = { red = 1, blue = 0.25, green = 0.75, alpha = 0.8 }
-module.stroke_color_tgt = { red = 1, blue = 0.25, green = 0.75, alpha = 0.8 }
+local border = hs.canvas.new({ x = 0, y = 0, w = 0, h = 0 })
+border:level(hs.canvas.windowLevels.floating)
+border:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces + hs.canvas.windowBehaviors.transient)
+border:clickActivating(false)
+border:canvasMouseEvents(false, false, false, false)
+border:appendElements({
+  type = "rectangle",
+  action = "stroke",
+  strokeColor = { red = 1, green = 0.75, blue = 0.25, alpha = 0.8 },
+  strokeWidth = 4,
+  roundedRectRadii = { xRadius = 8, yRadius = 8 },
+})
 
--- Handlers listening for window events
-module.handler = nil
-module.events = {
+local events = {
   hs.window.filter.windowCreated,
   hs.window.filter.windowDestroyed,
   hs.window.filter.windowFocused,
@@ -22,54 +28,37 @@ module.events = {
   hs.window.filter.windowUnminimized,
 }
 
--- Start drawing borders
-function module.start()
-  module.handler = hs.window.filter.new()
-  module.handler.setLogLevel(hs.logger.defaultLogLevel)
-  module.handler:setDefaultFilter({})
-  module.handler:setSortOrder(hs.window.filter.sortByFocusedLast)
-  for _, e in ipairs(module.events) do
-    module.handler:subscribe(e, module.redraw)
+function module.redraw()
+  if not active then
+    return
   end
+  local win = hs.window.focusedWindow()
+  local app = win and win:application()
+  if not win or win:isFullScreen() or (app and app:name() == "Hammerspoon") then
+    border:hide()
+    return
+  end
+  border:frame(win:frame())
+  border:show()
+end
+
+function module.start()
+  if active then
+    module.redraw()
+    return
+  end
+  active = true
+  wf:subscribe(events, module.redraw)
   module.redraw()
 end
 
--- Stop drawing borders
 function module.stop()
-  if module.handler then
-    for _, e in ipairs(module.events) do
-      module.handler:unsubscribe(e)
-    end
-    module.handler = nil
-  end
-  if module.border then
-    module.border:hide()
-    module.border = nil
-  end
-end
-
--- Draw borders around window
-function module.redraw()
-  if module.border ~= nil then
-    module.border:delete()
-    module.border = nil
-  end
-  local win = hs.window.focusedWindow()
-  if win == nil or win:isFullScreen() or win:application():name() == "Hammerspoon" then
+  if not active then
     return
   end
-  local winframe = win:frame()
-  local max = win:screen():frame()
-  module.border = hs.canvas.new({ x = max.x, y = max.y, w = max.w, h = max.h })
-  module.border
-    :appendElements({
-      type = "rectangle",
-      action = "stroke",
-      strokeColor = { red = 1, blue = 0.25, green = 0.75, alpha = 0.8 },
-      strokeWidth = 4,
-      frame = { x = winframe.x, y = winframe.y - max.y, w = winframe.w, h = winframe.h },
-    })
-    :show()
+  active = false
+  wf:unsubscribe(events, module.redraw)
+  border:hide()
 end
 
 return module
