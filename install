@@ -92,7 +92,9 @@ ensure_submodules() {
      || ! -e "${BASEDIR}/git/gitignore/.git" \
      || ! -e "${BASEDIR}/tmux/tpm/.git" \
      || ! -e "${BASEDIR}/shell/antidote/.git" ]]; then
-    git -C "${BASEDIR}" submodule update --init --recursive
+    # Pin the files ref backend: reftable (default on newer/vendor git) breaks
+    # gitoxide (Starship), libgit2 and lazy.nvim's .git/HEAD reader.
+    git -C "${BASEDIR}" -c init.defaultRefFormat=files submodule update --init --recursive
   fi
 }
 
