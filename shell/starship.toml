@@ -28,7 +28,7 @@ $custom"""
 
 [os]
 disabled = false
-format = "[$symbol]($style) "
+format = "[$symbol]($style)  "
 style = "15"
 
 [os.symbols]
@@ -92,8 +92,8 @@ before_repo_root_style = "109"
 repo_root_style = "bold blue"
 read_only = " "
 read_only_style = "9"
-format = "[ ]($style)[$path]($style)[$read_only]($read_only_style) "
-repo_root_format = "[ ]($style)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+format = "[  ]($style)[$path]($style)[$read_only]($read_only_style) "
+repo_root_format = "[  ]($style)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 truncation_length = 3
 truncate_to_repo = true
 fish_style_pwd_dir_length = 1
@@ -103,7 +103,7 @@ symbol = " "
 style = "yellow"
 only_attached = true
 truncation_length = 32
-format = "on [ ](white)[$symbol$branch]($style)(:[$remote_branch]($style)) "
+format = "on [  ](white)[$symbol$branch]($style)(:[$remote_branch]($style)) "
 
 [git_commit]
 only_detached = true
@@ -111,7 +111,7 @@ commit_hash_length = 8
 tag_disabled = false
 tag_symbol = ""
 style = "yellow"
-format = "on [ ](white)[@](white)[$hash]($style)( [#](white)[$tag]($style)) "
+format = "on [  ](white)[@](white)[$hash]($style)( [#](white)[$tag]($style)) "
 
 [git_state]
 style = "9"

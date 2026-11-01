@@ -184,22 +184,22 @@ def test_starship_prompt_shortening_and_git_icons(host: Host) -> None:
         rp_pipe,
     ) = parts
 
-    # [shell]: hidden cleanly in zsh (no double space), visible in bash
+    # [shell]: hidden cleanly in zsh (no stray triple space), visible in bash
     assert '[zsh]' not in p_zsh
-    assert '  ' not in p_zsh
-    assert ' ~/s/d/dirtwo/dirthree/Workshop » ' in p_zsh
-    assert '[bash]  ~/s/d/dirtwo/dirthree/Workshop » ' in p_bash
+    assert '   ' not in p_zsh
+    assert '  ~/s/d/dirtwo/dirthree/Workshop » ' in p_zsh
+    assert '[bash]   ~/s/d/dirtwo/dirthree/Workshop » ' in p_bash
 
     # [directory] + [git_branch]: repo root stays anchored inside subdirs
-    assert ' ~/s/d/d/d/Workshop on   main » ' in p_root
-    assert ' ~/s/d/d/d/Workshop/dotfiles/shell on   main » ' in p_sub
+    assert '  ~/s/d/d/d/Workshop on    main » ' in p_root
+    assert '  ~/s/d/d/d/Workshop/dotfiles/shell on    main » ' in p_sub
 
     # [git_status]: space-separated counters; tag hidden on attached branch
-    assert 'on   main +1 !1 ?1 » ' in p_dirty
+    assert 'on    main +1 !1 ?1 » ' in p_dirty
     assert '#v1.0' not in p_dirty
 
     # [git_commit]: detached HEAD shows @<8-sha> #<tag> without  HEAD or ()
-    assert f' ~/s/d/d/d/Workshop on  @{short_sha} #v1.0 » ' in p_detached
+    assert f'  ~/s/d/d/d/Workshop on   @{short_sha} #v1.0 » ' in p_detached
     assert 'HEAD' not in p_detached
     assert '(' not in p_detached
 
