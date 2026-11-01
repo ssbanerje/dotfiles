@@ -1,5 +1,5 @@
 # --- Shell Configuration ---
-- ifubuntu:
+- ifdebian:
     - apt:
         - zsh
         - fzf

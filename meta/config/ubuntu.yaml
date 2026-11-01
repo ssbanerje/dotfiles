@@ -1,5 +1,5 @@
 # --- Ubuntu Base Configuration ---
-- ifubuntu:
+- ifdebian:
     - aptupdate:
 
     - apt:

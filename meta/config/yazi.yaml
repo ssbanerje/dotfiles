@@ -1,5 +1,5 @@
 # --- Yazi Terminal File Manager Configuration ---
-- ifubuntu:
+- ifdebian:
     - apt:
         - chafa
         - file

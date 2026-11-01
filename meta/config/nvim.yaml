@@ -1,5 +1,5 @@
 # --- AstroNvim Configuration ---
-- ifubuntu:
+- ifdebian:
     - apt:
         - curl
         - nodejs
