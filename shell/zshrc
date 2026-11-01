@@ -80,7 +80,6 @@ function _bootstrap_plugins() {
   fi
 
   if $regenerate; then
-    source "$HOME/.config/antidote/antidote.zsh"
     zstyle ':antidote:*' zcompile 'yes'
     antidote bundle < <(cat "${plugin_files[@]}") >|"$zsh_plugins"
     zcompile "$zsh_plugins" 2>/dev/null || true
@@ -88,6 +87,8 @@ function _bootstrap_plugins() {
 
   source "$zsh_plugins"
 }
+# Load antidote so the `antidote` command is available interactively
+source "$HOME/.config/antidote/antidote.zsh"
 _bootstrap_plugins
 unset -f _bootstrap_plugins
 
