@@ -1,11 +1,13 @@
 [core]
   whitespace = fix,space-before-tab,tab-in-indent,trailing-space
-  legacyheaders = false
   quotepath = false
   excludesfile = {{HOME_DIR}}/.global_gitignore
+  attributesfile = {{HOME_DIR}}/.gitattributes
+  trustctime = false
+  precomposeUnicode = true
 
-[repack]
-  usedeltabaseoffset = true
+[init]
+  defaultBranch = main
 
 [apply]
   whitespace = fix
@@ -13,7 +15,6 @@
 [user]
   name = {{NAME}}
   email = {{EMAIL}}
-  signingkey = {{SIGNING_KEY}}
 
 [sendmail]
   smtpserver = {{SMTP_SERVER}}
@@ -31,22 +32,29 @@
 [credential]
   helper = {{CREDENTIAL_HELPER}}
 
+[column]
+  ui = auto
+
 [diff]
+  algorithm = histogram
+  colorMoved = default
   renames = copy
-  tool = vimdiff
+  submodule = log
+  tool = nvimdiff
   wordRegex = [^[:space:]]
   mnemonicprefix = true
 
 [merge]
-  summary = true
-  tool = diffconflicts
+  conflictStyle = zdiff3
+  log = true
+  tool = nvimdiff
 
 [mergetool]
   keepBackup = false
 
-[mergetool "diffconflicts"]
-  cmd = "diffconflicts lvim $BASE $LOCAL $REMOTE $MERGED"
-  trustExitCode = true
+[rerere]
+  enabled = true
+  autoupdate = true
 
 [color]
   diff = auto
@@ -56,12 +64,47 @@
   interactive = auto
 
 [branch]
-  autosetupmerge = always
-  autosetuprebase = always
+  autoSetupMerge = true
+  autoSetupRebase = always
+  sort = -committerdate
+
+[tag]
+  sort = version:refname
+
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+
+[pull]
+  rebase = true
+
+[rebase]
+  autoStash = true
+  autoSquash = true
+  updateRefs = true
+
+[commit]
+  verbose = true
+
+[stash]
+  showPatch = true
+
+[submodule]
+  fetchJobs = 4
+
+[help]
+  autocorrect = prompt
 
 [alias]
   root  = rev-parse --show-toplevel
   st    = status --short --branch --ignore-submodules=untracked
+  amend = commit --amend --no-edit
+  unstage = restore --staged
+  last  = log -1 HEAD --stat
+  aliases = config --get-regexp ^alias\\.
+  contributors = shortlog --summary --numbered
+  whoami = !git config user.name && git config user.email
   # [b]ranch
   bc    = checkout
   bcn   = checkout -b
@@ -72,6 +115,7 @@
   ll    = log --graph --decorate --pretty=oneline --abbrev-commit
   # [p]push
   p     = !git push && git push --tags
+  pf    = push --force-with-lease --force-if-includes
   # [r]emote
   ra    = remote add
   rl    = remote -v
@@ -87,9 +131,10 @@
   uu    = !git fetch -v upstream && git remote update upstream --prune
 
 [push]
-  default = matching
+  default = simple
+  autoSetupRemote = true
 
-[commit]
-  gpgsign = true
+[include]
+  path = ~/.gitconfig.local
 
 # vi: ft=gitconfig

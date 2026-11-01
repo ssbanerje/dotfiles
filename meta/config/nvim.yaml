@@ -1,0 +1,58 @@
+# --- AstroNvim Configuration ---
+- ifubuntu:
+    - apt:
+        - curl
+        - nodejs
+        - unzip
+        - ripgrep
+        - fd-find
+        - python3-pynvim
+        - python3-debugpy
+        - neovim:
+            if_available: true
+            min_version: "0.11"
+        - lazygit:
+            if_available: true
+    - ghrelease:
+        neovim/neovim:
+          asset: nvim-linux-{arch}.tar.gz
+          extract_to: ~/.local/opt/nvim
+          strip_components: 1
+          bins: [bin/nvim]
+          min_version: "0.11"
+        jesseduffield/lazygit:
+          asset: lazygit_{version}_linux_{arch}.tar.gz
+          bins: [lazygit]
+        tree-sitter/tree-sitter:
+          asset: tree-sitter-linux-{node_arch}.gz
+          bins: [tree-sitter]
+
+- ifarch:
+    - pacman:
+        - neovim
+        - nodejs
+        - npm
+        - unzip
+        - ripgrep
+        - fd
+        - lazygit
+        - python-pynvim
+        - python-debugpy
+        - tree-sitter-cli
+
+- ifmacos:
+    - brew:
+        - neovim
+        - node
+        - unzip
+        - ripgrep
+        - fd
+        - lazygit
+        - tree-sitter-cli
+
+- link:
+    ~/.config/nvim: editors/nvim
+    ~/.editorconfig: editors/editorconfig
+
+- shell:
+    - ["PATH=\"$HOME/.local/bin:$PATH\" nvim --headless '+Lazy! sync' +qa", "Installing AstroNvim Plugins"]

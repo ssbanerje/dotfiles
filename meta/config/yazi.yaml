@@ -1,0 +1,34 @@
+# --- Yazi Terminal File Manager Configuration ---
+- ifubuntu:
+    - apt:
+        - chafa
+        - file
+        - jq
+        - p7zip-full
+        - poppler-utils
+        - unzip
+    - ghrelease:
+        sxyazi/yazi:
+          asset: yazi-{uname_m}-unknown-linux-musl.zip
+          bins: [yazi, ya]
+
+- ifarch:
+    - pacman:
+        - chafa
+        - file
+        - jq
+        - p7zip
+        - poppler
+        - yazi
+
+- ifmacos:
+    - brew:
+        - chafa
+        - jq
+        - poppler
+        - sevenzip
+        - yazi
+
+- link:
+    ~/.config/yazi/yazi.toml: yazi/yazi.toml
+    ~/.config/yazi/keymap.toml: yazi/keymap.toml

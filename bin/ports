@@ -1,12 +1,21 @@
-#!/bin/sh
-#// Usage: ports [<options>]
-#// Show processes listening on ports.
-#// Any <options> are passed to lsof
-set -e
+#!/usr/bin/env sh
+# Usage: ports [<options>]
+# Show processes listening on TCP ports without reverse-DNS delays.
+# Extra <options> are passed through to lsof (or ss fallback on Linux).
+set -eu
 
-test "$1" = "--help" && {
-    grep ^#/ <"$0"| cut -c4-
-    exit 2
-}
+case "${1:-}" in
+  -h|--help)
+    sed -n '2,4s/^# //p' "$0"
+    exit 0
+    ;;
+esac
 
-exec lsof -iTCP -sTCP:LISTEN -P "$@"
+if command -v lsof >/dev/null 2>&1; then
+  exec lsof -iTCP -sTCP:LISTEN -P -n "$@"
+elif command -v ss >/dev/null 2>&1; then
+  exec ss -ltnp "$@"
+else
+  echo "ports: neither 'lsof' nor 'ss' is installed" >&2
+  exit 1
+fi

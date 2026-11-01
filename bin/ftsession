@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# ftsession - switch tmux session via fzf popup
+set -euo pipefail
+
+current_session="$(tmux display-message -p '#{session_id}')"
+sessions="$(
+  tmux list-sessions -F $'#{session_id}\t#{session_name}\t#{session_windows}\t#{session_attached}' \
+    | awk -F'\t' -v cur="$current_session" '{
+        mark = ($1 == cur) ? "*" : " "
+        color = ($1 == cur) ? "\033[32m" : ""
+        reset = ($1 == cur) ? "\033[0m" : ""
+        state = ($4 > 0) ? "(attached)" : ""
+        printf "%s\t%s %s%-20s%s  %2s win  %s\n", $1, mark, color, $2, reset, $3, state
+      }'
+)"
+
+[[ -z "$sessions" ]] && exit 0
+
+target="$(
+  printf '%s\n' "$sessions" \
+    | fzf --reverse --ansi --no-multi --delimiter=$'\t' --with-nth=2.. --prompt='session> '
+)" || exit 0
+
+tmux switch-client -t "${target%%$'\t'*}"

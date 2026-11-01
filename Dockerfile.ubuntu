@@ -1,37 +1,52 @@
-FROM ubuntu:rolling
+FROM ubuntu:latest
 
 LABEL org.opencontainers.image.authors="Subho Sankar Banerjee <ssbanerje@gmail.com>"
 LABEL org.opencontainers.image.title="Dotfiles"
 LABEL org.opencontainers.image.source="https://github.com/ssbanerje/dotfiles"
 
 ARG user=dotuser
-ARG uid=1001
+ARG uid=1000
+ARG gid=${uid}
 
 # Setup prereq packages
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'APT::Install-Recommends "false";' >> /etc/apt/apt.conf.d/99norecos && \
     echo 'APT::AutoRemove::RecommendsImportant "false";' >> /etc/apt/apt.conf.d/99norecos && \
-    echo 'APT::AutoRemove::SuggestsImportant "false";'  >> /etc/apt/apt.conf.d/99norecos && \
+    echo 'APT::AutoRemove::SuggestsImportant "false";' >> /etc/apt/apt.conf.d/99norecos && \
     apt-get update && \
-    apt-get install -y sudo python3 python3-pip openssh-client && \
-    adduser --disabled-password --gecos "" --uid ${uid} ${user} && \
-    echo "%${user} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
+    apt-get install -y sudo git ca-certificates python3 openssh-client && \
+    (userdel -r ubuntu || true) && \
+    (groupdel ubuntu || true) && \
+    groupadd -o -g "${gid}" "${user}" && \
+    useradd -l -m -d "/home/${user}" -s /bin/bash -u "${uid}" -g "${gid}" "${user}" && \
+    echo "${user} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${user}" && \
+    chmod 0440 "/etc/sudoers.d/${user}" && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/log/lastlog /var/log/faillog
 
 # Setup dotfiles
 USER ${user}
 ENV DEBIAN_FRONTEND=noninteractive
+ENV HOME=/home/${user}
+ENV SHELL=/bin/bash
 COPY --chown=${user}:${user} . /home/${user}/.dotfiles
-RUN cd /home/${user}/.dotfiles && \
-    ./install_profile -vv -x ubuntu-minimal && \
+RUN cd "/home/${user}/.dotfiles" && \
+    ./install -vv -x -P ubuntu-minimal && \
     git remote set-url origin git@github.com:ssbanerje/dotfiles && \
+    git gc --prune=now --quiet && \
+    sudo install -m 0755 "/home/${user}/.dotfiles/scripts/docker-entrypoint.sh" /usr/local/bin/docker-entrypoint.sh && \
+    sudo usermod -s /usr/bin/zsh "${user}" && \
     sudo apt-get clean && \
-    sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos && \
-    find /home/${user}/.dotfiles -name "*__pycache__" | xargs rm -rf
+    sudo rm -rf /var/lib/apt/lists/* /tmp/* /etc/apt/apt.conf.d/99norecos /var/log/lastlog /var/log/faillog && \
+    rm -rf "/home/${user}/.cache/uv" "/home/${user}/.cache/nvim" "/home/${user}/.local/state/nvim" && \
+    find "/home/${user}/.dotfiles" -name "*__pycache__" -exec rm -rf {} +
 
-# Take command from user
-ENTRYPOINT ["/bin/bash", "-l", "-c"]
-CMD []
+ENV SHELL=/usr/bin/zsh \
+    EDITOR=nvim \
+    VISUAL=nvim \
+    PATH=/home/${user}/.local/bin:/home/${user}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["zsh"]
 
 # vi:ft=dockerfile:

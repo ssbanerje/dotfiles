@@ -2,90 +2,118 @@
 
 # Setup environment variables {{{
 
-# Set locale
-if [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
+UNAME="${UNAME:-$(uname -s)}"
+
+# Set locale & macOS platform defaults
+if [[ "$UNAME" == "Darwin" ]]; then
   export LANG='en_US.UTF-8'
   export LANGUAGE='en_US:en'
-  export LC_CTYPE='UTF-8'
-  export LC_NUMERIC='en_US.UTF-8'
-  export LC_TIME='en_US.UTF-8'
-  export LC_COLLATE='en_US.UTF-8'
-  export LC_MONETARY='en_US.UTF-8'
-  export LC_MESSAGES='en_US.UTF-8'
-  export LC_PAPER='en_US.UTF-8'
-  export LC_NAME='en_US.UTF-8'
-  export LC_ADDRESS='en_US.UTF-8'
-  export LC_TELEPHONE='en_US.UTF-8'
   export LC_ALL='en_US.UTF-8'
-  export LC_MEASUREMENT='en_US.UTF-8'
-  export LC_IDENTIFICATION='en_US.TF-8'
+  export BASH_SILENCE_DEPRECATION_WARNING="1"
+
+  if [[ -z "${BREW_PREFIX:-}" ]]; then
+    if [[ -d /opt/homebrew ]]; then
+      export BREW_PREFIX="/opt/homebrew"
+    elif [[ -d /usr/local/Homebrew || -x /usr/local/bin/brew ]]; then
+      export BREW_PREFIX="/usr/local"
+    fi
+  fi
+fi
+
+# Standard XDG base directories
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# Encoding, GPG TTY, and CLI telemetry opt-outs
+export PYTHONIOENCODING="UTF-8"
+export DO_NOT_TRACK="1"
+export HOMEBREW_NO_ANALYTICS="1"
+if [[ -t 0 ]]; then
+  export GPG_TTY
+  GPG_TTY="$(tty)"
 fi
 
 # Setup less
 [[ -x /usr/bin/lesspipe ]] && eval "$(/usr/bin/lesspipe)"
-if type less &> /dev/null; then
+if command -v less >/dev/null 2>&1; then
   export PAGER="less"
   export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 fi
 
-# Setup GPG
-export GPG_TTY="$TTY"
-
-# Vim all the way
-export VISUAL="lvim"
-export EDITOR="lvim"
-export USE_EDITOR="lvim"
-export SVN_EDITOR="lvim"
+# Default editor
+export VISUAL="nvim"
+export EDITOR="nvim"
+export USE_EDITOR="nvim"
+export SVN_EDITOR="nvim"
 
 # }}}
 
 # Setup PATH {{{
 
-# Helper Functions {{{
 function PREPEND_PATH() {
-  while [[ "$#" -ne 0 ]]; do
-    if [[ "$PATH" != *:$1:* ]]; then
-      export PATH="$1:$PATH"
-    fi
-    shift
+  local dir
+  for dir in "$@"; do
+    [[ -n "$dir" && -d "$dir" ]] || continue
+    case ":$PATH:" in
+      *":$dir:"*) ;;
+      *) export PATH="$dir${PATH:+:$PATH}" ;;
+    esac
   done
 }
 
 function APPEND_PATH() {
-  while [[ "$#" -ne 0 ]]; do
-    if [[ "$PATH" != *:$1:* ]]; then
-      export PATH="$PATH:$1"
-    fi
-    shift
+  local dir
+  for dir in "$@"; do
+    [[ -n "$dir" && -d "$dir" ]] || continue
+    case ":$PATH:" in
+      *":$dir:"*) ;;
+      *) export PATH="${PATH:+$PATH:}$dir" ;;
+    esac
   done
 }
-# }}}
 
 if [[ -x /usr/libexec/path_helper ]]; then
   eval "$(/usr/libexec/path_helper -s)"
 fi
 
-if [[ "${UNAME:=$(uname -s)}" == 'Linux' ]]; then
+if [[ "$UNAME" == "Linux" ]]; then
   APPEND_PATH \
     /sbin \
     /usr/sbin \
     /usr/local/sbin \
-    "$([[ -d /usr/local/cuda ]] && echo /usr/local/cuda/bin)"
-elif [[ "${UNAME:=$(uname -s)}" == 'Darwin' ]]; then
+    /usr/local/cuda/bin
+elif [[ "$UNAME" == "Darwin" && -n "${BREW_PREFIX:-}" ]]; then
   PREPEND_PATH \
-    /usr/local/bin \
-    /usr/local/sbin \
-    /usr/local/opt/llvm/bin \
-    /usr/local/opt/python/libexec/bin
+    "$BREW_PREFIX/bin" \
+    "$BREW_PREFIX/sbin" \
+    "$BREW_PREFIX/opt/llvm/bin" \
+    "$BREW_PREFIX/opt/python/libexec/bin"
 fi
 
 PREPEND_PATH \
   "$HOME/.local/bin" \
-  "$HOME/.cargo/bin" \
-  "$HOME/.npm-global/bin"
+  "$HOME/.cargo/bin"
 
-unset -f PREPEND_PATH
-unset -f APPEND_PATH
+# fzf defaults (after PATH setup so Homebrew / ~/.local/bin fd is visible)
+if command -v fd >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+elif command -v fdfind >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fdfind --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fdfind --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+fi
+export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline"
+
+# Machine-local environment overrides (untracked; can call PREPEND_PATH / APPEND_PATH)
+if [[ -r "$HOME/.config/env.local.sh" ]]; then
+  source "$HOME/.config/env.local.sh"
+fi
+
+unset -f PREPEND_PATH APPEND_PATH
 
 # }}}
 

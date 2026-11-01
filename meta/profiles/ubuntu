@@ -6,8 +6,8 @@ tmux
 git
 bin
 shell
-lunarvim
-ranger
+nvim
+yazi
 
 vale
 

@@ -1,44 +1,258 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
+
+export SHELL="${SHELL:-/bin/bash}"
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIGDIR="${BASEDIR}/meta/config"
+PROFILESDIR="${BASEDIR}/meta/profiles"
 DOTBOT="${BASEDIR}/installer/dotbot/bin/dotbot"
 PLUGINDIR="${BASEDIR}/installer/plugins"
 
-# Parse arguments
-declare -a CONFIGS
-declare -a FLAGS
-while (( "$#" )); do
-  case "$1" in
-    -*)
-      FLAGS+=("$1")
+usage() {
+  cat <<'EOF'
+Usage:
+  ./install [options] [dotbot-flags...] [module...]
+
+Options:
+  -P, --profile <name>   Load module list from meta/profiles/<name> (repeatable)
+  -l, --list             List available profiles and individual modules
+  -h, --help             Show this help message
+
+Dotbot flags (passed through):
+  -n, --dry-run          Preview actions without modifying the system
+  -v, -vv                Increase verbosity
+  -q, --quiet            Suppress informational output
+  -x, --exit-on-failure  Stop immediately on first failed directive
+  --only <dir...>        Run only matching directives (auto-keeps plugins & if*)
+  --except <dir...>      Skip matching directives
+
+Examples:
+  ./install                                # Auto-detect host OS default profile
+  ./install -P macos                       # Run full macOS profile
+  ./install -n -P ubuntu                   # Dry-run Ubuntu desktop profile
+  ./install -P macos --only link template  # Re-sync symlinks & templates only
+  ./install --only link template -P macos  # Same (flag order independent)
+  ./install git tmux                       # Install specific standalone modules
+  ./install -l                             # List all profiles and modules
+EOF
+}
+
+list_targets() {
+  local f name
+  echo "Profiles (meta/profiles/):"
+  for f in "${PROFILESDIR}"/*; do
+    [[ -f "${f}" ]] || continue
+    echo "  $(basename "${f}")"
+  done
+  echo ""
+  echo "Modules (meta/config/):"
+  for f in "${CONFIGDIR}"/*.yaml; do
+    [[ -f "${f}" ]] || continue
+    name="$(basename "${f}" .yaml)"
+    echo "  ${name}"
+  done
+}
+
+detect_default_profile() {
+  case "$(uname -s)" in
+    Darwin)
+      echo "macos"
+      return 0
       ;;
-    *)
-      CONFIGS+=("$1")
+    Linux)
+      if [[ -r /etc/os-release ]]; then
+        local os_tokens
+        os_tokens="$(
+          . /etc/os-release
+          printf '%s %s\n' "${ID:-}" "${ID_LIKE:-}"
+        )"
+        case " ${os_tokens} " in
+          *" ubuntu "*|*" debian "*)
+            echo "ubuntu-minimal"
+            return 0
+            ;;
+          *" arch "*)
+            echo "archlinux-minimal"
+            return 0
+            ;;
+        esac
+      fi
       ;;
   esac
-  shift
+  return 1
+}
+
+ensure_submodules() {
+  [[ -e "${BASEDIR}/.git" ]] || return 0
+  if [[ ! -x "${DOTBOT}" \
+     || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" \
+     || ! -e "${PLUGINDIR}/dotbot-template/lib/jinja/.git" \
+     || ! -e "${BASEDIR}/git/gitignore/.git" \
+     || ! -e "${BASEDIR}/tmux/tpm/.git" \
+     || ! -e "${BASEDIR}/shell/antidote/.git" ]]; then
+    git -C "${BASEDIR}" submodule update --init --recursive
+  fi
+}
+
+declare -a PROFILES=()
+declare -a EXTRA_CONFIGS=()
+declare -a FLAGS=()
+declare -a ONLY_DIRECTIVES=()
+declare -a SKIP_DIRECTIVES=()
+HAS_ONLY=0
+HAS_SKIP=0
+
+while (( "$#" )); do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -l|--list)
+      list_targets
+      exit 0
+      ;;
+    -P|--profile)
+      if (( "$#" < 2 )) || [[ -z "$2" ]]; then
+        echo "Error: option '$1' requires a profile name" >&2
+        exit 1
+      fi
+      PROFILES+=("$2")
+      shift 2
+      ;;
+    --profile=*)
+      profile_arg="${1#*=}"
+      if [[ -z "${profile_arg}" ]]; then
+        echo "Error: option '--profile' requires a profile name" >&2
+        exit 1
+      fi
+      PROFILES+=("${profile_arg}")
+      shift
+      ;;
+    --)
+      shift
+      while (( "$#" )); do
+        EXTRA_CONFIGS+=("$1")
+        shift
+      done
+      break
+      ;;
+    -d|--base-directory|-p|--plugin|--plugin-dir)
+      if (( "$#" < 2 )); then
+        echo "Error: option '$1' requires an argument" >&2
+        exit 1
+      fi
+      FLAGS+=("$1" "$2")
+      shift 2
+      ;;
+    --only)
+      HAS_ONLY=1
+      shift
+      while (( "$#" )) && [[ "$1" != -* ]]; do
+        ONLY_DIRECTIVES+=("$1")
+        shift
+      done
+      ;;
+    --except)
+      HAS_SKIP=1
+      shift
+      while (( "$#" )) && [[ "$1" != -* ]]; do
+        SKIP_DIRECTIVES+=("$1")
+        shift
+      done
+      ;;
+    -*)
+      FLAGS+=("$1")
+      shift
+      ;;
+    *)
+      EXTRA_CONFIGS+=("$1")
+      shift
+      ;;
+  esac
 done
 
-# Load configuration
-for config in base "${CONFIGS[@]}"; do
-    echo -e "Adding configuration $config"
-    CONFIGCONTENT="${CONFIGCONTENT}\n$(<"${CONFIGDIR}/${config}.yaml")"
-done
+ensure_submodules
 
-# Get Plugins
-declare -a PLUGINS
-PLUGINS=("--plugin-dir" "${PLUGINDIR}" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-ifplatform" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-template" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-pip" \
-  "--plugin-dir" "${PLUGINDIR}/dotbot-sudo")
-
-# Run dotbot
-if [[ "${#FLAGS[@]}" -gt 0 ]]; then
-  "${DOTBOT}" "${FLAGS[@]}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
-else
-  "${DOTBOT}" -d "${BASEDIR}" "${PLUGINS[@]}" -c <(echo -e "${CONFIGCONTENT}")
+if [[ "${#PROFILES[@]}" -eq 0 && "${#EXTRA_CONFIGS[@]}" -eq 0 ]]; then
+  if default_profile="$(detect_default_profile)"; then
+    echo "Auto-detected profile: ${default_profile}"
+    PROFILES+=("${default_profile}")
+  else
+    echo "Error: could not auto-detect profile for this host; specify '-P <profile>' or '<module...>'" >&2
+    echo "Run './install --list' to see available profiles and modules." >&2
+    exit 1
+  fi
 fi
+
+declare -a REQUESTED_CONFIGS=("base")
+for profile in ${PROFILES[@]+"${PROFILES[@]}"}; do
+  profile_file="${PROFILESDIR}/${profile}"
+  if [[ ! -f "${profile_file}" ]]; then
+    echo "Error: profile '${profile}' not found at ${profile_file}" >&2
+    exit 1
+  fi
+  echo "Loading profile ${profile}"
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    line="${line%%#*}"
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+    if [[ -n "${line}" ]]; then
+      REQUESTED_CONFIGS+=("${line}")
+    fi
+  done < "${profile_file}"
+done
+
+for extra in ${EXTRA_CONFIGS[@]+"${EXTRA_CONFIGS[@]}"}; do
+  REQUESTED_CONFIGS+=("${extra}")
+done
+
+declare -a SEEN_CONFIGS=()
+declare -a CONFIG_FILES=()
+for config in "${REQUESTED_CONFIGS[@]}"; do
+  already_seen=0
+  for seen in ${SEEN_CONFIGS[@]+"${SEEN_CONFIGS[@]}"}; do
+    if [[ "${seen}" == "${config}" ]]; then
+      already_seen=1
+      break
+    fi
+  done
+  if (( already_seen )); then
+    continue
+  fi
+  SEEN_CONFIGS+=("${config}")
+
+  config_path="${CONFIGDIR}/${config}.yaml"
+  if [[ ! -f "${config_path}" ]]; then
+    echo "Error: configuration '${config}' not found at ${config_path}" >&2
+    exit 1
+  fi
+  echo "Adding configuration ${config}"
+  CONFIG_FILES+=("${config_path}")
+done
+
+if (( HAS_ONLY )); then
+  if [[ "${#ONLY_DIRECTIVES[@]}" -eq 0 ]]; then
+    echo "Error: option '--only' requires at least one directive" >&2
+    exit 1
+  fi
+  ONLY_DIRECTIVES+=("plugins")
+  while IFS= read -r directive; do
+    if [[ -n "${directive}" ]]; then
+      ONLY_DIRECTIVES+=("${directive}")
+    fi
+  done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*(if(not)?[a-z0-9_]+):.*/\1/p' "${CONFIG_FILES[@]}" | sort -u)
+  FLAGS+=("--only" "${ONLY_DIRECTIVES[@]}")
+fi
+
+if (( HAS_SKIP )); then
+  if [[ "${#SKIP_DIRECTIVES[@]}" -eq 0 ]]; then
+    echo "Error: option '--except' requires at least one directive" >&2
+    exit 1
+  fi
+  FLAGS+=("--except" "${SKIP_DIRECTIVES[@]}")
+fi
+
+exec "${DOTBOT}" ${FLAGS[@]+"${FLAGS[@]}"} -d "${BASEDIR}" -c "${CONFIG_FILES[@]}"

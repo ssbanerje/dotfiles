@@ -1,15 +1,11 @@
 # --- Dotfile Binaries Config ---
 - link:
-    ~/.local/bin/diffconflicts: bin/diffconflicts
-    ~/.local/bin/doi2bib: bin/doi2bib
-    ~/.local/bin/ftwind: bin/ftwind
-    ~/.local/bin/ftpane: bin/ftpane
-    ~/.local/bin/gzball: bin/gzball
-    ~/.local/bin/ports: bin/ports
-    ~/.local/bin/random: bin/random
+    ~/.local/bin/:
+      glob: true
+      path: bin/*
+      exclude: [bin/lock-screen]
     ~/.local/bin/shim: scripts/shim.sh
 
 - ifmacos:
     - link:
         ~/.local/bin/lock-screen: bin/lock-screen
-        ~/.local/bin/lyrics: bin/lyrics

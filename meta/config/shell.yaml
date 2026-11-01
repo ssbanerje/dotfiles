@@ -3,39 +3,56 @@
     - apt:
         - zsh
         - fzf
-        - silversearcher-ag
-        - libnotify-bin
+        - zoxide
+        - tealdeer
+    - ghrelease:
+        starship/starship:
+          asset: starship-{uname_m}-unknown-linux-musl.tar.gz
+          bins: [starship]
+        astral-sh/uv:
+          asset: uv-{uname_m}-unknown-linux-musl.tar.gz
+          bins: [uv, uvx]
 
 - ifarch:
     - pacman:
         - zsh
         - fzf
-        - the_silver_searcher
-        - libnotify
+        - zoxide
+        - tealdeer
+        - starship
+        - uv
 
 - ifmacos:
-    - tap:
-        - homebrew/command-not-found
     - brew:
         - zsh
         - bash-completion
         - fzf
+        - zoxide
+        - tealdeer
+        - starship
         - coreutils
-        - the_silver_searcher
+        - uv
 
-- pip:
-    file: shell/requirements.txt
-    user: true
-    stdout: false
-    stderr: true
+- shell:
+    - [
+        'export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"; command -v ipython >/dev/null 2>&1 || UV_TOOL_BIN_DIR="$HOME/.local/bin" uv tool install --no-cache ipython',
+        "Install IPython via uv",
+      ]
+    - [
+        'if command -v tldr >/dev/null 2>&1; then tldr --list 2>/dev/null | grep -q . || tldr --update; fi',
+        "Populate tealdeer tldr cache",
+      ]
 
 - link:
-    ~/.config/antigen.zsh: shell/antigen.zsh
-    ~/.config/antigenrc: shell/antigenrc
+    ~/.config/antidote: shell/antidote
+    ~/.config/zsh_plugins.txt: shell/plugins.txt
+    ~/.config/zsh_plugins_macos.txt: shell/plugins_macos.txt
+    ~/.config/zsh_plugins_ubuntu.txt: shell/plugins_ubuntu.txt
+    ~/.config/zsh_plugins_arch.txt: shell/plugins_arch.txt
+    ~/.config/starship.toml: shell/starship.toml
     ~/.zshrc: shell/zshrc
-    ~/.p10k.zsh: shell/p10k.zsh
     ~/.bashrc: shell/bashrc
-    ~/.config/bash_prompt.sh: shell/bash_prompt.sh
+    ~/.inputrc: shell/inputrc
     ~/.config/env.sh: shell/env.sh
     ~/.config/aliases.sh: shell/aliases.sh
     ~/.hushlogin: shell/hushlogin

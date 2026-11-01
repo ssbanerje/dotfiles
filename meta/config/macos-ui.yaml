@@ -1,19 +1,18 @@
 # --- MacOS UI Elements Configuration ---
-- tap:
-  - koekeishiya/formulae
+- ifmacos:
+    - tap:
+        - asmvik/formulae
 
-- brew:
-  - python
-  - yabai
+    - brew:
+        - yabai
 
-- cask:
-  - dozer
-  - hammerspoon
+    - cask:
+        - hammerspoon
 
-- link:
-    ~/.yabairc: yabai/yabairc
-    ~/.hammerspoon: hammerspoon
+    - link:
+        ~/.yabairc: yabai/yabairc
+        ~/.hammerspoon: hammerspoon
 
-- shell:
-    - "brew services start yabai"
-    - "./scripts/macos.sh"
+    - shell:
+        - ["yabai --start-service || true", "Start yabai background service"]
+        - ["./scripts/macos.sh", "Apply macOS system preferences"]

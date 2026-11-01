@@ -1,8 +1,16 @@
 # --- Base Configuration ---
+- plugins:
+    - installer/plugins
+    - installer/plugins/dotbot-ifplatform
+    - installer/plugins/dotbot-template
+
 - defaults:
     link:
+      create: true
       force: true
       relink: true
+    shell:
+      stderr: true
 
 - clean:
     ~/:
