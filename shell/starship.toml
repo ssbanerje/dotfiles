@@ -1,15 +1,19 @@
 "$schema" = "https://starship.rs/config-schema.json"
 
 add_newline = true
+scan_timeout = 100
+command_timeout = 1000
 
+# Overlay contract: [vcs], [hg_*] and [custom.*] are intentionally left at
+# Starship defaults / undefined so a machine-local fragment can be appended to
+# this file without a TOML duplicate-table error. Undefined ${custom.*} slots
+# render nothing; $custom renders any custom module not placed explicitly.
 format = """
 $os\
 $shell\
 $directory\
-$git_branch\
-$git_commit\
-$git_state\
-$git_status\
+$vcs\
+${custom.vcs_extra}\
 $character"""
 
 right_format = """
@@ -19,7 +23,8 @@ $jobs\
 $username\
 $hostname\
 ${env_var.YAZI_LEVEL}\
-${env_var.VIMRUNTIME}"""
+${env_var.VIMRUNTIME}\
+$custom"""
 
 [os]
 disabled = false

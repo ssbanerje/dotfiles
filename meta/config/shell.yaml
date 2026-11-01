@@ -9,6 +9,7 @@
         starship/starship:
           asset: starship-{uname_m}-unknown-linux-musl.tar.gz
           bins: [starship]
+          min_version: "1.27.0"
         astral-sh/uv:
           asset: uv-{uname_m}-unknown-linux-musl.tar.gz
           bins: [uv, uvx]
