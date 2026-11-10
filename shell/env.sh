@@ -45,34 +45,31 @@ fi
 # Default editor
 export VISUAL="nvim"
 export EDITOR="nvim"
-export USE_EDITOR="nvim"
-export SVN_EDITOR="nvim"
 
 # }}}
 
 # Setup PATH {{{
 
-function PREPEND_PATH() {
-  local dir
+function _add_path() {
+  local mode="$1" dir
+  shift
   for dir in "$@"; do
     [[ -n "$dir" && -d "$dir" ]] || continue
     case ":$PATH:" in
       *":$dir:"*) ;;
-      *) export PATH="$dir${PATH:+:$PATH}" ;;
+      *)
+        if [[ "$mode" == "prepend" ]]; then
+          export PATH="$dir${PATH:+:$PATH}"
+        else
+          export PATH="${PATH:+$PATH:}$dir"
+        fi
+        ;;
     esac
   done
 }
 
-function APPEND_PATH() {
-  local dir
-  for dir in "$@"; do
-    [[ -n "$dir" && -d "$dir" ]] || continue
-    case ":$PATH:" in
-      *":$dir:"*) ;;
-      *) export PATH="${PATH:+$PATH:}$dir" ;;
-    esac
-  done
-}
+function PREPEND_PATH() { _add_path prepend "$@"; }
+function APPEND_PATH()  { _add_path append "$@"; }
 
 if [[ -x /usr/libexec/path_helper ]]; then
   eval "$(/usr/libexec/path_helper -s)"
@@ -97,15 +94,18 @@ PREPEND_PATH \
   "$HOME/.cargo/bin"
 
 # fzf defaults (after PATH setup so Homebrew / ~/.local/bin fd is visible)
+_fd_bin=""
 if command -v fd >/dev/null 2>&1; then
-  export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+  _fd_bin="fd"
 elif command -v fdfind >/dev/null 2>&1; then
-  export FZF_DEFAULT_COMMAND='fdfind --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_ALT_C_COMMAND='fdfind --type d --strip-cwd-prefix --hidden --follow --exclude .git'
+  _fd_bin="fdfind"
 fi
+if [[ -n "$_fd_bin" ]]; then
+  export FZF_DEFAULT_COMMAND="${_fd_bin} --type f --strip-cwd-prefix --hidden --follow --exclude .git"
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="${_fd_bin} --type d --strip-cwd-prefix --hidden --follow --exclude .git"
+fi
+unset _fd_bin
 export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --info=inline"
 
 # Machine-local environment overrides (untracked; can call PREPEND_PATH / APPEND_PATH)
@@ -113,7 +113,7 @@ if [[ -r "$HOME/.config/env.local.sh" ]]; then
   source "$HOME/.config/env.local.sh"
 fi
 
-unset -f PREPEND_PATH APPEND_PATH
+unset -f _add_path PREPEND_PATH APPEND_PATH
 
 # }}}
 

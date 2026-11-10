@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# Ask before overwriting
-alias rm='rm -i'
-alias mv='mv -i'
-alias cp='cp -i'
-
-# ls/grep variants for Bash (OMZ provides these in Zsh)
+# Interactive safety & ls/grep aliases for Bash (OMZ provides these in Zsh)
 if [[ -n "${BASH_VERSION:-}" ]]; then
+  alias rm='rm -i'
+  alias mv='mv -i'
+  alias cp='cp -i'
   if [[ "$UNAME" == "Darwin" ]]; then
     alias ls='command ls -G'
   else
