@@ -5,7 +5,7 @@
         - iterm2
         - font-hack-nerd-font
 
-- ifubuntu:
+- ifdebian:
     - apt:
         - curl
         - libnotify-bin

@@ -1,5 +1,5 @@
 # --- Vale Configuration ---
-- ifubuntu:
+- ifdebian:
     - ghrelease:
         vale-cli/vale:
           asset: vale_{version}_Linux_{arch}.tar.gz

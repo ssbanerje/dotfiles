@@ -1,5 +1,5 @@
 # --- i3wm Configuration ---
-- ifubuntu:
+- ifdebian:
     - apt:
         - i3
         - i3status
