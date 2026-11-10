@@ -4,6 +4,7 @@
         - i3
         - i3status
         - rofi
+        - feh
         - xss-lock
         - i3lock-fancy
         - network-manager-gnome
@@ -17,6 +18,7 @@
         - i3
         - i3status
         - rofi
+        - feh
         - xss-lock
         - networkmanager
         - blueman
