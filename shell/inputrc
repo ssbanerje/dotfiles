@@ -24,11 +24,6 @@ set completion-query-items 200
 # Avoid duplicating trailing text when completing mid-word
 set skip-completed-text on
 
-# Clean 8-bit UTF-8 input/output handling
-set input-meta on
-set output-meta on
-set convert-meta off
-
 # Prefix-aware Up/Down history search across default and vi keymaps
 "\e[A": history-search-backward
 "\e[B": history-search-forward

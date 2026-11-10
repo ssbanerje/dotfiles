@@ -1,6 +1,5 @@
 "$schema" = "https://starship.rs/config-schema.json"
 
-add_newline = true
 follow_symlinks = false
 scan_timeout = 100
 command_timeout = 1000
@@ -116,14 +115,6 @@ format = "on [  ](white)[@](white)[$hash]($style)( [#](white)[$tag]($style)) 
 
 [git_state]
 style = "9"
-format = "[$state( $progress_current/$progress_total)]($style) "
-rebase = "rebase"
-merge = "merge"
-revert = "revert"
-cherry_pick = "cherry-pick"
-bisect = "bisect"
-am = "am"
-am_or_rebase = "am/rebase"
 
 [git_status]
 style = "yellow"
@@ -155,21 +146,17 @@ success_style = "green"
 failure_style = "9"
 recognize_signal_code = true
 pipestatus = true
-pipestatus_separator = "|"
 pipestatus_segment_format = "[$status( $signal_name)]($style)"
 pipestatus_format = '\[$pipestatus\] => [$symbol$status( $signal_name)]($style) '
 format = "[$symbol$status( $signal_name)]($style) "
 
 [cmd_duration]
 min_time = 5_000
-show_milliseconds = false
 style = "yellow"
-format = "took [$duration]($style) "
 
 [jobs]
 symbol = " "
 number_threshold = 1
-symbol_threshold = 1
 style = "blue"
 format = "[$symbol$number]($style) "
 
