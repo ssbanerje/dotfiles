@@ -8,14 +8,8 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{py,rs,cmake}]
+[{*.py,*.rs,*.cmake,CMakeLists.txt}]
 indent_size = 4
-
-[CMakeLists.txt]
-indent_size = 4
-
-[*.{c,cc,cpp,h,hpp,toml}]
-indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
