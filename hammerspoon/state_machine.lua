@@ -27,13 +27,19 @@ local function show_badge(label, color)
   badge:show()
 end
 
+function module.new_overlay(level, ...)
+  local canvas = hs.canvas.new({ x = 0, y = 0, w = 0, h = 0 })
+  canvas:level(level)
+  canvas:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces + hs.canvas.windowBehaviors.transient)
+  canvas:clickActivating(false)
+  canvas:canvasMouseEvents(false, false, false, false)
+  canvas:appendElements(...)
+  return canvas
+end
+
 function module:init()
-  badge = hs.canvas.new({ x = 0, y = 0, w = 0, h = 0 })
-  badge:level(hs.canvas.windowLevels.tornOffMenu)
-  badge:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces + hs.canvas.windowBehaviors.transient)
-  badge:clickActivating(false)
-  badge:canvasMouseEvents(false, false, false, false)
-  badge:appendElements(
+  badge = module.new_overlay(
+    hs.canvas.windowLevels.tornOffMenu,
     {
       type = "circle",
       action = "fill",

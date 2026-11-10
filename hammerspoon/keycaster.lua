@@ -1,4 +1,5 @@
 local utf8 = require("utf8")
+local state_machine = require("state_machine")
 
 local module = {}
 
@@ -36,12 +37,8 @@ for i = 0, 9 do
   pretty_keys["pad" .. i] = tostring(i)
 end
 
-local overlay = hs.canvas.new({ x = 0, y = 0, w = 0, h = 0 })
-overlay:level(hs.canvas.windowLevels.overlay)
-overlay:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces + hs.canvas.windowBehaviors.transient)
-overlay:clickActivating(false)
-overlay:canvasMouseEvents(false, false, false, false)
-overlay:appendElements(
+local overlay = state_machine.new_overlay(
+  hs.canvas.windowLevels.overlay,
   {
     type = "rectangle",
     fillColor = { white = 0.125, alpha = 0.85 },

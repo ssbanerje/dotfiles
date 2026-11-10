@@ -1,14 +1,11 @@
+local state_machine = require("state_machine")
+
 local module = {}
 
 local wf = hs.window.filter.defaultCurrentSpace
 local active = false
 
-local border = hs.canvas.new({ x = 0, y = 0, w = 0, h = 0 })
-border:level(hs.canvas.windowLevels.floating)
-border:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces + hs.canvas.windowBehaviors.transient)
-border:clickActivating(false)
-border:canvasMouseEvents(false, false, false, false)
-border:appendElements({
+local border = state_machine.new_overlay(hs.canvas.windowLevels.floating, {
   type = "rectangle",
   action = "stroke",
   strokeColor = { red = 1, green = 0.75, blue = 0.25, alpha = 0.8 },

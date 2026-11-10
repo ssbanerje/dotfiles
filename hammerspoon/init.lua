@@ -56,10 +56,42 @@ local keycaster = require("keycaster")
 local yabai = require("yabai")
 
 local dirs = {
-  { keys = { "h", "left" }, compass = "west", label = "Left", dx = -10, dy = 0, resize = { "left:-20:0", "right:-20:0" } },
-  { keys = { "j", "down" }, compass = "south", label = "Down", dx = 0, dy = 10, resize = { "bottom:0:20", "top:0:20" } },
-  { keys = { "k", "up" }, compass = "north", label = "Up", dx = 0, dy = -10, resize = { "bottom:0:-20", "top:0:-20" } },
-  { keys = { "l", "right" }, compass = "east", label = "Right", dx = 10, dy = 0, resize = { "left:20:0", "right:20:0" } },
+  {
+    keys = { "h", "left" },
+    compass = "west",
+    label = "Left",
+    dx = -10,
+    dy = 0,
+    resize = { "left:-20:0", "right:-20:0" },
+    space_cmd = { "window", "--space", "prev", "--focus" },
+  },
+  {
+    keys = { "j", "down" },
+    compass = "south",
+    label = "Down",
+    dx = 0,
+    dy = 10,
+    resize = { "bottom:0:20", "top:0:20" },
+    space_cmd = { "space", "--rotate", "90" },
+  },
+  {
+    keys = { "k", "up" },
+    compass = "north",
+    label = "Up",
+    dx = 0,
+    dy = -10,
+    resize = { "bottom:0:-20", "top:0:-20" },
+    space_cmd = { "space", "--rotate", "270" },
+  },
+  {
+    keys = { "l", "right" },
+    compass = "east",
+    label = "Right",
+    dx = 10,
+    dy = 0,
+    resize = { "left:20:0", "right:20:0" },
+    space_cmd = { "window", "--space", "next", "--focus" },
+  },
 }
 
 ---------------------------------------------------------------------------------------------------
@@ -98,11 +130,12 @@ end
 state_machine:transition("base", "navigation", { "alt", "n" }, "Navigation Mode")
 state_machine:transition("base", "keycaster", { hyper, "k" }, "Keycaster Mode")
 
-local yabai_bsp_enabled = true
 state_machine:bind("base", { hyper, "return" }, "Toggle Yabai", function()
-  local layout = yabai_bsp_enabled and "float" or "bsp"
-  yabai_bsp_enabled = not yabai_bsp_enabled
-  yabai.ipc({ "space", "--layout", layout })
+  yabai.ipc({ "query", "--spaces", "--space" }, function(payload)
+    local ok, space = pcall(hs.json.decode, payload)
+    local layout = (ok and type(space) == "table" and space.type == "bsp") and "float" or "bsp"
+    yabai.ipc({ "space", "--layout", layout })
+  end)
 end)
 
 state_machine:bind("base", { "alt", "return" }, "Open kitty", function()
@@ -175,18 +208,13 @@ bind_dirs("navigation", hyper, "Move Floating", function(d)
     win:move({ d.dx, d.dy }, nil, false, 0)
   end)
 end)
+bind_dirs("navigation", "cmd", "Space", function(d)
+  yabai.ipc(d.space_cmd)
+end)
 
 for _, binding in ipairs({
-  { { "cmd", "k" }, "Rotate Clockwise", { "space", "--rotate", "270" } },
-  { { "cmd", "up" }, "Rotate Clockwise", { "space", "--rotate", "270" } },
-  { { "cmd", "j" }, "Rotate Anticlockwise", { "space", "--rotate", "90" } },
-  { { "cmd", "down" }, "Rotate Anticlockwise", { "space", "--rotate", "90" } },
   { { "shift", "\\" }, "Flip on Y", { "space", "--mirror", "y-axis" } },
   { { "", "-" }, "Flip on X", { "space", "--mirror", "x-axis" } },
-  { { "cmd", "h" }, "Send Window Prev Space", { "window", "--space", "prev", "--focus" } },
-  { { "cmd", "left" }, "Send Window Prev Space", { "window", "--space", "prev", "--focus" } },
-  { { "cmd", "l" }, "Send Window Next Space", { "window", "--space", "next", "--focus" } },
-  { { "cmd", "right" }, "Send Window Next Space", { "window", "--space", "next", "--focus" } },
 }) do
   state_machine:bind("navigation", binding[1], binding[2], function()
     yabai.ipc(binding[3])
@@ -216,14 +244,11 @@ state_machine:bind("resize", { "", "p" }, "Zoom parent", function()
   yabai.ipc({ "window", "--toggle", "zoom-parent" })
 end)
 
-local gap = 0
 state_machine:bind("resize", { "", "-" }, "Decrease Gap", function()
-  gap = math.max(0, gap - 10)
-  yabai.ipc({ "space", "--gap", string.format("abs:%d", gap) })
+  yabai.ipc({ "space", "--gap", "rel:-10" })
 end)
 state_machine:bind("resize", { "shift", "=" }, "Increase Gap", function()
-  gap = gap + 10
-  yabai.ipc({ "space", "--gap", string.format("abs:%d", gap) })
+  yabai.ipc({ "space", "--gap", "rel:10" })
 end)
 
 bind_dirs("resize", "", "Resize", function(d)
