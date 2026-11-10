@@ -1,4 +1,3 @@
-romkatv/zsh-defer
 getantidote/use-omz
 
 ohmyzsh/ohmyzsh path:lib/functions.zsh
@@ -25,7 +24,6 @@ ohmyzsh/ohmyzsh path:plugins/fzf kind:defer
 ohmyzsh/ohmyzsh path:plugins/gh kind:defer
 ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/git-escape-magic
-ohmyzsh/ohmyzsh path:plugins/gitfast kind:defer
 ohmyzsh/ohmyzsh path:plugins/gpg-agent
 ohmyzsh/ohmyzsh path:plugins/mosh
 ohmyzsh/ohmyzsh path:plugins/npm kind:defer
@@ -41,6 +39,14 @@ ohmyzsh/ohmyzsh path:plugins/vscode
 ohmyzsh/ohmyzsh path:plugins/web-search
 ohmyzsh/ohmyzsh path:plugins/yarn
 ohmyzsh/ohmyzsh path:plugins/zoxide
+
+ohmyzsh/ohmyzsh path:plugins/macos conditional:_is_macos
+ohmyzsh/ohmyzsh path:plugins/brew conditional:_is_macos
+ohmyzsh/ohmyzsh path:plugins/iterm2 conditional:_is_macos
+ohmyzsh/ohmyzsh path:plugins/debian conditional:_is_debian
+ohmyzsh/ohmyzsh path:plugins/ubuntu conditional:_is_debian
+ohmyzsh/ohmyzsh path:plugins/archlinux conditional:_is_arch
+ohmyzsh/ohmyzsh path:plugins/systemd conditional:_is_linux
 
 jeffreytse/zsh-vi-mode
 zsh-users/zsh-completions kind:defer

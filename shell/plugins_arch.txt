@@ -1,2 +1,0 @@
-ohmyzsh/ohmyzsh path:plugins/archlinux
-ohmyzsh/ohmyzsh path:plugins/systemd

@@ -47,9 +47,6 @@
 - link:
     ~/.config/antidote: shell/antidote
     ~/.config/zsh_plugins.txt: shell/plugins.txt
-    ~/.config/zsh_plugins_macos.txt: shell/plugins_macos.txt
-    ~/.config/zsh_plugins_ubuntu.txt: shell/plugins_ubuntu.txt
-    ~/.config/zsh_plugins_arch.txt: shell/plugins_arch.txt
     ~/.config/starship.toml: shell/starship.toml
     ~/.zshrc: shell/zshrc
     ~/.bashrc: shell/bashrc

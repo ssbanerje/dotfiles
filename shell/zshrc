@@ -2,16 +2,13 @@
 
 # ZSH Options {{{
 
-HISTFILE="$HOME/.zsh_history"
-HISTSIZE=50000
 SAVEHIST=50000
-setopt AUTOCD
 setopt ALWAYS_TO_END COMPLETE_IN_WORD
-setopt AUTOPUSHD PUSHDMINUS PUSHDSILENT PUSHDTOHOME PUSHDIGNOREDUPS
+setopt PUSHDSILENT PUSHDTOHOME
 setopt CORRECT
 setopt COMPLETE_ALIASES
 setopt EXTENDED_GLOB
-setopt HIST_EXPIRE_DUPS_FIRST HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS HIST_VERIFY SHARE_HISTORY
+setopt HIST_FIND_NO_DUPS HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS
 setopt INTERACTIVE_COMMENTS
 setopt LOCAL_OPTIONS LOCAL_TRAPS
 
@@ -52,45 +49,17 @@ if [[ "$UNAME" == "Darwin" ]]; then
   zstyle ':omz:plugins:iterm2' shell-integration yes
 fi
 
-function _bootstrap_plugins() {
-  local zsh_plugins="$HOME/.zsh_plugins.zsh"
-  local -a plugin_files=("$HOME/.config/zsh_plugins.txt")
+function _is_macos()  { [[ "$UNAME" == "Darwin" ]]; }
+function _is_debian() { [[ "$UNAME" == "Linux" ]] && (( $+commands[apt-get] )); }
+function _is_arch()   { [[ "$UNAME" == "Linux" ]] && (( $+commands[pacman] )); }
+function _is_linux()  { [[ "$UNAME" == "Linux" ]]; }
 
-  if [[ "$UNAME" == "Darwin" ]]; then
-    plugin_files+=("$HOME/.config/zsh_plugins_macos.txt")
-  elif [[ "$UNAME" == "Linux" ]]; then
-    if (( $+commands[apt-get] )); then
-      plugin_files+=("$HOME/.config/zsh_plugins_ubuntu.txt")
-    elif (( $+commands[pacman] )); then
-      plugin_files+=("$HOME/.config/zsh_plugins_arch.txt")
-    fi
-  fi
-
-  local regenerate=false
-  if [[ ! -f "$zsh_plugins" ]]; then
-    regenerate=true
-  else
-    local f
-    for f in "${plugin_files[@]}"; do
-      if [[ "$f" -nt "$zsh_plugins" ]]; then
-        regenerate=true
-        break
-      fi
-    done
-  fi
-
-  if $regenerate; then
-    zstyle ':antidote:*' zcompile 'yes'
-    antidote bundle < <(cat "${plugin_files[@]}") >|"$zsh_plugins"
-    zcompile "$zsh_plugins" 2>/dev/null || true
-  fi
-
-  source "$zsh_plugins"
-}
-# Load antidote so the `antidote` command is available interactively
+zstyle ':antidote:bundle' file "$HOME/.config/zsh_plugins.txt"
+zstyle ':antidote:static' file "$HOME/.zsh_plugins.zsh"
+zstyle ':antidote:*' zcompile 'yes'
 source "$HOME/.config/antidote/antidote.zsh"
-_bootstrap_plugins
-unset -f _bootstrap_plugins
+antidote load
+unset -f _is_macos _is_debian _is_arch _is_linux
 
 # Make fancy-ctrl-z work in zsh-vi-mode insert mode
 zvm_define_widget fancy-ctrl-z fancy-ctrl-z

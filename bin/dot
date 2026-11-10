@@ -55,7 +55,7 @@ cmd_update() {
   if command -v zsh >/dev/null 2>&1 && [[ -r "${HOME}/.config/antidote/antidote.zsh" ]]; then
     echo "==> Updating Antidote Zsh bundles"
     rm -f "${HOME}/.zsh_plugins.zsh" "${HOME}/.zsh_plugins.zsh.zwc"
-    zsh -c 'source "$HOME/.config/antidote/antidote.zsh" && antidote update'
+    zsh -c 'zstyle ":antidote:bundle" file "$HOME/.config/zsh_plugins.txt"; source "$HOME/.config/antidote/antidote.zsh" && antidote update'
     zsh -i -c exit
   fi
   if command -v uv >/dev/null 2>&1; then
