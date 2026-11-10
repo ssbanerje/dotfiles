@@ -91,11 +91,16 @@ def test_conditional_profile_files(
     if profile_spec.has_kitty:
         kitty_conf = host.file(f'{target_home}/.config/kitty/kitty.conf')
         keymaps = host.file(f'{target_home}/.config/kitty/keymaps.conf')
+        os_macos = host.file(f'{target_home}/.config/kitty/os-macos.conf')
         assert kitty_conf.is_symlink
-        assert keymaps.is_file
+        assert keymaps.is_symlink
         keymap_text = keymaps.content_string
         assert '{{' not in keymap_text and '}}' not in keymap_text
         assert 'new_tab_with_cwd' in keymap_text
+        if profile_spec.expected_os == 'Darwin':
+            assert os_macos.is_symlink
+        else:
+            assert not os_macos.exists
 
     if profile_spec.has_vale:
         assert host.file(f'{target_home}/.vale.ini').is_symlink
