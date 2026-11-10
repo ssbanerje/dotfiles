@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-if [[ -z "$1" ]]; then
-  echo "Needs a DOI as an argument."
-  exit
+DOI="${1:-}"
+if [[ -z "${DOI}" ]]; then
+  echo "Usage: doi2bib <doi>" >&2
+  exit 1
 fi
-
-DOI="$1"
 
 # Check crossref.org for the bib citation.
 curl -fsSL "https://api.crossref.org/works/${DOI}/transform/application/x-bibtex" -w "\n"
