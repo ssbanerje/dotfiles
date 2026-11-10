@@ -1,38 +1,36 @@
 from __future__ import annotations
 
 import subprocess
-from pathlib import Path
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+from tests.conftest import PROFILE_SPECS, REPO_ROOT
+
 INSTALL_BIN = str(REPO_ROOT / 'install')
-PROFILES = ('macos', 'ubuntu', 'ubuntu-minimal', 'archlinux-minimal')
+PROFILES = tuple(PROFILE_SPECS.keys())
 
 pytestmark = pytest.mark.unit
 
 
-def test_install_help_flag() -> None:
-    res = subprocess.run(
-        [INSTALL_BIN, '--help'],
+def run_install(*args: str, check: bool = False) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [INSTALL_BIN, *args],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
-        check=False,
+        check=check,
     )
+
+
+def test_install_help_flag() -> None:
+    res = run_install('--help')
     assert res.returncode == 0
     assert 'Usage:' in res.stdout
     assert '--profile' in res.stdout
 
 
 def test_install_list_profiles() -> None:
-    res = subprocess.run(
-        [INSTALL_BIN, '--list'],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    res = run_install('--list')
     assert res.returncode == 0
     listed = {line.strip() for line in res.stdout.splitlines()}
     assert set(PROFILES).issubset(listed)
@@ -47,41 +45,17 @@ def test_install_list_profiles() -> None:
     ],
 )
 def test_install_rejects_invalid_profile_args(bad_args: list[str]) -> None:
-    res = subprocess.run(
-        [INSTALL_BIN, *bad_args],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    res = run_install(*bad_args)
     assert res.returncode != 0
 
 
 @pytest.mark.parametrize('profile', PROFILES)
 def test_install_dry_run_all_profiles(profile: str) -> None:
-    res = subprocess.run(
-        [INSTALL_BIN, '-n', '-P', profile],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    res = run_install('-n', '-P', profile)
     assert res.returncode == 0, f'{profile} dry-run failed:\n{res.stdout}\n{res.stderr}'
 
 
 def test_install_passthrough_flag_order_is_equivalent() -> None:
-    left = subprocess.run(
-        [INSTALL_BIN, '-n', '--only', 'link', 'template', '-P', 'macos'],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    right = subprocess.run(
-        [INSTALL_BIN, '-P', 'macos', '--only', 'link', 'template', '-n'],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    left = run_install('-n', '--only', 'link', 'template', '-P', 'macos', check=True)
+    right = run_install('-P', 'macos', '--only', 'link', 'template', '-n', check=True)
     assert sorted(left.stdout.splitlines()) == sorted(right.stdout.splitlines())

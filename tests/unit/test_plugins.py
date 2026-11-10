@@ -6,14 +6,15 @@ import os
 import subprocess
 import sys
 import tarfile
-import tempfile
 import zipfile
 from pathlib import Path
 from unittest import mock
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+from scripts.lib import manifest as manifest_mod
+from tests.conftest import PROFILE_SPECS, REPO_ROOT
+
 for extra in (
     REPO_ROOT / 'installer' / 'dotbot' / 'src',
     REPO_ROOT / 'installer' / 'dotbot' / 'lib' / 'pyyaml' / 'lib',
@@ -58,11 +59,11 @@ class DummyOptions:
 class DummyContext:
     def __init__(
         self,
-        base_dir: str = str(REPO_ROOT),
+        base_dir: str | Path = REPO_ROOT,
         dry_run: bool = False,
         defaults: dict | None = None,
     ) -> None:
-        self._base_dir = base_dir
+        self._base_dir = str(base_dir)
         self._dry_run = dry_run
         self._defaults = defaults or {}
 
@@ -83,11 +84,17 @@ def make_plugin(
     cls,
     dry_run: bool = False,
     defaults: dict | None = None,
-    base_dir: str = str(REPO_ROOT),
+    base_dir: str | Path = REPO_ROOT,
 ):
     plugin = cls(DummyContext(base_dir=base_dir, dry_run=dry_run, defaults=defaults))
     plugin._log = DummyLog()
     return plugin
+
+
+def _completed(
+    argv: list[str], rc: int = 0, stdout: str = '', stderr: str = ''
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess(argv, rc, stdout=stdout, stderr=stderr)
 
 
 class TestAptPlugin:
@@ -96,14 +103,13 @@ class TestAptPlugin:
 
         def fake_run(argv, **kwargs):
             assert argv[0] == 'dpkg-query'
-            return subprocess.CompletedProcess(
+            return _completed(
                 argv,
                 1,
                 stdout=(
                     'curl:amd64\tcurl\t7.88.1-10\tinstalled\n'
                     'git\tgit\t1:2.39.5-1\tinstalled\n'
                 ),
-                stderr='',
             )
 
         with (
@@ -157,13 +163,11 @@ class TestAptPlugin:
 
         def fake_run(argv, **kwargs):
             if argv[0] == 'dpkg-query':
-                return subprocess.CompletedProcess(argv, 1, stdout='', stderr='')
+                return _completed(argv, 1)
             if argv[0] == 'apt-cache':
-                return subprocess.CompletedProcess(
-                    argv, 0, stdout=policy_out, stderr=''
-                )
+                return _completed(argv, 0, stdout=policy_out)
             assert argv[0] == 'dpkg'
-            return subprocess.CompletedProcess(argv, dpkg_rc, stdout='', stderr='')
+            return _completed(argv, dpkg_rc)
 
         with (
             mock.patch.object(subprocess, 'run', side_effect=fake_run),
@@ -204,25 +208,26 @@ class TestAptPlugin:
 
 
 class TestBrewPlugin:
-    def test_find_brew_discovers_apple_silicon_and_prepends_path(self) -> None:
+    def test_find_brew_discovers_apple_silicon_and_prepends_path(
+        self, tmp_path: Path
+    ) -> None:
         plugin = make_plugin(brew.Brew)
-        with tempfile.TemporaryDirectory() as td:
-            fake_bin = os.path.join(td, 'bin')
-            fake_sbin = os.path.join(td, 'sbin')
-            os.makedirs(fake_bin)
-            os.makedirs(fake_sbin)
-            fake_brew = os.path.join(fake_bin, 'brew')
-            Path(fake_brew).write_text('#!/bin/sh\n', encoding='utf-8')
-            os.chmod(fake_brew, 0o755)
+        fake_bin = tmp_path / 'bin'
+        fake_sbin = tmp_path / 'sbin'
+        fake_bin.mkdir()
+        fake_sbin.mkdir()
+        fake_brew = fake_bin / 'brew'
+        fake_brew.write_text('#!/bin/sh\n', encoding='utf-8')
+        fake_brew.chmod(0o755)
 
-            with (
-                mock.patch.object(brew.Brew, '_BREW_CANDIDATES', (fake_brew,)),
-                mock.patch.object(brew.shutil, 'which', return_value=None),
-                mock.patch.dict(os.environ, {'PATH': '/usr/bin:/bin'}, clear=False),
-            ):
-                found = plugin._find_brew()
-                assert found == fake_brew
-                assert os.environ['PATH'].startswith(f'{fake_bin}:{fake_sbin}:')
+        with (
+            mock.patch.object(brew.Brew, '_BREW_CANDIDATES', (str(fake_brew),)),
+            mock.patch.object(brew.shutil, 'which', return_value=None),
+            mock.patch.dict(os.environ, {'PATH': '/usr/bin:/bin'}, clear=False),
+        ):
+            found = plugin._find_brew()
+            assert found == str(fake_brew)
+            assert os.environ['PATH'].startswith(f'{fake_bin}:{fake_sbin}:')
 
     def test_bootstrap_passes_noninteractive_and_uses_argv(self) -> None:
         plugin = make_plugin(brew.Brew)
@@ -250,10 +255,8 @@ class TestBrewPlugin:
         calls: list[list[str]] = []
 
         def fake_run(argv, **kwargs):
-            if argv[1:] == ['tap']:
-                return subprocess.CompletedProcess(argv, 0, stdout='', stderr='')
-            if argv[1:] == ['trust', '--help']:
-                return subprocess.CompletedProcess(argv, 0, stdout='', stderr='')
+            if argv[1:] in (['tap'], ['trust', '--help']):
+                return _completed(argv)
             raise AssertionError(argv)
 
         with (
@@ -308,9 +311,7 @@ class TestPacmanPlugin:
             mock.patch.object(
                 subprocess,
                 'run',
-                return_value=subprocess.CompletedProcess(
-                    ['pacman'], 127, stdout='ripgrep\n', stderr=''
-                ),
+                return_value=_completed(['pacman'], 127, stdout='ripgrep\n'),
             ) as m_run,
             mock.patch.object(subprocess, 'call', return_value=0) as m_call,
             mock.patch.object(os, 'geteuid', return_value=1000),
@@ -365,171 +366,253 @@ class TestGhReleasePlugin:
         )
         assert tokens == expected
 
-    def test_path_traversal_rejected_tar_and_zip(self) -> None:
-        with tempfile.TemporaryDirectory() as td:
-            bad_tar = os.path.join(td, 'bad.tar.gz')
-            with tarfile.open(bad_tar, 'w:gz') as tf:
-                info = tarfile.TarInfo('../evil')
-                data = b'boom'
-                info.size = len(data)
-                tf.addfile(info, io.BytesIO(data))
-            stage = os.path.join(td, 'stage')
-            os.makedirs(stage)
-            with pytest.raises(RuntimeError):
-                ghrelease.GhRelease._extract_archive(bad_tar, 'bad.tar.gz', stage)
+    def test_path_traversal_rejected_tar_and_zip(self, tmp_path: Path) -> None:
+        bad_tar = tmp_path / 'bad.tar.gz'
+        with tarfile.open(bad_tar, 'w:gz') as tf:
+            info = tarfile.TarInfo('../evil')
+            data = b'boom'
+            info.size = len(data)
+            tf.addfile(info, io.BytesIO(data))
+        stage = tmp_path / 'stage'
+        stage.mkdir()
+        with pytest.raises(RuntimeError):
+            ghrelease.GhRelease._extract_archive(str(bad_tar), 'bad.tar.gz', str(stage))
 
-            abs_zip = os.path.join(td, 'abs.zip')
-            with zipfile.ZipFile(abs_zip, 'w') as zf:
-                zf.writestr('/etc/passwd', 'boom')
-            with pytest.raises(RuntimeError):
-                ghrelease.GhRelease._extract_archive(abs_zip, 'abs.zip', stage)
+        abs_zip = tmp_path / 'abs.zip'
+        with zipfile.ZipFile(abs_zip, 'w') as zf:
+            zf.writestr('/etc/passwd', 'boom')
+        with pytest.raises(RuntimeError):
+            ghrelease.GhRelease._extract_archive(str(abs_zip), 'abs.zip', str(stage))
 
-    def test_extract_tar_gz_strip_components_and_min_version_skip(self) -> None:
-        with tempfile.TemporaryDirectory() as td:
-            archive = os.path.join(td, 'nvim.tar.gz')
-            with tarfile.open(archive, 'w:gz') as tf:
-                info = tarfile.TarInfo('nvim-linux-x86_64/bin/nvim')
-                body = b'#!/bin/sh\necho "NVIM v0.12.6"\n'
-                info.size = len(body)
-                info.mode = 0o755
-                tf.addfile(info, io.BytesIO(body))
+    def test_extract_tar_gz_strip_components_and_min_version_skip(
+        self, tmp_path: Path
+    ) -> None:
+        archive = tmp_path / 'nvim.tar.gz'
+        with tarfile.open(archive, 'w:gz') as tf:
+            info = tarfile.TarInfo('nvim-linux-x86_64/bin/nvim')
+            body = b'#!/bin/sh\necho "NVIM v0.12.6"\n'
+            info.size = len(body)
+            info.mode = 0o755
+            tf.addfile(info, io.BytesIO(body))
 
-            opt_dir = os.path.join(td, 'opt/nvim')
-            bin_dir = os.path.join(td, 'bin')
-            plugin = make_plugin(ghrelease.GhRelease, base_dir=td)
-            spec = {
-                'neovim/neovim': {
-                    'asset': 'nvim-linux-{arch}.tar.gz',
-                    'extract_to': opt_dir,
-                    'strip_components': 1,
-                    'bin_dir': bin_dir,
-                    'bins': ['bin/nvim'],
-                    'min_version': '0.11',
-                },
-            }
-            with mock.patch.object(
-                plugin,
-                '_download',
-                side_effect=lambda url, dst: Path(dst).write_bytes(
-                    Path(archive).read_bytes()
-                ),
-            ):
-                assert plugin.handle('ghrelease', spec) is True
-                assert os.path.islink(os.path.join(bin_dir, 'nvim'))
-                assert os.path.isfile(os.path.join(opt_dir, 'bin/nvim'))
+        opt_dir = tmp_path / 'opt/nvim'
+        bin_dir = tmp_path / 'bin'
+        plugin = make_plugin(ghrelease.GhRelease, base_dir=tmp_path)
+        spec = {
+            'neovim/neovim': {
+                'asset': 'nvim-linux-{arch}.tar.gz',
+                'extract_to': str(opt_dir),
+                'strip_components': 1,
+                'bin_dir': str(bin_dir),
+                'bins': ['bin/nvim'],
+                'min_version': '0.11',
+            },
+        }
+        with mock.patch.object(
+            plugin,
+            '_download',
+            side_effect=lambda url, dst: Path(dst).write_bytes(archive.read_bytes()),
+        ):
+            assert plugin.handle('ghrelease', spec) is True
+            assert (bin_dir / 'nvim').is_symlink()
+            assert (opt_dir / 'bin/nvim').is_file()
 
-            with mock.patch.object(
-                plugin,
-                '_download',
-                side_effect=AssertionError('should not download'),
-            ):
-                assert plugin.handle('ghrelease', spec) is True
+        with mock.patch.object(
+            plugin,
+            '_download',
+            side_effect=AssertionError('should not download'),
+        ):
+            assert plugin.handle('ghrelease', spec) is True
 
-    def test_extract_gz_zip_and_tar_xz_with_creates_and_post_install(self) -> None:
-        with tempfile.TemporaryDirectory() as td:
-            bin_dir = os.path.join(td, 'bin')
-            gz_src = os.path.join(td, 'src.gz')
-            with gzip.open(gz_src, 'wb') as fh:
-                fh.write(b'#!/bin/sh\necho tree-sitter 0.27.1\n')
+    def test_extract_gz_zip_and_tar_xz_with_creates_and_post_install(
+        self, tmp_path: Path
+    ) -> None:
+        bin_dir = tmp_path / 'bin'
+        gz_src = tmp_path / 'src.gz'
+        with gzip.open(gz_src, 'wb') as fh:
+            fh.write(b'#!/bin/sh\necho tree-sitter 0.27.1\n')
 
-            zip_src = os.path.join(td, 'src.zip')
-            with zipfile.ZipFile(zip_src, 'w') as zf:
-                zf.writestr('yazi-x86_64/yazi', '#!/bin/sh\n')
-                zf.writestr('yazi-x86_64/ya', '#!/bin/sh\n')
+        zip_src = tmp_path / 'src.zip'
+        with zipfile.ZipFile(zip_src, 'w') as zf:
+            zf.writestr('yazi-x86_64/yazi', '#!/bin/sh\n')
+            zf.writestr('yazi-x86_64/ya', '#!/bin/sh\n')
 
-            txz_src = os.path.join(td, 'Hack.tar.xz')
-            with tarfile.open(txz_src, 'w:xz') as tf:
-                ti = tarfile.TarInfo('HackNerdFont-Regular.ttf')
-                ti.size = 4
-                tf.addfile(ti, io.BytesIO(b'font'))
+        txz_src = tmp_path / 'Hack.tar.xz'
+        with tarfile.open(txz_src, 'w:xz') as tf:
+            ti = tarfile.TarInfo('HackNerdFont-Regular.ttf')
+            ti.size = 4
+            tf.addfile(ti, io.BytesIO(b'font'))
 
-            fonts_dir = os.path.join(td, 'fonts/Hack')
-            marker = os.path.join(td, 'post_ran')
+        fonts_dir = tmp_path / 'fonts/Hack'
+        marker = tmp_path / 'post_ran'
 
-            def fake_dl(url: str, dst: str) -> None:
-                if url.endswith('.gz') and not url.endswith('.tar.gz'):
-                    src = gz_src
-                elif url.endswith('.zip'):
-                    src = zip_src
-                else:
-                    src = txz_src
-                Path(dst).write_bytes(Path(src).read_bytes())
+        def fake_dl(url: str, dst: str) -> None:
+            if url.endswith('.gz') and not url.endswith('.tar.gz'):
+                src = gz_src
+            elif url.endswith('.zip'):
+                src = zip_src
+            else:
+                src = txz_src
+            Path(dst).write_bytes(src.read_bytes())
 
-            plugin = make_plugin(ghrelease.GhRelease, base_dir=td)
-            with (
-                mock.patch.object(plugin, '_download', side_effect=fake_dl),
-                mock.patch.object(ghrelease.shutil, 'which', return_value=None),
-            ):
-                ok = plugin.handle(
-                    'ghrelease',
-                    {
-                        'tree-sitter/tree-sitter': {
-                            'asset': 'tree-sitter-linux-{node_arch}.gz',
-                            'bin_dir': bin_dir,
-                            'bins': ['tree-sitter'],
-                        },
-                        'sxyazi/yazi': {
-                            'asset': 'yazi-{uname_m}-unknown-linux-musl.zip',
-                            'bin_dir': bin_dir,
-                            'bins': ['yazi', 'ya'],
-                        },
-                        'ryanoasis/nerd-fonts': {
-                            'asset': 'Hack.tar.xz',
-                            'extract_to': fonts_dir,
-                            'creates': os.path.join(
-                                fonts_dir, 'HackNerdFont-Regular.ttf'
-                            ),
-                            'post_install': [f'touch {marker}'],
-                        },
+        plugin = make_plugin(ghrelease.GhRelease, base_dir=tmp_path)
+        with (
+            mock.patch.object(plugin, '_download', side_effect=fake_dl),
+            mock.patch.object(ghrelease.shutil, 'which', return_value=None),
+        ):
+            ok = plugin.handle(
+                'ghrelease',
+                {
+                    'tree-sitter/tree-sitter': {
+                        'asset': 'tree-sitter-linux-{node_arch}.gz',
+                        'bin_dir': str(bin_dir),
+                        'bins': ['tree-sitter'],
                     },
-                )
-                assert ok is True
-                for b in ('tree-sitter', 'yazi', 'ya'):
-                    p = os.path.join(bin_dir, b)
-                    assert os.path.isfile(p) and os.access(p, os.X_OK)
-                assert os.path.isfile(
-                    os.path.join(fonts_dir, 'HackNerdFont-Regular.ttf')
-                )
-                assert os.path.isfile(marker)
+                    'sxyazi/yazi': {
+                        'asset': 'yazi-{uname_m}-unknown-linux-musl.zip',
+                        'bin_dir': str(bin_dir),
+                        'bins': ['yazi', 'ya'],
+                    },
+                    'ryanoasis/nerd-fonts': {
+                        'asset': 'Hack.tar.xz',
+                        'extract_to': str(fonts_dir),
+                        'creates': str(fonts_dir / 'HackNerdFont-Regular.ttf'),
+                        'post_install': [f'touch {marker}'],
+                    },
+                },
+            )
+            assert ok is True
+            for b in ('tree-sitter', 'yazi', 'ya'):
+                p = bin_dir / b
+                assert p.is_file() and os.access(p, os.X_OK)
+            assert (fonts_dir / 'HackNerdFont-Regular.ttf').is_file()
+            assert marker.is_file()
 
-    def test_resolve_latest_tag_and_dry_run(self) -> None:
+    def test_resolve_latest_tag_and_dry_run(self, tmp_path: Path) -> None:
         with mock.patch.object(
             subprocess,
             'run',
-            return_value=subprocess.CompletedProcess(
+            return_value=_completed(
                 ['curl'],
-                0,
-                'https://github.com/astral-sh/uv/releases/tag/0.13.6',
-                '',
+                stdout='https://github.com/astral-sh/uv/releases/tag/0.13.6',
             ),
         ):
             assert ghrelease.GhRelease._resolve_latest_tag('astral-sh/uv') == '0.13.6'
 
-        with tempfile.TemporaryDirectory() as td:
-            bin_dir = os.path.join(td, 'bin')
-            plugin = make_plugin(ghrelease.GhRelease, dry_run=True, base_dir=td)
-            with (
-                mock.patch.object(ghrelease.shutil, 'which', return_value=None),
-                mock.patch.object(
-                    plugin,
-                    '_resolve_latest_tag',
-                    side_effect=AssertionError('network called'),
-                ),
-                mock.patch.object(
-                    plugin,
-                    '_download',
-                    side_effect=AssertionError('download called'),
-                ),
-            ):
-                ok = plugin.handle(
-                    'ghrelease',
-                    {
-                        'jesseduffield/lazygit': {
-                            'asset': 'lazygit_{version}_linux_{arch}.tar.gz',
-                            'bin_dir': bin_dir,
-                            'bins': ['lazygit'],
-                        },
+        bin_dir = tmp_path / 'bin'
+        plugin = make_plugin(ghrelease.GhRelease, dry_run=True, base_dir=tmp_path)
+        with (
+            mock.patch.object(ghrelease.shutil, 'which', return_value=None),
+            mock.patch.object(
+                plugin,
+                '_resolve_latest_tag',
+                side_effect=AssertionError('network called'),
+            ),
+            mock.patch.object(
+                plugin,
+                '_download',
+                side_effect=AssertionError('download called'),
+            ),
+        ):
+            ok = plugin.handle(
+                'ghrelease',
+                {
+                    'jesseduffield/lazygit': {
+                        'asset': 'lazygit_{version}_linux_{arch}.tar.gz',
+                        'bin_dir': str(bin_dir),
+                        'bins': ['lazygit'],
                     },
-                )
-                assert ok is True
-                assert not os.path.exists(bin_dir)
+                },
+            )
+            assert ok is True
+            assert not bin_dir.exists()
+
+
+class TestManifestResolver:
+    @pytest.mark.parametrize('profile', tuple(PROFILE_SPECS.keys()))
+    def test_resolve_manifest_sources_and_platform_exclusions(
+        self, profile: str
+    ) -> None:
+        resolved = manifest_mod.resolve_manifest(REPO_ROOT, profile=profile)
+        assert '.config/zsh_plugins.txt' in resolved.symlinks
+        assert '.local/bin/dot' in resolved.symlinks
+        assert '.gitconfig' in resolved.templates
+        assert resolved.directories.get('.ssh') == 0o700
+
+        for src_rel in resolved.symlinks.values():
+            assert (REPO_ROOT / src_rel).exists(), (
+                f'Missing symlink source {src_rel!r} in profile {profile}'
+            )
+        for src_rel in resolved.templates.values():
+            assert (REPO_ROOT / src_rel).is_file(), (
+                f'Missing template source {src_rel!r} in profile {profile}'
+            )
+
+        if profile == 'macos':
+            assert '.local/bin/lock-screen' in resolved.symlinks
+            assert '.config/kitty/os-macos.conf' in resolved.symlinks
+        else:
+            assert '.local/bin/lock-screen' not in resolved.symlinks
+            assert '.local/bin/lock-screen' in resolved.excluded_symlinks
+
+    def test_discover_submodules_and_local_hooks(self) -> None:
+        submodules = dict(manifest_mod.discover_submodules(REPO_ROOT))
+        assert submodules.get('installer/dotbot') is True
+        assert submodules.get('shell/antidote') is True
+        assert submodules.get('tmux/tpm') is True
+
+        hooks = manifest_mod.discover_local_hooks(REPO_ROOT)
+        for expected in (
+            '.gitconfig.local',
+            '.ssh/config.local',
+            '.config/env.local.sh',
+            '.zshrc.local',
+            '.bashrc.local',
+            '.tmux.conf.local',
+            '.tmux.conf.post.local',
+        ):
+            assert expected in hooks
+
+    def test_run_doctor_validates_synthetic_home(self, tmp_path: Path) -> None:
+        repo = tmp_path / 'repo'
+        home = tmp_path / 'home'
+        home.mkdir()
+        (repo / 'meta/profiles').mkdir(parents=True)
+        (repo / 'meta/config').mkdir(parents=True)
+        (repo / 'shell').mkdir()
+        (repo / 'shell/zshrc').write_text(
+            '[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"\n',
+            encoding='utf-8',
+        )
+        (repo / 'git').mkdir()
+        (repo / 'git/gitconfig').write_text(
+            '[user]\n  name = {{NAME}}\n', encoding='utf-8'
+        )
+        (repo / 'meta/profiles/ubuntu-minimal').write_text(
+            'base\nshell\ngit\n', encoding='utf-8'
+        )
+        (repo / 'meta/config/base.yaml').write_text(
+            '- create:\n    ~/.ssh:\n      mode: 0700\n', encoding='utf-8'
+        )
+        (repo / 'meta/config/shell.yaml').write_text(
+            '- link:\n    ~/.zshrc: shell/zshrc\n', encoding='utf-8'
+        )
+        (repo / 'meta/config/git.yaml').write_text(
+            '- template:\n    ~/.gitconfig:\n      source_file: git/gitconfig\n',
+            encoding='utf-8',
+        )
+
+        ssh_dir = home / '.ssh'
+        ssh_dir.mkdir(mode=0o700)
+        ssh_dir.chmod(0o700)
+        (home / '.zshrc').symlink_to(repo / 'shell/zshrc')
+        (home / '.gitconfig').write_text('[user]\n  name = Test\n', encoding='utf-8')
+        (home / '.global_gitignore').write_text('*.swp\n', encoding='utf-8')
+
+        assert manifest_mod.run_doctor(repo, profile='ubuntu-minimal', home=home) == 0
+
+        # Unrendered template placeholder should fail doctor
+        (home / '.gitconfig').write_text(
+            '[user]\n  name = {{NAME}}\n', encoding='utf-8'
+        )
+        assert manifest_mod.run_doctor(repo, profile='ubuntu-minimal', home=home) == 1

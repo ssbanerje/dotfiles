@@ -4,9 +4,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.conftest import run_env, write_remote_file
+from tests.conftest import run_env
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from testinfra.host import Host
 
 pytestmark = pytest.mark.environment
@@ -65,36 +67,35 @@ def test_gitconfig_modern_settings(host: Host, key: str, expected: str) -> None:
     assert res.stdout.strip() == expected
 
 
-def test_gitconfig_local_override_precedence(host: Host, target_home: str) -> None:
-    local_cfg = f'{target_home}/.gitconfig.local'
-    try:
-        write_remote_file(
-            host,
-            local_cfg,
-            '[alias]\n  ci-local-probe = status --short\n',
-        )
-        res = run_env(host, 'git', 'config', '--get', 'alias.ci-local-probe')
-        assert res.rc == 0
-        assert res.stdout.strip() == 'status --short'
-    finally:
-        host.run('rm -f %s', local_cfg)
+def test_gitconfig_local_override_precedence(
+    host: Host,
+    target_home: str,
+    remote_files: Callable[[str, str, str | None], None],
+) -> None:
+    remote_files(
+        f'{target_home}/.gitconfig.local',
+        '[alias]\n  ci-local-probe = status --short\n',
+        None,
+    )
+    res = run_env(host, 'git', 'config', '--get', 'alias.ci-local-probe')
+    assert res.rc == 0
+    assert res.stdout.strip() == 'status --short'
 
 
-def test_ssh_config_and_local_include_override(host: Host, target_home: str) -> None:
+def test_ssh_config_and_local_include_override(
+    host: Host,
+    target_home: str,
+    remote_files: Callable[[str, str, str | None], None],
+) -> None:
     base = host.run('ssh -G localhost')
     assert base.rc == 0, base.stderr
     assert 'hashknownhosts yes' in base.stdout.splitlines()
 
-    local_ssh = f'{target_home}/.ssh/config.local'
-    try:
-        write_remote_file(
-            host,
-            local_ssh,
-            'Host ci-probe.invalid\n  User overrideprobe\n',
-            mode='0600',
-        )
-        probe = host.run('ssh -G ci-probe.invalid')
-        assert probe.rc == 0, probe.stderr
-        assert 'user overrideprobe' in probe.stdout.splitlines()
-    finally:
-        host.run('rm -f %s', local_ssh)
+    remote_files(
+        f'{target_home}/.ssh/config.local',
+        'Host ci-probe.invalid\n  User overrideprobe\n',
+        '0600',
+    )
+    probe = host.run('ssh -G ci-probe.invalid')
+    assert probe.rc == 0, probe.stderr
+    assert 'user overrideprobe' in probe.stdout.splitlines()

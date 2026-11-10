@@ -49,7 +49,7 @@ def test_cli_binaries_execute(host: Host, binary: str, flag: str) -> None:
 
 def test_profile_specific_binaries(host: Host, profile_spec: ProfileSpec) -> None:
     assert run_env(host, profile_spec.fd_binary, '--version').rc == 0
-    if profile_spec.has_vale:
+    if 'vale' in profile_spec.modules:
         assert run_env(host, 'vale', '--version').rc == 0
 
 

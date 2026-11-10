@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
 import testinfra
 
+from scripts.lib.manifest import ProfileManifest, load_profile_modules, resolve_manifest
+
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Callable, Iterator
 
     from testinfra.host import Host
 
@@ -21,45 +23,28 @@ class ProfileSpec:
     name: str
     expected_os: str
     fd_binary: str
-    has_vale: bool
-    has_kitty: bool
-    has_macos_ui: bool
+    modules: frozenset[str]
     is_container: bool = False
     docker_image: str | None = None
 
 
+def _profile_spec(name: str, expected_os: str, fd_binary: str) -> ProfileSpec:
+    return ProfileSpec(
+        name=name,
+        expected_os=expected_os,
+        fd_binary=fd_binary,
+        modules=frozenset(load_profile_modules(REPO_ROOT, name)),
+    )
+
+
 PROFILE_SPECS: dict[str, ProfileSpec] = {
-    'macos': ProfileSpec(
-        name='macos',
-        expected_os='Darwin',
-        fd_binary='fd',
-        has_vale=True,
-        has_kitty=True,
-        has_macos_ui=True,
+    'macos': _profile_spec('macos', expected_os='Darwin', fd_binary='fd'),
+    'ubuntu': _profile_spec('ubuntu', expected_os='Linux', fd_binary='fdfind'),
+    'ubuntu-minimal': _profile_spec(
+        'ubuntu-minimal', expected_os='Linux', fd_binary='fdfind'
     ),
-    'ubuntu': ProfileSpec(
-        name='ubuntu',
-        expected_os='Linux',
-        fd_binary='fdfind',
-        has_vale=True,
-        has_kitty=True,
-        has_macos_ui=False,
-    ),
-    'ubuntu-minimal': ProfileSpec(
-        name='ubuntu-minimal',
-        expected_os='Linux',
-        fd_binary='fdfind',
-        has_vale=False,
-        has_kitty=False,
-        has_macos_ui=False,
-    ),
-    'archlinux-minimal': ProfileSpec(
-        name='archlinux-minimal',
-        expected_os='Linux',
-        fd_binary='fd',
-        has_vale=False,
-        has_kitty=False,
-        has_macos_ui=False,
+    'archlinux-minimal': _profile_spec(
+        'archlinux-minimal', expected_os='Linux', fd_binary='fd'
     ),
 }
 
@@ -88,16 +73,7 @@ def _infer_container_profile(image: str, explicit_profile: str | None) -> Profil
         base = PROFILE_SPECS['archlinux-minimal']
     else:
         base = PROFILE_SPECS['ubuntu-minimal']
-    return ProfileSpec(
-        name=base.name,
-        expected_os=base.expected_os,
-        fd_binary=base.fd_binary,
-        has_vale=base.has_vale,
-        has_kitty=base.has_kitty,
-        has_macos_ui=base.has_macos_ui,
-        is_container=True,
-        docker_image=image,
-    )
+    return replace(base, is_container=True, docker_image=image)
 
 
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
@@ -196,8 +172,18 @@ def profile_spec(target_session: tuple[Host, ProfileSpec]) -> ProfileSpec:
 
 
 @pytest.fixture(scope='session')
+def profile_manifest(profile_spec: ProfileSpec) -> ProfileManifest:
+    return resolve_manifest(repo_root=REPO_ROOT, profile=profile_spec.name)
+
+
+@pytest.fixture(scope='session')
 def target_home(host: Host) -> str:
     return host.check_output('printf %s "$HOME"').strip()
+
+
+@pytest.fixture(params=('zsh', 'bash'))
+def interactive_shell(request: pytest.FixtureRequest) -> str:
+    return str(request.param)
 
 
 def run_env(host: Host, *argv: str):
@@ -209,12 +195,8 @@ def run_env(host: Host, *argv: str):
     )
 
 
-def run_zsh_i(host: Host, snippet: str):
-    return host.run('TERM=xterm-256color zsh -i -c %s', snippet)
-
-
-def run_bash_i(host: Host, snippet: str):
-    return host.run('TERM=xterm-256color bash -i -c %s', snippet)
+def run_shell_i(host: Host, shell: str, snippet: str):
+    return host.run(f'TERM=xterm-256color {shell} -i -c %s', snippet)
 
 
 def write_remote_file(
@@ -223,3 +205,19 @@ def write_remote_file(
     host.run_expect([0], 'printf %%s %s > %s', content, path)
     if mode is not None:
         host.run_expect([0], 'chmod %s %s', mode, path)
+
+
+@pytest.fixture
+def remote_files(host: Host) -> Iterator[Callable[[str, str, str | None], None]]:
+    created: list[str] = []
+
+    def _create(path: str, content: str, mode: str | None = None) -> None:
+        created.append(path)
+        write_remote_file(host, path, content, mode=mode)
+
+    try:
+        yield _create
+    finally:
+        if created:
+            placeholders = ' '.join(['%s'] * len(created))
+            host.run(f'rm -f {placeholders}', *created)

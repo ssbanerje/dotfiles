@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 import pytest
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from testinfra.host import Host
 
     from tests.conftest import ProfileSpec
@@ -15,25 +17,40 @@ pytestmark = pytest.mark.container
 MAX_IMAGE_SIZE_BYTES = 900 * 1024 * 1024
 
 
-def test_default_zero_arg_container_startup(profile_spec: ProfileSpec) -> None:
+@pytest.fixture
+def docker_image(profile_spec: ProfileSpec) -> str:
     assert profile_spec.docker_image is not None
-    res = subprocess.run(
-        ['docker', 'run', '--rm', profile_spec.docker_image],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    return profile_spec.docker_image
+
+
+@pytest.fixture
+def docker_run(
+    docker_image: str,
+) -> Callable[..., subprocess.CompletedProcess[str]]:
+    def _run(
+        *cmd_args: str, docker_args: tuple[str, ...] = ()
+    ) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ['docker', 'run', '--rm', *docker_args, docker_image, *cmd_args],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    return _run
+
+
+def test_default_zero_arg_container_startup(
+    docker_run: Callable[..., subprocess.CompletedProcess[str]],
+) -> None:
+    res = docker_run()
     assert res.returncode == 0, res.stderr
 
 
-def test_direct_multi_arg_entrypoint_execution(profile_spec: ProfileSpec) -> None:
-    assert profile_spec.docker_image is not None
-    res = subprocess.run(
-        ['docker', 'run', '--rm', profile_spec.docker_image, 'nvim', '--version'],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+def test_direct_multi_arg_entrypoint_execution(
+    docker_run: Callable[..., subprocess.CompletedProcess[str]],
+) -> None:
+    res = docker_run('nvim', '--version')
     assert res.returncode == 0, res.stderr
     assert 'NVIM v' in res.stdout
 
@@ -51,67 +68,38 @@ def test_embedded_dotfiles_repo_is_clean(host: Host, target_home: str) -> None:
 
 
 @pytest.mark.parametrize(
-    'cache_rel',
-    ('.cache/uv', '.cache/nvim', '.cache/yay'),
+    ('check_expr', 'label'),
+    [
+        ('test ! -e "$HOME/.cache/uv"', '$HOME/.cache/uv'),
+        ('test ! -e "$HOME/.cache/nvim"', '$HOME/.cache/nvim'),
+        ('test ! -e "$HOME/.cache/yay"', '$HOME/.cache/yay'),
+        (
+            'test ! -d "/var/cache/pacman/pkg" || test -z "$(ls -A "/var/cache/pacman/pkg")"',
+            '/var/cache/pacman/pkg',
+        ),
+        (
+            'test ! -d "/var/lib/apt/lists" || test -z "$(ls -A "/var/lib/apt/lists")"',
+            '/var/lib/apt/lists',
+        ),
+    ],
 )
-def test_user_build_caches_purged(profile_spec: ProfileSpec, cache_rel: str) -> None:
-    assert profile_spec.docker_image is not None
-    res = subprocess.run(
-        [
-            'docker',
-            'run',
-            '--rm',
-            profile_spec.docker_image,
-            'bash',
-            '-c',
-            f'test ! -e "$HOME/{cache_rel}"',
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert res.returncode == 0, f'Expected $HOME/{cache_rel} to be purged in image'
+def test_build_and_package_caches_purged(
+    docker_run: Callable[..., subprocess.CompletedProcess[str]],
+    check_expr: str,
+    label: str,
+) -> None:
+    res = docker_run('bash', '-c', check_expr)
+    assert res.returncode == 0, f'Expected {label} to be purged in image'
 
 
-@pytest.mark.parametrize(
-    'sys_dir',
-    ('/var/cache/pacman/pkg', '/var/lib/apt/lists'),
-)
-def test_system_package_caches_purged(profile_spec: ProfileSpec, sys_dir: str) -> None:
-    assert profile_spec.docker_image is not None
-    res = subprocess.run(
-        [
-            'docker',
-            'run',
-            '--rm',
-            profile_spec.docker_image,
-            'bash',
-            '-c',
-            f'test ! -d "{sys_dir}" || test -z "$(ls -A "{sys_dir}")"',
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert res.returncode == 0, f'Expected {sys_dir} to be empty in image'
-
-
-def test_container_image_size_within_budget(profile_spec: ProfileSpec) -> None:
-    assert profile_spec.docker_image is not None
+def test_container_image_size_within_budget(docker_image: str) -> None:
     out = subprocess.check_output(
-        [
-            'docker',
-            'image',
-            'inspect',
-            '--format',
-            '{{.Size}}',
-            profile_spec.docker_image,
-        ],
+        ['docker', 'image', 'inspect', '--format', '{{.Size}}', docker_image],
         text=True,
     ).strip()
     size_bytes = int(out)
     assert size_bytes <= MAX_IMAGE_SIZE_BYTES, (
-        f'Image {profile_spec.docker_image} is {size_bytes / (1024 * 1024):.1f} MiB '
+        f'Image {docker_image} is {size_bytes / (1024 * 1024):.1f} MiB '
         f'(budget: {MAX_IMAGE_SIZE_BYTES / (1024 * 1024):.1f} MiB)'
     )
 
@@ -123,8 +111,11 @@ def test_container_image_size_within_budget(profile_spec: ProfileSpec) -> None:
         (907197, 89939),
     ],
 )
-def test_dynamic_uid_gid_remap(profile_spec: ProfileSpec, uid: int, gid: int) -> None:
-    assert profile_spec.docker_image is not None
+def test_dynamic_uid_gid_remap(
+    docker_run: Callable[..., subprocess.CompletedProcess[str]],
+    uid: int,
+    gid: int,
+) -> None:
     script = (
         f'set -euo pipefail; '
         f'test "$(id -u)" = "{uid}"; '
@@ -136,11 +127,11 @@ def test_dynamic_uid_gid_remap(profile_spec: ProfileSpec, uid: int, gid: int) ->
         f'test ! -s /var/log/lastlog; '
         f'zsh -i -c "alias ll >/dev/null && whence -w y | grep -q function && type z >/dev/null"'
     )
-    res = subprocess.run(
-        [
-            'docker',
-            'run',
-            '--rm',
+    res = docker_run(
+        'bash',
+        '-lc',
+        script,
+        docker_args=(
             '-u',
             '0:0',
             '-e',
@@ -149,14 +140,7 @@ def test_dynamic_uid_gid_remap(profile_spec: ProfileSpec, uid: int, gid: int) ->
             f'HOST_GID={gid}',
             '-e',
             'TERM=xterm-256color',
-            profile_spec.docker_image,
-            'bash',
-            '-lc',
-            script,
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
+        ),
     )
     assert res.returncode == 0, (
         f'UID/GID remap ({uid}:{gid}) failed:\n{res.stdout}\n{res.stderr}'

@@ -7,104 +7,55 @@ import pytest
 if TYPE_CHECKING:
     from testinfra.host import Host
 
-    from tests.conftest import ProfileSpec
+    from scripts.lib.manifest import ProfileManifest
 
 pytestmark = pytest.mark.environment
 
-CORE_SYMLINKS = (
-    '.zshrc',
-    '.bashrc',
-    '.inputrc',
-    '.hushlogin',
-    '.curlrc',
-    '.gdbinit',
-    '.wgetrc',
-    '.editorconfig',
-    '.gitattributes',
-    '.tmux.conf',
-    '.tmux/plugins/tpm',
-    '.ssh/config',
-    '.config/antidote',
-    '.config/env.sh',
-    '.config/aliases.sh',
-    '.config/starship.toml',
-    '.config/zsh_plugins.txt',
-    '.config/nvim',
-    '.config/yazi/yazi.toml',
-    '.config/yazi/keymap.toml',
-    '.local/bin/shim',
-    '.local/bin/dot',
-    '.local/bin/ports',
-    '.local/bin/ftpane',
-    '.local/bin/ftwind',
-    '.local/bin/ftsession',
-    '.local/bin/doi2bib',
-    '.local/bin/gzball',
-    '.local/bin/random',
-)
 
-
-@pytest.mark.parametrize('rel_path', CORE_SYMLINKS)
-def test_core_symlinks_exist_and_resolve(
-    host: Host, target_home: str, rel_path: str
+def test_profile_symlinks_exist_and_resolve(
+    host: Host, target_home: str, profile_manifest: ProfileManifest
 ) -> None:
-    path = f'{target_home}/{rel_path}'
-    f = host.file(path)
-    assert f.is_symlink, f'Expected symlink at {path}'
-    assert host.file(f.linked_to).exists, (
-        f'Broken symlink target for {path}: {f.linked_to}'
-    )
+    for rel_path, rel_target in profile_manifest.symlinks.items():
+        path = f'{target_home}/{rel_path}'
+        f = host.file(path)
+        assert f.is_symlink, f'Expected symlink at {path}'
+        assert host.file(f.linked_to).exists, (
+            f'Broken symlink target for {path}: {f.linked_to}'
+        )
+        assert f.linked_to.endswith(f'/{rel_target}'), (
+            f'Unexpected symlink target for {path}: {f.linked_to} '
+            f'(expected suffix /{rel_target})'
+        )
+
+    for rel_path in profile_manifest.excluded_symlinks:
+        path = f'{target_home}/{rel_path}'
+        assert not host.file(path).exists, f'Unexpected platform-excluded path {path}'
 
 
-@pytest.mark.parametrize('rel_dir', ('.ssh', '.ssh/sockets', '.ssh/config.d'))
-def test_ssh_directories_have_strict_permissions(
-    host: Host, target_home: str, rel_dir: str
+def test_created_directories_and_permissions(
+    host: Host, target_home: str, profile_manifest: ProfileManifest
 ) -> None:
-    d = host.file(f'{target_home}/{rel_dir}')
-    assert d.is_directory
-    assert d.mode == 0o700
+    for rel_dir, expected_mode in profile_manifest.directories.items():
+        d = host.file(f'{target_home}/{rel_dir}')
+        assert d.is_directory, f'Expected directory at {target_home}/{rel_dir}'
+        if expected_mode is not None:
+            assert d.mode == expected_mode, (
+                f'Directory {target_home}/{rel_dir} has mode {oct(d.mode)}, '
+                f'expected {oct(expected_mode)}'
+            )
 
 
-def test_gitconfig_template_rendered_cleanly(host: Host, target_home: str) -> None:
-    gitconfig = host.file(f'{target_home}/.gitconfig')
-    assert gitconfig.is_file
-    content = gitconfig.content_string
-    assert len(content) > 0
-    assert '{{' not in content and '}}' not in content
-
-
-def test_global_gitignore_assembled(host: Host, target_home: str) -> None:
-    gitignore = host.file(f'{target_home}/.global_gitignore')
-    assert gitignore.is_file
-    assert gitignore.size > 0
-
-
-def test_conditional_profile_files(
-    host: Host, target_home: str, profile_spec: ProfileSpec
+def test_generated_files_present_and_rendered(
+    host: Host, target_home: str, profile_manifest: ProfileManifest
 ) -> None:
-    lock_screen = host.file(f'{target_home}/.local/bin/lock-screen')
-    if profile_spec.expected_os == 'Darwin':
-        assert lock_screen.is_symlink
-    else:
-        assert not lock_screen.exists
+    for rel_path in profile_manifest.templates:
+        rendered = host.file(f'{target_home}/{rel_path}')
+        assert rendered.is_file, f'Missing rendered template {target_home}/{rel_path}'
+        content = rendered.content_string
+        assert len(content) > 0
+        assert '{{' not in content and '}}' not in content
 
-    if profile_spec.has_kitty:
-        kitty_conf = host.file(f'{target_home}/.config/kitty/kitty.conf')
-        keymaps = host.file(f'{target_home}/.config/kitty/keymaps.conf')
-        os_macos = host.file(f'{target_home}/.config/kitty/os-macos.conf')
-        assert kitty_conf.is_symlink
-        assert keymaps.is_symlink
-        keymap_text = keymaps.content_string
-        assert '{{' not in keymap_text and '}}' not in keymap_text
-        assert 'new_tab_with_cwd' in keymap_text
-        if profile_spec.expected_os == 'Darwin':
-            assert os_macos.is_symlink
-        else:
-            assert not os_macos.exists
-
-    if profile_spec.has_vale:
-        assert host.file(f'{target_home}/.vale.ini').is_symlink
-
-    if profile_spec.has_macos_ui:
-        assert host.file(f'{target_home}/.yabairc').is_symlink
-        assert host.file(f'{target_home}/.hammerspoon').is_symlink
+    for rel_path in profile_manifest.generated_files:
+        generated = host.file(f'{target_home}/{rel_path}')
+        assert generated.is_file, f'Missing generated file {target_home}/{rel_path}'
+        assert generated.size > 0
