@@ -2,11 +2,7 @@
 -- This is just pure lua so anything that doesn't
 -- fit in the normal config locations above can go here
 
--- Configure formatoptions: + "c" + "j" + "n" + "q" + "r" + "l" + "v" - "2" - "a" - "o" - "t"
-vim.opt.formatoptions:append("cjnqrlv")
-vim.opt.formatoptions:remove("2aot")
-
--- Fix Typos
+-- Fix common Ex-command typos only at command-line position 0
 local abbreviations = {
   W1 = "W!",
   w1 = "w!",
@@ -30,5 +26,7 @@ local abbreviations = {
 }
 
 for k, v in pairs(abbreviations) do
-  vim.cmd(string.format("cnoreabbrev %s %s", k, v))
+  vim.keymap.set("ca", k, function()
+    return vim.fn.getcmdtype() == ":" and vim.fn.getcmdline() == k and v or k
+  end, { expr = true })
 end
