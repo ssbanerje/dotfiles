@@ -93,7 +93,7 @@ Keep work/corporate hosts, tokens, proxy settings, and machine-specific tweaks o
 - `~/.ssh/config.local` and `~/.ssh/config.d/*.conf` — included first by `~/.ssh/config` (first-match-wins over `Host *`)
 - `~/.config/env.local.sh` — sourced by `~/.config/env.sh` (can call `PREPEND_PATH` / `APPEND_PATH`)
 - `~/.zshrc.local` and `~/.bashrc.local` — sourced at the end of `~/.zshrc` and `~/.bashrc`
-- `~/.tmux.conf.local` — sourced by `~/.tmux.conf` immediately before TPM initialization
+- `~/.tmux.conf.local` and `~/.tmux.conf.post.local` — sourced by `~/.tmux.conf` immediately before and after TPM initialization
 
 
 ## Setup Development Environment
