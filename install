@@ -84,19 +84,8 @@ detect_default_profile() {
   return 1
 }
 
-ensure_submodules() {
-  [[ -e "${BASEDIR}/.git" ]] || return 0
-  if [[ ! -x "${DOTBOT}" \
-     || ! -e "${PLUGINDIR}/dotbot-ifplatform/lib/distro/.git" \
-     || ! -e "${PLUGINDIR}/dotbot-template/lib/jinja/.git" \
-     || ! -e "${BASEDIR}/git/gitignore/.git" \
-     || ! -e "${BASEDIR}/tmux/tpm/.git" \
-     || ! -e "${BASEDIR}/shell/antidote/.git" ]]; then
-    # Pin the files ref backend: reftable (default on newer/vendor git) breaks
-    # gitoxide (Starship), libgit2 and lazy.nvim's .git/HEAD reader.
-    git -C "${BASEDIR}" -c init.defaultRefFormat=files submodule update --init --recursive
-  fi
-}
+# shellcheck source=scripts/lib/submodules.sh
+source "${BASEDIR}/scripts/lib/submodules.sh"
 
 declare -a PROFILES=()
 declare -a EXTRA_CONFIGS=()
@@ -176,7 +165,7 @@ while (( "$#" )); do
   esac
 done
 
-ensure_submodules
+ensure_submodules "${BASEDIR}"
 
 if [[ "${#PROFILES[@]}" -eq 0 && "${#EXTRA_CONFIGS[@]}" -eq 0 ]]; then
   if default_profile="$(detect_default_profile)"; then
