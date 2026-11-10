@@ -1,19 +1,12 @@
 #!/usr/bin/env bash
 
 # Bash Options {{{
-HISTCONTROL=ignoreboth:ignoredups:ignorespace
+HISTCONTROL=ignoreboth
 HISTSIZE=50000
 HISTFILESIZE=50000
 HISTTIMEFORMAT='%F %T '
-shopt -s histappend
-shopt -s checkwinsize
-shopt -s cdspell
-shopt -s no_empty_cmd_completion
-if (( BASH_VERSINFO[0] >= 4 )); then
-  shopt -s autocd
-  shopt -s dirspell
-  shopt -s globstar
-fi
+shopt -s histappend checkwinsize cdspell no_empty_cmd_completion
+(( BASH_VERSINFO[0] >= 4 )) && shopt -s autocd dirspell globstar
 # }}}
 
 function _check_and_source() {
@@ -40,19 +33,26 @@ fi
 
 if [[ "$UNAME" == "Linux" ]]; then
   shopt -oq posix || _check_and_source /usr/share/bash-completion/bash_completion
-  _check_and_source \
-    /usr/share/doc/fzf/examples/completion.bash \
-    /usr/share/doc/fzf/examples/key-bindings.bash \
-    /usr/share/fzf/completion.bash \
-    /usr/share/fzf/key-bindings.bash
 elif [[ "$UNAME" == "Darwin" && -n "${BREW_PREFIX:-}" ]]; then
-  _check_and_source \
-    "$BREW_PREFIX/etc/profile.d/bash_completion.sh" \
-    "$BREW_PREFIX/opt/fzf/shell/completion.bash" \
-    "$BREW_PREFIX/opt/fzf/shell/key-bindings.bash"
+  _check_and_source "$BREW_PREFIX/etc/profile.d/bash_completion.sh"
   if [[ "${TERM_PROGRAM:-}" == "iTerm.app" ]]; then
     _check_and_source "$HOME/.config/iterm2_shell_integration.bash"
   fi
+fi
+
+if command -v fzf >/dev/null 2>&1; then
+  if _fzf_init="$(fzf --bash 2>/dev/null)"; then
+    eval "$_fzf_init"
+  else
+    _check_and_source \
+      /usr/share/doc/fzf/examples/completion.bash \
+      /usr/share/doc/fzf/examples/key-bindings.bash \
+      /usr/share/fzf/completion.bash \
+      /usr/share/fzf/key-bindings.bash \
+      "${BREW_PREFIX:+$BREW_PREFIX/opt/fzf/shell/completion.bash}" \
+      "${BREW_PREFIX:+$BREW_PREFIX/opt/fzf/shell/key-bindings.bash}"
+  fi
+  unset _fzf_init
 fi
 
 # }}}
@@ -60,9 +60,12 @@ fi
 # Set vi mode
 set -o vi
 
-# Theme
+# Prompt & smart directory jumping
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init bash)"
+fi
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init bash)"
 fi
 
 # Machine-local overrides (untracked)
