@@ -1,10 +1,9 @@
 [core]
   whitespace = fix,space-before-tab,tab-in-indent,trailing-space
   quotepath = false
-  excludesfile = {{HOME_DIR}}/.global_gitignore
-  attributesfile = {{HOME_DIR}}/.gitattributes
+  excludesfile = ~/.global_gitignore
+  attributesfile = ~/.gitattributes
   trustctime = false
-  precomposeUnicode = true
 
 [init]
   defaultBranch = main
@@ -57,14 +56,9 @@
   autoupdate = true
 
 [color]
-  diff = auto
-  status = auto
-  branch = auto
   ui = true
-  interactive = auto
 
 [branch]
-  autoSetupMerge = true
   autoSetupRebase = always
   sort = -committerdate
 
@@ -106,15 +100,15 @@
   contributors = shortlog --summary --numbered
   whoami = !git config user.name && git config user.email
   # [b]ranch
-  bc    = checkout
-  bcn   = checkout -b
+  bc    = switch
+  bcn   = switch -c
   bd    = branch -D
   bi    = branch --verbose
   # [l]og
   la    = log --graph --decorate --pretty=oneline --abbrev-commit --all
   ll    = log --graph --decorate --pretty=oneline --abbrev-commit
   # [p]push
-  p     = !git push && git push --tags
+  p     = push --follow-tags
   pf    = push --force-with-lease --force-if-includes
   # [r]emote
   ra    = remote add
@@ -123,15 +117,14 @@
   # [r]eset
   R     = reset --hard HEAD
   # [s]ubmodule
-  scm   = submodule foreach --recursive git checkout master
+  scm   = submodule foreach --recursive 'git switch main 2>/dev/null || git switch master'
   sl    = submodule --quiet foreach --recursive echo $path  on  $(git rev-parse --abbrev-ref HEAD)
   su    = !git submodule sync && git submodule update --init --recursive
   # [u]pdate
-  uo    = !git fetch -v origin && git remote update origin --prune
-  uu    = !git fetch -v upstream && git remote update upstream --prune
+  uo    = fetch -v origin
+  uu    = fetch -v upstream
 
 [push]
-  default = simple
   autoSetupRemote = true
 
 [include]
