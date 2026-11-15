@@ -1,0 +1,93 @@
+*dotfiles.txt*  AstroNvim v6 Dotfiles Reference & Cheat Sheet
+
+==============================================================================
+CONTENTS                                                   *dotfiles-contents*
+
+  1. Overview ............................................. |dotfiles-overview|
+  2. Core Keybindings ...................................... |dotfiles-keymaps|
+  3. Snacks, Git & Markdown ................................. |dotfiles-snacks|
+  4. Dotfiles Commands & Local Overrides ....................... |dotfiles-cli|
+  5. Language Guides ......................................... |dotfiles-langs|
+
+==============================================================================
+1. OVERVIEW                                                *dotfiles-overview*
+
+This Neovim configuration builds on AstroNvim v6 (`clipboard = "unnamedplus"`,
+`Neo-tree` on `<Leader>e`, `Snacks.nvim`, native Neovim 0.11 `after/lsp/*.lua`,
+`conform.nvim`, and `nvim-lint`) with curated `astrocommunity` packs and
+polyglot research/engineering workflows.
+
+Package & Parser Lifecycle:
+  Plugin sync (CLI)      `nvim --headless "+Lazy! sync" +qa`
+  Mason tools (manual)   `:MasonToolsInstall` / `:MasonToolsUpdateSync`
+  Full update (UI)       `<Leader>pa` (`:AstroUpdate`)
+  Full update (CLI)      `dot update` (two-pass pinned snapshot sync)
+
+==============================================================================
+2. CORE KEYBINDINGS                                         *dotfiles-keymaps*
+
+Clipboard & Buffers (`unnamedplus` active by default):
+  `<Leader>by`           Yank entire buffer to `+` (preserves cursor)
+  `<Leader>bP`           Replace buffer from `+` (black-hole delete preserves `+`)
+  `<Leader>b=`           Reindent entire buffer and restore cursor
+  `<Leader>bp` / `br`    Previous buffer / Close buffers to the right
+  `p` (Visual)           Paste over selection without clobbering `+`
+
+Window Navigation (counts `1`..`9` preserved for motions):
+  `<M-1>`..`<M-9>`       Jump directly to window 1..9 (Option/Alt + number)
+  `<Leader>1`..`9`       Jump directly to window 1..9
+  `<C-h/j/k/l>`          Move across splits (`<Leader>wh/j/k/l` also bound)
+
+Search, Motions & Explorer:
+  `n` / `N`              Next / previous match (centered with `zzzv`)
+  `s` / `S`              Flash jump / Flash Treesitter (Normal)
+  `<C-S>` (Visual)       Flash Treesitter selection (`S` stays `nvim-surround`)
+  `w` / `e` / `b` / `ge` Subword (`camelCase` / `snake_case`) motions
+  `ga` / `gA`            Interactive text alignment (`mini.align`)
+  `<Leader>e` / `<F3>`   Toggle Neo-tree explorer
+  `<Leader>-`            Open floating Yazi file manager
+  `<Leader>W` / `:W`     Privileged write via `suda.vim`
+
+LSP & Diagnostics:
+  `gd` / `gD` / `gI`     Definitions / Declarations / Implementations (Snacks)
+  `grr` / `gri` / `grt`  References / Implementations / Type definitions
+  `<Leader>uh`           Toggle LSP inlay hints (auto-hidden in Insert mode)
+  `<Leader>uT`           Toggle buffer linting (`:LintToggle` / `:LintInfo`)
+  `<Leader>xx` / `xX`    Trouble workspace / buffer diagnostics
+
+==============================================================================
+3. SNACKS, GIT & MARKDOWN                                    *dotfiles-snacks*
+
+  `<Leader>.`            Toggle persistent `Snacks.scratch` buffer
+  `<Leader>fS`           Select from saved scratch buffers
+  `<Leader>gi`           Search GitHub issues (`Snacks.picker.gh_issue`)
+  `<Leader>gP`           Search GitHub pull requests (`Snacks.picker.gh_pr`)
+  `<Leader>gp`           Preview current Git hunk inline (`gitsigns`)
+  `<Leader>gD`           Open multi-file Git Diffview (`:DiffviewOpen`)
+  `<Leader>gH`           Current file Git history (`:DiffviewFileHistory %`)
+  `<Leader>gy` / `gz`    Copy / open GitHub permalink (`gitlinker.nvim`)
+  `<Leader>um`           Toggle rendered Markdown (`:RenderMarkdown toggle`)
+
+Note: Hovering over LaTeX math blocks or image links in `.md` / `.tex` opens a
+floating rendered preview via `Snacks.image.doc` (Kitty graphics passthrough).
+
+==============================================================================
+4. DOTFILES COMMANDS & LOCAL OVERRIDES                         *dotfiles-cli*
+
+  `:DotDoctor [args]`    Run `dot doctor` profile & symlink health check
+  `:DotBench [runs]`     Run `dot bench` shell & headless Neovim benchmark
+  `:DotSync [args]`      Run `dot sync` to refresh symlinks and templates
+
+Machine-Local Override Hook:
+  Create `~/.config/nvim.local.lua` (untracked, auto-discovered by `dot doctor`)
+  for machine-specific options, paths, or keymaps loaded at the end of startup.
+
+==============================================================================
+5. LANGUAGE GUIDES                                            *dotfiles-langs*
+
+  Python workflows       |python.txt|
+  LaTeX & BibTeX         |tex.txt|
+  Rust workflows         |rust.txt|
+  C / C++ workflows      |cpp.txt|
+
+ vim:tw=78:ts=8:et:ft=help:norl:

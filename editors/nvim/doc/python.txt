@@ -1,0 +1,29 @@
+*python.txt*  Python Development Workflows (`ftplugin/python.lua`)
+
+==============================================================================
+1. STACK OVERVIEW                                            *python-overview*
+
+  LSP                    `pyright` + `ruff` (`astrocommunity.pack.python.ruff`)
+  Formatter              `ruff` (`conform.nvim`)
+  Debugger               `debugpy` (auto-detects project `.venv` / `uv`, `dap.lua`)
+  Test Runner            `uv run pytest -v` (or `pytest -v` outside `uv` repos)
+
+==============================================================================
+2. BUFFER COMMANDS & KEYMAPS                                  *python-keymaps*
+
+LocalLeader is `,` (comma):
+
+  `,tf`  `:PyTestFunc`   Run nearest test function/method under cursor via
+                         Treesitter AST (`file.py::ClassName::test_func`) in a
+                         persistent `Snacks.terminal`.
+  `,tt`  `:PyTestFile`   Run `pytest -v` on the current file.
+  `,a`   `:PyAlt`        Toggle between `<module>.py` and `tests/**/test_<module>.py`.
+  `,r`   `:PyRepl`       Toggle project-rooted `ipython` (vi editing mode) or
+                         `python3` REPL in `Snacks.terminal`.
+
+Debugging (`nvim-dap` + `nvim-dap-view`):
+  `<Leader>db`           Toggle breakpoint
+  `<Leader>dc`           Start / continue debugger (opens `dap-view` UI)
+  `<Leader>du`           Toggle `nvim-dap-view` panel
+
+ vim:tw=78:ts=8:et:ft=help:norl:

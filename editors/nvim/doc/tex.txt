@@ -1,0 +1,36 @@
+*tex.txt*  LaTeX, BibTeX & Academic Writing Workflows (`ftplugin/tex.lua`)
+
+==============================================================================
+1. STACK OVERVIEW                                               *tex-overview*
+
+  Syntax & Compiler      `lervag/vimtex` (`latexmk -outdir=build`, Skim/Okular)
+                         Note: Treesitter `latex` parser stays installed for
+                         `Snacks.image.doc` math previews while VimTeX owns
+                         `.tex` highlighting and conceal.
+  LSP                    `texlab` (`after/lsp/texlab.lua`, `chktex`, `build/`)
+  Prose Linter           `vale` via `nvim-lint` (toggle with `<Leader>uT`)
+
+==============================================================================
+2. ACADEMIC COMMANDS & KEYMAPS                                   *tex-keymaps*
+
+LocalLeader is `,` (comma):
+
+  `,d`   `:Doi2Bib [doi]`  Fetch BibTeX from DOI (or `https://doi.org/...`)
+                           asynchronously via `bin/doi2bib`. Inserts at cursor
+                           in `.bib` buffers, appends to a single project `.bib`
+                           file (copying citekey to `+`), or copies entry to `+`.
+  `,c`   `:BibCite`        Fuzzy-search project `.bib` entries in `Snacks.picker`:
+                           - `.tex`: inserts `\cite{key}` (or bare `key` inside
+                             an open `\cite{...`)
+                           - `.md`:  inserts `[@key]`
+                           - `.bib`: jumps directly to the entry definition
+  `,w`   `:TexWordCount`   Run `texcount -brief` asynchronously (with pure-Lua
+                           fallback when `texcount` is not installed).
+
+Standard VimTeX Chords:
+  `,ll`                  Toggle continuous `latexmk` compilation
+  `,lv`                  Forward-search PDF at cursor line (Skim / Okular)
+  `,lc`                  Clean auxiliary build artifacts
+  `,lt`                  Open VimTeX table of contents
+
+ vim:tw=78:ts=8:et:ft=help:norl:

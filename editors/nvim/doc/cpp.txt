@@ -1,0 +1,26 @@
+*cpp.txt*  C, C++ & CMake Workflows
+
+==============================================================================
+1. STACK OVERVIEW                                               *cpp-overview*
+
+  Pack & Extensions      `astrocommunity.pack.cpp` (`clangd_extensions.nvim`)
+                         `astrocommunity.pack.cmake` (`cmake-tools.nvim`)
+  LSP Settings           `after/lsp/clangd.lua` (`--background-index`,
+                         `--clang-tidy`, `--header-insertion=iwyu`,
+                         `--pch-storage=memory`, system `clangd` auto-detected)
+  Formatter              `clang-format` (`conform.nvim`)
+  Debugger               `codelldb` (Mason) or system `lldb-dap` (`dap.lua`)
+
+==============================================================================
+2. KEY WORKFLOWS & COMMANDS                                      *cpp-keymaps*
+
+  `<Leader>lh` / `:ClangdSwitchSourceHeader`
+                         Switch between `.c`/`.cpp`/`.cc` and `.h`/`.hpp`
+  `:ClangdAST`           Inspect Clang AST for current node/selection
+  `:ClangdSymbolInfo`    Show symbol details under cursor
+  `:ClangdTypeHierarchy` Inspect C++ class/type hierarchy
+  `:CMakeGenerate`       Configure CMake build directory
+  `:CMakeBuild`          Build active CMake target
+  `<Leader>dc`           Launch C/C++ executable under `codelldb` / `lldb-dap`
+
+ vim:tw=78:ts=8:et:ft=help:norl:

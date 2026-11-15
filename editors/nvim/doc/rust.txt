@@ -1,0 +1,28 @@
+*rust.txt*  Rust Development Workflows (`ftplugin/rust.lua`)
+
+==============================================================================
+1. STACK OVERVIEW                                              *rust-overview*
+
+  Pack & Tooling         `astrocommunity.pack.rust` (`rustaceanvim` + `crates.nvim`)
+  LSP Settings           `after/lsp/rust_analyzer.lua` (merged into `rustaceanvim`
+                         via Neovim 0.11 `vim.lsp.config["rust_analyzer"]`)
+  Debugger               `codelldb` / `lldb-dap` (`dap.lua` + `nvim-dap-view`)
+
+==============================================================================
+2. BUFFER COMMANDS & KEYMAPS                                    *rust-keymaps*
+
+LocalLeader is `,` (comma):
+
+  `,d`   `:RustDoc [crate]`  Open `https://docs.rs/<crate>` in browser (defaults
+                             to identifier under cursor).
+  `,e`   `:CargoExpand`      Run `cargo expand` asynchronously and display the
+                             expanded Rust AST in a read-only vertical scratch
+                             split.
+
+Useful `rustaceanvim` Commands:
+  `:RustLsp runnables`       Pick and run Cargo target / test
+  `:RustLsp debuggables`     Pick and debug Cargo target via `nvim-dap`
+  `:RustLsp explainError`    Explain Rust compiler diagnostic under cursor
+  `<Leader>uh`               Toggle Rust inlay hints
+
+ vim:tw=78:ts=8:et:ft=help:norl:
