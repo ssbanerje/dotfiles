@@ -49,7 +49,29 @@ cmd_update() {
   fi
   if command -v nvim >/dev/null 2>&1; then
     echo "==> Syncing Neovim plugins"
-    nvim --headless "+Lazy! sync" +qa || true
+    local astro_dir="${HOME}/.local/share/nvim/lazy/AstroNvim"
+    local before_sha="" after_sha=""
+    if [[ -d "${astro_dir}/.git" ]]; then
+      before_sha="$(git -C "${astro_dir}" rev-parse HEAD 2>/dev/null || true)"
+    fi
+    nvim --headless "+lua require('astrocore').config.treesitter.ensure_installed = {}" "+Lazy! sync" +qa || true
+    if [[ -d "${astro_dir}/.git" ]]; then
+      after_sha="$(git -C "${astro_dir}" rev-parse HEAD 2>/dev/null || true)"
+    fi
+    if [[ -n "${before_sha}" && -n "${after_sha}" && "${before_sha}" != "${after_sha}" ]]; then
+      echo "==> AstroNvim snapshot updated; syncing pinned core plugins"
+      nvim --headless "+lua require('astrocore').config.treesitter.ensure_installed = {}" "+Lazy! sync" +qa || true
+    fi
+    if command -v tree-sitter >/dev/null 2>&1; then
+      echo "==> Updating Treesitter parsers"
+      nvim --headless "+lua local ac = require('astrocore'); local langs = vim.deepcopy(ac.config.treesitter.ensure_installed or {}); ac.config.treesitter.ensure_installed = {}; require('lazy').load({ plugins = { 'nvim-treesitter' } }); if type(langs) == 'table' and #langs > 0 then require('nvim-treesitter').install(langs):wait(300000) end; require('nvim-treesitter').update():wait(300000)" "+helptags ALL" +qa || true
+    else
+      nvim --headless "+helptags ALL" +qa || true
+    fi
+    if compgen -G "${HOME}/.local/share/nvim/mason/packages/*" >/dev/null; then
+      echo "==> Updating Mason tools"
+      nvim --headless "+MasonToolsUpdateSync" +qa || true
+    fi
   fi
 }
 

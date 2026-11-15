@@ -2,11 +2,12 @@
 - ifdebian:
     - apt:
         - curl
+        - gcc
         - nodejs
+        - npm
         - unzip
         - ripgrep
         - fd-find
-        - python3-pynvim
         - python3-debugpy
         - neovim:
             if_available: true
@@ -36,7 +37,6 @@
         - ripgrep
         - fd
         - lazygit
-        - python-pynvim
         - python-debugpy
         - tree-sitter-cli
 
@@ -55,4 +55,10 @@
     ~/.editorconfig: editors/editorconfig
 
 - shell:
-    - ["PATH=\"$HOME/.local/bin:$PATH\" nvim --headless '+Lazy! sync' +qa", "Installing AstroNvim Plugins"]
+    - command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        nvim --headless "+lua require('astrocore').config.treesitter.ensure_installed = {}" '+Lazy! sync' '+helptags ALL' +qa
+        if command -v tree-sitter >/dev/null 2>&1; then
+          nvim --headless "+lua local ac = require('astrocore'); local langs = vim.deepcopy(ac.config.treesitter.ensure_installed or {}); ac.config.treesitter.ensure_installed = {}; require('lazy').load({ plugins = { 'nvim-treesitter' } }); if type(langs) == 'table' and #langs > 0 then require('nvim-treesitter').install(langs):wait(300000) end" '+helptags ALL' +qa
+        fi
+      description: Installing AstroNvim Plugins and Treesitter Parsers

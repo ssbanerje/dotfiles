@@ -94,6 +94,7 @@ Keep work/corporate hosts, tokens, proxy settings, and machine-specific tweaks o
 - `~/.config/env.local.sh` — sourced by `~/.config/env.sh` (can call `PREPEND_PATH` / `APPEND_PATH`)
 - `~/.zshrc.local` and `~/.bashrc.local` — sourced at the end of `~/.zshrc` and `~/.bashrc`
 - `~/.tmux.conf.local` and `~/.tmux.conf.post.local` — sourced by `~/.tmux.conf` immediately before and after TPM initialization
+- `~/.config/nvim.local.lua` — executed at the end of Neovim startup by `editors/nvim/lua/polish.lua`
 
 
 ## Setup Development Environment

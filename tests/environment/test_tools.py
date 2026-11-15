@@ -62,6 +62,12 @@ def test_neovim_version_and_headless_startup(host: Host) -> None:
 
     boot = run_env(host, 'nvim', '--headless', '+qa')
     assert boot.rc == 0, boot.stderr
+    assert boot.stderr.strip() == ''
+
+    help_check = run_env(
+        host, 'nvim', '--headless', '+helptags ALL', '+help dotfiles.txt', '+qa'
+    )
+    assert help_check.rc == 0, help_check.stderr
 
 
 @pytest.mark.parametrize('name', ('yazi.toml', 'keymap.toml'))

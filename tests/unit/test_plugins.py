@@ -570,6 +570,7 @@ class TestManifestResolver:
             '.bashrc.local',
             '.tmux.conf.local',
             '.tmux.conf.post.local',
+            '.config/nvim.local.lua',
         ):
             assert expected in hooks
 
