@@ -27,12 +27,7 @@ end
 return {
   "mfussenegger/nvim-dap",
   optional = true,
-  config = function(plugin, opts)
-    local astro_dap = pcall(require, "astronvim.plugins.configs.nvim-dap")
-    if astro_dap then
-      require("astronvim.plugins.configs.nvim-dap")(plugin, opts)
-    end
-
+  opts = function()
     local dap = require("dap")
 
     -- Python (debugpy)

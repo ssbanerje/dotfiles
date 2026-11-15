@@ -55,14 +55,13 @@ local mappings = {
     [">"] = { ">>_", desc = "Indent right" },
     vv = { "^v$", desc = "Select line" },
 
-    -- Undo picker & privileged save
+    -- Undo picker
     U = {
       function()
         require("snacks").picker.undo()
       end,
       desc = "Undo history",
     },
-    ["<Leader>W"] = { "<cmd>SudaWrite<cr>", desc = "Write with sudo" },
 
     -- F-keys (Outline, File Tree)
     ["<F2>"] = { "<cmd>AerialToggle<cr>", desc = "Outline Toggle", silent = true },
@@ -153,14 +152,11 @@ return {
       highlight = function(lang, bufnr)
         return lang ~= "latex" or vim.bo[bufnr].filetype ~= "tex"
       end,
-      -- Core AstroNvim + imported community packs already install bash, c, lua,
-      -- markdown, markdown_inline, python, query, vim, vimdoc, dockerfile, rust,
-      -- toml, and yaml.
+      -- Core AstroNvim + imported community packs already install bash, c, cpp,
+      -- dockerfile, html, json, lua, markdown, markdown_inline, python, query,
+      -- rust, toml, vim, vimdoc, and yaml.
       ensure_installed = {
         "bibtex",
-        "cpp",
-        "html",
-        "json",
         "latex",
         "regex",
       },

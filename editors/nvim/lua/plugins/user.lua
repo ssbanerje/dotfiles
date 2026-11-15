@@ -18,13 +18,78 @@ return {
     end,
   },
 
-  -- Privileged reads/writes
+  -- Privileged writes (`:W` alias; `<Leader>W` and cmd lazy-loading come from astrocommunity)
   {
     "lambdalisue/suda.vim",
-    cmd = { "SudaRead", "SudaWrite", "W" },
-    config = function()
-      vim.api.nvim_create_user_command("W", "SudaWrite", {})
+    optional = true,
+    cmd = { "W" },
+    init = function()
+      vim.api.nvim_create_user_command("W", function(args)
+        vim.cmd(("SudaWrite%s %s"):format(args.bang and "!" or "", args.args))
+      end, { bang = true, nargs = "*", complete = "file", desc = "Write with sudo" })
     end,
+  },
+
+  -- Keep Visual `S` for nvim-surround; move Visual Flash Treesitter to `<C-S>`
+  {
+    "folke/flash.nvim",
+    optional = true,
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            x = {
+              ["S"] = false,
+              ["<C-S>"] = {
+                function()
+                  require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  -- Markdown rendering toggle (`<Leader>um`)
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    optional = true,
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<Leader>um"] = { "<Cmd>RenderMarkdown toggle<CR>", desc = "Toggle Markdown render" },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  -- Multi-file Git diff & file-history views (`<Leader>gD`, `<Leader>gH`)
+  {
+    "sindrets/diffview.nvim",
+    optional = true,
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<Leader>gD"] = { "<Cmd>DiffviewOpen<CR>", desc = "Git Diffview" },
+              ["<Leader>gH"] = { "<Cmd>DiffviewFileHistory %<CR>", desc = "Git file history (Diffview)" },
+            },
+          },
+        },
+      },
+    },
   },
 
   -- Interactive text alignment via `ga` / `gA` (replaces godlygeek/tabular)
@@ -39,22 +104,50 @@ return {
   {
     "chrisgrieser/nvim-spider",
     keys = {
-      { "w", function() require("spider").motion("w") end, mode = { "n", "o", "x" }, desc = "Next subword" },
-      { "e", function() require("spider").motion("e") end, mode = { "n", "o", "x" }, desc = "Next end of subword" },
-      { "b", function() require("spider").motion("b") end, mode = { "n", "o", "x" }, desc = "Previous subword" },
-      { "ge", function() require("spider").motion("ge") end, mode = { "n", "o", "x" }, desc = "Previous end of subword" },
+      {
+        "w",
+        function()
+          require("spider").motion("w")
+        end,
+        mode = { "n", "o", "x" },
+        desc = "Next subword",
+      },
+      {
+        "e",
+        function()
+          require("spider").motion("e")
+        end,
+        mode = { "n", "o", "x" },
+        desc = "Next end of subword",
+      },
+      {
+        "b",
+        function()
+          require("spider").motion("b")
+        end,
+        mode = { "n", "o", "x" },
+        desc = "Previous subword",
+      },
+      {
+        "ge",
+        function()
+          require("spider").motion("ge")
+        end,
+        mode = { "n", "o", "x" },
+        desc = "Previous end of subword",
+      },
     },
     opts = {},
   },
 
-  -- Tokyo Night theme
+  -- Tokyo Night theme (variant selected via astroui.lua `colorscheme = "tokyonight-night"`)
   {
     "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
+    lazy = true,
     opts = {
-      style = "night",
-      on_colors = function(c) c.border = c.fg_gutter end,
+      on_colors = function(c)
+        c.border = c.fg_gutter
+      end,
     },
   },
 }
