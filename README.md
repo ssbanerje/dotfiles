@@ -35,9 +35,9 @@ Build and test the Ubuntu and Arch Linux containers locally (runs the full param
 
 You can also run the test tiers directly via `uv`:
 ```bash
-uv run --frozen --only-group dev pytest tests/unit
-uv run --frozen --only-group dev pytest tests/environment --profile macos
-uv run --frozen --only-group dev pytest tests/environment tests/container \
+uv run --only-group dev pytest tests/unit
+uv run --only-group dev pytest tests/environment --profile macos
+uv run --only-group dev pytest tests/environment tests/container \
   --docker-image ghcr.io/ssbanerje/dotfiles:ubuntu
 ```
 
@@ -103,5 +103,5 @@ Install pre-commit hooks and run static + unit checks:
 ```bash
 uv tool install pre-commit
 pre-commit install
-uv run --frozen --only-group dev pytest tests/unit
+uv run --only-group dev pytest tests/unit
 ```

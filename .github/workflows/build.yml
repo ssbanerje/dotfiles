@@ -32,10 +32,8 @@ jobs:
           enable-cache: true
       - name: Run pre-commit static checks
         run: uvx pre-commit run --all-files
-      - name: Verify uv lockfile is up to date
-        run: uv lock --check
       - name: Run unit & installer dry-run tests
-        run: uv run --frozen --only-group dev pytest tests/unit
+        run: uv run --only-group dev pytest tests/unit
   # }}}
 
   test-profiles:  # {{{
@@ -60,7 +58,7 @@ jobs:
       - name: Verify installed environment via pytest + testinfra
         run: |
           export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
-          uv run --frozen --only-group dev pytest tests/environment --profile "${{ matrix.profile }}"
+          uv run --only-group dev pytest tests/environment --profile "${{ matrix.profile }}"
   # }}}
 
   build-containers:  # {{{

@@ -17,3 +17,6 @@ node_modules
 *.log
 *.swp
 *~
+editors/nvim/doc/tags
+editors/nvim/lazy-lock.json
+uv.lock

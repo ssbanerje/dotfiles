@@ -29,7 +29,7 @@ smoke_test_images() {
   echo "==> Running parameterized pytest + testinfra suite (${*})"
   (
     cd "${REPO_ROOT}"
-    uv run --frozen --only-group dev pytest tests/environment tests/container "${pytest_args[@]}"
+    uv run --only-group dev pytest tests/environment tests/container "${pytest_args[@]}"
   )
 }
 
