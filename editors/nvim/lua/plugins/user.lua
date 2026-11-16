@@ -30,6 +30,77 @@ return {
     end,
   },
 
+  -- Seamless Neovim <-> Kitty / tmux navigation & Alt+hjkl resize
+  {
+    "mrjones2014/smart-splits.nvim",
+    optional = true,
+    lazy = (vim.env.TMUX == nil and vim.env.KITTY_LISTEN_ON == nil),
+    opts = {
+      at_edge = "stop",
+    },
+    specs = {
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              ["<M-h>"] = {
+                function()
+                  require("smart-splits").resize_left()
+                end,
+                desc = "Resize split left",
+              },
+              ["<M-j>"] = {
+                function()
+                  require("smart-splits").resize_down()
+                end,
+                desc = "Resize split down",
+              },
+              ["<M-k>"] = {
+                function()
+                  require("smart-splits").resize_up()
+                end,
+                desc = "Resize split up",
+              },
+              ["<M-l>"] = {
+                function()
+                  require("smart-splits").resize_right()
+                end,
+                desc = "Resize split right",
+              },
+            },
+            t = {
+              ["<M-h>"] = {
+                function()
+                  require("smart-splits").resize_left()
+                end,
+                desc = "Resize split left",
+              },
+              ["<M-j>"] = {
+                function()
+                  require("smart-splits").resize_down()
+                end,
+                desc = "Resize split down",
+              },
+              ["<M-k>"] = {
+                function()
+                  require("smart-splits").resize_up()
+                end,
+                desc = "Resize split up",
+              },
+              ["<M-l>"] = {
+                function()
+                  require("smart-splits").resize_right()
+                end,
+                desc = "Resize split right",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   -- Keep Visual `S` for nvim-surround; move Visual Flash Treesitter to `<C-S>`
   {
     "folke/flash.nvim",

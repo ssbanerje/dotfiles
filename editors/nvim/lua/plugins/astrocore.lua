@@ -50,22 +50,9 @@ local mappings = {
     N = { "'nN'[v:searchforward] . 'zzzv'", expr = true, desc = "Previous search match" },
 
     -- Custom mappings
-    Q = { "<cmd>close<cr>", desc = "Close window", silent = true },
     ["<"] = { "<<_", desc = "Indent left" },
     [">"] = { ">>_", desc = "Indent right" },
     vv = { "^v$", desc = "Select line" },
-
-    -- Undo picker
-    U = {
-      function()
-        require("snacks").picker.undo()
-      end,
-      desc = "Undo history",
-    },
-
-    -- F-keys (Outline, File Tree)
-    ["<F2>"] = { "<cmd>AerialToggle<cr>", desc = "Outline Toggle", silent = true },
-    ["<F3>"] = { "<cmd>Neotree toggle<cr>", desc = "Neotree Toggle", silent = true },
 
     -- Registers (<Leader>r)
     ["<Leader>r"] = { desc = "Registers" },
@@ -88,19 +75,13 @@ local mappings = {
     ["<Leader>wK"] = { "<cmd>wincmd K<cr>", desc = "Move far up" },
     ["<Leader>wL"] = { "<cmd>wincmd L<cr>", desc = "Move far right" },
     ["<Leader>wf"] = { "<cmd>setlocal scrollbind!<cr>", desc = "Toggle follow mode" },
-    ["<Leader>wh"] = { "<cmd>wincmd h<cr>", desc = "Move left" },
-    ["<Leader>wj"] = { "<cmd>wincmd j<cr>", desc = "Move down" },
-    ["<Leader>wk"] = { "<cmd>wincmd k<cr>", desc = "Move up" },
-    ["<Leader>wl"] = { "<cmd>wincmd l<cr>", desc = "Move right" },
     ["<Leader>wm"] = {
       function()
         require("snacks").zen.zoom()
       end,
       desc = "Maximize window",
     },
-    ["<Leader>ws"] = { "<cmd>split<cr>", desc = "Split horizontal" },
     ["<Leader>wt"] = { "<cmd>tabnew<cr>", desc = "Create new tab" },
-    ["<Leader>wv"] = { "<cmd>vsplit<cr>", desc = "Split vertical" },
     ["<Leader>ww"] = {
       function()
         local win = require("window-picker").pick_window()
