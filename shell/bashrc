@@ -40,6 +40,9 @@ elif [[ "$UNAME" == "Darwin" && -n "${BREW_PREFIX:-}" ]]; then
   fi
 fi
 
+# Set vi mode before keybinding plugins (fzf) so vi-insert/vi-command bindings persist
+set -o vi
+
 if command -v fzf >/dev/null 2>&1; then
   if _fzf_init="$(fzf --bash 2>/dev/null)"; then
     eval "$_fzf_init"
@@ -56,9 +59,6 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # }}}
-
-# Set vi mode
-set -o vi
 
 # Prompt & smart directory jumping
 if command -v starship >/dev/null 2>&1; then

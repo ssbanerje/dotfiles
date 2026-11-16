@@ -61,9 +61,10 @@ source "$HOME/.config/antidote/antidote.zsh"
 antidote load
 unset -f _is_macos _is_debian _is_arch _is_linux
 
-# Make fancy-ctrl-z work in zsh-vi-mode insert mode
+# Make fancy-ctrl-z and edit-command-line work in zsh-vi-mode insert mode
 zvm_define_widget fancy-ctrl-z fancy-ctrl-z
 zvm_bindkey viins '^Z' fancy-ctrl-z
+zvm_bindkey viins '^X^E' edit-command-line
 
 # }}}
 

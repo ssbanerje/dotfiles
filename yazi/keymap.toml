@@ -2,7 +2,7 @@
 
 [mgr]
 prepend_keymap = [
-  { on = "<C-n>", run = "tab_create --current", desc = "Create a new tab with CWD" },
+  { on = "<C-t>", run = "tab_create --current", desc = "Create a new tab with CWD" },
   { on = "<Tab>", run = "tab_switch 1 --relative", desc = "Switch to next tab" },
   { on = "<BackTab>", run = "tab_switch -1 --relative", desc = "Switch to previous tab" },
   { on = "<C-f>", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
