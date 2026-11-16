@@ -27,7 +27,12 @@
 - link:
     ~/.config/kitty/kitty.conf: kitty/kitty.conf
     ~/.config/kitty/keymaps.conf: kitty/keymaps.conf
+    ~/.config/kitty/smart_nav.py: kitty/smart_nav.py
     ~/.config/kitty/tokyonight.conf: kitty/tokyonight.conf
+
+- ifanylinux:
+    - link:
+        ~/.config/kitty/os-linux.conf: kitty/os-linux.conf
 
 - ifmacos:
     - link:
