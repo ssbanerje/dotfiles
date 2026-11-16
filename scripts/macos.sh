@@ -93,10 +93,11 @@ if write_bool com.apple.screencapture disable-shadow true; then
   uiserver_changed=1
 fi
 
-# Keep Mission Control spaces in fixed order for Yabai
+# Keep Mission Control spaces fixed and disable click-wallpaper-to-show-desktop for Yabai
 if write_bool com.apple.dock mru-spaces false; then
   dock_changed=1
 fi
+write_bool com.apple.WindowManager EnableStandardClickToShowDesktop false || true
 
 if (( finder_changed )); then
   killall Finder >/dev/null 2>&1 || true

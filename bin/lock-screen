@@ -1,2 +1,10 @@
 #!/bin/sh
-pmset displaysleepnow
+if [ "$(uname -s)" = "Darwin" ]; then
+  exec pmset displaysleepnow
+elif command -v i3lock-fancy >/dev/null 2>&1; then
+  exec i3lock-fancy -p
+elif command -v loginctl >/dev/null 2>&1; then
+  exec loginctl lock-session
+else
+  exec xdg-screensaver lock
+fi

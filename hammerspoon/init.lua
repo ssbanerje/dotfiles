@@ -14,8 +14,13 @@
 --  > Alt + Shift + m -> Toggle Native Fullscreen
 --
 -- Navigate Mode:
---  * Z -> Resize mode
+--  * z / Z -> Resize mode
+--  * o -> Output (Display) mode
+--  * w -> Workspace (Space) mode
+--  * / -> Keycaster mode
 --  * Esc / Enter -> Normal mode
+--  > t -> Toggle yabai layout for space (laptop-friendly Hyper+Enter alternative)
+--  > ` -> Toggle Hammerspoon console (laptop-friendly Hyper+` alternative)
 --  > HJKL/Arrows -> Focus window
 --  > Shift + HJKL/Arrows -> Warp window
 --  > Cmd + Shift + HJKL/Arrows -> Swap window
@@ -27,8 +32,18 @@
 --  > Alt + HJKL/Arrows -> Stack window
 --  > Tab / Shift + Tab -> Cycle stack
 --
+-- Output Mode:
+--  * Esc / Enter -> Normal mode
+--  > HJKL/Arrows -> Focus display
+--  > Shift + HJKL/Arrows -> Send window to display & follow
+--
+-- Workspace Mode:
+--  * Esc / Enter -> Normal mode
+--  > 1-9 -> Focus Space 1-9 (when Yabai scripting addition is active)
+--  > Shift + 1-9 -> Send window to Space 1-9 & follow (SIP-compatible)
+--
 -- Resize Mode:
---  * Esc -> Normal mode
+--  * Esc / Enter -> Normal mode
 --  > HJKL/Arrows -> Resize window
 --  > + / - -> Increase / decrease gaps
 --  > 0 -> Equalize windows
@@ -39,7 +54,7 @@
 --  > Cmd + ASDZXC (floating) -> Sixth-screen snaps
 --
 -- Keycaster Mode:
---  * Hyper + K -> Normal mode
+--  * Esc / Hyper + K -> Normal mode
 
 ---------------------------------------------------------------------------------------------------
 -- Defaults
@@ -104,6 +119,8 @@ hs.hotkey.bind(hyper, "`", "Toggle Hammerspoon Console", hs.toggleConsole)
 ---------------------------------------------------------------------------------------------------
 local state_machine = require("state_machine"):init()
 state_machine:new_state("navigation", "#d53e4f", { on_enter = borders.start, on_exit = borders.stop })
+state_machine:new_state("output", "#fdae61", { on_enter = borders.start, on_exit = borders.stop })
+state_machine:new_state("workspace", "#abdda4", { on_enter = borders.start, on_exit = borders.stop })
 state_machine:new_state("resize", "#e6f598", { on_enter = borders.start, on_exit = borders.stop })
 state_machine:new_state("keycaster", "#3288bd", {
   on_enter = function()
@@ -124,19 +141,21 @@ local function bind_dirs(state, mods, prefix, handler)
   end
 end
 
+local function toggle_yabai_layout()
+  yabai.ipc({ "query", "--spaces", "--space" }, function(payload)
+    local ok, space = pcall(hs.json.decode, payload)
+    local layout = (ok and type(space) == "table" and space.type == "bsp") and "float" or "bsp"
+    yabai.ipc({ "space", "--layout", layout })
+  end)
+end
+
 ---------------------------------------------------------------------------------------------------
 -- Normal Mode
 ---------------------------------------------------------------------------------------------------
 state_machine:transition("base", "navigation", { "alt", "n" }, "Navigation Mode")
 state_machine:transition("base", "keycaster", { hyper, "k" }, "Keycaster Mode")
 
-state_machine:bind("base", { hyper, "return" }, "Toggle Yabai", function()
-  yabai.ipc({ "query", "--spaces", "--space" }, function(payload)
-    local ok, space = pcall(hs.json.decode, payload)
-    local layout = (ok and type(space) == "table" and space.type == "bsp") and "float" or "bsp"
-    yabai.ipc({ "space", "--layout", layout })
-  end)
-end)
+state_machine:bind("base", { hyper, "return" }, "Toggle Yabai", toggle_yabai_layout)
 
 state_machine:bind("base", { "alt", "return" }, "Open kitty", function()
   local app = hs.application.get("net.kovidgoyal.kitty")
@@ -185,7 +204,14 @@ end
 ---------------------------------------------------------------------------------------------------
 state_machine:transition("navigation", "base", { "", "escape" }, "Exit")
 state_machine:transition("navigation", "base", { "", "return" }, "Exit")
-state_machine:transition("navigation", "resize", { "", "Z" }, "Resize State")
+state_machine:transition("navigation", "resize", { "", "z" }, "Resize State")
+state_machine:transition("navigation", "resize", { "shift", "z" }, "Resize State")
+state_machine:transition("navigation", "output", { "", "o" }, "Output State")
+state_machine:transition("navigation", "workspace", { "", "w" }, "Workspace State")
+state_machine:transition("navigation", "keycaster", { "", "/" }, "Keycaster Mode")
+
+state_machine:bind("navigation", { "", "t" }, "Toggle Yabai", toggle_yabai_layout)
+state_machine:bind("navigation", { "", "`" }, "Toggle Hammerspoon Console", hs.toggleConsole)
 
 bind_dirs("navigation", "", "Focus", function(d)
   yabai.ipc({ "window", "--focus", d.compass })
@@ -233,9 +259,39 @@ state_machine:bind("navigation", { "shift", "tab" }, "Stack previous", function(
 end)
 
 ---------------------------------------------------------------------------------------------------
+-- Output (Display) Mode
+---------------------------------------------------------------------------------------------------
+state_machine:transition("output", "base", { "", "escape" }, "Exit")
+state_machine:transition("output", "base", { "", "return" }, "Exit")
+
+bind_dirs("output", "", "Focus Display", function(d)
+  yabai.ipc({ "display", "--focus", d.compass })
+end)
+bind_dirs("output", "shift", "Send to Display", function(d)
+  yabai.ipc({ "window", "--display", d.compass, "--focus" })
+end)
+
+---------------------------------------------------------------------------------------------------
+-- Workspace (Space) Mode
+---------------------------------------------------------------------------------------------------
+state_machine:transition("workspace", "base", { "", "escape" }, "Exit")
+state_machine:transition("workspace", "base", { "", "return" }, "Exit")
+
+for i = 1, 9 do
+  local idx = tostring(i)
+  state_machine:bind("workspace", { "", idx }, "Focus Space " .. idx, function()
+    yabai.ipc({ "space", "--focus", idx })
+  end)
+  state_machine:bind("workspace", { "shift", idx }, "Send Window to Space " .. idx, function()
+    yabai.ipc({ "window", "--space", idx, "--focus" })
+  end)
+end
+
+---------------------------------------------------------------------------------------------------
 -- Resize Mode
 ---------------------------------------------------------------------------------------------------
 state_machine:transition("resize", "base", { "", "escape" }, "Exit")
+state_machine:transition("resize", "base", { "", "return" }, "Exit")
 
 state_machine:bind("resize", { "", "0" }, "Equalize windows", function()
   yabai.ipc({ "space", "--balance" })
@@ -291,6 +347,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Keycaster Mode
 ---------------------------------------------------------------------------------------------------
+state_machine:transition("keycaster", "base", { "", "escape" }, "Exit")
 state_machine:transition("keycaster", "base", { hyper, "k" }, "Exit")
 
 ---------------------------------------------------------------------------------------------------

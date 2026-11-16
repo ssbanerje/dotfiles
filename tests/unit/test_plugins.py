@@ -549,8 +549,10 @@ class TestManifestResolver:
             )
 
         if profile == 'macos':
-            assert '.local/bin/lock-screen' in resolved.symlinks
             assert '.config/kitty/os-macos.conf' in resolved.symlinks
+
+        if profile in ('macos', 'ubuntu'):
+            assert '.local/bin/lock-screen' in resolved.symlinks
         else:
             assert '.local/bin/lock-screen' not in resolved.symlinks
             assert '.local/bin/lock-screen' in resolved.excluded_symlinks

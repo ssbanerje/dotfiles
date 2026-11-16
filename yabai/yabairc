@@ -7,9 +7,9 @@ yabai -m config window_shadow                float
 
 yabai -m config mouse_follows_focus          on
 yabai -m config focus_follows_mouse          autofocus
-yabai -m config mouse_modifier               ctrl
-yabai -m config mouse_action1                resize
-yabai -m config mouse_action2                move
+yabai -m config mouse_modifier               alt
+yabai -m config mouse_action1                move
+yabai -m config mouse_action2                resize
 
 #------------------------------------------ Rules --------------------------------------------------
 yabai -m rule --add app="^(Activity Monitor|CleanMyMac X|FaceTime|Hammerspoon|Music|System Settings|mpv|zoom\.us)$" manage=off
