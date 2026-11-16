@@ -34,9 +34,11 @@ Clipboard & Buffers (`unnamedplus` active by default):
   `p` (Visual)           Paste over selection without clobbering `+`
 
 Window Navigation (counts `1`..`9` preserved for motions):
+  `<C-h/j/k/l>`          Move across Neovim, Kitty & tmux splits
+  `<M-h/j/k/l>`          Resize active Neovim, Kitty & tmux split
+  `|` / `\`              Vertical / horizontal split (`<Leader>wm` zooms)
   `<M-1>`..`<M-9>`       Jump directly to window 1..9 (Option/Alt + number)
   `<Leader>1`..`9`       Jump directly to window 1..9
-  `<C-h/j/k/l>`          Move across splits (`<Leader>wh/j/k/l` also bound)
 
 Search, Motions & Explorer:
   `n` / `N`              Next / previous match (centered with `zzzv`)
@@ -44,7 +46,7 @@ Search, Motions & Explorer:
   `<C-S>` (Visual)       Flash Treesitter selection (`S` stays `nvim-surround`)
   `w` / `e` / `b` / `ge` Subword (`camelCase` / `snake_case`) motions
   `ga` / `gA`            Interactive text alignment (`mini.align`)
-  `<Leader>e` / `<F3>`   Toggle Neo-tree explorer
+  `<Leader>e`            Toggle Neo-tree (`<Leader>lS` toggles Aerial outline)
   `<Leader>-`            Open floating Yazi file manager
   `<Leader>W` / `:W`     Privileged write via `suda.vim`
 

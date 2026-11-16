@@ -3,6 +3,8 @@ from __future__ import annotations
 import gzip
 import io
 import os
+import plistlib
+import py_compile
 import subprocess
 import sys
 import tarfile
@@ -619,3 +621,115 @@ class TestManifestResolver:
             '[user]\n  name = {{NAME}}\n', encoding='utf-8'
         )
         assert manifest_mod.run_doctor(repo, profile='ubuntu-minimal', home=home) == 1
+
+
+class TestShortcutUnification:
+    def test_wm_and_kinesis_parity(self) -> None:
+        qwerty = (REPO_ROOT / 'kinesis/qwerty.txt').read_text(encoding='utf-8')
+        assert '[lctrl]>[lwin]' in qwerty
+        assert '[rctrl]>[rwin]' in qwerty
+        assert '[intl-\\]>[lctrl]' in qwerty
+        assert '[rwin]>[rctrl][t&h250][hyper]' in qwerty
+        for line in qwerty.splitlines():
+            assert not line.lstrip().startswith('#')
+
+        yabairc = ' '.join(
+            (REPO_ROOT / 'yabai/yabairc').read_text(encoding='utf-8').split()
+        )
+        assert 'yabai -m config mouse_modifier alt' in yabairc
+        assert 'yabai -m config mouse_action1 move' in yabairc
+        assert 'yabai -m config mouse_action2 resize' in yabairc
+
+        i3_conf = (REPO_ROOT / 'i3wm/i3.conf').read_text(encoding='utf-8')
+        assert 'floating_modifier $mod' in i3_conf
+        assert 'bindsym Mod4+space exec "rofi -show combi"' in i3_conf
+        assert 'bindsym $mod+s split toggle' in i3_conf
+        assert 'bindsym Mod4+Control+$mod+Shift+Return floating toggle' in i3_conf
+        for legacy in ('bindsym $mod+d ', 'bindsym $mod+h ', 'bindsym $mod+v '):
+            assert legacy not in i3_conf
+
+        hs_lua = (REPO_ROOT / 'hammerspoon/init.lua').read_text(encoding='utf-8')
+        assert '"display", "--focus"' in hs_lua
+        assert '"window", "--display"' in hs_lua
+        assert '"window", "--space"' in hs_lua
+
+    def test_terminal_kitty_and_iterm2_convergence(self, tmp_path: Path) -> None:
+        kitty_conf = (REPO_ROOT / 'kitty/kitty.conf').read_text(encoding='utf-8')
+        assert 'listen_on' in kitty_conf
+        mod_idx = kitty_conf.index('kitty_mod')
+        clear_idx = kitty_conf.index('clear_all_shortcuts')
+        keymaps_idx = kitty_conf.index('keymaps.conf')
+        glob_idx = kitty_conf.index('globinclude')
+        assert mod_idx < clear_idx < keymaps_idx < glob_idx
+
+        keymaps = (REPO_ROOT / 'kitty/keymaps.conf').read_text(encoding='utf-8')
+        assert 'ctrl+a>' not in keymaps
+        assert 'kitten smart_nav.py move left' in keymaps
+        assert 'kitten smart_nav.py resize left 3' in keymaps
+        assert 'kitty_mod+shift+[' in keymaps
+        assert 'ctrl+tab' in keymaps
+        assert 'send_key home' in keymaps
+        assert 'send_key end' in keymaps
+
+        cfile = tmp_path / 'smart_nav.pyc'
+        py_compile.compile(
+            str(REPO_ROOT / 'kitty/smart_nav.py'), cfile=str(cfile), doraise=True
+        )
+
+        plist_bytes = (REPO_ROOT / 'iterm2/com.googlecode.iterm2.plist').read_bytes()
+        assert plist_bytes.startswith(b'bplist00')
+        plist_data = plistlib.loads(plist_bytes)
+        assert plist_data['RightOption'] == 2
+        for bm in plist_data['New Bookmarks']:
+            assert bm['Option Key Sends'] == 2
+            assert bm['Right Option Key Sends'] == 2
+            km = bm['Keyboard Map']
+            assert km['0xf702-0x300000'] == {'Text': '[H', 'Action': 10}
+            assert km['0xf703-0x300000'] == {'Text': '[F', 'Action': 10}
+            assert km['0x68-0x180000'] == {'Text': '', 'Action': 18}
+            assert km['0x6c-0x180000'] == {'Text': '', 'Action': 19}
+            assert km['0x6b-0x180000'] == {'Text': '', 'Action': 20}
+            assert km['0x6a-0x180000'] == {'Text': '', 'Action': 21}
+
+    def test_tmux_shell_yazi_and_nvim_unification(self) -> None:
+        tmux_conf = (REPO_ROOT / 'tmux/tmux.conf').read_text(encoding='utf-8')
+        assert 'bind C-l send-keys C-l' in tmux_conf
+        assert 'bind -n C-l send-keys C-l' not in tmux_conf
+        assert 'bind z resize-pane -Z' in tmux_conf
+        assert '@pane-is-vim' in tmux_conf
+        assert 'bind -n M-h' in tmux_conf
+
+        bashrc = (REPO_ROOT / 'shell/bashrc').read_text(encoding='utf-8')
+        assert bashrc.index('set -o vi') < bashrc.index('fzf --bash')
+
+        plugins_txt = (REPO_ROOT / 'shell/plugins.txt').read_text(encoding='utf-8')
+        kb_idx = plugins_txt.index('ohmyzsh/ohmyzsh path:lib/key-bindings.zsh')
+        zvm_idx = plugins_txt.index('jeffreytse/zsh-vi-mode')
+        cb_idx = plugins_txt.index('ohmyzsh/ohmyzsh path:plugins/copybuffer')
+        fzf_idx = plugins_txt.index('ohmyzsh/ohmyzsh path:plugins/fzf')
+        assert kb_idx < zvm_idx < cb_idx < fzf_idx
+
+        yazi_km = (REPO_ROOT / 'yazi/keymap.toml').read_text(encoding='utf-8')
+        assert 'on = "<C-t>"' in yazi_km
+        assert 'on = "<C-n>"' not in yazi_km
+
+        nvim_user = (REPO_ROOT / 'editors/nvim/lua/plugins/user.lua').read_text(
+            encoding='utf-8'
+        )
+        assert 'mrjones2014/smart-splits.nvim' in nvim_user
+        assert 'at_edge = "stop"' in nvim_user
+        assert '["<M-h>"]' in nvim_user
+
+        astrocore = (REPO_ROOT / 'editors/nvim/lua/plugins/astrocore.lua').read_text(
+            encoding='utf-8'
+        )
+        for pruned in (
+            'Q = {',
+            'U = {',
+            '["<F2>"]',
+            '["<F3>"]',
+            '["<Leader>wh"]',
+            '["<Leader>ws"]',
+            '["<Leader>wv"]',
+        ):
+            assert pruned not in astrocore
