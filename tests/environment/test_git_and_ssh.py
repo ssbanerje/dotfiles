@@ -58,6 +58,9 @@ def test_global_gitattributes_active(
         ('rebase.updateRefs', 'true'),
         ('rerere.enabled', 'true'),
         ('rerere.autoupdate', 'true'),
+        ('sendemail.smtpserver', 'smtp.gmail.com'),
+        ('sendemail.smtpserverport', '587'),
+        ('sendemail.smtpencryption', 'tls'),
         ('alias.pf', 'push --force-with-lease --force-if-includes'),
     ],
 )

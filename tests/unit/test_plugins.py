@@ -733,3 +733,22 @@ class TestShortcutUnification:
             '["<Leader>wv"]',
         ):
             assert pruned not in astrocore
+
+
+def test_gitconfig_sendemail_section() -> None:
+    gitconfig = REPO_ROOT / 'git/gitconfig'
+    get_res = subprocess.run(
+        ['git', 'config', '--file', str(gitconfig), '--get', 'sendemail.smtpserver'],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert get_res.stdout.strip() == '{{SMTP_SERVER}}'
+
+    legacy_res = subprocess.run(
+        ['git', 'config', '--file', str(gitconfig), '--get-regexp', r'^sendmail\.'],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert legacy_res.returncode != 0

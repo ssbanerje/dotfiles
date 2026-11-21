@@ -15,7 +15,7 @@
   name = {{NAME}}
   email = {{EMAIL}}
 
-[sendmail]
+[sendemail]
   smtpserver = {{SMTP_SERVER}}
   smtpserverport = {{SMTP_PORT}}
   smtpencryption = {{SMTP_ENCRYPTION}}
