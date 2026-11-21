@@ -96,12 +96,7 @@ def handle_result(
     mods = GLFW_MOD_CONTROL if action == 'move' else GLFW_MOD_ALT
     tab = boss.active_tab
     is_zoomed = getattr(getattr(tab, 'current_layout', None), 'name', '') == 'stack'
-    if (
-        _should_passthrough(window)
-        or tab is None
-        or len(tab.windows) <= 1
-        or is_zoomed
-    ):
+    if _should_passthrough(window) or tab is None or len(tab.windows) <= 1 or is_zoomed:
         _forward_key(window, key_char, mods)
         return
 
