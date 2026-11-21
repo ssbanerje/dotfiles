@@ -33,7 +33,6 @@ ZSH_ALIASES = (
     't',
     'ccat',
     'cless',
-    'ya',
     'rm',
     'mv',
     'cp',
@@ -102,7 +101,8 @@ def test_zsh_aliases_functions_and_widgets_present(host: Host) -> None:
         f'for s in {symbols_str}; do '
         'whence -w "$s" >/dev/null || { echo "missing zsh symbol: $s" >&2; exit 1; }; '
         'done && '
-        '[[ "$(whence -w y)" == "y: function" ]]'
+        '[[ "$(whence -w y)" == "y: function" ]] && '
+        '! alias ya >/dev/null 2>&1'
     )
     res = run_shell_i(host, 'zsh', snippet)
     assert res.rc == 0, res.stderr

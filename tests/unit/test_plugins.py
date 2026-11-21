@@ -702,6 +702,9 @@ class TestShortcutUnification:
         bashrc = (REPO_ROOT / 'shell/bashrc').read_text(encoding='utf-8')
         assert bashrc.index('set -o vi') < bashrc.index('fzf --bash')
 
+        aliases_sh = (REPO_ROOT / 'shell/aliases.sh').read_text(encoding='utf-8')
+        assert 'unalias y ya 2>/dev/null || true' in aliases_sh
+
         plugins_txt = (REPO_ROOT / 'shell/plugins.txt').read_text(encoding='utf-8')
         kb_idx = plugins_txt.index('ohmyzsh/ohmyzsh path:lib/key-bindings.zsh')
         zvm_idx = plugins_txt.index('jeffreytse/zsh-vi-mode')
